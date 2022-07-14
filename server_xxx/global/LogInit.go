@@ -12,7 +12,7 @@ import (
 )
 
 var Log *log.Logger // 系统日志& 重大错误或者事件
-func LogInt() {
+func LogInit() {
 	// 检测 logs 目录
 	isLogPath := mPath.Exists(config.Dir.Log)
 	if !isLogPath {

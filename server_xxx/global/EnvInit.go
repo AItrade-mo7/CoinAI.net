@@ -8,7 +8,7 @@ import (
 	"github.com/EasyGolang/goTools/mPath"
 )
 
-func AppEnvInt() {
+func AppEnvInit() {
 	config.LoadSysEnv()
 	Log.Println("加载 SysEnv : ", mJson.JsonFormat(mJson.ToJson(config.SysEnv)))
 
