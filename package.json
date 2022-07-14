@@ -3,7 +3,7 @@
   "version": "0.2.3",
   "scripts": {
     "git": "./_shell/gitSet.sh",
-    "sync": "./_shell/sync_git.sh",
+    "sync": "./_shell/gitSync.sh",
     "serve": "./_shell/run.sh",
     "build": "./_shell/build.sh",
     "deploy": "./_shell/deploy.sh"
