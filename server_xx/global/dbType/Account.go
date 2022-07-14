@@ -1,7 +1,7 @@
 package dbType
 
 // 秘钥的 数据模板 ============ 对外展示  ===============
-type OkxKey struct {
+type OkxKeyTable struct {
 	OkxKeyID   string `bson:"OkxKeyID"`   // OkxKeyID
 	ApiKey     string `bson:"ApiKey"`     // ApiKey
 	SecretKey  string `bson:"SecretKey"`  // SecretKey  密钥
@@ -24,6 +24,6 @@ type AccountTable struct {
 	SecurityCode string `bson:"SecurityCode"` // 防伪标识
 	/* type UserInfo struct */
 
-	Password   string   `bson:"Password"` // 用户密码
-	OkxKeyList []OkxKey `bson:"OkxKeyList"`
+	Password   string        `bson:"Password"` // 用户密码
+	OkxKeyList []OkxKeyTable `bson:"OkxKeyList"`
 }
