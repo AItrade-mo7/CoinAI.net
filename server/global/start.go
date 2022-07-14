@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"Hunter.net/server/global/config"
+	"CoinFund.net/server/global/config"
 	"github.com/EasyGolang/goTools/mCycle"
 	"github.com/EasyGolang/goTools/mPath"
 )

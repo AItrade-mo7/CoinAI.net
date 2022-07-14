@@ -1,11 +1,11 @@
 package sys
 
 import (
-	"Hunter.net/server/router/middle"
-	"Hunter.net/server/router/result"
-	"Hunter.net/server/utils/dbUser"
-	"Hunter.net/server/utils/shellControl"
-	"Hunter.net/server/utils/verifyCode"
+	"CoinFund.net/server/router/middle"
+	"CoinFund.net/server/router/result"
+	"CoinFund.net/server/utils/dbUser"
+	"CoinFund.net/server/utils/shellControl"
+	"CoinFund.net/server/utils/verifyCode"
 	"github.com/EasyGolang/goTools/mRes/mFiber"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"

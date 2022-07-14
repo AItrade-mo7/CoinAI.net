@@ -3,7 +3,7 @@ package global
 import (
 	"fmt"
 
-	"Hunter.net/server/global/config"
+	"CoinFund.net/server/global/config"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mPath"
 )

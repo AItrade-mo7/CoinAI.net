@@ -1,8 +1,8 @@
 package api
 
 import (
-	"Hunter.net/server/global/config"
-	"Hunter.net/server/router/result"
+	"CoinFund.net/server/global/config"
+	"CoinFund.net/server/router/result"
 	"github.com/EasyGolang/goTools/mFetch"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
@@ -12,7 +12,7 @@ func GetConfig(c *fiber.Ctx) error {
 	// 在这里请求数据
 	GithubReqData := mFetch.NewHttp(mFetch.HttpOpt{
 		Origin: "https://raw.githubusercontent.com",
-		Path:   "/mo7static/Hunter.net/main/package.json",
+		Path:   "/mo7static/CoinFund.net/main/package.json",
 	}).Get()
 
 	var GithubInfo struct {

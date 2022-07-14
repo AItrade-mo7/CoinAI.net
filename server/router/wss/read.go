@@ -4,8 +4,8 @@ import (
 	"strings"
 	"time"
 
-	"Hunter.net/server/global/config"
-	"Hunter.net/server/router/result"
+	"CoinFund.net/server/global/config"
+	"CoinFund.net/server/router/result"
 	"github.com/EasyGolang/goTools/mEncrypt"
 	"github.com/EasyGolang/goTools/mRes"
 	"github.com/EasyGolang/goTools/mStr"

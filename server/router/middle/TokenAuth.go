@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"Hunter.net/server/global/config"
+	"CoinFund.net/server/global/config"
 	"github.com/EasyGolang/goTools/mEncrypt"
 	"github.com/gofiber/fiber/v2"
 )

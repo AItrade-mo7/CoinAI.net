@@ -1,4 +1,4 @@
-module Hunter.net
+module CoinFund.net
 
 go 1.18
 

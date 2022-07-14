@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"Hunter.net/server/global/config"
+	"CoinFund.net/server/global/config"
 	"github.com/gofiber/fiber/v2"
 )
 

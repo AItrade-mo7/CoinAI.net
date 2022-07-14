@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"Hunter.net/server/global/config"
+	"CoinFund.net/server/global/config"
 	"github.com/EasyGolang/goTools/mLog"
 	"github.com/EasyGolang/goTools/mPath"
 	"github.com/EasyGolang/goTools/mTime"

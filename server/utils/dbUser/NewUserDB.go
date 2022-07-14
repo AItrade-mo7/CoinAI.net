@@ -3,9 +3,9 @@ package dbUser
 import (
 	"fmt"
 
-	"Hunter.net/server/global"
-	"Hunter.net/server/global/config"
-	"Hunter.net/server/global/dbType"
+	"CoinFund.net/server/global"
+	"CoinFund.net/server/global/config"
+	"CoinFund.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mMongo"
 	"go.mongodb.org/mongo-driver/bson"
 )

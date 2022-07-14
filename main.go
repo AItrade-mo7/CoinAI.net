@@ -3,9 +3,9 @@ package main
 import (
 	_ "embed"
 
-	"Hunter.net/server/global"
-	"Hunter.net/server/global/config"
-	"Hunter.net/server/router"
+	"CoinFund.net/server/global"
+	"CoinFund.net/server/global/config"
+	"CoinFund.net/server/router"
 	jsoniter "github.com/json-iterator/go"
 )
 
