@@ -29,7 +29,7 @@ func NewUserDB(opt NewUserOpt) (resData *AccountType, resErr error) {
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
-		DBName:   "Hunter",
+		DBName:   "AIFund",
 	}).Connect().Collection("Account")
 
 	resData.DB = db
