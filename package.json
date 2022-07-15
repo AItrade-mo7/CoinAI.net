@@ -1,5 +1,5 @@
 {
-  "name": "hunter-net",
+  "name": "coin-fund",
   "version": "0.2.3",
   "scripts": {
     "git": "./_shell/gitSet.sh",
