@@ -48,7 +48,7 @@ func Start() {
 	}), middle.Public, compress.New(), favicon.New())
 
 	// api
-	r_api := app.Group("/CoinServe")
+	r_api := app.Group("/CoinFundServe")
 	// ping
 	r_api.Get("/config", api.GetConfig)
 	r_api.Get("/wss", wss.WsServer())
