@@ -1,6 +1,7 @@
 package middle
 
 import (
+	"fmt"
 	"strings"
 
 	"CoinFund.net/server/router/result"
@@ -25,9 +26,11 @@ func Public(c *fiber.Ctx) error {
 
 	// Token 验证
 	_, err = TokenAuth(c)
-	if err != nil {
-		return c.JSON(result.ErrToken.WithData(mStr.ToStr(err)))
-	}
+
+	fmt.Println(err)
+	// if err != nil {
+	// 	return c.JSON(result.ErrToken.WithData(mStr.ToStr(err)))
+	// }
 
 	return c.Next()
 }
