@@ -1,9 +1,9 @@
 package api
 
 import (
-	"CoinFund.net/server/global/config"
-	"CoinFund.net/server/router/middle"
-	"CoinFund.net/server/router/result"
+	"CoinServe.net/server/global/config"
+	"CoinServe.net/server/router/middle"
+	"CoinServe.net/server/router/result"
 	"github.com/EasyGolang/goTools/mRes/mFiber"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"

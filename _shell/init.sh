@@ -13,4 +13,4 @@ buildName=${startName}
 outPutPath=${path}"/dist"
 
 # 部署目录
-deployPath="git@github.com:mo7static/CoinFund.net.git"
+deployPath="git@github.com:mo7static/CoinServe.net.git"

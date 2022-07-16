@@ -3,8 +3,8 @@ package verifyCode
 import (
 	"fmt"
 
-	"CoinFund.net/server/global/config"
-	"CoinFund.net/server/global/dbType"
+	"CoinServe.net/server/global/config"
+	"CoinServe.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mEncrypt"
 	"github.com/EasyGolang/goTools/mMongo"

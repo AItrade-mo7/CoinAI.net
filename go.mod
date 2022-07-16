@@ -1,4 +1,4 @@
-module CoinFund.net
+module CoinServe.net
 
 go 1.18
 

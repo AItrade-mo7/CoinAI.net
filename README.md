@@ -1,4 +1,4 @@
-# CoinFund.net
+# CoinServe.net
 
 Hunter 的客户端程序, 使用方法：
 

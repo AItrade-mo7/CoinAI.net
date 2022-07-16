@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"CoinFund.net/server/global/config"
+	"CoinServe.net/server/global/config"
 	"github.com/gofiber/fiber/v2"
 )
 

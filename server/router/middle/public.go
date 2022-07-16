@@ -3,7 +3,7 @@ package middle
 import (
 	"strings"
 
-	"CoinFund.net/server/router/result"
+	"CoinServe.net/server/router/result"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
 )
@@ -33,6 +33,6 @@ func Public(c *fiber.Ctx) error {
 }
 
 func AddHeader(c *fiber.Ctx) error {
-	c.Set("Data-Path", "CoinFund.net")
+	c.Set("Data-Path", "CoinServe.net")
 	return nil
 }
