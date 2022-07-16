@@ -1,7 +1,7 @@
 package shellControl
 
 import (
-	"CoinServe.net/server/global/config"
+	"CoinAI.net/server/global/config"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTikker"
 )

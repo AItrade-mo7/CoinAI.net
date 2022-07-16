@@ -1,4 +1,4 @@
-module CoinServe.net
+module CoinAI.net
 
 go 1.18
 

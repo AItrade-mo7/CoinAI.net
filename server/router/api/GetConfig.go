@@ -1,8 +1,8 @@
 package api
 
 import (
-	"CoinServe.net/server/global/config"
-	"CoinServe.net/server/router/result"
+	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/router/result"
 	"github.com/EasyGolang/goTools/mFetch"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
@@ -12,7 +12,7 @@ func GetConfig(c *fiber.Ctx) error {
 	// 在这里请求数据
 	GithubReqData := mFetch.NewHttp(mFetch.HttpOpt{
 		Origin: "https://raw.githubusercontent.com",
-		Path:   "/mo7static/CoinServe.net/main/package.json",
+		Path:   "/mo7static/CoinAI.net/main/package.json",
 	}).Get()
 
 	var GithubInfo struct {

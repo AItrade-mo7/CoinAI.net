@@ -3,9 +3,9 @@ package dbUser
 import (
 	"fmt"
 
-	"CoinServe.net/server/global"
-	"CoinServe.net/server/global/config"
-	"CoinServe.net/server/global/dbType"
+	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mMongo"
 	"go.mongodb.org/mongo-driver/bson"
 )

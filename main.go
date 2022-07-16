@@ -3,9 +3,9 @@ package main
 import (
 	_ "embed"
 
-	"CoinServe.net/server/global"
-	"CoinServe.net/server/global/config"
-	"CoinServe.net/server/router"
+	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/router"
 	jsoniter "github.com/json-iterator/go"
 )
 

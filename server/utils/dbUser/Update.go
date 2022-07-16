@@ -1,8 +1,8 @@
 package dbUser
 
 import (
-	"CoinServe.net/server/global/apiType"
-	"CoinServe.net/server/global/dbType"
+	"CoinAI.net/server/global/apiType"
+	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mJson"
 	jsoniter "github.com/json-iterator/go"
 	"go.mongodb.org/mongo-driver/bson"

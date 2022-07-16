@@ -4,12 +4,12 @@ import (
 	"os"
 	"time"
 
-	"CoinServe.net/server/global"
-	"CoinServe.net/server/global/config"
-	"CoinServe.net/server/router/api"
-	"CoinServe.net/server/router/api/sys"
-	"CoinServe.net/server/router/middle"
-	"CoinServe.net/server/router/wss"
+	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/router/api"
+	"CoinAI.net/server/router/api/sys"
+	"CoinAI.net/server/router/middle"
+	"CoinAI.net/server/router/wss"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -30,7 +30,7 @@ func Start() {
 
 	// 创建服务
 	app := fiber.New(fiber.Config{
-		ServerHeader: "CoinServe.net",
+		ServerHeader: "CoinAI.net",
 	})
 
 	// 跨域
@@ -48,7 +48,7 @@ func Start() {
 	}), middle.Public, compress.New(), favicon.New())
 
 	// api
-	r_api := app.Group("/CoinFundServe")
+	r_api := app.Group("/CoinAI")
 	// ping
 	r_api.Get("/config", api.GetConfig)
 	r_api.Get("/wss", wss.WsServer())

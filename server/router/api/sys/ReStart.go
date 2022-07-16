@@ -1,11 +1,11 @@
 package sys
 
 import (
-	"CoinServe.net/server/router/middle"
-	"CoinServe.net/server/router/result"
-	"CoinServe.net/server/utils/dbUser"
-	"CoinServe.net/server/utils/shellControl"
-	"CoinServe.net/server/utils/verifyCode"
+	"CoinAI.net/server/router/middle"
+	"CoinAI.net/server/router/result"
+	"CoinAI.net/server/utils/dbUser"
+	"CoinAI.net/server/utils/shellControl"
+	"CoinAI.net/server/utils/verifyCode"
 	"github.com/EasyGolang/goTools/mRes/mFiber"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"

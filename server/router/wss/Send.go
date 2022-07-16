@@ -1,14 +1,14 @@
 package wss
 
 import (
-	"CoinServe.net/server/router/result"
+	"CoinAI.net/server/router/result"
 	"github.com/EasyGolang/goTools/mRes"
 	"github.com/EasyGolang/goTools/mTime"
 )
 
 func Send() mRes.ResType {
 	data := map[string]any{
-		"DataSource": "CoinServe.net",
+		"DataSource": "CoinAI.net",
 		"SysTime":    mTime.GetUnixInt64(),
 	}
 

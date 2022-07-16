@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"CoinServe.net/server/global/config"
+	"CoinAI.net/server/global/config"
 	"github.com/EasyGolang/goTools/mCycle"
 	"github.com/EasyGolang/goTools/mPath"
 )
