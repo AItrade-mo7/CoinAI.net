@@ -7,6 +7,7 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/router/api"
+	"CoinAI.net/server/router/api/order"
 	"CoinAI.net/server/router/api/sys"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/wss"
@@ -47,14 +48,23 @@ func Start() {
 		Output:     logFile,
 	}), middle.Public, compress.New(), favicon.New())
 
-	// api
+	// CoinAI
 	r_api := app.Group("/CoinAI")
-	// ping
 	r_api.Get("/config", api.GetConfig)
 	r_api.Get("/wss", wss.WsServer())
-	r_api.Post("/sys/remove", sys.Remove)
-	r_api.Post("/sys/restart", sys.ReStart)
 
+	// sys
+	s_api := app.Group("/CoinAI/sys")
+	s_api.Post("/remove", sys.Remove)
+	s_api.Post("/restart", sys.ReStart)
+
+	// order
+	o_api := app.Group("/CoinAI/Order")
+	o_api.Post("/Buy", order.Buy)
+	o_api.Post("/Sell", order.Sell)
+	o_api.Post("/Close", order.Close)
+
+	// Ping
 	app.Use(api.Ping)
 
 	listenHost := mStr.Join(":", config.AppEnv.Port)
