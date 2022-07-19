@@ -6,5 +6,5 @@ import (
 )
 
 func Close(c *fiber.Ctx) error {
-	return c.JSON(result.Succeed.WithData("Buy"))
+	return c.JSON(result.Succeed.WithData("Close"))
 }
