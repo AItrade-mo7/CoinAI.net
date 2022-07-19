@@ -10,7 +10,7 @@ import (
 
 func GetConfig(c *fiber.Ctx) error {
 	// 在这里请求数据
-	GithubReqData := mFetch.NewHttp(mFetch.HttpOpt{
+	GithubReqData, _ := mFetch.NewHttp(mFetch.HttpOpt{
 		Origin: "https://raw.githubusercontent.com",
 		Path:   "/mo7static/CoinAI.net/main/package.json",
 	}).Get()
