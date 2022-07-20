@@ -3,6 +3,7 @@ package wss
 import (
 	"time"
 
+	"github.com/EasyGolang/goTools/mRes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
 	jsoniter "github.com/json-iterator/go"
@@ -11,37 +12,42 @@ import (
 // webSocket请求ping 返回pong
 func WsServer() func(*fiber.Ctx) error {
 	return websocket.New(func(ws *websocket.Conn) {
-		AuthStatus := -1
+		AuthResult := mRes.ResType{}
 
 		var (
-			mt  int
 			msg []byte
 			err error
 		)
 
 		go func() {
 			for {
-				mt, msg, err = ws.ReadMessage()
+				_, msg, err = ws.ReadMessage()
 				if err != nil {
 					ws.Close()
 					break
 				}
 
-				SendData := Read(msg)
-				AuthStatus = SendData.Code
+				// 第一次需要验证
+				if AuthResult.Code == 0 {
+					AuthResult = Auth(msg)
+				}
 
-				b, _ := jsoniter.Marshal(SendData)
-				ws.WriteMessage(mt, b)
 				time.Sleep(time.Second) // 一秒执行一次
 			}
 		}()
 
 		for {
-			SendData := Send()
 
-			if AuthStatus > 0 {
-				b, _ := jsoniter.Marshal(SendData)
-
+			if AuthResult.Code > 0 {
+				AuthResult := Send()
+				b, _ := jsoniter.Marshal(AuthResult)
+				err := ws.WriteMessage(1, b)
+				if err != nil {
+					ws.Close()
+					break
+				}
+			} else {
+				b, _ := jsoniter.Marshal(AuthResult)
 				err := ws.WriteMessage(1, b)
 				if err != nil {
 					ws.Close()

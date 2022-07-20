@@ -12,7 +12,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Read(msg []byte) mRes.ResType {
+func Auth(msg []byte) mRes.ResType {
 	MsgStr := mStr.ToStr(msg)
 
 	if strings.ToLower(MsgStr) == "ping" {
@@ -26,7 +26,7 @@ func Read(msg []byte) mRes.ResType {
 		return verifyCode(msg)
 	}
 
-	return result.Succeed.WithData(msg)
+	return result.ErrToken.WithData(msg)
 }
 
 func verifyCode(data []byte) mRes.ResType {
