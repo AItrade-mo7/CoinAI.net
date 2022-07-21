@@ -64,7 +64,7 @@ func New(opt FetchOpt) (_this *mFetch.Wss) {
 		)
 		Sign := mEncrypt.Sha256(SignStr, dbData.OkxKey.SecretKey)
 		LoginParam := LoginType{
-			Op: "",
+			Op: "login",
 			Args: []LoginArgsType{
 				{
 					APIKey:     dbData.OkxKey.ApiKey,

@@ -6,7 +6,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/okxApi/restApi"
+	"CoinAI.net/server/okxApi/wssApi"
 	"CoinAI.net/server/ready"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
@@ -22,23 +22,16 @@ func main() {
 
 	ready.Start()
 
-	resData, err := restApi.Fetch(restApi.FetchOpt{
-		Path: "/abc/ert",
-		Data: map[string]any{
-			"qwe": 123,
-			"abc": 456,
-		},
-		Method: "get",
+	wss := wssApi.New(wssApi.FetchOpt{
+		Type: 1,
 		Event: func(s string, a any) {
-			fmt.Println("Event", s, a)
+			fmt.Println("Event", s, mStr.ToStr(a))
 		},
 	})
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
 
-	fmt.Println(mStr.ToStr(resData))
+	wss.Read(func(msg []byte) {
+		fmt.Println("读数据", mStr.ToStr(msg))
+	})
 
 	// router.Start()
 }
