@@ -44,8 +44,6 @@ type FetchOpt struct {
 	Event func(string, any)
 }
 
-var FetchTimeDown = 25
-
 func New(opt FetchOpt) (_this *mFetch.Wss) {
 	WssOpt := mFetch.WssOpt{}
 	WssOpt.Event = opt.Event
