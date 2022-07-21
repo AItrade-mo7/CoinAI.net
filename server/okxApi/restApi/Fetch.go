@@ -13,6 +13,26 @@ import (
 	"github.com/EasyGolang/goTools/mUrl"
 )
 
+/*
+	resData, err := restApi.Fetch(restApi.FetchOpt{
+		Path: "/api/v5/account/balance",
+		Data: map[string]any{
+			"ccy": "USDT",
+		},
+		Method: "get",
+		Event: func(s string, a any) {
+			fmt.Println("Event", s, a)
+		},
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(mStr.ToStr(resData))
+
+*/
+
 type FetchOpt struct {
 	Path   string
 	Data   map[string]any
@@ -21,11 +41,8 @@ type FetchOpt struct {
 }
 
 func Fetch(opt FetchOpt) (resData []byte, resErr error) {
-	if opt.Method == "get" || opt.Method == "post" {
-		//
-	} else {
-		errStr := fmt.Errorf("opt.Method : %+v", opt)
-		panic(errStr)
+	if len(opt.Method) < 1 {
+		opt.Method = "GET"
 	}
 
 	// 处理 Header 和 加密信息
