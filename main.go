@@ -8,6 +8,7 @@ import (
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxApi/restApi"
 	"CoinAI.net/server/ready"
+	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -32,8 +33,12 @@ func main() {
 			fmt.Println("Event", s, a)
 		},
 	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
-	fmt.Println(resData, err)
+	fmt.Println(mStr.ToStr(resData))
 
 	// router.Start()
 }
