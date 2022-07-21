@@ -11,7 +11,11 @@ import (
 	"github.com/EasyGolang/goTools/mTime"
 )
 
-var Log *log.Logger // 系统日志& 重大错误或者事件
+var (
+	Log    *log.Logger // 系统日志& 重大错误或者事件
+	WssLog *log.Logger // 系统日志& 重大错误或者事件
+)
+
 func LogInit() {
 	// 检测 logs 目录
 	isLogPath := mPath.Exists(config.Dir.Log)
@@ -24,6 +28,10 @@ func LogInit() {
 	Log = mLog.NewLog(mLog.NewLogParam{
 		Path: config.Dir.Log,
 		Name: "Sys",
+	})
+	WssLog = mLog.NewLog(mLog.NewLogParam{
+		Path: config.Dir.Log,
+		Name: "Wss",
 	})
 
 	// 设定清除log
