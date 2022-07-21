@@ -11,7 +11,6 @@ import (
 )
 
 func GetOkxKey() {
-	fmt.Println("请求数据库")
 	db := mMongo.New(mMongo.Opt{
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
@@ -32,6 +31,4 @@ func GetOkxKey() {
 		Value: config.AppEnv.CoinServeID,
 	}}
 	db.Table.FindOne(db.Ctx, FK).Decode(&dbData.CoinServe)
-
-	fmt.Println(dbData.CoinServe)
 }

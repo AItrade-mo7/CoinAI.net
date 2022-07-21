@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbData"
 	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mMongo"
 	"go.mongodb.org/mongo-driver/bson"
@@ -29,7 +30,7 @@ func NewUserDB(opt NewUserOpt) (resData *AccountType, resErr error) {
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
-		DBName:   "AIFund",
+		DBName:   "AITrade",
 	}).Connect().Collection("Account")
 
 	resData.DB = db
@@ -43,7 +44,6 @@ func NewUserDB(opt NewUserOpt) (resData *AccountType, resErr error) {
 		return
 	}
 
-	var result dbType.AccountTable
 	FK := bson.D{{
 		Key:   "Email",
 		Value: opt.Email,
@@ -54,10 +54,16 @@ func NewUserDB(opt NewUserOpt) (resData *AccountType, resErr error) {
 			Value: opt.UserID,
 		}}
 	}
+
+	var result dbType.AccountTable
 	db.Table.FindOne(db.Ctx, FK).Decode(&result)
 
 	resData.UserID = result.UserID
 	resData.AccountData = result
+
+	if len(result.UserID) > 6 {
+		dbData.UserInfo = result
+	}
 
 	return
 }
