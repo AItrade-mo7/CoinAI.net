@@ -29,7 +29,7 @@ func main() {
 		},
 		Method: "get",
 		Event: func(s string, a any) {
-			fmt.Println(s, a)
+			fmt.Println("Event", s, a)
 		},
 	})
 
