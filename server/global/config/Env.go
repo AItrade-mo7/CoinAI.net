@@ -13,7 +13,7 @@ var SysEnv struct {
 }
 
 func LoadSysEnv() {
-	SysEnv.MongoAddress = "fund.mo7.cc:17017"
+	SysEnv.MongoAddress = "trade.mo7.cc:17017"
 	SysEnv.MongoPassword = "asdasd55555"
 	SysEnv.MongoUserName = "mo7"
 }
