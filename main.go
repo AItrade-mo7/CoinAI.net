@@ -18,6 +18,17 @@ func main() {
 	// 初始化系统参数
 	global.Start()
 
+	// restApi.Fetch(restApi.FetchOpt{
+	// 	Path: "/abc/ert",
+	// 	Data: map[string]any{
+	// 		"qwe": 123,
+	// 		"abc": 456,
+	// 	},
+	// 	Event: func(s string, a any) {
+	// 		fmt.Println(s, a)
+	// 	},
+	// }).Get()
+
 	ready.Start()
 
 	router.Start()
