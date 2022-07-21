@@ -1,5 +1,0 @@
-{
-  "event": "error",
-  "msg": "Illegal request: {\"op\":\"\",\"args\":[{\"apiKey\":\"ca6e399d-cc78-41b0-90fe-40ab99fb8040\",\"passphrase\":\"@Mcl931750\",\"timestamp\":\"1658427601\",\"sign\":\"GBz+ToOjb6LtBCKV9I5dBg7hDefHPi90AwGdTZW1hS8=\"}]}",
-  "code": "60012"
-}
