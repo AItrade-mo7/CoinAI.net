@@ -3,7 +3,7 @@ module CoinAI.net
 go 1.18
 
 require (
-	github.com/EasyGolang/goTools v0.13.3
+	github.com/EasyGolang/goTools v0.13.5
 	github.com/gofiber/fiber/v2 v2.34.1
 	github.com/gofiber/websocket/v2 v2.0.22
 	github.com/json-iterator/go v1.1.12
