@@ -23,7 +23,7 @@ func main() {
 	ready.Start()
 
 	wss := wssApi.New(wssApi.FetchOpt{
-		Type: 0,
+		Type: 1,
 		Event: func(s string, a any) {
 			global.WssLog.Println("Event", s, mStr.ToStr(a))
 		},
