@@ -22,7 +22,7 @@ import (
 
 func Start() {
 	// 加载日志文件
-	fileName := config.Dir.Log + "/HTTP-" + time.Now().Format("06年1月02日15时") + ".log"
+	fileName := config.Dir.Log + "/HTTP-T" + time.Now().Format("06年1月02日15时") + ".log"
 	logFile, _ := os.Create(fileName)
 	/*
 		加载模板
