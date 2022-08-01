@@ -6,7 +6,7 @@ import (
 	"CoinAI.net/server/utils/dbUser"
 	"CoinAI.net/server/utils/shellControl"
 	"CoinAI.net/server/utils/verifyCode"
-	"github.com/EasyGolang/goTools/mRes/mFiber"
+	"github.com/EasyGolang/goTools/mFiber"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
 )

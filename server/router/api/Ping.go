@@ -4,7 +4,7 @@ import (
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
-	"github.com/EasyGolang/goTools/mRes/mFiber"
+	"github.com/EasyGolang/goTools/mFiber"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
 )
