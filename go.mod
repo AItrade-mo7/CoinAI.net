@@ -3,7 +3,7 @@ module CoinAI.net
 go 1.18
 
 require (
-	github.com/EasyGolang/goTools v0.14.6
+	github.com/EasyGolang/goTools v0.16.5
 	github.com/gofiber/fiber/v2 v2.34.1
 	github.com/gofiber/websocket/v2 v2.0.22
 	github.com/json-iterator/go v1.1.12
@@ -15,9 +15,9 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
-	github.com/antchfx/htmlquery v1.2.4 // indirect
-	github.com/antchfx/xmlquery v1.3.10 // indirect
-	github.com/antchfx/xpath v1.2.0 // indirect
+	github.com/antchfx/htmlquery v1.2.5 // indirect
+	github.com/antchfx/xmlquery v1.3.12 // indirect
+	github.com/antchfx/xpath v1.2.1 // indirect
 	github.com/fasthttp/websocket v1.5.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
@@ -30,7 +30,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
-	github.com/klauspost/compress v1.15.8 // indirect
+	github.com/klauspost/compress v1.15.9 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -56,12 +56,12 @@ require (
 	github.com/xdg-go/stringprep v1.0.2 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
-	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2 // indirect
+	golang.org/x/net v0.0.0-20220805013720-a33c5aa5df48 // indirect
 	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a // indirect
-	golang.org/x/sys v0.0.0-20220624220833-87e55d714810 // indirect
+	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/protobuf v1.28.0 // indirect
+	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b // indirect
 	gopkg.in/ini.v1 v1.66.6 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
