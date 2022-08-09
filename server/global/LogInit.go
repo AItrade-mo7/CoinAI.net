@@ -13,6 +13,7 @@ import (
 
 var (
 	Log    *log.Logger // 系统日志& 重大错误或者事件
+	ErrLog *log.Logger // 重大错误或者事件
 	WssLog *log.Logger // 系统日志& 重大错误或者事件
 )
 
@@ -29,6 +30,12 @@ func LogInit() {
 		Path: config.Dir.Log,
 		Name: "Sys",
 	})
+
+	ErrLog = mLog.NewLog(mLog.NewLogParam{
+		Path: config.Dir.Log,
+		Name: "Err",
+	})
+
 	WssLog = mLog.NewLog(mLog.NewLogParam{
 		Path: config.Dir.Log,
 		Name: "Wss",
@@ -46,5 +53,5 @@ func LogInit() {
 
 func LogErr(sum ...any) {
 	str := fmt.Sprintf("系统错误 : %+v", sum)
-	Log.Println(str)
+	ErrLog.Println(str)
 }
