@@ -8,6 +8,10 @@ import (
 )
 
 func Start() {
+	GetDataCenter()
+}
+
+func GetDataCenter() {
 	GetUserInfo()
 	GetOkxKey()
 

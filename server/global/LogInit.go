@@ -53,5 +53,6 @@ func LogInit() {
 
 func LogErr(sum ...any) {
 	str := fmt.Sprintf("系统错误 : %+v", sum)
+
 	ErrLog.Println(str)
 }
