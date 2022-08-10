@@ -2,19 +2,34 @@ package ready
 
 import (
 	"fmt"
+	"time"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbData"
+	"github.com/EasyGolang/goTools/mClock"
+	"github.com/EasyGolang/goTools/mCycle"
 )
 
 func Start() {
-	GetDataCenter()
+	mCycle.New(mCycle.Opt{
+		Func:      GetUserData,
+		SleepTime: time.Hour * 4, // 每 4 时获取一次
+	}).Start()
+
+	GetCoinMarket()
+	go mClock.New(mClock.OptType{
+		Func: GetCoinMarket,
+		Spec: "0 1,16,31,46 0/1 * * ?",
+	})
 }
 
-func GetDataCenter() {
+// 获取基本的用户数据和Key数据
+func GetUserData() {
 	GetUserInfo()
-	GetOkxKey()
+}
 
+func CheckUserData() {
+	GetOkxKey()
 	if len(dbData.CoinServe.OkxKeyID) < 10 {
 		errStr := fmt.Errorf("读取 dbData.CoinServe 失败 %+v", dbData.CoinServe)
 		global.LogErr(errStr)
