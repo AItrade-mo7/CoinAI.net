@@ -12,3 +12,5 @@ var AnalySingle map[string][]mOKX.AnalySliceType // 单个币种分析合集
 
 // 计价的锚定货币
 var Unit string
+
+var IsMarket = false

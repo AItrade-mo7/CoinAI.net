@@ -6,6 +6,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbData"
+	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mClock"
 	"github.com/EasyGolang/goTools/mCycle"
 )
@@ -16,11 +17,24 @@ func Start() {
 		SleepTime: time.Hour * 4, // 每 4 时获取一次
 	}).Start()
 
-	GetCoinMarket()
+	CheckUserData()
+
+	SetMarket()
+
 	go mClock.New(mClock.OptType{
-		Func: GetCoinMarket,
+		Func: SetMarket,
 		Spec: "0 1,16,31,46 0/1 * * ?",
 	})
+}
+
+func SetMarket() {
+	GetCoinMarket()
+	// 一旦有一个长度不对，则 Market 不合格
+	if len(okxInfo.Unit) < 3 || len(okxInfo.TickerList) < 4 || len(okxInfo.AnalyWhole) < 4 || len(okxInfo.AnalySingle) < 4 {
+		okxInfo.IsMarket = false
+	} else {
+		okxInfo.IsMarket = true
+	}
 }
 
 // 获取基本的用户数据和Key数据
