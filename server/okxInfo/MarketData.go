@@ -4,8 +4,6 @@ import (
 	"github.com/EasyGolang/goTools/mOKX"
 )
 
-var Lever = "10" // 默认的杠杆倍数
-
 var TickerList []mOKX.TypeTicker
 
 var AnalyWhole []mOKX.TypeWholeTickerAnaly // 大盘分析结果
