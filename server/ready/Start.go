@@ -12,7 +12,7 @@ import (
 
 func Start() {
 	mCycle.New(mCycle.Opt{
-		Func:      GetUserData,
+		Func:      GetUserInfo,
 		SleepTime: time.Hour * 4, // 每 4 时获取一次
 	}).Start()
 
@@ -24,10 +24,6 @@ func Start() {
 }
 
 // 获取基本的用户数据和Key数据
-func GetUserData() {
-	GetUserInfo()
-}
-
 func CheckUserData() {
 	GetOkxKey()
 	if len(dbData.CoinServe.OkxKeyID) < 10 {
