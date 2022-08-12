@@ -7,7 +7,6 @@ import (
 	"CoinAI.net/server/analy"
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbData"
-	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mClock"
 	"github.com/EasyGolang/goTools/mCycle"
 )
@@ -28,19 +27,21 @@ func Start() {
 
 func SetUserInfo() {
 	GetUserInfo()
-
 	GetOkxKey()
+}
 
+func CheckOkx() (resErr error) {
+	resErr = nil
 	if len(dbData.CoinServe.OkxKeyID) < 10 {
-		errStr := fmt.Errorf("读取 dbData.CoinServe 失败 %+v", dbData.CoinServe)
-		global.LogErr(errStr)
-		okxInfo.IsMarket = false
+		resErr = fmt.Errorf("读取 dbData.CoinServe 失败 %+v", dbData.CoinServe)
+		global.LogErr(resErr)
+		return
 	}
 
 	if len(dbData.UserInfo.OkxKeyList) < 1 {
-		errStr := fmt.Errorf("读取 dbData.UserInfo 失败 %+v", dbData.UserInfo)
-		global.LogErr(errStr)
-		okxInfo.IsMarket = false
+		resErr = fmt.Errorf("读取 dbData.UserInfo 失败 %+v", dbData.UserInfo)
+		global.LogErr(resErr)
+		return
 	}
 
 	for _, val := range dbData.UserInfo.OkxKeyList {
@@ -51,20 +52,21 @@ func SetUserInfo() {
 	}
 
 	if len(dbData.OkxKey.OkxKeyID) < 10 {
-		errStr := fmt.Errorf("读取 dbData.OkxKey 失败 %+v", dbData.OkxKey)
-		global.LogErr(errStr)
-		okxInfo.IsMarket = false
+		resErr = fmt.Errorf("读取 dbData.OkxKey 失败 %+v", dbData.OkxKey)
+		global.LogErr(resErr)
+		return
 	}
+
+	return
 }
 
 func SetMarket() {
-	GetCoinMarket()
-	// 一旦有一个长度不对，则 Market 不合格
-	if len(okxInfo.Unit) < 3 || len(okxInfo.TickerList) < 4 || len(okxInfo.AnalyWhole) < 4 || len(okxInfo.AnalySingle) < 4 {
-		okxInfo.IsMarket = false
-	} else {
-		okxInfo.IsMarket = true
+	err := CheckOkx()
+	if err != nil {
+		return
 	}
+
+	GetCoinMarket()
 
 	analy.MarketStart()
 }
