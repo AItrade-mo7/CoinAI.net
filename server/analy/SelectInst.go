@@ -15,8 +15,9 @@ func SelectInst(AnalyKdata map[string][]mOKX.TypeKd) {
 	}
 }
 
+// 在这里判断趋势
 func SingleAnalyInst(list []mOKX.TypeKd) {
-	for _, item := range list {
-		fmt.Println(item.Time)
-	}
+	// for _, item := range list {
+	// 	fmt.Println(item.Time)
+	// }
 }
