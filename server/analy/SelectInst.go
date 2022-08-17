@@ -22,7 +22,7 @@ func SelectInst(AnalyKdata map[string][]mOKX.TypeKd) {
 	}
 }
 
-// 在这里判断趋势
+// 在这里判断趋势 并挑选币种
 func SingleAnalyInst(list []mOKX.TypeKd) {
 	for _, item := range list {
 		fmt.Println(item.Time, item.C, item.O)
