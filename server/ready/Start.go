@@ -74,7 +74,6 @@ func SetMarket() {
 	// 筛选最近币种的信息
 	RecentTickerList := analy.RecentTicker()
 
-	//
 	okxInfo.AnalyKdata = make(map[string][]mOKX.TypeKd)
 	AnalyKdata := make(map[string][]mOKX.TypeKd)
 	if len(RecentTickerList) > 3 {
