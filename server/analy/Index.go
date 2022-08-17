@@ -16,7 +16,7 @@ func MarketStart() {
 
 	// 设置 近 8 小时成交量的榜单
 	SetHour8Ticker()
-	// 挑选可交易币种
 
+	// 挑选可交易币种
 	SelectInst()
 }

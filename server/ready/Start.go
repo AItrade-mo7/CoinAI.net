@@ -7,8 +7,10 @@ import (
 	"CoinAI.net/server/analy"
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbData"
+	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mClock"
 	"github.com/EasyGolang/goTools/mCycle"
+	"github.com/EasyGolang/goTools/mOKX"
 )
 
 func Start() {
@@ -69,4 +71,16 @@ func SetMarket() {
 	GetCoinMarket()
 
 	analy.MarketStart()
+
+	okxInfo.AnalyKdata = make(map[string][]mOKX.TypeKd)
+	AnalyKdata := make(map[string][]mOKX.TypeKd)
+	if len(okxInfo.Hour8Ticker) > 3 {
+		for _, item := range okxInfo.Hour8Ticker {
+			list := GetCoinAnalyKdata(item.InstID)
+			if len(list) == 300 {
+				AnalyKdata[item.InstID] = list
+			}
+		}
+	}
+	okxInfo.AnalyKdata = AnalyKdata
 }
