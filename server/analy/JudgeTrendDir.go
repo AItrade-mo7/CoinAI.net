@@ -1,4 +1,0 @@
-package analy
-
-func JudgeTrendDir() {
-}

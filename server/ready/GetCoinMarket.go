@@ -13,7 +13,8 @@ type TickerResType struct {
 	List        []mOKX.TypeTicker                `json:"List"`        // 列表
 	AnalyWhole  []mOKX.TypeWholeTickerAnaly      `json:"AnalyWhole"`  // 大盘分析结果
 	AnalySingle map[string][]mOKX.AnalySliceType `json:"AnalySingle"` // 单个币种分析结果
-	Unit        string
+	Unit        string                           `json:"Unit"`
+	WholeDir    int
 }
 
 type ReqCoinMarketType struct {
@@ -48,4 +49,6 @@ func GetCoinMarket() {
 	okxInfo.AnalySingle = result.Data.AnalySingle
 
 	okxInfo.Unit = result.Data.Unit
+
+	okxInfo.WholeDir = result.Data.WholeDir
 }

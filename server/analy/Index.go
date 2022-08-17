@@ -18,5 +18,4 @@ func MarketStart() {
 	// 设置 近 8 小时成交量的榜单
 	SetHour8Ticker()
 	// 判断市场大盘
-	JudgeTrendDir()
 }
