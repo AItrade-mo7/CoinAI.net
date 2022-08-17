@@ -15,3 +15,4 @@ var Unit string
 
 // 最近 8 小时的市场
 var Hour8Ticker []mOKX.AnalySliceType
+var Hour8TickerUR []mOKX.AnalySliceType
