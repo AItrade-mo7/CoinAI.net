@@ -1,0 +1,4 @@
+package analy
+
+func SelectInst() {
+}

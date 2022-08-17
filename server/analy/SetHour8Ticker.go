@@ -27,7 +27,4 @@ func SetHour8Ticker() {
 
 	// 成交量排序 前 1/2
 	okxInfo.Hour8Ticker = Filter8Ticker
-
-	// 成交量排序前 1/2  的涨跌幅排序
-	okxInfo.Hour8TickerUR = mOKX.SortAnalySlice_UR(Filter8Ticker)
 }
