@@ -3,11 +3,11 @@ package analy
 import (
 	"fmt"
 
-	"CoinAI.net/server/okxInfo"
+	"github.com/EasyGolang/goTools/mOKX"
 )
 
-func SelectInst() {
-	for key, list := range okxInfo.AnalyKdata {
+func SelectInst(AnalyKdata map[string][]mOKX.TypeKd) {
+	for key, list := range AnalyKdata {
 		fmt.Println(key, len(list))
 	}
 }

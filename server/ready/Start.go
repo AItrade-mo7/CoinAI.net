@@ -87,4 +87,6 @@ func SetMarket() {
 	}
 
 	okxInfo.AnalyKdata = AnalyKdata
+
+	analy.SelectInst(AnalyKdata)
 }
