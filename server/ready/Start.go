@@ -68,19 +68,23 @@ func SetMarket() {
 		return
 	}
 
+	// 获取市场行情
 	GetCoinMarket()
 
-	analy.MarketStart()
+	// 筛选最近币种的信息
+	RecentTickerList := analy.RecentTicker()
 
+	//
 	okxInfo.AnalyKdata = make(map[string][]mOKX.TypeKd)
 	AnalyKdata := make(map[string][]mOKX.TypeKd)
-	if len(okxInfo.Hour8Ticker) > 3 {
-		for _, item := range okxInfo.Hour8Ticker {
+	if len(RecentTickerList) > 3 {
+		for _, item := range RecentTickerList {
 			list := GetCoinAnalyKdata(item.InstID)
 			if len(list) == 300 {
 				AnalyKdata[item.InstID] = list
 			}
 		}
 	}
+
 	okxInfo.AnalyKdata = AnalyKdata
 }

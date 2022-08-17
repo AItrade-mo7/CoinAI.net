@@ -16,10 +16,5 @@ var Unit string
 
 var WholeDir int
 
-/*  分析结果  */
-// 最近 8 小时的市场,成交量排序
-var Hour8Ticker []mOKX.AnalySliceType
-
 // 币种历史数据
-
 var AnalyKdata map[string][]mOKX.TypeKd
