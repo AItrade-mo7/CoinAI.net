@@ -12,9 +12,10 @@ import (
 )
 
 var (
-	Log    *log.Logger // 系统日志& 重大错误或者事件
-	ErrLog *log.Logger // 重大错误或者事件
-	WssLog *log.Logger // 系统日志& 重大错误或者事件
+	Log       *log.Logger // 系统日志& 重大错误或者事件
+	ErrLog    *log.Logger // 重大错误或者事件
+	WssLog    *log.Logger // 系统日志& 重大错误或者事件
+	HunterLog *log.Logger // 系统日志& 重大错误或者事件
 )
 
 func LogInit() {
@@ -39,6 +40,11 @@ func LogInit() {
 	WssLog = mLog.NewLog(mLog.NewLogParam{
 		Path: config.Dir.Log,
 		Name: "Wss",
+	})
+
+	HunterLog = mLog.NewLog(mLog.NewLogParam{
+		Path: config.Dir.Log,
+		Name: "Hunter",
 	})
 
 	// 设定清除log
