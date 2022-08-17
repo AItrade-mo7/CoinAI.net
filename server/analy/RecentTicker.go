@@ -13,26 +13,26 @@ func RecentTicker() (resList []mOKX.AnalySliceType) {
 		return
 	}
 
-	// 将 8 小时切片提取出来，做一个排名
-	Hour8Ticker := []mOKX.AnalySliceType{}
+	// 将 12 小时切片提取出来，做一个排名
+	Hour12Ticker := []mOKX.AnalySliceType{}
 	for _, item := range okxInfo.AnalySingle {
 		for _, Slice := range item {
-			if Slice.DiffHour == 8 {
-				Hour8Ticker = append(Hour8Ticker, Slice)
+			if Slice.DiffHour == 12 {
+				Hour12Ticker = append(Hour12Ticker, Slice)
 			}
 		}
 	}
 	// 按照成交量排序
-	Hour8TickerVolSort := mOKX.SortAnalySlice_Volume(Hour8Ticker)
+	Hour12TickerVolSort := mOKX.SortAnalySlice_Volume(Hour12Ticker)
 	// 前 1/3
-	MaxLen := len(Hour8TickerVolSort) - (len(Hour8TickerVolSort) / 3)
-	Hour8TickerVol := Hour8TickerVolSort[0:MaxLen]
+	MaxLen := len(Hour12TickerVolSort) - (len(Hour12TickerVolSort) / 3)
+	Hour12TickerVol := Hour12TickerVolSort[0:MaxLen]
 
 	// copy 一份
-	Filter8Ticker := make([]mOKX.AnalySliceType, len(Hour8TickerVol))
-	copy(Filter8Ticker, Hour8TickerVol)
+	Filter12Ticker := make([]mOKX.AnalySliceType, len(Hour12TickerVol))
+	copy(Filter12Ticker, Hour12TickerVol)
 
-	// 成交量排序 前 1/3
-	resList = Filter8Ticker
+	// 最近 12 小时 成交量排序 前 1/3
+	resList = Filter12Ticker
 	return
 }
