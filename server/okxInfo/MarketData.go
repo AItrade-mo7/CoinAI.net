@@ -12,3 +12,6 @@ var AnalySingle map[string][]mOKX.AnalySliceType // 单个币种分析合集
 
 // 计价的锚定货币
 var Unit string
+
+// 最近 8 小时的市场
+var Hour8Ticker []mOKX.AnalySliceType

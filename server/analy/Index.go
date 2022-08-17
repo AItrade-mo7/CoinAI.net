@@ -1,9 +1,8 @@
 package analy
 
 import (
-	"fmt"
-
 	"CoinAI.net/server/okxInfo"
+	"github.com/EasyGolang/goTools/mOKX"
 )
 
 func MarketStart() {
@@ -12,18 +11,15 @@ func MarketStart() {
 		return
 	}
 
-	for _, item := range okxInfo.TickerList {
-		fmt.Println("TickerList", item.InstID)
-	}
-
-	for _, item := range okxInfo.AnalyWhole {
-		fmt.Println("AnalyWhole", item.DiffHour, item.DirIndex)
-	}
-
-	for key, item := range okxInfo.AnalySingle {
-		fmt.Println("AnalySingle", key)
+	// 将 8 小时切片提取出来，做一个排名
+	Hour8Ticker := []mOKX.AnalySliceType{}
+	for _, item := range okxInfo.AnalySingle {
 		for _, Slice := range item {
-			fmt.Println("Slice", Slice.InstID, Slice.StartTime, Slice.EndTime)
+			if Slice.DiffHour == 8 {
+				Hour8Ticker = append(Hour8Ticker, Slice)
+			}
 		}
 	}
+	Hour8TickerVol := mOKX.SortAnalySlice_Volume(Hour8Ticker)
+	okxInfo.Hour8Ticker = Hour8TickerVol
 }
