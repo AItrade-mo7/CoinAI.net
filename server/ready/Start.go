@@ -86,4 +86,6 @@ func SetMarket() {
 	}
 
 	analy.SelectInst(AnalyKdata)
+
+	okxInfo.SetHunterInstID("11") // 暂时写死
 }
