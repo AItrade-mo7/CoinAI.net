@@ -18,3 +18,15 @@ var WholeDir int
 
 // 币种历史数据
 var AnalyKdata map[string][]mOKX.TypeKd
+
+// 币种挑选策略
+
+type AnalySelectType struct {
+	InstID     string
+	CcyName    string
+	MaxHLPer   string
+	HLPerAvg   string
+	DiffMaxAvg string
+}
+
+var AnalySelect []AnalySelectType

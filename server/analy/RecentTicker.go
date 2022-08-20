@@ -25,7 +25,7 @@ func RecentTicker() (resList []mOKX.AnalySliceType) {
 	// 按照成交量排序
 	Hour12TickerVolSort := mOKX.SortAnalySlice_Volume(Hour12Ticker)
 	// 前 1/2
-	MaxLen := len(Hour12TickerVolSort) - (len(Hour12TickerVolSort) / 2)
+	MaxLen := len(Hour12TickerVolSort) - (len(Hour12TickerVolSort) / 3)
 	Hour12TickerVol := Hour12TickerVolSort[0:MaxLen]
 
 	// copy 一份

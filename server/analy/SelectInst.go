@@ -1,22 +1,27 @@
 package analy
 
 import (
-	"fmt"
-
+	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 )
 
 func SelectInst(AnalyKdata map[string][]mOKX.TypeKd) {
+	AnalySelect := []okxInfo.AnalySelectType{}
 	for _, list := range AnalyKdata {
 		if len(list) == 300 {
-			SingleAnalyInst(list)
+			result := SingleAnalyInst(list)
+			AnalySelect = append(AnalySelect, result)
 		}
 	}
+
+	mJson.Println(AnalySelect)
 }
 
 // 在这里判断趋势 并挑选币种
-func SingleAnalyInst(list []mOKX.TypeKd) {
+func SingleAnalyInst(list []mOKX.TypeKd) (resData okxInfo.AnalySelectType) {
+	resData = okxInfo.AnalySelectType{}
 	// 截取最近 8 小时振幅 , 15分钟一格， 32 个格子
 	listLen := len(list)
 	HLPerArr := []string{}
@@ -27,7 +32,6 @@ func SingleAnalyInst(list []mOKX.TypeKd) {
 			HLPerArr = append(HLPerArr, item.HLPer)
 		}
 	}
-	fmt.Println("精度", precision)
 	// 平均振幅
 	HLPerAvg := mCount.Average(HLPerArr)
 	// 最大振幅
@@ -37,7 +41,10 @@ func SingleAnalyInst(list []mOKX.TypeKd) {
 			MaxHLPer = item
 		}
 	}
-
-	fmt.Println(list[0].InstID, "平均振幅", mCount.CentRound(HLPerAvg, precision))
-	fmt.Println(list[0].InstID, "最大振幅", MaxHLPer)
+	resData.MaxHLPer = MaxHLPer
+	resData.HLPerAvg = mCount.CentRound(HLPerAvg, precision)
+	resData.DiffMaxAvg = mCount.Sub(MaxHLPer, resData.HLPerAvg)
+	resData.InstID = list[0].InstID
+	resData.CcyName = list[0].CcyName
+	return
 }
