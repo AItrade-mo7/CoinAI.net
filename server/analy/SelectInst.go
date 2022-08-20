@@ -16,6 +16,7 @@ func SelectInst(AnalyKdata map[string][]mOKX.TypeKd) {
 		}
 	}
 
+	// 振幅与平均振幅
 	mJson.Println(AnalySelect)
 }
 
