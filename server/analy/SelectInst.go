@@ -45,6 +45,5 @@ func SingleAnalyInst(list []mOKX.TypeKd) (resData okxInfo.AnalySelectType) {
 	resData.HLPerAvg = mCount.CentRound(HLPerAvg, precision)
 	resData.DiffMaxAvg = mCount.Sub(MaxHLPer, resData.HLPerAvg)
 	resData.InstID = list[0].InstID
-	resData.CcyName = list[0].CcyName
 	return
 }

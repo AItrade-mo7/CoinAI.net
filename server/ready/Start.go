@@ -67,6 +67,8 @@ func SetMarket() {
 	if err != nil {
 		return
 	}
+	// 获取产品信息
+	GetSWAPInst()
 
 	// 获取市场行情
 	GetCoinMarket()
@@ -78,7 +80,19 @@ func SetMarket() {
 	AnalyKdata := make(map[string][]mOKX.TypeKd)
 	if len(RecentTickerList) > 3 {
 		for _, item := range RecentTickerList {
-			list := GetCoinAnalyKdata(item.InstID)
+			// 开始设置 SWAP
+			SwapInst := mOKX.TypeInst{}
+			for _, SWAP := range okxInfo.SWAP_inst {
+				if SWAP.Uly == item.InstID {
+					SwapInst = SWAP
+					break
+				}
+			}
+			if len(SwapInst.InstID) < 3 {
+				continue
+			}
+
+			list := GetCoinAnalyKdata(SwapInst.InstID)
 			if len(list) == 300 {
 				AnalyKdata[item.InstID] = list
 			}

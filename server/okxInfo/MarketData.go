@@ -23,7 +23,6 @@ var AnalyKdata map[string][]mOKX.TypeKd
 
 type AnalySelectType struct {
 	InstID     string
-	CcyName    string
 	MaxHLPer   string
 	HLPerAvg   string
 	DiffMaxAvg string
