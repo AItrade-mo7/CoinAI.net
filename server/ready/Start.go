@@ -93,6 +93,7 @@ func SetMarket() {
 			}
 
 			list := GetCoinAnalyKdata(SwapInst.InstID)
+			fmt.Println(list[0].InstID)
 			if len(list) == 300 {
 				AnalyKdata[item.InstID] = list
 			}
