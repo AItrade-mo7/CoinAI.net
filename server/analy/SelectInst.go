@@ -1,6 +1,8 @@
 package analy
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mJson"
@@ -17,6 +19,7 @@ func SelectInst(AnalyKdata map[string][]mOKX.TypeKd) {
 	}
 
 	// 振幅与平均振幅
+	fmt.Println("振幅与平均振幅")
 	mJson.Println(AnalySelect)
 }
 
