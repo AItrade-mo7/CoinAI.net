@@ -76,6 +76,7 @@ func SetMarket() {
 	// 筛选最近币种的信息
 	RecentTickerList := analy.RecentTicker()
 
+	// 币种历史数据
 	okxInfo.AnalyKdata = make(map[string][]mOKX.TypeKd)
 	AnalyKdata := make(map[string][]mOKX.TypeKd)
 	if len(RecentTickerList) > 3 {
@@ -98,9 +99,9 @@ func SetMarket() {
 			}
 		}
 	}
-
 	okxInfo.AnalyKdata = AnalyKdata
 
+	// 根据 振幅 筛选并排序
 	okxInfo.AnalySelect = []okxInfo.AnalySelectType{}
 	okxInfo.AnalySelect = analy.GetAnalySelect(AnalyKdata)
 
