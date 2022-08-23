@@ -105,7 +105,8 @@ func SetMarket() {
 	okxInfo.HLAnalySelect = []okxInfo.HLAnalySelectType{}
 	okxInfo.HLAnalySelect = analy.HLAnalySelect(AnalyKdata)
 
-	// 根据方向筛选
+	// 根据方向涨跌幅度筛选并排序
+	analy.DirAnalySelect()
 
 	okxInfo.SetHunterInstID("11") // 暂时写死
 }
