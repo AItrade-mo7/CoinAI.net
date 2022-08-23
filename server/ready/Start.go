@@ -99,7 +99,10 @@ func SetMarket() {
 		}
 	}
 
-	analy.SelectInst(AnalyKdata)
+	okxInfo.AnalyKdata = AnalyKdata
+
+	okxInfo.AnalySelect = []okxInfo.AnalySelectType{}
+	okxInfo.AnalySelect = analy.GetAnalySelect(AnalyKdata)
 
 	okxInfo.SetHunterInstID("11") // 暂时写死
 }

@@ -1,15 +1,12 @@
 package analy
 
 import (
-	"fmt"
-
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 )
 
-func SelectInst(AnalyKdata map[string][]mOKX.TypeKd) {
+func GetAnalySelect(AnalyKdata map[string][]mOKX.TypeKd) (resList []okxInfo.AnalySelectType) {
 	AnalySelect := []okxInfo.AnalySelectType{}
 	for _, list := range AnalyKdata {
 		if len(list) == 300 {
@@ -19,8 +16,12 @@ func SelectInst(AnalyKdata map[string][]mOKX.TypeKd) {
 	}
 
 	// 振幅与平均振幅
-	fmt.Println("振幅与平均振幅")
-	mJson.Println(AnalySelect)
+
+	AnalySelect_Sort_MaxHL := Sort_MaxHLPer(AnalySelect)
+
+	resList = AnalySelect_Sort_MaxHL
+
+	return
 }
 
 // 在这里判断趋势 并挑选币种

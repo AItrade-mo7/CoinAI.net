@@ -20,7 +20,6 @@ var WholeDir int
 var AnalyKdata map[string][]mOKX.TypeKd
 
 // 币种挑选策略
-
 type AnalySelectType struct {
 	InstID     string
 	MaxHLPer   string
