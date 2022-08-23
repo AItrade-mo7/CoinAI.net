@@ -6,9 +6,9 @@ import (
 )
 
 // 按照 最大振幅 排序
-func Sort_MaxHLPer(data []okxInfo.AnalySelectType) []okxInfo.AnalySelectType {
+func Sort_MaxHLPer(data []okxInfo.HLAnalySelectType) []okxInfo.HLAnalySelectType {
 	size := len(data)
-	list := make([]okxInfo.AnalySelectType, size)
+	list := make([]okxInfo.HLAnalySelectType, size)
 	copy(list, data)
 
 	var swapped bool
@@ -27,7 +27,7 @@ func Sort_MaxHLPer(data []okxInfo.AnalySelectType) []okxInfo.AnalySelectType {
 		}
 	}
 	// 设置 Idx 并翻转
-	listIDX := []okxInfo.AnalySelectType{}
+	listIDX := []okxInfo.HLAnalySelectType{}
 	j := 0
 	for i := len(list) - 1; i > -1; i-- {
 		Kdata := list[i]

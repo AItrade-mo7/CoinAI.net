@@ -6,8 +6,8 @@ import (
 	"github.com/EasyGolang/goTools/mOKX"
 )
 
-func GetAnalySelect(AnalyKdata map[string][]mOKX.TypeKd) (resList []okxInfo.AnalySelectType) {
-	AnalySelect := []okxInfo.AnalySelectType{}
+func GetHLAnalySelect(AnalyKdata map[string][]mOKX.TypeKd) (resList []okxInfo.HLAnalySelectType) {
+	AnalySelect := []okxInfo.HLAnalySelectType{}
 	for _, list := range AnalyKdata {
 		if len(list) == 300 {
 			result := SingleAnalyInst(list)
@@ -25,8 +25,8 @@ func GetAnalySelect(AnalyKdata map[string][]mOKX.TypeKd) (resList []okxInfo.Anal
 }
 
 // 在这里判断趋势 并挑选币种
-func SingleAnalyInst(list []mOKX.TypeKd) (resData okxInfo.AnalySelectType) {
-	resData = okxInfo.AnalySelectType{}
+func SingleAnalyInst(list []mOKX.TypeKd) (resData okxInfo.HLAnalySelectType) {
+	resData = okxInfo.HLAnalySelectType{}
 	// 截取最近 8 小时振幅 , 15分钟一格， 32 个格子
 	listLen := len(list)
 	HLPerArr := []string{}

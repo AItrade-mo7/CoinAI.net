@@ -102,8 +102,8 @@ func SetMarket() {
 	okxInfo.AnalyKdata = AnalyKdata
 
 	// 根据 振幅 筛选并排序
-	okxInfo.AnalySelect = []okxInfo.AnalySelectType{}
-	okxInfo.AnalySelect = analy.GetAnalySelect(AnalyKdata)
+	okxInfo.HLAnalySelect = []okxInfo.HLAnalySelectType{}
+	okxInfo.HLAnalySelect = analy.GetHLAnalySelect(AnalyKdata)
 
 	okxInfo.SetHunterInstID("11") // 暂时写死
 }
