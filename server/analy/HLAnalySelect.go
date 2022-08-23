@@ -6,7 +6,7 @@ import (
 	"github.com/EasyGolang/goTools/mOKX"
 )
 
-func GetHLAnalySelect(AnalyKdata map[string][]mOKX.TypeKd) (resList []okxInfo.HLAnalySelectType) {
+func HLAnalySelect(AnalyKdata map[string][]mOKX.TypeKd) (resList []okxInfo.HLAnalySelectType) {
 	AnalySelect := []okxInfo.HLAnalySelectType{}
 	for _, list := range AnalyKdata {
 		if len(list) == 300 {

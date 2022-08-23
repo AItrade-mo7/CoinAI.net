@@ -19,7 +19,7 @@ var WholeDir int
 // 币种历史数据
 var AnalyKdata map[string][]mOKX.TypeKd
 
-// 币种挑选策略
+// 振幅筛选
 type HLAnalySelectType struct {
 	InstID     string
 	MaxHLPer   string
