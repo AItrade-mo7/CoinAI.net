@@ -5,7 +5,7 @@ import "github.com/EasyGolang/goTools/mOKX"
 // 15 分钟线
 type KD struct {
 	mOKX.TypeKd // KDData 基础结构
-	MA_26       string
+	MA_24       string
 	EMA_10      string
 	EMA_60      string
 }
