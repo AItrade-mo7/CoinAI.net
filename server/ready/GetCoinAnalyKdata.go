@@ -19,7 +19,7 @@ func GetCoinAnalyKdata(InstID string) (resList []mOKX.TypeKd) {
 
 	resData, err := mFetch.NewHttp(mFetch.HttpOpt{
 		Origin: "https://trade.mo7.cc",
-		Path:   "/CoinMarket/public/GetAnalyKdata",
+		Path:   "/CoinMarket/public/GetKdata",
 		Data: map[string]any{
 			"InstID": InstID,
 		},
