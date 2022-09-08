@@ -23,7 +23,7 @@ func Start() {
 	SetMarket()
 	go mClock.New(mClock.OptType{
 		Func: SetMarket,
-		Spec: "0 1,16,31,46 0/1 * * ?",
+		Spec: "2 0,15,30,45 * * * ? ",
 	})
 }
 
