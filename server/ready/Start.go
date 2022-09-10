@@ -120,6 +120,7 @@ func CheckAccount() (resErr error) {
 		Subject:  "CoinServe 启动成功",
 		Template: tmpl.SysEmail,
 		SendData: tmpl.SysParam{
+			NickName:     okxInfo.UserInfo.NickName,
 			Message:      Message,
 			SysTime:      time.Now(),
 			SecurityCode: okxInfo.UserInfo.SecurityCode,
