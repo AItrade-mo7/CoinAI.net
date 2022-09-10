@@ -13,6 +13,8 @@ import (
 */
 
 func Start() {
+	global.RunLog.Println("======== Hunter =========")
+
 	global.RunLog.Println("加载设置", mJson.Format(okxInfo.HunterRun))
 
 	global.RunLog.Println("设置持仓模式")
