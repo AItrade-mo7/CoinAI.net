@@ -1,11 +1,15 @@
 package ready
 
 import (
+	"bytes"
 	"fmt"
+	"text/template"
+	"time"
 
 	"CoinAI.net/server/analy"
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
+	"CoinAI.net/server/tmpl"
 	"github.com/EasyGolang/goTools/mClock"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -101,6 +105,26 @@ func CheckAccount() (resErr error) {
 		global.LogErr(resErr)
 		return
 	}
+
+	Body := new(bytes.Buffer)
+	Tmpl := template.Must(template.New("").Parse(tmpl.StartSlice))
+	Tmpl.Execute(Body, tmpl.StartSliceParam{
+		CoinServeID: okxInfo.CoinServe.CoinServeID,
+	})
+	Message := Body.String()
+
+	go global.Email(global.EmailOpt{
+		To: []string{
+			okxInfo.UserInfo.Email,
+		},
+		Subject:  "CoinServe 启动成功",
+		Template: tmpl.SysEmail,
+		SendData: tmpl.SysParam{
+			Message:      Message,
+			SysTime:      time.Now(),
+			SecurityCode: okxInfo.UserInfo.SecurityCode,
+		},
+	}).Send()
 
 	return
 }
