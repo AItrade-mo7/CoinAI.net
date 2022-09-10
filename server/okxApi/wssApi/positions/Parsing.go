@@ -30,15 +30,9 @@ func Write_LoginInfo(cont any) (resData LoginWrite, resErr error) {
 		resErr = fmt.Errorf("positions.Write_LoginInfo 长度不足")
 		return
 	}
-	loginInfo.APIKey = mStr.Join(
-		loginInfo.APIKey[0:4], "****", loginInfo.APIKey[10:14],
-	)
-	loginInfo.Sign = mStr.Join(
-		loginInfo.Sign[0:4], "****", loginInfo.Sign[10:14],
-	)
-	loginInfo.Passphrase = mStr.Join(
-		"******",
-	)
+	loginInfo.APIKey = mStr.Fuzzy(loginInfo.APIKey)
+	loginInfo.Sign = mStr.Fuzzy(loginInfo.Sign)
+	loginInfo.Passphrase = "******"
 
 	loginInfo.Timestamp = mTime.UnixFormat(mCount.Mul(loginInfo.Timestamp, "1000"))
 

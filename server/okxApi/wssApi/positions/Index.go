@@ -2,6 +2,7 @@ package positions
 
 import (
 	"strings"
+	"time"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
@@ -48,6 +49,7 @@ func Start() {
 			isLogin := Read_Login(msg)
 			if !isLogin {
 				wss.Close("登录失败")
+				time.Sleep(time.Second)
 				return
 			}
 		}
