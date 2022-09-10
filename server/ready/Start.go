@@ -22,17 +22,19 @@ func Start() {
 }
 
 func SetMarket() {
+	global.RunLog.Println("============= 开始执行周期任务 ==============")
+
 	err := CheckAccount()
 	if err != nil {
 		return
 	}
-	// 获取产品信息
+	global.RunLog.Println("获取 SWAP 品信息")
 	GetSWAPInst()
 
-	// 获取市场行情
+	global.RunLog.Println("获取市场行情")
 	GetCoinMarket()
 
-	// 获取币种历史数据
+	global.RunLog.Println("获取币种历史数据")
 	okxInfo.AnalyKdata_SPOT = make(map[string][]mOKX.TypeKd)
 	okxInfo.AnalyKdata_SWAP = make(map[string][]mOKX.TypeKd)
 	AnalyKdata_SPOT := make(map[string][]mOKX.TypeKd)
@@ -53,8 +55,6 @@ func SetMarket() {
 		SPOT_list := GetCoinAnalyKdata(item.InstID)
 		SWAP_list := GetCoinAnalyKdata(SwapInst.InstID)
 
-		fmt.Println(len(SWAP_list))
-
 		if len(SPOT_list) == 300 {
 			AnalyKdata_SPOT[SwapInst.InstID] = SPOT_list
 		}
@@ -66,13 +66,16 @@ func SetMarket() {
 	okxInfo.AnalyKdata_SPOT = AnalyKdata_SPOT
 	okxInfo.AnalyKdata_SWAP = AnalyKdata_SWAP
 
-	// 开始获取历史分析结果
+	global.RunLog.Println("开始获取历史分析结果列表")
 	GetAnalyList()
 }
 
 // 用户信息检查
 func CheckAccount() (resErr error) {
+	global.RunLog.Println("开始获取用户数据")
 	GetUserInfo()
+
+	global.RunLog.Println("开始获取 OkxKey 数据")
 	GetOkxKey()
 
 	resErr = nil
@@ -101,6 +104,8 @@ func CheckAccount() (resErr error) {
 		return
 	}
 
+	global.RunLog.Println("发送 启动邮件 邮件")
+
 	Body := new(bytes.Buffer)
 	Tmpl := template.Must(template.New("").Parse(tmpl.StartSlice))
 	Tmpl.Execute(Body, tmpl.StartSliceParam{
@@ -108,7 +113,7 @@ func CheckAccount() (resErr error) {
 	})
 	Message := Body.String()
 
-	go global.Email(global.EmailOpt{
+	global.Email(global.EmailOpt{
 		To: []string{
 			okxInfo.UserInfo.Email,
 		},
