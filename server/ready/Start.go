@@ -64,11 +64,8 @@ func SetMarket() {
 	okxInfo.AnalyKdata_SPOT = AnalyKdata_SPOT
 	okxInfo.AnalyKdata_SWAP = AnalyKdata_SWAP
 
+	// 开始获取历史分析结果
 	GetAnalyList()
-
-	for _, item := range okxInfo.AnalyList {
-		fmt.Println(item.CreateTime)
-	}
 }
 
 // 用户信息检查
