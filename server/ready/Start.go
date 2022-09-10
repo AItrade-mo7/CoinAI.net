@@ -6,12 +6,10 @@ import (
 	"text/template"
 	"time"
 
-	"CoinAI.net/server/analy"
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/tmpl"
 	"github.com/EasyGolang/goTools/mClock"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 )
 
@@ -34,51 +32,43 @@ func SetMarket() {
 	// 获取市场行情
 	GetCoinMarket()
 
-	// 筛选最近币种的信息
-	RecentTickerList := analy.RecentTicker()
-
-	// 币种历史数据
-	okxInfo.AnalyKdata = make(map[string][]mOKX.TypeKd)
-	AnalyKdata := make(map[string][]mOKX.TypeKd)
-	if len(RecentTickerList) > 3 {
-		for _, item := range RecentTickerList {
-			// 开始设置 SWAP
-			SwapInst := mOKX.TypeInst{}
-			for _, SWAP := range okxInfo.SWAP_inst {
-				if SWAP.Uly == item.InstID {
-					SwapInst = SWAP
-					break
-				}
-			}
-			if len(SwapInst.InstID) < 3 {
-				continue
-			}
-
-			list := GetCoinAnalyKdata(SwapInst.InstID)
-			if len(list) == 300 {
-				AnalyKdata[SwapInst.InstID] = list
+	// 获取币种历史数据
+	okxInfo.AnalyKdata_SPOT = make(map[string][]mOKX.TypeKd)
+	okxInfo.AnalyKdata_SWAP = make(map[string][]mOKX.TypeKd)
+	AnalyKdata_SPOT := make(map[string][]mOKX.TypeKd)
+	AnalyKdata_SWAP := make(map[string][]mOKX.TypeKd)
+	for _, item := range okxInfo.MarketTicker.List {
+		// 开始设置 SWAP
+		SwapInst := mOKX.TypeInst{}
+		for _, SWAP := range okxInfo.SWAP_inst {
+			if SWAP.Uly == item.InstID {
+				SwapInst = SWAP
+				break
 			}
 		}
+		if len(SwapInst.InstID) < 3 {
+			continue
+		}
+
+		SPOT_list := GetCoinAnalyKdata(item.InstID)
+		SWAP_list := GetCoinAnalyKdata(SwapInst.InstID)
+
+		if len(SPOT_list) == 300 {
+			AnalyKdata_SPOT[SwapInst.InstID] = SPOT_list
+		}
+		if len(SWAP_list) == 300 {
+			AnalyKdata_SWAP[SwapInst.InstID] = SWAP_list
+		}
 	}
-	okxInfo.AnalyKdata = AnalyKdata
 
-	// 根据 振幅 筛选并排序
-	okxInfo.HLAnalySelect = []okxInfo.HLAnalySelectType{}
-	okxInfo.HLAnalySelect = analy.HLAnalySelect(AnalyKdata)
-
-	// 根据方向涨跌幅度筛选并排序
-	analy.DirAnalySelect()
-
-	okxInfo.SetHunterInstID("11") // 暂时写死
+	okxInfo.AnalyKdata_SPOT = AnalyKdata_SPOT
+	okxInfo.AnalyKdata_SWAP = AnalyKdata_SWAP
 }
 
 // 用户信息检查
 func CheckAccount() (resErr error) {
 	GetUserInfo()
 	GetOkxKey()
-
-	mJson.Println(okxInfo.CoinServe)
-	mJson.Println(okxInfo.UserInfo)
 
 	resErr = nil
 	if len(okxInfo.CoinServe.OkxKeyID) < 10 {
