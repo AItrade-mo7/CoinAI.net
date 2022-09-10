@@ -20,6 +20,10 @@ type MarketTickerTable struct {
 
 var MarketTicker MarketTickerTable
 
+// 按照时间倒序
+var AnalyList []MarketTickerTable
+
 /* 币种历史数据 */
+// 按照时间正序
 var AnalyKdata_SPOT map[string][]mOKX.TypeKd
 var AnalyKdata_SWAP map[string][]mOKX.TypeKd
