@@ -2,6 +2,7 @@ package positions
 
 import (
 	"strings"
+	"time"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
@@ -34,7 +35,8 @@ func Start() {
 			}
 
 			if lType != "Close" {
-				global.WssLog.Println("positions.Start", lType, "链接关闭，重启", cont)
+				global.WssLog.Println("positions.Start", lType, cont, "链接关闭,执行重启")
+				time.Sleep(time.Second * 1)
 				Start()
 				return
 			}
