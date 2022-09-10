@@ -1,4 +1,4 @@
-package dbData
+package okxInfo
 
 import "CoinAI.net/server/global/dbType"
 

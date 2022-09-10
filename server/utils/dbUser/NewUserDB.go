@@ -5,8 +5,8 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/global/dbData"
 	"CoinAI.net/server/global/dbType"
+	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mMongo"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -62,7 +62,7 @@ func NewUserDB(opt NewUserOpt) (resData *AccountType, resErr error) {
 	resData.AccountData = result
 
 	if len(result.UserID) > 6 {
-		dbData.UserInfo = result
+		okxInfo.UserInfo = result
 	}
 
 	return

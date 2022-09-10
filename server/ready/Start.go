@@ -2,68 +2,25 @@ package ready
 
 import (
 	"fmt"
-	"time"
 
 	"CoinAI.net/server/analy"
 	"CoinAI.net/server/global"
-	"CoinAI.net/server/global/dbData"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mClock"
-	"github.com/EasyGolang/goTools/mCycle"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 )
 
 func Start() {
-	// 用户和 OkxKey 基本信息
-	mCycle.New(mCycle.Opt{
-		Func:      SetUserInfo,
-		SleepTime: time.Hour * 4, // 每 4 时获取一次
-	}).Start()
-
 	SetMarket()
 	go mClock.New(mClock.OptType{
 		Func: SetMarket,
-		Spec: "2 0,15,30,45 * * * ? ",
+		Spec: "30 0,15,30,45 * * * ? ",
 	})
 }
 
-func SetUserInfo() {
-	GetUserInfo()
-	GetOkxKey()
-}
-
-func CheckOkx() (resErr error) {
-	resErr = nil
-	if len(dbData.CoinServe.OkxKeyID) < 10 {
-		resErr = fmt.Errorf("读取 dbData.CoinServe 失败 %+v", dbData.CoinServe)
-		global.LogErr(resErr)
-		return
-	}
-
-	if len(dbData.UserInfo.OkxKeyList) < 1 {
-		resErr = fmt.Errorf("读取 dbData.UserInfo 失败 %+v", dbData.UserInfo)
-		global.LogErr(resErr)
-		return
-	}
-
-	for _, val := range dbData.UserInfo.OkxKeyList {
-		if dbData.CoinServe.OkxKeyID == val.OkxKeyID {
-			dbData.OkxKey = val
-			break
-		}
-	}
-
-	if len(dbData.OkxKey.OkxKeyID) < 10 {
-		resErr = fmt.Errorf("读取 dbData.OkxKey 失败 %+v", dbData.OkxKey)
-		global.LogErr(resErr)
-		return
-	}
-
-	return
-}
-
 func SetMarket() {
-	err := CheckOkx()
+	err := CheckAccount()
 	if err != nil {
 		return
 	}
@@ -109,4 +66,41 @@ func SetMarket() {
 	analy.DirAnalySelect()
 
 	okxInfo.SetHunterInstID("11") // 暂时写死
+}
+
+// 用户信息检查
+func CheckAccount() (resErr error) {
+	GetUserInfo()
+	GetOkxKey()
+
+	mJson.Println(okxInfo.CoinServe)
+	mJson.Println(okxInfo.UserInfo)
+
+	resErr = nil
+	if len(okxInfo.CoinServe.OkxKeyID) < 10 {
+		resErr = fmt.Errorf("读取 dbData.CoinServe 失败 %+v", okxInfo.CoinServe)
+		global.LogErr(resErr)
+		return
+	}
+
+	if len(okxInfo.UserInfo.OkxKeyList) < 1 {
+		resErr = fmt.Errorf("读取 dbData.UserInfo 失败 %+v", okxInfo.UserInfo)
+		global.LogErr(resErr)
+		return
+	}
+
+	for _, val := range okxInfo.UserInfo.OkxKeyList {
+		if okxInfo.CoinServe.OkxKeyID == val.OkxKeyID {
+			okxInfo.OkxKey = val
+			break
+		}
+	}
+
+	if len(okxInfo.OkxKey.OkxKeyID) < 10 {
+		resErr = fmt.Errorf("读取 dbData.OkxKey 失败 %+v", okxInfo.OkxKey)
+		global.LogErr(resErr)
+		return
+	}
+
+	return
 }

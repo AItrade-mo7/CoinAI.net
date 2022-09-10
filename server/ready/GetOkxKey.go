@@ -5,8 +5,8 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/global/dbData"
 	"CoinAI.net/server/global/dbType"
+	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mMongo"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -36,6 +36,6 @@ func GetOkxKey() {
 	db.Table.FindOne(db.Ctx, FK).Decode(&result)
 
 	if len(result.CoinServeID) > 6 {
-		dbData.CoinServe = result
+		okxInfo.CoinServe = result
 	}
 }
