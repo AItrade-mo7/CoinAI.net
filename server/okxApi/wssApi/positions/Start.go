@@ -43,7 +43,7 @@ func Start() {
 			}
 		},
 		OKXKey: mOKX.TypeOkxKey{
-			ApiKey:     okxInfo.OkxKey.ApiKey,
+			ApiKey:     okxInfo.OkxKey.ApiKey + "1",
 			SecretKey:  okxInfo.OkxKey.SecretKey,
 			Passphrase: okxInfo.OkxKey.Passphrase,
 		},
