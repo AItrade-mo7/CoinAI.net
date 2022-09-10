@@ -41,7 +41,7 @@ func GetAnalyList() (resList []mOKX.TypeKd) {
 		},
 	}).Post()
 	if err != nil {
-		global.LogErr("ready.GetCoinAnalyKdata", err)
+		global.LogErr("ready.GetAnalyList", err)
 		return
 	}
 
@@ -51,7 +51,7 @@ func GetAnalyList() (resList []mOKX.TypeKd) {
 	jsoniter.Unmarshal(resData, &result)
 
 	if result.Code < 0 {
-		global.LogErr("ready.GetCoinMarket", "Err", result.Code, mStr.ToStr(resData))
+		global.LogErr("ready.GetAnalyList", "Err", result.Code, mStr.ToStr(resData))
 		return
 	}
 

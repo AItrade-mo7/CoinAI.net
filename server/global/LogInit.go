@@ -26,6 +26,12 @@ func LogInit() {
 		os.Mkdir(config.Dir.Log, 0o777)
 	}
 
+	isJsonDataPath := mPath.Exists(config.Dir.JsonData)
+	if !isJsonDataPath {
+		// 不存在则创建 jsonData 目录
+		os.MkdirAll(config.Dir.JsonData, 0o777)
+	}
+
 	// 创建一个log
 	Log = mLog.NewLog(mLog.NewLogParam{
 		Path: config.Dir.Log,

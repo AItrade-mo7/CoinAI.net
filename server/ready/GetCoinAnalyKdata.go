@@ -33,7 +33,7 @@ func GetCoinAnalyKdata(InstID string) (resList []mOKX.TypeKd) {
 	jsoniter.Unmarshal(resData, &result)
 
 	if result.Code < 0 {
-		global.LogErr("ready.GetCoinMarket", "Err", result.Code, mStr.ToStr(resData))
+		global.LogErr("ready.GetCoinAnalyKdata", "Err", result.Code, mStr.ToStr(resData))
 		return
 	}
 

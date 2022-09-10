@@ -24,7 +24,7 @@ func GetSWAPInst() {
 		},
 	}).Post()
 	if err != nil {
-		global.LogErr("ready.GetCoinMarket", err)
+		global.LogErr("ready.GetSWAPInst", err)
 		return
 	}
 
@@ -32,7 +32,7 @@ func GetSWAPInst() {
 	jsoniter.Unmarshal(resData, &result)
 
 	if result.Code < 0 {
-		global.LogErr("ready.GetCoinMarket", "Err", result.Code, mStr.ToStr(resData))
+		global.LogErr("ready.GetSWAPInst", "Err", result.Code, mStr.ToStr(resData))
 		return
 	}
 
