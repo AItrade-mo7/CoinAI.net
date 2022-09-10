@@ -17,7 +17,7 @@ func Start() {
 	SetMarket()
 	go mClock.New(mClock.OptType{
 		Func: SetMarket,
-		Spec: "30 0,15,30,45 * * * ? ",
+		Spec: "40 0,15,30,45 * * * ? ",
 	})
 }
 
@@ -52,6 +52,8 @@ func SetMarket() {
 
 		SPOT_list := GetCoinAnalyKdata(item.InstID)
 		SWAP_list := GetCoinAnalyKdata(SwapInst.InstID)
+
+		fmt.Println(len(SWAP_list))
 
 		if len(SPOT_list) == 300 {
 			AnalyKdata_SPOT[SwapInst.InstID] = SPOT_list

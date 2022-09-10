@@ -2,10 +2,8 @@ package ready
 
 import (
 	"CoinAI.net/server/global"
-	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mFetch"
-	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
@@ -44,8 +42,6 @@ func GetAnalyList() (resList []mOKX.TypeKd) {
 		global.LogErr("ready.GetAnalyList", err)
 		return
 	}
-
-	mFile.Write(config.Dir.JsonData+"/AnalyList.json", mStr.ToStr(resData))
 
 	var result ReqGetAnalyListType
 	jsoniter.Unmarshal(resData, &result)
