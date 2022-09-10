@@ -50,6 +50,8 @@ func Start() {
 			if !isLogin {
 				wss.Close("登录失败")
 				time.Sleep(time.Second)
+				global.WssLog.Println("===============positions.Start  ReStart================")
+				Start()
 				return
 			}
 		}
