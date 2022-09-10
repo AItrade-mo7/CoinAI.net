@@ -2,7 +2,6 @@ package positions
 
 import (
 	"strings"
-	"time"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
@@ -13,6 +12,7 @@ import (
 // 持仓频道
 
 func Start() {
+	global.WssLog.Println("=============== positions.Start ================")
 	wss := mOKX.WssOKX(mOKX.OptWssOKX{
 		FetchType: 1,
 		Event: func(lType string, a any) {
@@ -24,7 +24,7 @@ func Start() {
 
 			if lType == "Write" {
 				loginInfo, err := Write_LoginInfo(a)
-				global.WssLog.Println("positions.Start", lType, err, mStr.ToStr(loginInfo))
+				global.WssLog.Println("positions.Start", lType, err, mStr.ToStr(loginInfo), cont)
 				return
 			}
 
@@ -32,9 +32,15 @@ func Start() {
 				global.WssLog.Println("positions.Start", lType, cont)
 				return
 			}
+
+			if lType != "Close" {
+				global.WssLog.Println("positions.Start", lType, "链接关闭，重启", cont)
+				Start()
+				return
+			}
 		},
 		OKXKey: mOKX.TypeOkxKey{
-			ApiKey:     okxInfo.OkxKey.ApiKey + "x",
+			ApiKey:     okxInfo.OkxKey.ApiKey,
 			SecretKey:  okxInfo.OkxKey.SecretKey,
 			Passphrase: okxInfo.OkxKey.Passphrase,
 		},
@@ -49,9 +55,6 @@ func Start() {
 			isLogin := Read_Login(msg)
 			if !isLogin {
 				wss.Close("登录失败")
-				time.Sleep(time.Second)
-				global.WssLog.Println("===============positions.Start  ReStart================")
-				Start()
 				return
 			}
 		}
