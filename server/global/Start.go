@@ -36,23 +36,5 @@ func Start() {
 		panic(errStr)
 	}
 
-	if len(config.AppEnv.CoinServeID) < 5 {
-		errStr := fmt.Errorf("CoinServeID 读取错误 %+v", config.AppEnv.CoinServeID)
-		LogErr(errStr)
-		panic(errStr)
-	}
-
-	if len(config.AppEnv.UserID) < 5 {
-		errStr := fmt.Errorf("UserID 读取错误 %+v", config.AppEnv.CoinServeID)
-		LogErr(errStr)
-		panic(errStr)
-	}
-
-	if len(config.AppEnv.UserID) < 5 {
-		errStr := fmt.Errorf("UserID 读取错误 %+v", config.AppEnv.CoinServeID)
-		LogErr(errStr)
-		panic(errStr)
-	}
-
 	Log.Println(`系统初始化完成`)
 }

@@ -16,7 +16,6 @@ func GetOutPut() (resData OutPut) {
 	resData = OutPut{}
 	resData.SysTime = mTime.GetUnixInt64()
 	resData.DataSource = "CoinAI.net"
-	resData.CoinServeID = config.AppEnv.CoinServeID
 	resData.UserID = config.AppEnv.UserID
 
 	return

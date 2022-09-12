@@ -28,8 +28,7 @@ func GetOkxKey() {
 	}
 
 	FK := bson.D{{
-		Key:   "CoinServeID",
-		Value: config.AppEnv.CoinServeID,
+		Key: "CoinServeID",
 	}}
 
 	var result dbType.CoinServeTable
