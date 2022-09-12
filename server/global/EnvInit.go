@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	"CoinAI.net/server/global/config"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mPath"
+	"github.com/spf13/viper"
 )
 
 func AppEnvInit() {
@@ -16,5 +18,15 @@ func AppEnvInit() {
 		panic(errStr)
 	}
 
-	config.LoadAppEnv()
+	viper.SetConfigFile(config.File.AppEnv)
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		errStr := fmt.Errorf("AppEnv 读取配置文件出错: %+v", err)
+		LogErr(errStr)
+		panic(errStr)
+	}
+	viper.Unmarshal(&config.AppEnv)
+
+	mJson.Println(config.AppEnv)
 }
