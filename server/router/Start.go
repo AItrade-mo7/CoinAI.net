@@ -57,6 +57,8 @@ func Start() {
 	s_api := app.Group("/CoinAI/sys")
 	s_api.Post("/remove", sys.Remove)
 	s_api.Post("/restart", sys.ReStart)
+	// 认主
+	s_api.Post("/dominate", sys.Dominate)
 
 	// order
 	o_api := app.Group("/CoinAI/Order")
