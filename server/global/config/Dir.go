@@ -15,9 +15,9 @@ type DirType struct {
 var Dir DirType
 
 type FileType struct {
-	AppEnv   string // ./app_env.yaml
-	Restart  string // ./restart.yaml
-	Shutdown string // ./shutdown.yaml
+	AppEnv   string // ./app_env.json
+	Restart  string // ./restart.sh
+	Shutdown string // ./shutdown.sh
 }
 
 var File FileType
@@ -40,7 +40,7 @@ func DirInit() {
 	File.AppEnv = mStr.Join(
 		Dir.App,
 		mStr.ToStr(os.PathSeparator),
-		"app_env.yaml",
+		"app_env.json",
 	)
 
 	File.Restart = mStr.Join(

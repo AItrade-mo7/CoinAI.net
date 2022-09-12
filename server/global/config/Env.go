@@ -6,16 +6,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-var SysEnv struct {
+var SysEnv = struct {
 	MongoAddress  string
 	MongoPassword string
 	MongoUserName string
-}
-
-func LoadSysEnv() {
-	SysEnv.MongoAddress = "trade.mo7.cc:17017"
-	SysEnv.MongoPassword = "asdasd55555"
-	SysEnv.MongoUserName = "mo7"
+}{
+	MongoAddress:  "trade.mo7.cc:17017",
+	MongoPassword: "asdasd55555",
+	MongoUserName: "mo7",
 }
 
 var AppEnv struct {
@@ -23,11 +21,6 @@ var AppEnv struct {
 	UserID      string `json:"UserID"`
 	CoinServeID string `json:"CoinServeID"`
 	RunMod      int    // 0 则为正常模式 ， 1 则为数据模拟模式
-}
-
-var AppInfo struct {
-	Name    string `json:"name"`
-	Version string `json:"version"`
 }
 
 func LoadAppEnv() {
@@ -40,4 +33,9 @@ func LoadAppEnv() {
 		panic(errStr)
 	}
 	viper.Unmarshal(&AppEnv)
+}
+
+var AppInfo struct {
+	Name    string `json:"name"`
+	Version string `json:"version"`
 }

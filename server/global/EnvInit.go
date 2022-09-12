@@ -8,12 +8,10 @@ import (
 )
 
 func AppEnvInit() {
-	config.LoadSysEnv()
-
 	// 检查配置文件在不在
 	isUserEnvPath := mPath.Exists(config.File.AppEnv)
 	if !isUserEnvPath {
-		errStr := fmt.Errorf("没找到 app_env.yaml 配置文件")
+		errStr := fmt.Errorf("没找到 app_env.json 配置文件")
 		LogErr(errStr)
 		panic(errStr)
 	}
