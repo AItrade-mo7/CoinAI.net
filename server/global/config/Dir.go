@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 
+	"github.com/EasyGolang/goTools/mPath"
 	"github.com/EasyGolang/goTools/mStr"
 )
 
@@ -30,12 +31,21 @@ func DirInit() {
 		mStr.ToStr(os.PathSeparator),
 		"logs",
 	)
+	// 检测 logs 目录
+	isLogPath := mPath.Exists(Dir.Log)
+	if !isLogPath {
+		os.MkdirAll(Dir.Log, 0o777)
+	}
 
 	Dir.JsonData = mStr.Join(
 		Dir.App,
 		mStr.ToStr(os.PathSeparator),
 		"jsonData",
 	)
+	isJsonDataPath := mPath.Exists(Dir.JsonData)
+	if !isJsonDataPath {
+		os.MkdirAll(Dir.JsonData, 0o777)
+	}
 
 	File.AppEnv = mStr.Join(
 		Dir.App,
