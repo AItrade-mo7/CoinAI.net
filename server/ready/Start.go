@@ -2,11 +2,11 @@ package ready
 
 import (
 	"bytes"
-	"fmt"
 	"text/template"
 	"time"
 
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/tmpl"
 	"github.com/EasyGolang/goTools/mClock"
@@ -76,40 +76,15 @@ func CheckAccount() (resErr error) {
 	GetUserInfo()
 
 	global.RunLog.Println("开始获取 OkxKey 数据")
-	GetOkxKey()
 
 	resErr = nil
-	if len(okxInfo.CoinServe.OkxKeyID) < 10 {
-		resErr = fmt.Errorf("读取 dbData.CoinServe 失败 %+v", okxInfo.CoinServe)
-		global.LogErr(resErr)
-		return
-	}
-
-	if len(okxInfo.UserInfo.OkxKeyList) < 1 {
-		resErr = fmt.Errorf("读取 dbData.UserInfo 失败 %+v", okxInfo.UserInfo)
-		global.LogErr(resErr)
-		return
-	}
-
-	for _, val := range okxInfo.UserInfo.OkxKeyList {
-		if okxInfo.CoinServe.OkxKeyID == val.OkxKeyID {
-			okxInfo.OkxKey = val
-			break
-		}
-	}
-
-	if len(okxInfo.OkxKey.OkxKeyID) < 10 {
-		resErr = fmt.Errorf("读取 dbData.OkxKey 失败 %+v", okxInfo.OkxKey)
-		global.LogErr(resErr)
-		return
-	}
 
 	global.RunLog.Println("发送 启动邮件 邮件")
 
 	Body := new(bytes.Buffer)
 	Tmpl := template.Must(template.New("").Parse(tmpl.StartSlice))
 	Tmpl.Execute(Body, tmpl.StartSliceParam{
-		CoinServeID: okxInfo.CoinServe.CoinServeID,
+		CoinServeID: config.AppEnv.IP + ":" + config.AppEnv.Port,
 	})
 	Message := Body.String()
 

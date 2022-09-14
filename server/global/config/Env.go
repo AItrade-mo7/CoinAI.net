@@ -11,10 +11,13 @@ var SysEnv = struct {
 }
 
 var AppEnv struct {
-	Port   string `json:"Port"`
-	IP     string `json:"IP"`
-	UserID string `json:"UserID"`
-	RunMod int    // 0 则为正常模式 ， 1 则为数据模拟模式
+	Port       string `json:"Port"`
+	IP         string `json:"IP"`
+	UserID     string `json:"UserID"`
+	ApiKey     string `json:"ApiKey"`
+	SecretKey  string `json:"SecretKey"`
+	Passphrase string `json:"Passphrase"`
+	RunMod     int    // 0 则为正常模式 ， 1 则为数据模拟模式
 }
 
 var AppInfo struct {

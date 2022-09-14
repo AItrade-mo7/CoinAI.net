@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"CoinAI.net/server/global"
-	"CoinAI.net/server/okxInfo"
+	"CoinAI.net/server/global/config"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
@@ -38,9 +38,9 @@ func Start() {
 			}
 		},
 		OKXKey: mOKX.TypeOkxKey{
-			ApiKey:     okxInfo.OkxKey.ApiKey,
-			SecretKey:  okxInfo.OkxKey.SecretKey,
-			Passphrase: okxInfo.OkxKey.Passphrase,
+			ApiKey:     config.AppEnv.ApiKey,
+			SecretKey:  config.AppEnv.SecretKey,
+			Passphrase: config.AppEnv.Passphrase,
 		},
 	})
 
