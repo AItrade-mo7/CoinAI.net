@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"CoinAI.net/server/global/config"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mPath"
 	"github.com/spf13/viper"
 )
@@ -27,6 +26,4 @@ func AppEnvInit() {
 		panic(errStr)
 	}
 	viper.Unmarshal(&config.AppEnv)
-
-	mJson.Println(config.AppEnv)
 }

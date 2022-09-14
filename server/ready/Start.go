@@ -2,6 +2,7 @@ package ready
 
 import (
 	"bytes"
+	"fmt"
 	"text/template"
 	"time"
 
@@ -75,12 +76,13 @@ func CheckAccount() (resErr error) {
 	global.RunLog.Println("开始获取用户数据")
 	GetUserInfo()
 
-	global.RunLog.Println("开始获取 OkxKey 数据")
-
 	resErr = nil
 
-	global.RunLog.Println("发送 启动邮件 邮件")
+	if len(config.AppEnv.ApiKey) < 20 || len(config.AppEnv.SecretKey) < 20 || len(config.AppEnv.Passphrase) < 6 {
+		resErr = fmt.Errorf("缺少 OKX Key")
+	}
 
+	global.RunLog.Println("发送 启动邮件 邮件")
 	Body := new(bytes.Buffer)
 	Tmpl := template.Must(template.New("").Parse(tmpl.StartSlice))
 	Tmpl.Execute(Body, tmpl.StartSliceParam{
