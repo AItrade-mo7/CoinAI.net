@@ -38,7 +38,7 @@ func Start() {
 	app.Use(cors.New())
 	// 限流
 	app.Use(limiter.New(limiter.Config{
-		Max:        100,
+		Max:        200,
 		Expiration: 1 * time.Second,
 	}))
 	// 日志中间件
