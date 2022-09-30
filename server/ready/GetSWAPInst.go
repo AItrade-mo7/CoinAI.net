@@ -17,7 +17,7 @@ type ReqSWAPInstType struct {
 
 func GetSWAPInst() {
 	resData, err := mFetch.NewHttp(mFetch.HttpOpt{
-		Origin: "https://trade.mo7.cc",
+		Origin: "https://trade-api.mo7.cc",
 		Path:   "/CoinMarket/public/Inst",
 		Data: map[string]any{
 			"TypeInst": "SWAP",

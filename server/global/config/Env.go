@@ -5,7 +5,7 @@ var SysEnv = struct {
 	MongoPassword string
 	MongoUserName string
 }{
-	MongoAddress:  "trade.mo7.cc:17017",
+	MongoAddress:  "aws.mo7.cc:17017",
 	MongoPassword: "asdasd55555",
 	MongoUserName: "mo7",
 }

@@ -27,7 +27,7 @@ func GetAnalyList() (resList []mOKX.TypeKd) {
 	resList = []mOKX.TypeKd{}
 
 	resData, err := mFetch.NewHttp(mFetch.HttpOpt{
-		Origin: "https://trade.mo7.cc",
+		Origin: "https://trade-api.mo7.cc",
 		Path:   "/CoinMarket/public/GetAnalyList",
 		Data: map[string]any{
 			"Size":    300,

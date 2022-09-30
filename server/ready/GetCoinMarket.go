@@ -16,7 +16,7 @@ type ReqCoinMarketType struct {
 
 func GetCoinMarket() {
 	resData, err := mFetch.NewHttp(mFetch.HttpOpt{
-		Origin: "https://trade.mo7.cc",
+		Origin: "https://trade-api.mo7.cc",
 		Path:   "/CoinMarket/public/Tickers",
 	}).Post()
 	if err != nil {
