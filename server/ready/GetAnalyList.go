@@ -18,9 +18,9 @@ type PagingType struct {
 }
 
 type ReqGetAnalyListType struct {
-	Code int        `json:"Code"` // 返回码
-	Data PagingType `json:"Data"` // 返回数据
-	Msg  string     `json:"Msg"`  // 描述
+	Code int        `bson:"Code"` // 返回码
+	Data PagingType `bson:"Data"` // 返回数据
+	Msg  string     `bson:"Msg"`  // 描述
 }
 
 func GetAnalyList() (resList []mOKX.TypeKd) {

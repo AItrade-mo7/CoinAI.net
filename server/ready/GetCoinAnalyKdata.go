@@ -9,9 +9,9 @@ import (
 )
 
 type ReqCoinAnalyKdataType struct {
-	Code int           `json:"Code"` // 返回码
-	Data []mOKX.TypeKd `json:"Data"` // 返回数据
-	Msg  string        `json:"Msg"`  // 描述
+	Code int           `bson:"Code"` // 返回码
+	Data []mOKX.TypeKd `bson:"Data"` // 返回数据
+	Msg  string        `bson:"Msg"`  // 描述
 }
 
 func GetCoinAnalyKdata(InstID string) (resList []mOKX.TypeKd) {

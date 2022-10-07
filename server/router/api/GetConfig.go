@@ -16,8 +16,8 @@ func GetConfig(c *fiber.Ctx) error {
 	}).Get()
 
 	var GithubInfo struct {
-		Name    string `json:"name"`
-		Version string `json:"version"`
+		Name    string `bson:"name"`
+		Version string `bson:"version"`
 	}
 	jsoniter.Unmarshal(GithubReqData, &GithubInfo)
 

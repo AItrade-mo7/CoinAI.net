@@ -10,9 +10,9 @@ import (
 )
 
 type ReqSWAPInstType struct {
-	Code int                      `json:"Code"` // 返回码
-	Data map[string]mOKX.TypeInst `json:"Data"` // 返回数据
-	Msg  string                   `json:"Msg"`  // 描述
+	Code int                      `bson:"Code"` // 返回码
+	Data map[string]mOKX.TypeInst `bson:"Data"` // 返回数据
+	Msg  string                   `bson:"Msg"`  // 描述
 }
 
 func GetSWAPInst() {

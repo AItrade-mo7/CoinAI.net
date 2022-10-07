@@ -11,16 +11,16 @@ var SysEnv = struct {
 }
 
 var AppEnv struct {
-	Port       string `json:"Port"`
-	IP         string `json:"IP"`
-	UserID     string `json:"UserID"`
-	ApiKey     string `json:"ApiKey"`
-	SecretKey  string `json:"SecretKey"`
-	Passphrase string `json:"Passphrase"`
+	Port       string `bson:"Port"`
+	IP         string `bson:"IP"`
+	UserID     string `bson:"UserID"`
+	ApiKey     string `bson:"ApiKey"`
+	SecretKey  string `bson:"SecretKey"`
+	Passphrase string `bson:"Passphrase"`
 	RunMod     int    // 0 则为正常模式 ， 1 则为数据模拟模式
 }
 
 var AppInfo struct {
-	Name    string `json:"name"`
-	Version string `json:"version"`
+	Name    string `bson:"name"`
+	Version string `bson:"version"`
 }

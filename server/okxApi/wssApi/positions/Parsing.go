@@ -10,15 +10,15 @@ import (
 )
 
 type OkxWssRes struct {
-	Op   string       `json:"op"`
-	Args []LoginWrite `json:"args"`
+	Op   string       `bson:"op"`
+	Args []LoginWrite `bson:"args"`
 }
 
 type LoginWrite struct {
-	APIKey     string `json:"apiKey"`
-	Passphrase string `json:"passphrase"`
-	Timestamp  string `json:"timestamp"`
-	Sign       string `json:"sign"`
+	APIKey     string `bson:"apiKey"`
+	Passphrase string `bson:"passphrase"`
+	Timestamp  string `bson:"timestamp"`
+	Sign       string `bson:"sign"`
 }
 
 func Write_LoginInfo(cont any) (resData LoginWrite, resErr error) {
@@ -41,9 +41,9 @@ func Write_LoginInfo(cont any) (resData LoginWrite, resErr error) {
 }
 
 type LoginRes struct {
-	Event string `json:"event"`
-	Msg   string `json:"msg"`
-	Code  string `json:"code"`
+	Event string `bson:"event"`
+	Msg   string `bson:"msg"`
+	Code  string `bson:"code"`
 }
 
 func Read_Login(cont []byte) (resData bool) {

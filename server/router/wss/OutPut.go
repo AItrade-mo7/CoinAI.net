@@ -6,10 +6,10 @@ import (
 )
 
 type OutPut struct {
-	SysTime     int64  `json:"SysTime"`     // 系统时间
-	DataSource  string `json:"DataSource"`  // 数据来源
-	CoinServeID string `json:"CoinServeID"` //
-	UserID      string `json:"UserID"`      //
+	SysTime     int64  `bson:"SysTime"`     // 系统时间
+	DataSource  string `bson:"DataSource"`  // 数据来源
+	CoinServeID string `bson:"CoinServeID"` //
+	UserID      string `bson:"UserID"`      //
 }
 
 func GetOutPut() (resData OutPut) {

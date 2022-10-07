@@ -31,8 +31,8 @@ func Auth(msg []byte) mRes.ResType {
 
 func verifyCode(data []byte) mRes.ResType {
 	var Auth struct {
-		Token   string `json:"Token"`
-		Encrypt string `json:"Encrypt"`
+		Token   string `bson:"Token"`
+		Encrypt string `bson:"Encrypt"`
 	}
 	err := jsoniter.Unmarshal(data, &Auth)
 	if err != nil {
