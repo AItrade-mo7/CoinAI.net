@@ -2,6 +2,9 @@ package main
 
 import (
 	_ "embed"
+	"fmt"
+	"net"
+	"strings"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
@@ -20,6 +23,24 @@ func main() {
 	// 数据准备
 	ready.Start()
 
+	ip, err := GetOutBoundIP()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(ip)
+
 	// 启动路由
 	// router.Start()
+}
+
+func GetOutBoundIP() (ip string, err error) {
+	conn, err := net.Dial("udp", "8.8.8.8:53")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+	fmt.Println(localAddr.String())
+	ip = strings.Split(localAddr.String(), ":")[0]
+	return
 }
