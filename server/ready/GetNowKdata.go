@@ -14,7 +14,7 @@ type ReqCoinAnalyKdataType struct {
 	Msg  string        `bson:"Msg"`  // 描述
 }
 
-func GetCoinAnalyKdata(InstID string) (resList []mOKX.TypeKd) {
+func GetNowKdata(InstID string) (resList []mOKX.TypeKd) {
 	resList = []mOKX.TypeKd{}
 
 	resData, err := mFetch.NewHttp(mFetch.HttpOpt{

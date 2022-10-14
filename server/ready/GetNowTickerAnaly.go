@@ -14,10 +14,10 @@ type ReqCoinMarketType struct {
 	Msg  string                    `bson:"Msg"`  // 描述
 }
 
-func GetCoinMarket() {
+func GetNowTickerAnaly() {
 	resData, err := mFetch.NewHttp(mFetch.HttpOpt{
 		Origin: "https://trade-api.mo7.cc",
-		Path:   "/CoinMarket/public/Tickers",
+		Path:   "/CoinMarket/public/GetNowTickerAnaly",
 	}).Post()
 	if err != nil {
 		global.LogErr("ready.GetCoinMarket", err)
