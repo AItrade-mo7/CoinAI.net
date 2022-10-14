@@ -21,10 +21,10 @@ func AppEnvInit() {
 	if len(config.AppEnv.Port) < 1 {
 		config.AppEnv.Port = "9453"
 	}
-	WriteAppEnv()
 
 	CreateReboot()
 	CreateShutdown()
+	WriteAppEnv()
 }
 
 func WriteAppEnv() {
