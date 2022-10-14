@@ -8,6 +8,7 @@ import (
 )
 
 type DirType struct {
+	Home     string // Home 根目录
 	App      string // APP 根目录
 	Log      string // 日志文件目录
 	JsonData string // json 数据存放目录
@@ -17,13 +18,15 @@ var Dir DirType
 
 type FileType struct {
 	AppEnv   string // ./app_env.json
-	Restart  string // ./restart.sh
-	Shutdown string // ./shutdown.sh
+	Reboot   string // ./Reboot.sh
+	Shutdown string // ./Shutdown.sh
 }
 
 var File FileType
 
 func DirInit() {
+	Dir.Home = mPath.HomePath()
+
 	Dir.App, _ = os.Getwd()
 
 	Dir.Log = mStr.Join(
@@ -44,16 +47,16 @@ func DirInit() {
 		"app_env.json",
 	)
 
-	File.Restart = mStr.Join(
+	File.Reboot = mStr.Join(
 		Dir.App,
 		mStr.ToStr(os.PathSeparator),
-		"restart.sh",
+		"Reboot.sh",
 	)
 
 	File.Shutdown = mStr.Join(
 		Dir.App,
 		mStr.ToStr(os.PathSeparator),
-		"shutdown.sh",
+		"Shutdown.sh",
 	)
 
 	// 检测 logs 目录
