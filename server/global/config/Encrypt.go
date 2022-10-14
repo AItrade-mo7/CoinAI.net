@@ -28,5 +28,6 @@ func ClientEncrypt(msg string) string {
 	now := time.Now().Unix() / 30
 	return mEncrypt.Sha256(
 		mStr.Join(msg, "mo7", now),
-		SecretKey)
+		SecretKey,
+	)
 }

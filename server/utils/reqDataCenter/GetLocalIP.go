@@ -1,9 +1,6 @@
-package ready
+package reqDataCenter
 
 import (
-	"fmt"
-
-	"CoinAI.net/server/utils/reqDataCenter"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -15,8 +12,8 @@ type PingDataType struct {
 	Msg string `json:"Msg"`
 }
 
-func GetIP() {
-	resData, _ := reqDataCenter.NewRest(reqDataCenter.RestOpt{
+func GetLocalIP() string {
+	resData, _ := NewRest(RestOpt{
 		Origin: "https://trade-api.mo7.cc",
 		Path:   "/ping",
 		Method: "GET",
@@ -25,7 +22,5 @@ func GetIP() {
 	var PingData PingDataType
 	jsoniter.Unmarshal(resData, &PingData)
 
-	LocalIP := PingData.Data.IP
-
-	fmt.Println(LocalIP)
+	return PingData.Data.IP
 }

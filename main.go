@@ -20,7 +20,6 @@ func main() {
 	// 数据准备
 	ready.Start()
 
-	ready.GetIP()
 	// 启动路由
 	// router.Start()
 }
