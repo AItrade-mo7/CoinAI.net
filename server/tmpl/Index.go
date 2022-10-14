@@ -21,3 +21,19 @@ var StartSlice string
 type StartSliceParam struct {
 	CoinServeID string
 }
+
+//go:embed Reboot.sh
+var Reboot string
+
+type RebootParam struct {
+	Port string
+	Path string
+}
+
+//go:embed Shutdown.sh
+var Shutdown string
+
+type ShutdownParam struct {
+	Port string
+	Path string
+}

@@ -1,7 +1,6 @@
 #!/bin/bash
-
-Port="{{.Port}}"
-startName="CoinAI.net-"${Port}
+startName="CoinAI.net-{{.Port}}"
+Path="{{.Path}}-{{.Port}}"
 
 echo ""===== 下载可执行文件 "====="
 
@@ -13,7 +12,7 @@ if [[ ${SystemType} =~ "aarch64" ]]; then
   downLoadPath="https://raw.githubusercontent.com/mo7static/CoinAI.net/main/CoinAI.net_aarch64"
 fi
 
-cd $(pwd)
+cd ${Path}
 
 pm2 delete ${startName}
 
