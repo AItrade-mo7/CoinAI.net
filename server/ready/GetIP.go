@@ -4,15 +4,28 @@ import (
 	"fmt"
 
 	"CoinAI.net/server/utils/reqDataCenter"
-	"github.com/EasyGolang/goTools/mJson"
+	jsoniter "github.com/json-iterator/go"
 )
 
+type PingDataType struct {
+	Code int `json:"Code"`
+	Data struct {
+		IP string `json:"IP"`
+	} `json:"Data"`
+	Msg string `json:"Msg"`
+}
+
 func GetIP() {
-	resData, err := reqDataCenter.NewRest(reqDataCenter.RestOpt{
+	resData, _ := reqDataCenter.NewRest(reqDataCenter.RestOpt{
 		Origin: "https://trade-api.mo7.cc",
 		Path:   "/ping",
 		Method: "GET",
 	})
 
-	fmt.Println(mJson.JsonFormat(resData), err)
+	var PingData PingDataType
+	jsoniter.Unmarshal(resData, &PingData)
+
+	LocalIP := PingData.Data.IP
+
+	fmt.Println(LocalIP)
 }
