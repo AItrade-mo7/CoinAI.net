@@ -3,8 +3,8 @@ package global
 import (
 	"CoinAI.net/server/global/config"
 	"github.com/EasyGolang/goTools/mFile"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mPath"
-	"github.com/EasyGolang/goTools/mStr"
 	"github.com/spf13/viper"
 )
 
@@ -31,5 +31,5 @@ func AppEnvInit() {
 
 func WriteAppEnv() {
 	// 如果不存在 app_env.json 则创建写入
-	mFile.Write(config.File.AppEnv, mStr.ToStr(config.AppEnv))
+	mFile.Write(config.File.AppEnv, mJson.ToStr(config.AppEnv))
 }

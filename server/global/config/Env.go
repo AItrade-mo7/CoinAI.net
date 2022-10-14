@@ -16,14 +16,15 @@ var SysEnv = struct {
 }
 
 type ApiKeyList struct {
+	Name       string `bson:"Name"`
 	ApiKey     string `bson:"ApiKey"`
 	SecretKey  string `bson:"SecretKey"`
 	Passphrase string `bson:"Passphrase"`
 }
 
 var AppEnv struct {
-	Port       string     `bson:"Port"`
-	IP         string     `bson:"IP"`
-	UserID     string     `bson:"UserID"`
-	ApiKeyList ApiKeyList `bson:"ApiKeyList"`
+	Port       string       `bson:"Port"`
+	IP         string       `bson:"IP"`
+	UserID     string       `bson:"UserID"`
+	ApiKeyList []ApiKeyList `bson:"ApiKeyList"`
 }
