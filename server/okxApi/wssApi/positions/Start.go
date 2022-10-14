@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"CoinAI.net/server/global"
-	"CoinAI.net/server/global/config"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
@@ -37,11 +36,11 @@ func Start() {
 				return
 			}
 		},
-		OKXKey: mOKX.TypeOkxKey{
-			ApiKey:     config.AppEnv.ApiKey,
-			SecretKey:  config.AppEnv.SecretKey,
-			Passphrase: config.AppEnv.Passphrase,
-		},
+		// OKXKey: mOKX.TypeOkxKey{
+		// 	ApiKey:     config.AppEnv.ApiKey,
+		// 	SecretKey:  config.AppEnv.SecretKey,
+		// 	Passphrase: config.AppEnv.Passphrase,
+		// },
 	})
 
 	Wss.Read(func(msg []byte) {

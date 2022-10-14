@@ -1,5 +1,10 @@
 package config
 
+var AppInfo struct {
+	Name    string `bson:"name"`
+	Version string `bson:"version"`
+}
+
 var SysEnv = struct {
 	MongoAddress  string
 	MongoPassword string
@@ -10,17 +15,15 @@ var SysEnv = struct {
 	MongoUserName: "mo7",
 }
 
-var AppEnv struct {
-	Port       string `bson:"Port"`
-	IP         string `bson:"IP"`
-	UserID     string `bson:"UserID"`
+type ApiKeyList struct {
 	ApiKey     string `bson:"ApiKey"`
 	SecretKey  string `bson:"SecretKey"`
 	Passphrase string `bson:"Passphrase"`
-	RunMod     int    // 0 则为正常模式 ， 1 则为数据模拟模式
 }
 
-var AppInfo struct {
-	Name    string `bson:"name"`
-	Version string `bson:"version"`
+var AppEnv struct {
+	Port       string     `bson:"Port"`
+	IP         string     `bson:"IP"`
+	UserID     string     `bson:"UserID"`
+	ApiKeyList ApiKeyList `bson:"ApiKeyList"`
 }

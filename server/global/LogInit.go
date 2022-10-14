@@ -10,10 +10,10 @@ import (
 )
 
 var (
-	Log    *log.Logger // 系统日志& 重大错误或者事件
+	Log    *log.Logger // 系统日志
 	ErrLog *log.Logger // 重大错误或者事件
-	WssLog *log.Logger // 系统日志& 重大错误或者事件
-	RunLog *log.Logger // 核心交易程序
+	WssLog *log.Logger // Wss 数据
+	RunLog *log.Logger // 运行过程
 )
 
 func LogInit() {

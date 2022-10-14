@@ -2,7 +2,6 @@ package ready
 
 import (
 	"bytes"
-	"fmt"
 	"text/template"
 	"time"
 
@@ -77,10 +76,6 @@ func CheckAccount() (resErr error) {
 	GetUserInfo()
 
 	resErr = nil
-
-	if len(config.AppEnv.ApiKey) < 20 || len(config.AppEnv.SecretKey) < 20 || len(config.AppEnv.Passphrase) < 6 {
-		resErr = fmt.Errorf("缺少 OKX Key")
-	}
 
 	global.RunLog.Println("发送 启动邮件 邮件")
 	Body := new(bytes.Buffer)
