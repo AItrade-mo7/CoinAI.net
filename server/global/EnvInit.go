@@ -5,11 +5,11 @@ import (
 
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/utils/reqDataCenter"
+	"github.com/EasyGolang/goTools/mEncrypt"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mPath"
-	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mStruct"
 	jsoniter "github.com/json-iterator/go"
 	"go.mongodb.org/mongo-driver/bson"
@@ -32,7 +32,7 @@ func AppEnvInit() {
 	}
 
 	if len(config.AppEnv.ServeID) < 1 {
-		config.AppEnv.ServeID = mStr.Join(config.AppEnv.IP, ":", config.AppEnv.Port)
+		config.AppEnv.ServeID = mEncrypt.GetUUID()
 	}
 
 	if len(config.AppEnv.Name) < 1 {
