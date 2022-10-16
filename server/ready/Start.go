@@ -1,6 +1,9 @@
 package ready
 
-import "github.com/EasyGolang/goTools/mClock"
+import (
+	"CoinAI.net/server/global"
+	"github.com/EasyGolang/goTools/mClock"
+)
 
 func Start() {
 	//
@@ -16,4 +19,5 @@ func Start() {
 */
 
 func GetAnalyData() {
+	global.RunLog.Println("拉取一次 Analy 接口")
 }
