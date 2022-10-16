@@ -41,8 +41,6 @@ func AppEnvInit() {
 	config.AppEnv.Version = config.AppInfo.Version
 
 	WriteAppEnv()
-
-	Log.Println(`第二次读取文件`, mJson.Format(config.AppEnv))
 }
 
 // 写入 config.AppEnv
@@ -84,5 +82,5 @@ func WriteAppEnv() {
 	if err != nil {
 		LogErr("config.AppEnv 数据更插失败", err)
 	}
-	LogErr("config.AppEnv 已更新至数据库", mJson.ToStr(config.AppEnv))
+	RunLog.Println("config.AppEnv 已更新至数据库", mJson.Format(config.AppEnv))
 }

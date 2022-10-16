@@ -5,7 +5,6 @@ import (
 
 	"CoinAI.net/server/global/config"
 	"github.com/EasyGolang/goTools/mCycle"
-	"github.com/EasyGolang/goTools/mJson"
 )
 
 func Start() {
@@ -20,6 +19,4 @@ func Start() {
 
 	// 加载App启动配置文件
 	AppEnvInit()
-
-	Log.Println(`系统初始化完成`, mJson.Format(config.AppEnv))
 }

@@ -19,19 +19,19 @@ func Order(opt OrderParam) {
 	// Side 参数判断
 	if opt.Side == "buy" || opt.Side == "sell" {
 	} else {
-		global.ErrLog.Println("order.Order opt.Side 值不正确", opt.Side)
+		global.LogErr("order.Order opt.Side 值不正确", opt.Side)
 		return
 	}
 	// 委托数量判断
 	Sz := mCount.Add(opt.Sz, "0")
 	if mCount.Le(Sz, "0") < 1 {
-		global.ErrLog.Println("order.Order opt.Sz 值不正确", opt.Sz)
+		global.LogErr("order.Order opt.Sz 值不正确", opt.Sz)
 		return
 	}
 	// 委托价格判断
 	Px := mCount.Add(opt.Px, "0")
 	if mCount.Le(Px, "0") < 1 {
-		global.ErrLog.Println("order.Order opt.Px 值不正确", opt.Px)
+		global.LogErr("order.Order opt.Px 值不正确", opt.Px)
 		return
 	}
 
