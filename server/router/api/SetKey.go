@@ -8,7 +8,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func GetConfig(c *fiber.Ctx) error {
+func SetKey(c *fiber.Ctx) error {
 	// 在这里请求数据
 	GithubReqData, _ := mFetch.NewHttp(mFetch.HttpOpt{
 		Origin: "https://raw.githubusercontent.com",
