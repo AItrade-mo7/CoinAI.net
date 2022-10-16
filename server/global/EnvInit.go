@@ -16,7 +16,7 @@ func AppEnvInit() {
 	viper.Unmarshal(&config.AppEnv)
 
 	if len(config.AppEnv.Port) < 1 {
-		config.AppEnv.Port = "9453"
+		config.AppEnv.Port = "9000"
 	}
 	if len(config.AppEnv.IP) < 1 {
 		config.AppEnv.IP = reqDataCenter.GetLocalIP()
