@@ -26,8 +26,10 @@ func AppEnvInit() {
 		config.AppEnv.IP = reqDataCenter.GetLocalIP()
 	}
 
+	if len(config.AppEnv.Name) < 1 {
+		config.AppEnv.Name = config.AppInfo.Name
+	}
 	config.AppEnv.Version = config.AppInfo.Version
-	config.AppEnv.Name = config.AppInfo.Name
 
 	WriteAppEnv()
 
