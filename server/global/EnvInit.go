@@ -5,11 +5,16 @@ import (
 
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/utils/reqDataCenter"
+	"github.com/EasyGolang/goTools/global"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
+	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mPath"
 	"github.com/EasyGolang/goTools/mStr"
+	"github.com/EasyGolang/goTools/mStruct"
 	jsoniter "github.com/json-iterator/go"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func AppEnvInit() {
@@ -44,4 +49,41 @@ func AppEnvInit() {
 // 写入 config.AppEnv
 func WriteAppEnv() {
 	mFile.Write(config.File.AppEnv, mJson.JsonFormat(mJson.ToJson(config.AppEnv)))
+
+	db := mMongo.New(mMongo.Opt{
+		UserName: config.SysEnv.MongoUserName,
+		Password: config.SysEnv.MongoPassword,
+		Address:  config.SysEnv.MongoAddress,
+		DBName:   "AITrade",
+	}).Connect().Collection("CoinAINet")
+	defer db.Close()
+
+	findOpt := options.FindOne()
+	findOpt.SetSort(map[string]int{
+		"TimeUnix": -1,
+	})
+
+	FK := bson.D{{
+		Key:   "ServeID",
+		Value: config.AppEnv,
+	}}
+	UK := bson.D{}
+	mStruct.Traverse(config.AppEnv, func(key string, val any) {
+		UK = append(UK, bson.E{
+			Key: "$set",
+			Value: bson.D{
+				{
+					Key:   key,
+					Value: val,
+				},
+			},
+		})
+	})
+	upOpt := options.Update()
+	upOpt.SetUpsert(true)
+	_, err := db.Table.UpdateOne(db.Ctx, FK, UK, upOpt)
+	if err != nil {
+		global.LogErr("config.AppEnv 数据更插失败", err)
+	}
+	global.LogErr("config.AppEnv 已更新至数据库", mJson.ToStr(config.AppEnv))
 }
