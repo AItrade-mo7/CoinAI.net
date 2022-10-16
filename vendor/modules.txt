@@ -1,4 +1,4 @@
-# github.com/EasyGolang/goTools v0.24.1
+# github.com/EasyGolang/goTools v0.24.4
 ## explicit; go 1.18
 github.com/EasyGolang/goTools/global/config
 github.com/EasyGolang/goTools/mClock
