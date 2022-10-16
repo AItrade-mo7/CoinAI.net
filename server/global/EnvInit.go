@@ -5,7 +5,6 @@ import (
 
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/utils/reqDataCenter"
-	"github.com/EasyGolang/goTools/global"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
@@ -83,7 +82,7 @@ func WriteAppEnv() {
 	upOpt.SetUpsert(true)
 	_, err := db.Table.UpdateOne(db.Ctx, FK, UK, upOpt)
 	if err != nil {
-		global.LogErr("config.AppEnv 数据更插失败", err)
+		LogErr("config.AppEnv 数据更插失败", err)
 	}
-	global.LogErr("config.AppEnv 已更新至数据库", mJson.ToStr(config.AppEnv))
+	LogErr("config.AppEnv 已更新至数据库", mJson.ToStr(config.AppEnv))
 }
