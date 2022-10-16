@@ -9,7 +9,7 @@ import (
 // https://blog.csdn.net/raoxiaoya/article/details/109014347
 
 func SysReStart() {
-	ShellCont := mStr.Join("source ", config.File.Reboot)
+	ShellCont := mStr.Join("source ", config.File.ReBoot)
 
 	mTikker.NewTikker(mTikker.TikkerOpt{
 		LogPath:      config.Dir.Log,

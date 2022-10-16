@@ -1,11 +1,7 @@
 package global
 
 import (
-	"bytes"
-	"text/template"
-
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/tmpl"
 	"CoinAI.net/server/utils/reqDataCenter"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
@@ -26,8 +22,6 @@ func AppEnvInit() {
 		config.AppEnv.IP = reqDataCenter.GetLocalIP()
 	}
 
-	CreateReboot()
-	CreateShutdown()
 	WriteAppEnv()
 }
 
@@ -35,28 +29,4 @@ func WriteAppEnv() {
 	// 如果不存在 app_env.json 则创建写入
 
 	mFile.Write(config.File.AppEnv, mJson.JsonFormat(mJson.ToJson(config.AppEnv)))
-}
-
-func CreateReboot() {
-	Body := new(bytes.Buffer)
-	Tmpl := template.Must(template.New("").Parse(tmpl.Reboot))
-	Tmpl.Execute(Body, tmpl.RebootParam{
-		Port: config.AppEnv.Port,
-		Path: config.Dir.App,
-	})
-	Cont := Body.String()
-
-	mFile.Write(config.File.Reboot, Cont)
-}
-
-func CreateShutdown() {
-	Body := new(bytes.Buffer)
-	Tmpl := template.Must(template.New("").Parse(tmpl.Shutdown))
-	Tmpl.Execute(Body, tmpl.ShutdownParam{
-		Port: config.AppEnv.Port,
-		Path: config.Dir.App,
-	})
-	Cont := Body.String()
-
-	mFile.Write(config.File.Shutdown, Cont)
 }

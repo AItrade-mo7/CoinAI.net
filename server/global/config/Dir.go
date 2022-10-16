@@ -18,7 +18,7 @@ var Dir DirType
 
 type FileType struct {
 	AppEnv   string // ./app_env.json
-	Reboot   string // ./Reboot.sh
+	ReBoot   string // ./ReBoot.sh
 	Shutdown string // ./Shutdown.sh
 }
 
@@ -47,10 +47,10 @@ func DirInit() {
 		"app_env.json",
 	)
 
-	File.Reboot = mStr.Join(
+	File.ReBoot = mStr.Join(
 		Dir.App,
 		mStr.ToStr(os.PathSeparator),
-		"Reboot.sh",
+		"ReBoot.sh",
 	)
 
 	File.Shutdown = mStr.Join(
