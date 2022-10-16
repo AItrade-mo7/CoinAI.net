@@ -15,7 +15,7 @@ var SysEnv = struct {
 	MongoUserName: "mo7",
 }
 
-type ApiKeyList struct {
+type ApiKeyType struct {
 	Name       string `bson:"Name"`
 	ApiKey     string `bson:"ApiKey"`
 	SecretKey  string `bson:"SecretKey"`
@@ -29,5 +29,5 @@ var AppEnv struct {
 	IP         string       `bson:"IP"`
 	ServeID    string       `bson:"ServeID"`
 	UserID     string       `bson:"UserID"`
-	ApiKeyList []ApiKeyList `bson:"ApiKeyList"`
+	ApiKeyList []ApiKeyType `bson:"ApiKeyList"`
 }
