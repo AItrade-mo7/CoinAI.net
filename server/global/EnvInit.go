@@ -15,6 +15,8 @@ func AppEnvInit() {
 
 	viper.Unmarshal(&config.AppEnv)
 
+	Log.Println(`第一次读取文件`, mJson.Format(config.AppEnv))
+
 	if len(config.AppEnv.Port) < 1 {
 		config.AppEnv.Port = "9000"
 	}
@@ -26,6 +28,8 @@ func AppEnvInit() {
 	config.AppEnv.Name = config.AppInfo.Name
 
 	WriteAppEnv()
+
+	Log.Println(`第二次读取文件`, mJson.Format(config.AppEnv))
 }
 
 // 写入 config.AppEnv
