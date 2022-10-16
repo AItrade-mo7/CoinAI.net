@@ -8,6 +8,7 @@ import (
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mPath"
+	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -24,6 +25,10 @@ func AppEnvInit() {
 	}
 	if len(config.AppEnv.IP) < 1 {
 		config.AppEnv.IP = reqDataCenter.GetLocalIP()
+	}
+
+	if len(config.AppEnv.ServeID) < 1 {
+		config.AppEnv.ServeID = mStr.Join(config.AppEnv.IP, ":", config.AppEnv.Port)
 	}
 
 	if len(config.AppEnv.Name) < 1 {

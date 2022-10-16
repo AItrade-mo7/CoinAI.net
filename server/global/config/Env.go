@@ -27,6 +27,7 @@ var AppEnv struct {
 	Version    string       `bson:"Version"`
 	Port       string       `bson:"Port"`
 	IP         string       `bson:"IP"`
+	ServeID    string       `bson:"ServeID"`
 	UserID     string       `bson:"UserID"`
 	ApiKeyList []ApiKeyList `bson:"ApiKeyList"`
 }
