@@ -1,21 +1,23 @@
 package global
 
 import (
+	"os"
+
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/utils/reqDataCenter"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
-	"github.com/spf13/viper"
+	"github.com/EasyGolang/goTools/mPath"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func AppEnvInit() {
-	// 检查配置文件在不在
-
-	viper.SetConfigFile(config.File.AppEnv)
-
-	viper.Unmarshal(&config.AppEnv)
-
-	Log.Println(`第一次读取文件`, mJson.Format(config.AppEnv))
+	// 检查并读取配置文件
+	isEnvPath := mPath.Exists(config.File.AppEnv)
+	if isEnvPath {
+		byteCont, _ := os.ReadFile(config.File.AppEnv)
+		jsoniter.Unmarshal(byteCont, &config.AppEnv)
+	}
 
 	if len(config.AppEnv.Port) < 1 {
 		config.AppEnv.Port = "9000"
