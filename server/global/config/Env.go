@@ -23,6 +23,8 @@ type ApiKeyList struct {
 }
 
 var AppEnv struct {
+	Name       string       `bson:"name"`
+	Version    string       `bson:"version"`
 	Port       string       `bson:"Port"`
 	IP         string       `bson:"IP"`
 	UserID     string       `bson:"UserID"`
