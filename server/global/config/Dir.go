@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/EasyGolang/goTools/mPath"
@@ -65,5 +66,15 @@ func DirInit() {
 	}
 	if !mPath.Exists(Dir.JsonData) {
 		os.MkdirAll(Dir.JsonData, 0o777)
+	}
+
+	if !mPath.Exists(File.Shutdown) {
+		err := fmt.Errorf("缺少文件 %+v", File.Shutdown)
+		panic(err)
+	}
+
+	if !mPath.Exists(File.ReBoot) {
+		err := fmt.Errorf("缺少文件 %+v", File.ReBoot)
+		panic(err)
 	}
 }
