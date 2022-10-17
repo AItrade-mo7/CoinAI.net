@@ -25,7 +25,7 @@ func CheckEmailCode(opt CheckEmailCodeParam) (resErr error) {
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
-		DBName:   "AIFund",
+		DBName:   "AITrade",
 	}).Connect().Collection("EmailCode")
 
 	err := db.Ping()
@@ -35,12 +35,11 @@ func CheckEmailCode(opt CheckEmailCodeParam) (resErr error) {
 		return
 	}
 
-	var result dbType.EmailCodeTable
-
 	FK := bson.D{{
 		Key:   "Email",
 		Value: opt.Email,
 	}}
+	var result dbType.EmailCodeTable
 	db.Table.FindOne(db.Ctx, FK).Decode(&result)
 
 	DBCode := mEncrypt.MD5(result.Code)
