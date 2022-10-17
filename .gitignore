@@ -15,8 +15,7 @@ package-lock.json
 
 sys_env.yaml
 app_env.json
-Reboot.sh
-Shutdown.sh
+
 node_modules
 
 logs
