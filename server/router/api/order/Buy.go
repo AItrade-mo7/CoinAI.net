@@ -8,5 +8,5 @@ import (
 
 func Buy(c *fiber.Ctx) error {
 	order.Buy()
-	return c.JSON(result.Succeed.WithData("Buy"))
+	return c.JSON(result.Succeed.WithData("开多"))
 }

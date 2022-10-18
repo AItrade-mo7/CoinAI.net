@@ -64,6 +64,7 @@ func Start() {
 	o_api.Post("/Buy", order.Buy)
 	o_api.Post("/Sell", order.Sell)
 	o_api.Post("/Close", order.Close)
+	o_api.Post("/BuySPOT", order.BuySPOT)
 
 	// Ping
 	app.Use(api.Ping)
