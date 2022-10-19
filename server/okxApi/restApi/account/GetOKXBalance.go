@@ -6,78 +6,67 @@ import (
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
+	"github.com/EasyGolang/goTools/mTime"
 	jsoniter "github.com/json-iterator/go"
 )
 
 type BalanceReq []struct {
-	Details     []BalanceDetails `json:"details"`
-	Imr         string           `json:"imr"`
-	IsoEq       string           `json:"isoEq"`
-	MgnRatio    string           `json:"mgnRatio"`
-	Mmr         string           `json:"mmr"`
-	TotalEq     string           `json:"totalEq"`
-	AdjEq       string           `json:"adjEq"`
-	NotionalUsd string           `json:"notionalUsd"`
-	OrdFroz     string           `json:"ordFroz"`
-	UTime       string           `json:"uTime"`
+	Details []BalanceDetails `json:"details"`
+	UTime   string           `json:"uTime"`
 }
 type BalanceDetails struct {
-	Eq            string `json:"eq"`
-	FixedBal      string `json:"fixedBal"`
-	IsoEq         string `json:"isoEq"`
-	OrdFrozen     string `json:"ordFrozen"`
-	StgyEq        string `json:"stgyEq"`
-	AvailBal      string `json:"availBal"`
-	CrossLiab     string `json:"crossLiab"`
-	MaxLoan       string `json:"maxLoan"`
-	MgnRatio      string `json:"mgnRatio"`
-	NotionalLever string `json:"notionalLever"`
-	SpotInUseAmt  string `json:"spotInUseAmt"`
-	Twap          string `json:"twap"`
-	IsoLiab       string `json:"isoLiab"`
-	IsoUpl        string `json:"isoUpl"`
-	Liab          string `json:"liab"`
-	UTime         string `json:"uTime"`
-	AvailEq       string `json:"availEq"`
-	CashBal       string `json:"cashBal"`
-	EqUsd         string `json:"eqUsd"`
-	FrozenBal     string `json:"frozenBal"`
-	Interest      string `json:"interest"`
-	Upl           string `json:"upl"`
-	UplLiab       string `json:"uplLiab"`
-	Ccy           string `json:"ccy"`
-	DisEq         string `json:"disEq"`
+	UTime string `json:"uTime"`
+	Ccy   string `json:"ccy"`   // 币种
+	DisEq string `json:"disEq"` // 美金层面折算
 }
 
-func GetOKXBalance(ApiKey mOKX.TypeOkxKey) (resData BalanceReq) {
+type AccountBalance struct {
+	TimeUnix int64  `bson:"TimeUnix"`
+	TimeStr  string `bson:"TimeStr"`
+	CcyName  string `bson:"CcyName"` // 币种
+	Balance  string `bson:"Balance"` // 币种
+}
+
+func GetOKXBalance(ApiKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr error) {
+	resData = []AccountBalance{}
+	resErr = nil
+
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/balance",
 		Method: "GET",
 		OKXKey: ApiKey,
 	})
 	if err != nil {
-		return nil
+		resErr = err
+		return
 	}
 
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 
 	if resObj.Code != "0" {
-		return nil
+		resErr = err
+		return
 	}
 	var Data BalanceReq
 	jsoniter.Unmarshal(mJson.ToJson(resObj.Data), &Data)
 
-	if len(Data) < 1 {
-		return nil
-	}
-
-	if len(Data[0].UTime) != 13 {
-		return nil
+	if len(Data) > 0 {
+		Details := Data[0].Details
+		for _, val := range Details {
+			myTime := mTime.MsToTime(val.UTime, "0")
+			NewBalance := AccountBalance{
+				TimeUnix: mTime.ToUnixMsec(myTime),
+				TimeStr:  mTime.UnixFormat(val.UTime),
+				CcyName:  val.Ccy,
+				Balance:  val.DisEq,
+			}
+			resData = append(resData, NewBalance)
+		}
 	}
 
 	Balance_file := mStr.Join(config.Dir.JsonData, "/Balance.json")
-	mFile.Write(Balance_file, mJson.ToStr(res))
+	mFile.Write(Balance_file, string(mJson.ToJson(resData)))
 
-	return Data
+	return
 }
