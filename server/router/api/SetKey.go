@@ -1,29 +1,58 @@
 package api
 
 import (
-	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
-	"github.com/EasyGolang/goTools/mFetch"
+	"CoinAI.net/server/utils/dbUser"
+	"github.com/EasyGolang/goTools/mFiber"
+	"github.com/EasyGolang/goTools/mJson"
+	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
-	jsoniter "github.com/json-iterator/go"
 )
 
+type SetKeyParam struct {
+	Name       string
+	ApiKey     string
+	SecretKey  string
+	Passphrase string
+	Password   string
+}
+
 func SetKey(c *fiber.Ctx) error {
-	// 在这里请求数据
-	GithubReqData, _ := mFetch.NewHttp(mFetch.HttpOpt{
-		Origin: "https://raw.githubusercontent.com",
-		Path:   "/AITrade-mo7/CoinAIPackage/main/package.json",
-	}).Get()
+	var json SetKeyParam
+	mFiber.Parser(c, &json)
 
-	var GithubInfo struct {
-		Name    string `bson:"name"`
-		Version string `bson:"version"`
+	if len(json.Name) < 2 {
+		return c.JSON(result.Fail.WithMsg("请填写一个备注名"))
 	}
-	jsoniter.Unmarshal(GithubReqData, &GithubInfo)
+	if len(json.ApiKey) < 10 {
+		return c.JSON(result.Fail.WithMsg("缺少有效的 API key"))
+	}
+	if len(json.SecretKey) < 10 {
+		return c.JSON(result.Fail.WithMsg("缺少有效的 Secret key"))
+	}
+	if len(json.Passphrase) < 8 {
+		return c.JSON(result.Fail.WithMsg("缺少有效的 密码短语"))
+	}
 
-	ConfigData := make(map[string]any)
-	ConfigData["AppEnv"] = config.AppEnv
-	ConfigData["GithubInfo"] = GithubInfo
+	UserID, err := middle.TokenAuth(c)
+	if err != nil {
+		return c.JSON(result.ErrToken.WithData(mStr.ToStr(err)))
+	}
 
-	return c.JSON(result.Succeed.WithData(ConfigData))
+	UserDB, err := dbUser.NewUserDB(dbUser.NewUserOpt{
+		UserID: UserID,
+	})
+	if err != nil {
+		return c.JSON(result.ErrLogin.WithMsg(err))
+	}
+	// 验证密码
+	err = UserDB.CheckPassword(json.Password)
+	if err != nil {
+		return c.JSON(result.ErrLogin.WithMsg(err))
+	}
+
+	mJson.Println(json)
+
+	return c.JSON(result.Succeed.WithData("添加一个Key"))
 }
