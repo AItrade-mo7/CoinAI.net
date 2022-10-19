@@ -21,7 +21,7 @@ func main() {
 	// 数据准备
 	ready.Start()
 
-	account.GetOKXBalance(config.AppEnv.ApiKeyList[0])
+	account.GetOKXPositions(config.AppEnv.ApiKeyList[0])
 
 	// 启动路由
 	// router.Start()
