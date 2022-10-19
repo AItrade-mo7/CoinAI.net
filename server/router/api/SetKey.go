@@ -8,7 +8,6 @@ import (
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
 	"github.com/EasyGolang/goTools/mFiber"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
@@ -61,8 +60,7 @@ func SetKey(c *fiber.Ctx) error {
 	ApiKey.ApiKey = json.ApiKey
 	ApiKey.SecretKey = json.SecretKey
 	ApiKey.Passphrase = json.Passphrase
-
-	mJson.Println(ApiKey)
+	ApiKey.IsTrade = false
 
 	resData := account.GetOKXBalance(ApiKey)
 	if resData == nil {
@@ -73,12 +71,13 @@ func SetKey(c *fiber.Ctx) error {
 	isRepeat := false
 	isName := false
 	for _, val := range ApiKeyList {
-		if ApiKey.Name == val.Name {
-			isName = true
-			break
-		}
+
 		if ApiKey.ApiKey == val.ApiKey || ApiKey.SecretKey == val.SecretKey {
 			isRepeat = true
+			break
+		}
+		if ApiKey.Name == val.Name {
+			isName = true
 			break
 		}
 	}
