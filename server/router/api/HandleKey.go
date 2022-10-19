@@ -73,5 +73,5 @@ func HandleKey(c *fiber.Ctx) error {
 
 	global.WriteAppEnv()
 
-	return c.JSON(result.Succeed.WithData("添加一个Key"))
+	return c.JSON(result.Succeed.WithData("操作完成"))
 }

@@ -1,8 +1,6 @@
 package account
 
 import (
-	"fmt"
-
 	"CoinAI.net/server/global/config"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
@@ -56,7 +54,7 @@ func GetOKXPositions(ApiKey mOKX.TypeOkxKey) (resData []PositionsData, resErr er
 	Positions_file := mStr.Join(config.Dir.JsonData, "/Positions.json")
 	mFile.Write(Positions_file, mJson.ToStr(Data))
 
-	fmt.Println(err)
+	resData = Data
 
 	return
 }
