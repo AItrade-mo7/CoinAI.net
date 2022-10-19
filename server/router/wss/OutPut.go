@@ -45,9 +45,9 @@ func GetFuzzyApiKey() []mOKX.TypeOkxKey {
 	for _, val := range ApiKeyList {
 		NewKeyList = append(NewKeyList, mOKX.TypeOkxKey{
 			Name:       val.Name,
-			ApiKey:     GetKeyFuzzy(val.ApiKey),
-			SecretKey:  GetKeyFuzzy(val.SecretKey),
-			Passphrase: GetKeyFuzzy(val.Passphrase),
+			ApiKey:     GetKeyFuzzy(val.ApiKey, 6),
+			SecretKey:  GetKeyFuzzy(val.SecretKey, 6),
+			Passphrase: GetKeyFuzzy(val.Passphrase, 1),
 			IsTrade:    val.IsTrade,
 		})
 	}
@@ -55,6 +55,6 @@ func GetFuzzyApiKey() []mOKX.TypeOkxKey {
 	return NewKeyList
 }
 
-func GetKeyFuzzy(Ket string) string {
-	return Ket[0:6] + "******" + Ket[len(Ket)-6:len(Ket)-1]
+func GetKeyFuzzy(Ket string, num int) string {
+	return Ket[0:num] + "******" + Ket[len(Ket)-num:len(Ket)-1]
 }
