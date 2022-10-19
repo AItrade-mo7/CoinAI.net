@@ -1,11 +1,14 @@
 package api
 
 import (
+	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
 	"github.com/EasyGolang/goTools/mFiber"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
@@ -59,9 +62,37 @@ func SetKey(c *fiber.Ctx) error {
 	ApiKey.SecretKey = json.SecretKey
 	ApiKey.Passphrase = json.Passphrase
 
-	account.GetOKXBalance(ApiKey)
+	mJson.Println(ApiKey)
 
-	// 在这里验证Key
+	resData := account.GetOKXBalance(ApiKey)
+	if resData == nil {
+		return c.JSON(result.ErrLogin.WithMsg("Api Key 验证失败!"))
+	}
+
+	ApiKeyList := config.AppEnv.ApiKeyList
+	isRepeat := false
+	isName := false
+	for _, val := range ApiKeyList {
+		if ApiKey.Name == val.Name {
+			isName = true
+			break
+		}
+		if ApiKey.ApiKey == val.ApiKey || ApiKey.SecretKey == val.SecretKey {
+			isRepeat = true
+			break
+		}
+	}
+	if isName {
+		return c.JSON(result.ErrLogin.WithMsg("备注名重复"))
+	}
+
+	if isRepeat {
+		return c.JSON(result.ErrLogin.WithMsg("Api key已存在"))
+	}
+
+	config.AppEnv.ApiKeyList = append(config.AppEnv.ApiKeyList, ApiKey)
+
+	global.WriteAppEnv()
 
 	return c.JSON(result.Succeed.WithData("添加一个Key"))
 }
