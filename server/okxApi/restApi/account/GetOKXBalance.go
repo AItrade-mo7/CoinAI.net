@@ -12,13 +12,13 @@ import (
 )
 
 type BalanceReq []struct {
-	Details []BalanceDetails `json:"details"`
-	UTime   string           `json:"uTime"`
+	Details []BalanceDetails
+	UTime   string
 }
 type BalanceDetails struct {
-	UTime string `json:"uTime"`
-	Ccy   string `json:"ccy"`   // 币种
-	DisEq string `json:"disEq"` // 美金层面折算
+	UTime string
+	Ccy   string // 币种
+	DisEq string // 美金层面折算
 }
 
 type AccountBalance struct {
@@ -60,7 +60,7 @@ func GetOKXBalance(ApiKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr err
 				TimeUnix: mTime.ToUnixMsec(myTime),
 				TimeStr:  mTime.UnixFormat(val.UTime),
 				CcyName:  val.Ccy,
-				Balance:  mCount.Cent(val.DisEq,2),
+				Balance:  mCount.Cent(val.DisEq, 2),
 			}
 			if mCount.Le(NewBalance.Balance, "0.1") > -1 {
 				resData = append(resData, NewBalance)
