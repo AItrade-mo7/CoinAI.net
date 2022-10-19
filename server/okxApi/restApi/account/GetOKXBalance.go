@@ -2,6 +2,7 @@ package account
 
 import (
 	"CoinAI.net/server/global/config"
+	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -59,9 +60,11 @@ func GetOKXBalance(ApiKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr err
 				TimeUnix: mTime.ToUnixMsec(myTime),
 				TimeStr:  mTime.UnixFormat(val.UTime),
 				CcyName:  val.Ccy,
-				Balance:  val.DisEq,
+				Balance:  mCount.Cent(val.DisEq,2),
 			}
-			resData = append(resData, NewBalance)
+			if mCount.Le(NewBalance.Balance, "0.1") > -1 {
+				resData = append(resData, NewBalance)
+			}
 		}
 	}
 
