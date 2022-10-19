@@ -69,7 +69,7 @@ func GetOKXBalance(ApiKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr err
 	}
 
 	Balance_file := mStr.Join(config.Dir.JsonData, "/Balance.json")
-	mFile.Write(Balance_file, string(mJson.ToJson(resData)))
+	mFile.Write(Balance_file, string(res))
 
 	return
 }

@@ -26,6 +26,7 @@ type PositionsData struct {
 	UTime       string `bson:"UTime"`       // 更新时间
 	Upl         string `bson:"Upl"`         // 未实现收益
 	UplRatio    string `bson:"UplRatio"`    // 未实现收益率
+	Imr         string `bson:"Imr"`         // 初始保证金
 }
 
 func GetOKXPositions(ApiKey mOKX.TypeOkxKey) (resData []PositionsData, resErr error) {
@@ -52,7 +53,7 @@ func GetOKXPositions(ApiKey mOKX.TypeOkxKey) (resData []PositionsData, resErr er
 	jsoniter.Unmarshal(mJson.ToJson(resObj.Data), &Data)
 
 	Positions_file := mStr.Join(config.Dir.JsonData, "/Positions.json")
-	mFile.Write(Positions_file, mJson.ToStr(Data))
+	mFile.Write(Positions_file, string(res))
 
 	resData = Data
 
