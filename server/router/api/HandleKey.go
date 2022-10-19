@@ -1,6 +1,8 @@
 package api
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/router/middle"
@@ -43,10 +45,14 @@ func HandleKey(c *fiber.Ctx) error {
 
 	NewApiKey := []mOKX.TypeOkxKey{}
 
+	var ListErr error
 	for key, val := range ApiKeyList {
 		OkxKey := val
-
 		if key == json.Index {
+			if val.UserID != UserID {
+				ListErr = fmt.Errorf("无权操作")
+				break
+			}
 			if json.Type == "embed" {
 				OkxKey.IsTrade = !OkxKey.IsTrade
 			}
@@ -54,8 +60,11 @@ func HandleKey(c *fiber.Ctx) error {
 				continue
 			}
 		}
-
 		NewApiKey = append(NewApiKey, OkxKey)
+	}
+
+	if ListErr != nil {
+		return c.JSON(result.Fail.WithMsg(ListErr))
 	}
 
 	config.AppEnv.ApiKeyList = []mOKX.TypeOkxKey{}
