@@ -25,7 +25,7 @@ func GetOutPut() (resData OutPut) {
 	resData.IP = config.AppEnv.IP
 	resData.ServeID = config.AppEnv.ServeID
 	resData.UserID = config.AppEnv.UserID
-	resData.ApiKeyList = config.AppEnv.ApiKeyList
+	resData.ApiKeyList = GetFuzzyApiKey()
 	// 系统时间
 	resData.SysTime = mTime.GetUnixInt64()
 	resData.DataSource = "CoinAI.net"
@@ -35,4 +35,26 @@ func GetOutPut() (resData OutPut) {
 	resData.OrderInst = okxInfo.OrderInst
 
 	return
+}
+
+func GetFuzzyApiKey() []mOKX.TypeOkxKey {
+	ApiKeyList := config.AppEnv.ApiKeyList
+
+	NewKeyList := []mOKX.TypeOkxKey{}
+
+	for _, val := range ApiKeyList {
+		NewKeyList = append(NewKeyList, mOKX.TypeOkxKey{
+			Name:       val.Name,
+			ApiKey:     GetKeyFuzzy(val.ApiKey),
+			SecretKey:  GetKeyFuzzy(val.SecretKey),
+			Passphrase: GetKeyFuzzy(val.Passphrase),
+			IsTrade:    val.IsTrade,
+		})
+	}
+
+	return NewKeyList
+}
+
+func GetKeyFuzzy(Ket string) string {
+	return Ket[0:6] + "******" + Ket[len(Ket)-6:len(Ket)-1]
 }
