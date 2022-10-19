@@ -1,6 +1,7 @@
 package sys
 
 import (
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
@@ -18,6 +19,9 @@ func Remove(c *fiber.Ctx) error {
 	UserID, err := middle.TokenAuth(c)
 	if err != nil {
 		return c.JSON(result.ErrDB.WithData(mStr.ToStr(err)))
+	}
+	if UserID != config.AppEnv.UserID {
+		return c.JSON(result.Fail.WithMsg("无权操作"))
 	}
 
 	UserInfo, err := dbUser.NewUserDB(dbUser.NewUserOpt{

@@ -25,14 +25,13 @@ func ReStart(c *fiber.Ctx) error {
 	if err != nil {
 		return c.JSON(result.ErrDB.WithData(mStr.ToStr(err)))
 	}
+	if UserID != config.AppEnv.UserID {
+		return c.JSON(result.Fail.WithMsg("无权操作"))
+	}
 
 	UserInfo, err := dbUser.NewUserDB(dbUser.NewUserOpt{
 		UserID: UserID,
 	})
-
-	if UserID != config.AppEnv.UserID {
-		return c.JSON(result.Fail.WithMsg("无权操作"))
-	}
 	if err != nil {
 		return c.JSON(result.ErrDB.WithData(mStr.ToStr(err)))
 	}
