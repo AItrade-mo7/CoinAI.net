@@ -3,7 +3,9 @@ package account
 import (
 	"fmt"
 
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func GetOKXPositions(ApiKey mOKX.TypeOkxKey) {
@@ -12,6 +14,10 @@ func GetOKXPositions(ApiKey mOKX.TypeOkxKey) {
 		Method: "GET",
 		OKXKey: ApiKey,
 	})
+	var resObj mOKX.TypeReq
+	jsoniter.Unmarshal(resData, &resObj)
 
-	fmt.Println(resData, err)
+	mJson.Println(resObj)
+
+	fmt.Println(err)
 }

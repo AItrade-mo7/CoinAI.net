@@ -59,7 +59,7 @@ func SetKey(c *fiber.Ctx) error {
 	ApiKey.SecretKey = json.SecretKey
 	ApiKey.Passphrase = json.Passphrase
 
-	account.GetOKXPositions(ApiKey)
+	account.GetOKXBalance(ApiKey)
 
 	// 在这里验证Key
 
