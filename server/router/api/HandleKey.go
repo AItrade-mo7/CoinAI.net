@@ -2,16 +2,18 @@ package api
 
 import (
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
 	"github.com/EasyGolang/goTools/mFiber"
+	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
 )
 
 type HandleKeyParam struct {
-	ApiKey   string
+	Index    int
 	Password string
 	Type     string // del //  embed
 }
@@ -36,6 +38,28 @@ func HandleKey(c *fiber.Ctx) error {
 	if err != nil {
 		return c.JSON(result.ErrLogin.WithMsg(err))
 	}
+
+	ApiKeyList := config.AppEnv.ApiKeyList
+
+	NewApiKey := []mOKX.TypeOkxKey{}
+
+	for key, val := range ApiKeyList {
+		OkxKey := val
+
+		if key == json.Index {
+			if json.Type == "embed" {
+				OkxKey.IsTrade = !OkxKey.IsTrade
+			}
+			if json.Type == "del" {
+				continue
+			}
+		}
+
+		NewApiKey = append(NewApiKey, OkxKey)
+	}
+
+	config.AppEnv.ApiKeyList = []mOKX.TypeOkxKey{}
+	config.AppEnv.ApiKeyList = NewApiKey
 
 	global.WriteAppEnv()
 

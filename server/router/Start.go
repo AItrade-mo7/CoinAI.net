@@ -53,6 +53,7 @@ func Start() {
 	r_api.Get("/config", api.GetConfig)
 	r_api.Get("/wss", wss.WsServer())
 	r_api.Post("/SetKey", api.SetKey)
+	r_api.Post("/HandleKey", api.HandleKey)
 
 	// sys
 	s_api := app.Group("/CoinAI/sys")
