@@ -1,5 +1,7 @@
 package config
 
+import "github.com/EasyGolang/goTools/mOKX"
+
 var AppInfo struct {
 	Name    string `bson:"name"`
 	Version string `bson:"version"`
@@ -15,21 +17,14 @@ var SysEnv = struct {
 	MongoUserName: "mo7",
 }
 
-type ApiKeyType struct {
-	Name       string `bson:"Name"`
-	ApiKey     string `bson:"ApiKey"`
-	SecretKey  string `bson:"SecretKey"`
-	Passphrase string `bson:"Passphrase"`
-}
-
 type AppEnvType struct {
-	Name       string       `bson:"Name"`
-	Version    string       `bson:"Version"`
-	Port       string       `bson:"Port"`
-	IP         string       `bson:"IP"`
-	ServeID    string       `bson:"ServeID"`
-	UserID     string       `bson:"UserID"`
-	ApiKeyList []ApiKeyType `bson:"ApiKeyList"`
+	Name       string            `bson:"Name"`
+	Version    string            `bson:"Version"`
+	Port       string            `bson:"Port"`
+	IP         string            `bson:"IP"`
+	ServeID    string            `bson:"ServeID"`
+	UserID     string            `bson:"UserID"`
+	ApiKeyList []mOKX.TypeOkxKey `bson:"ApiKeyList"`
 }
 
 var AppEnv AppEnvType

@@ -1,11 +1,12 @@
 package api
 
 import (
+	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
 	"github.com/EasyGolang/goTools/mFiber"
-	"github.com/EasyGolang/goTools/mJson"
+	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
 )
@@ -52,7 +53,15 @@ func SetKey(c *fiber.Ctx) error {
 		return c.JSON(result.ErrLogin.WithMsg(err))
 	}
 
-	mJson.Println(json)
+	var ApiKey mOKX.TypeOkxKey
+	ApiKey.Name = json.Name
+	ApiKey.ApiKey = json.ApiKey
+	ApiKey.SecretKey = json.SecretKey
+	ApiKey.Passphrase = json.Passphrase
+
+	account.GetOKXPositions(ApiKey)
+
+	// 在这里验证Key
 
 	return c.JSON(result.Succeed.WithData("添加一个Key"))
 }
