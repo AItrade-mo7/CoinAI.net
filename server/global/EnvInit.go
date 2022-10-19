@@ -35,12 +35,42 @@ func AppEnvInit() {
 		config.AppEnv.ServeID = mStr.Join(config.AppEnv.IP, ":", config.AppEnv.Port)
 	}
 
+	ReadeDBAppEnv(config.AppEnv.ServeID)
+
 	if len(config.AppEnv.Name) < 1 {
 		config.AppEnv.Name = config.AppInfo.Name
 	}
 	config.AppEnv.Version = config.AppInfo.Version
 
 	WriteAppEnv()
+}
+
+func ReadeDBAppEnv(ServeID string) {
+	db := mMongo.New(mMongo.Opt{
+		UserName: config.SysEnv.MongoUserName,
+		Password: config.SysEnv.MongoPassword,
+		Address:  config.SysEnv.MongoAddress,
+		DBName:   "AITrade",
+	}).Connect().Collection("CoinAINet")
+	defer db.Close()
+
+	findOpt := options.FindOne()
+	findOpt.SetSort(map[string]int{
+		"TimeUnix": 1,
+	})
+	FK := bson.D{{
+		Key:   "ServeID",
+		Value: ServeID,
+	}}
+
+	var AppEnv config.AppEnvType
+	db.Table.FindOne(db.Ctx, FK, findOpt).Decode(&AppEnv)
+
+	mJson.Println(AppEnv)
+
+	if len(AppEnv.ServeID) > 4 && len(AppEnv.UserID) > 4 {
+		config.AppEnv = AppEnv
+	}
 }
 
 // 写入 config.AppEnv
