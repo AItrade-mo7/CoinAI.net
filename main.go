@@ -5,8 +5,8 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/ready"
-	"CoinAI.net/server/router"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -21,6 +21,8 @@ func main() {
 	// 数据准备
 	ready.Start()
 
+	account.GetOKXBalance(config.AppEnv.ApiKeyList[0])
+
 	// 启动路由
-	router.Start()
+	// router.Start()
 }

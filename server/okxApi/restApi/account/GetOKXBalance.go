@@ -1,8 +1,11 @@
 package account
 
 import (
+	"CoinAI.net/server/global/config"
+	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
+	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -72,6 +75,9 @@ func GetOKXBalance(ApiKey mOKX.TypeOkxKey) (resData BalanceReq) {
 	if len(Data[0].UTime) != 13 {
 		return nil
 	}
+
+	Balance_file := mStr.Join(config.Dir.JsonData, "/Balance.json")
+	mFile.Write(Balance_file, mJson.ToStr(res))
 
 	return Data
 }
