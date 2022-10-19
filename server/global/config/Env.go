@@ -22,7 +22,7 @@ type ApiKeyType struct {
 	Passphrase string `bson:"Passphrase"`
 }
 
-var AppEnv struct {
+type AppEnvType struct {
 	Name       string       `bson:"Name"`
 	Version    string       `bson:"Version"`
 	Port       string       `bson:"Port"`
@@ -31,3 +31,5 @@ var AppEnv struct {
 	UserID     string       `bson:"UserID"`
 	ApiKeyList []ApiKeyType `bson:"ApiKeyList"`
 }
+
+var AppEnv AppEnvType
