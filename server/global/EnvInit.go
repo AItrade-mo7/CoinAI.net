@@ -40,7 +40,9 @@ func AppEnvInit() {
 	if len(config.AppEnv.Name) < 1 {
 		config.AppEnv.Name = config.AppInfo.Name
 	}
-	config.AppEnv.Version = config.AppInfo.Version
+	if len(config.AppEnv.Version) < 1 {
+		config.AppEnv.Version = config.AppInfo.Version
+	}
 
 	WriteAppEnv()
 }
@@ -65,8 +67,6 @@ func ReadeDBAppEnv(ServeID string) {
 
 	var AppEnv config.AppEnvType
 	db.Table.FindOne(db.Ctx, FK, findOpt).Decode(&AppEnv)
-
-	mJson.Println(AppEnv)
 
 	if len(AppEnv.ServeID) > 4 && len(AppEnv.UserID) > 4 {
 		config.AppEnv = AppEnv
