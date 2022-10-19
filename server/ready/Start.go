@@ -19,5 +19,6 @@ func Start() {
 */
 
 func GetAnalyData() {
+	GetSWAPInst() // 获取所有产品的合约信息
 	global.RunLog.Println("拉取一次 Analy 接口")
 }
