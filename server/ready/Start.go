@@ -1,6 +1,8 @@
 package ready
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mClock"
@@ -22,6 +24,13 @@ func Start() {
 
 func GetAnalyData() {
 	okxInfo.NowTicker = GetNowTickerAnaly()
+
+	for Key, SingleList := range okxInfo.NowTicker.AnalySingle {
+		fmt.Println(Key)
+		for _, Single := range SingleList {
+			fmt.Println(Single)
+		}
+	}
 
 	global.RunLog.Println("拉取一次数据接口")
 }
