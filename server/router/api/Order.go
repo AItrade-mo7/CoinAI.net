@@ -73,7 +73,7 @@ func Order(c *fiber.Ctx) error {
 		err = order.BuySPOT(ApiKey)
 	}
 	if err != nil {
-		return c.JSON(result.Fail.WithData(err))
+		return c.JSON(result.Fail.WithMsg(err))
 	}
 	return c.JSON(result.Succeed.WithData(json.Type))
 }
