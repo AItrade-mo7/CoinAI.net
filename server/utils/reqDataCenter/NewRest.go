@@ -22,8 +22,8 @@ fmt.Println(mStr.ToStr(resData))
 
 type RestOpt struct {
 	Origin string
-	UserID string
 	Path   string
+	UserID string
 	Method string
 	Data   map[string]any
 }

@@ -2,8 +2,9 @@ package ready
 
 import (
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
-	"github.com/EasyGolang/goTools/mFetch"
+	"CoinAI.net/server/utils/reqDataCenter"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
@@ -16,13 +17,15 @@ type ReqInstType struct {
 }
 
 func GetSWAPInst() {
-	resData, err := mFetch.NewHttp(mFetch.HttpOpt{
+	resData, err := reqDataCenter.NewRest(reqDataCenter.RestOpt{
 		Origin: "https://trade-api.mo7.cc",
 		Path:   "/CoinMarket/public/Inst",
+		UserID: config.AppEnv.UserID,
 		Data: map[string]any{
 			"TypeInst": "SWAP",
 		},
-	}).Post()
+		Method: "POST",
+	})
 	if err != nil {
 		global.LogErr("ready.GetSWAPInst", err)
 		return

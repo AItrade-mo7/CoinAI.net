@@ -7,6 +7,7 @@ import (
 
 func Start() {
 	//
+	GetAnalyData()
 	go mClock.New(mClock.OptType{
 		Func: GetAnalyData,
 		Spec: "30 0,5,10,15,20,25,30,35,40,45,50,55 * * * ? ", // 5 分的整数过 30 秒
@@ -20,5 +21,6 @@ func Start() {
 
 func GetAnalyData() {
 	GetSWAPInst() // 获取所有产品的合约信息
-	global.RunLog.Println("拉取一次 Analy 接口")
+
+	global.RunLog.Println("拉取一次数据接口")
 }
