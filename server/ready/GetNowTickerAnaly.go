@@ -1,8 +1,6 @@
 package ready
 
 import (
-	"fmt"
-
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mFetch"
@@ -27,8 +25,6 @@ func GetNowTickerAnaly() (resData okxInfo.AnalyTickerType) {
 		global.LogErr("ready.GetCoinMarket", err)
 		return
 	}
-
-	fmt.Println()
 
 	var result ReqCoinMarketType
 	jsoniter.Unmarshal(res, &result)
