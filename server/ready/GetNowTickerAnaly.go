@@ -14,8 +14,10 @@ type ReqCoinMarketType struct {
 	Msg  string                  `bson:"Msg"`  // 描述
 }
 
-func GetNowTickerAnaly() {
-	resData, err := mFetch.NewHttp(mFetch.HttpOpt{
+func GetNowTickerAnaly() (resData okxInfo.AnalyTickerType) {
+	resData = okxInfo.AnalyTickerType{}
+
+	res, err := mFetch.NewHttp(mFetch.HttpOpt{
 		Origin: "https://trade-api.mo7.cc",
 		Path:   "/CoinMarket/public/GetNowTickerAnaly",
 	}).Post()
@@ -25,12 +27,13 @@ func GetNowTickerAnaly() {
 	}
 
 	var result ReqCoinMarketType
-	jsoniter.Unmarshal(resData, &result)
+	jsoniter.Unmarshal(res, &result)
 
 	if result.Code < 0 {
 		global.LogErr("ready.GetCoinMarket", "Err", result.Code, mStr.ToStr(resData))
 		return
 	}
 
-	okxInfo.NowTicker = result.Data
+	resData = result.Data
+	return
 }
