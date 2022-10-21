@@ -22,11 +22,6 @@ func Start() {
 */
 
 func GetAnalyData() {
-	GetSWAPInst() // 获取所有产品的合约信息
-	GetSPOTInst() // 获取所有产品的合约信息
-
-
-
 	mJson.Println(okxInfo.SWAP_inst)
 
 	global.RunLog.Println("拉取一次数据接口")
