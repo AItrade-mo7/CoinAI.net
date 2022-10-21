@@ -2,8 +2,9 @@ package ready
 
 import (
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
-	"github.com/EasyGolang/goTools/mFetch"
+	"CoinAI.net/server/utils/reqDataCenter"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -17,10 +18,12 @@ type ReqCoinMarketType struct {
 func GetNowTickerAnaly() (resData okxInfo.AnalyTickerType) {
 	resData = okxInfo.AnalyTickerType{}
 
-	res, err := mFetch.NewHttp(mFetch.HttpOpt{
+	res, err := reqDataCenter.NewRest(reqDataCenter.RestOpt{
 		Origin: "https://trade-api.mo7.cc",
 		Path:   "/CoinMarket/public/GetNowTickerAnaly",
-	}).Post()
+		UserID: config.AppEnv.UserID,
+		Method: "Post",
+	})
 	if err != nil {
 		global.LogErr("ready.GetCoinMarket", err)
 		return

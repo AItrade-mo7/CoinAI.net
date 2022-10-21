@@ -8,18 +8,6 @@ import (
 	"github.com/EasyGolang/goTools/mFetch"
 )
 
-/*
-
-resData := reqDataCenter.NewRest(reqDataCenter.NewRestOpt{
-	Path:   "/private/get_user_info",
-	Method: "GET",
-	Data:   map[string]any{},
-})
-fmt.Println(mStr.ToStr(resData))
-
-
-*/
-
 type RestOpt struct {
 	Origin string
 	Path   string
