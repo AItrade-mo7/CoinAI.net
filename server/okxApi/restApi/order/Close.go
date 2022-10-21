@@ -3,13 +3,18 @@ package order
 import (
 	"fmt"
 
+	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mOKX"
 )
 
-func Close(OkxKey mOKX.TypeOkxKey)error {
+func Close(OkxKey mOKX.TypeOkxKey)(resErr error) {
+	resErr = nil
 	if len(OkxKey.ApiKey) < 10 {
-		return fmt.Errorf("Key 不能为空")
+		resErr = fmt.Errorf(" ApiKey 不能为空")
+		global.LogErr(resErr)
+		return
 	}
+
 
 	return nil
 }
