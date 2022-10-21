@@ -1,4 +1,4 @@
-package order
+package api
 
 import (
 	"fmt"
@@ -14,7 +14,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func BuySPOT(c *fiber.Ctx) error {
+type OrderParam struct {
+	Index    int
+	Password string
+	Type     string
+}
+
+func Order(c *fiber.Ctx) error {
 	var json OrderParam
 	mFiber.Parser(c, &json)
 
@@ -52,9 +58,22 @@ func BuySPOT(c *fiber.Ctx) error {
 		return c.JSON(result.Fail.WithMsg(ListErr))
 	}
 
-	err = order.BuySPOT(ApiKey)
+	if json.Type == "Buy" {
+		err = order.Buy(ApiKey)
+	}
+	if json.Type == "Sell" {
+		err = order.Sell(ApiKey)
+	}
+
+	if json.Type == "Close" {
+		err = order.Close(ApiKey)
+	}
+
+	if json.Type == "BuySPOT" {
+		err = order.BuySPOT(ApiKey)
+	}
 	if err != nil {
 		return c.JSON(result.Fail.WithData(err))
 	}
-	return c.JSON(result.Succeed.WithData("现货买入"))
+	return c.JSON(result.Succeed.WithData(json.Type))
 }

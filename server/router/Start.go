@@ -7,7 +7,6 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/router/api"
-	"CoinAI.net/server/router/api/order"
 	"CoinAI.net/server/router/api/sys"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/wss"
@@ -55,18 +54,12 @@ func Start() {
 	r_api.Post("/SetKey", api.SetKey)
 	r_api.Post("/HandleKey", api.HandleKey)
 	r_api.Post("/GetAccountDetail", api.GetAccountDetail)
+	r_api.Post("/Order", api.Order)
 
 	// sys
 	s_api := app.Group("/CoinAI/sys")
 	s_api.Post("/remove", sys.Remove)
 	s_api.Post("/restart", sys.ReStart)
-
-	// order
-	o_api := app.Group("/CoinAI/Order")
-	o_api.Post("/Buy", order.Buy)
-	o_api.Post("/Sell", order.Sell)
-	o_api.Post("/Close", order.Close)
-	o_api.Post("/BuySPOT", order.BuySPOT)
 
 	// Ping
 	app.Use(api.Ping)
