@@ -2,22 +2,25 @@ package ready
 
 import (
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
-	"github.com/EasyGolang/goTools/mFetch"
+	"CoinAI.net/server/utils/reqDataCenter"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
 )
 
 func GetSPOTInst() {
-	resData, err := mFetch.NewHttp(mFetch.HttpOpt{
+	resData, err := reqDataCenter.NewRest(reqDataCenter.RestOpt{
 		Origin: "https://trade-api.mo7.cc",
 		Path:   "/CoinMarket/public/Inst",
+		UserID: config.AppEnv.UserID,
 		Data: map[string]any{
 			"TypeInst": "SPOT",
 		},
-	}).Post()
+		Method: "POST",
+	})
 	if err != nil {
-		global.LogErr("ready.GetSWAPInst", err)
+		global.LogErr("ready.GetSPOTInst", err)
 		return
 	}
 
@@ -25,7 +28,7 @@ func GetSPOTInst() {
 	jsoniter.Unmarshal(resData, &result)
 
 	if result.Code < 0 {
-		global.LogErr("ready.GetSWAPInst", "Err", result.Code, mStr.ToStr(resData))
+		global.LogErr("ready.GetSPOTInst", "Err", result.Code, mStr.ToStr(resData))
 		return
 	}
 
