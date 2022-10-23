@@ -10,5 +10,8 @@ type AccountObj struct {
 	OkxKey mOKX.TypeOkxKey
 }
 
-func NewAccount(opt AccountParam) {
+func NewAccount(opt AccountParam) *AccountObj {
+	obj := AccountObj{}
+
+	return &obj
 }
