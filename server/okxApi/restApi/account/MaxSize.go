@@ -26,7 +26,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resErr error) {
 	}
 
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
-		Path:   "/api/v5/account/set-leverage",
+		Path:   "/api/v5/account/max-size",
 		Method: "POST",
 		OKXKey: opt.OKXKey,
 		Data: map[string]any{
