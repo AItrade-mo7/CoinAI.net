@@ -1,15 +1,12 @@
 package api
 
 import (
-	"fmt"
-
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxApi/restApi/order"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
 	"github.com/EasyGolang/goTools/mFiber"
-	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
 )
@@ -41,21 +38,10 @@ func Order(c *fiber.Ctx) error {
 		return c.JSON(result.ErrLogin.WithMsg(err))
 	}
 
-	ApiKeyList := config.AppEnv.ApiKeyList
-	var ListErr error
-	ApiKey := mOKX.TypeOkxKey{}
-	for key, val := range ApiKeyList {
-		if key == json.Index {
-			if val.UserID != UserID {
-				ListErr = fmt.Errorf("无权操作")
-				break
-			}
-			ApiKey = val
-		}
-	}
+	ApiKey := config.GetOKXKey(json.Index)
 
-	if ListErr != nil {
-		return c.JSON(result.Fail.WithMsg(ListErr))
+	if UserID != ApiKey.UserID {
+		return c.JSON(result.Fail.WithMsg("无权操作"))
 	}
 
 	if json.Type == "Buy" {
