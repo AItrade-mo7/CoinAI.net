@@ -2,5 +2,9 @@ package account
 
 import "github.com/EasyGolang/goTools/mOKX"
 
-func Order(OKXKey mOKX.TypeOkxKey) {
+type OrderParam struct {
+	OKXKey mOKX.TypeOkxKey
+}
+
+func Order(opt OrderParam) {
 }

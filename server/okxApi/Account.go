@@ -3,6 +3,7 @@ package okxApi
 import (
 	"fmt"
 
+	"CoinAI.net/server/okxApi/restApi/account"
 	"github.com/EasyGolang/goTools/mOKX"
 )
 
@@ -35,7 +36,7 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 // 设置持仓模式
 func (_this *AccountObj) SetPositionMode() (resErr error) {
 	resErr = nil
-
+	account.SetPositionMode(_this.OkxKey)
 	return
 }
 
