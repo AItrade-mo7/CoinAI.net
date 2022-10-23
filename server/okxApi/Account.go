@@ -33,7 +33,10 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 }
 
 // 设置持仓模式
-func (_this *AccountObj) SetPositionMode() {
+func (_this *AccountObj) SetPositionMode() (resErr error) {
+	resErr = nil
+
+	return
 }
 
 // 设置杠杆倍数

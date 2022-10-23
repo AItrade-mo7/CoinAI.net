@@ -29,14 +29,14 @@ type PositionsData struct {
 	Imr         string `bson:"Imr"`         // 初始保证金
 }
 
-func GetOKXPositions(ApiKey mOKX.TypeOkxKey) (resData []PositionsData, resErr error) {
+func GetOKXPositions(OKXKey mOKX.TypeOkxKey) (resData []PositionsData, resErr error) {
 	resData = []PositionsData{}
 	resErr = nil
 
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/positions",
 		Method: "GET",
-		OKXKey: ApiKey,
+		OKXKey: OKXKey,
 	})
 	if err != nil {
 		resErr = err

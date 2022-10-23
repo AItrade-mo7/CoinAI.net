@@ -28,14 +28,14 @@ type AccountBalance struct {
 	Balance  string `bson:"Balance"` // 币种
 }
 
-func GetOKXBalance(ApiKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr error) {
+func GetOKXBalance(OKXKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr error) {
 	resData = []AccountBalance{}
 	resErr = nil
 
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/balance",
 		Method: "GET",
-		OKXKey: ApiKey,
+		OKXKey: OKXKey,
 	})
 	if err != nil {
 		resErr = err
