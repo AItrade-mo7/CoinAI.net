@@ -30,3 +30,16 @@ type AppEnvType struct {
 }
 
 var AppEnv AppEnvType
+
+func GetOKXKey(Index int) mOKX.TypeOkxKey {
+	ReturnKey := mOKX.TypeOkxKey{}
+
+	for key, val := range AppEnv.ApiKeyList {
+		if key == Index {
+			ReturnKey = val
+			break
+		}
+	}
+
+	return ReturnKey
+}
