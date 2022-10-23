@@ -27,7 +27,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resErr error) {
 
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/max-size",
-		Method: "POST",
+		Method: "GET",
 		OKXKey: opt.OKXKey,
 		Data: map[string]any{
 			"instId": opt.InstID,
