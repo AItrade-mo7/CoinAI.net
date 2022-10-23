@@ -1,6 +1,8 @@
 package config
 
-import "github.com/EasyGolang/goTools/mOKX"
+import (
+	"github.com/EasyGolang/goTools/mOKX"
+)
 
 var AppInfo struct {
 	Name    string `bson:"name"`
