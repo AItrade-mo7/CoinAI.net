@@ -18,15 +18,15 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 	resErr = nil
 
 	if len(opt.InstID) < 3 {
-		resErr = fmt.Errorf("opt.InstID 不能为空 %+v", opt.InstID)
+		resErr = fmt.Errorf("account.SetLeverage opt.InstID 不能为空 %+v", opt.InstID)
 		return
 	}
 	if opt.Lever < 1 {
-		resErr = fmt.Errorf("opt.Lever 不能为0 %+v", opt.Lever)
+		resErr = fmt.Errorf("account.SetLeverage opt.Lever 不能为0 %+v", opt.Lever)
 		return
 	}
 	if len(opt.OKXKey.ApiKey) < 10 {
-		resErr = fmt.Errorf("opt.OKXKey.ApiKey 不能为空 %+v", opt.OKXKey.ApiKey)
+		resErr = fmt.Errorf("account.SetLeverage opt.OKXKey.ApiKey 不能为空 %+v", opt.OKXKey.ApiKey)
 		return
 	}
 
