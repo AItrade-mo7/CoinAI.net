@@ -58,11 +58,6 @@ func Order(c *fiber.Ctx) error {
 		return c.JSON(result.Fail.WithMsg(err))
 	}
 
-	err = OKXAccount.SetPositionMode()
-	if err != nil {
-		return c.JSON(result.Fail.WithMsg(err))
-	}
-
 	fmt.Println("响应结束", err)
 
 	// if json.Type == "Buy" {

@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/EasyGolang/goTools/mOKX"
+	"github.com/EasyGolang/goTools/mStr"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func SetPositionMode(OKXKey mOKX.TypeOkxKey) (resErr error) {
@@ -21,6 +23,12 @@ func SetPositionMode(OKXKey mOKX.TypeOkxKey) (resErr error) {
 		return
 	}
 
-	fmt.Println(res, err)
+	var resObj mOKX.TypeReq
+	jsoniter.Unmarshal(res, &resObj)
+	if resObj.Code != "0" {
+		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
+		return
+	}
+
 	return
 }
