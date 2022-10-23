@@ -2,7 +2,6 @@ package wss
 
 import (
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTime"
 )
@@ -30,9 +29,9 @@ func GetOutPut() (resData OutPut) {
 	resData.SysTime = mTime.GetUnixInt64()
 	resData.DataSource = "CoinAI.net"
 	// 下单信息
-	resData.Leverage = okxInfo.Leverage
-	resData.TradeModel = okxInfo.TradeModel
-	resData.OrderInst = okxInfo.OrderInst
+	// resData.Leverage = okxInfo.Leverage
+	// resData.TradeModel = okxInfo.TradeModel
+	// resData.OrderInst = okxInfo.OrderInst
 
 	return
 }

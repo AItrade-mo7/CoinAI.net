@@ -23,12 +23,7 @@ func Start() {
 func GetAnalyData() {
 	okxInfo.NowTicker = GetNowTickerAnaly()
 
-	// for Key, SingleList := range okxInfo.NowTicker.AnalySingle {
-	// 	fmt.Println(Key)
-	// 	for _, Single := range SingleList {
-	// 		fmt.Println(Single)
-	// 	}
-	// }
+	okxInfo.TradeInst = okxInfo.NowTicker.TickerVol[1]
 
 	global.RunLog.Println("拉取一次数据接口")
 }

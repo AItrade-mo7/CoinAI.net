@@ -41,7 +41,9 @@ func (_this *AccountObj) SetPositionMode() (resErr error) {
 }
 
 // 设置杠杆倍数
-func (_this *AccountObj) SetLeverage() {
+func (_this *AccountObj) SetLeverage() (resErr error) {
+	resErr = nil
+	return
 }
 
 // 获取账户余额

@@ -46,6 +46,7 @@ func Order(c *fiber.Ctx) error {
 		return c.JSON(result.Fail.WithMsg("无权操作"))
 	}
 
+	// 新建账户
 	OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
 		OkxKey: OkxKey,
 	})
@@ -53,11 +54,17 @@ func Order(c *fiber.Ctx) error {
 		return c.JSON(result.Fail.WithMsg(err))
 	}
 
+	// 设置持仓模式
 	err = OKXAccount.SetPositionMode()
 	if err != nil {
 		return c.JSON(result.Fail.WithMsg(err))
 	}
 
+	// 设置杠杆倍数
+	err = OKXAccount.SetLeverage()
+	if err != nil {
+		return c.JSON(result.Fail.WithMsg(err))
+	}
 	fmt.Println("响应结束", err)
 
 	// if json.Type == "Buy" {
