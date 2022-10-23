@@ -38,25 +38,25 @@ func Order(c *fiber.Ctx) error {
 		return c.JSON(result.ErrLogin.WithMsg(err))
 	}
 
-	ApiKey := config.GetOKXKey(json.Index)
+	OkxKey := config.GetOKXKey(json.Index)
 
-	if UserID != ApiKey.UserID {
+	if UserID != OkxKey.UserID {
 		return c.JSON(result.Fail.WithMsg("无权操作"))
 	}
 
 	if json.Type == "Buy" {
-		err = order.Buy(ApiKey)
+		err = order.Buy(OkxKey)
 	}
 	if json.Type == "Sell" {
-		err = order.Sell(ApiKey)
+		err = order.Sell(OkxKey)
 	}
 
 	if json.Type == "Close" {
-		err = order.Close(ApiKey)
+		err = order.Close(OkxKey)
 	}
 
 	if json.Type == "BuySPOT" {
-		err = order.BuySPOT(ApiKey)
+		err = order.BuySPOT(OkxKey)
 	}
 	if err != nil {
 		return c.JSON(result.Fail.WithMsg(err))
