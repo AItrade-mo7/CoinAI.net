@@ -1,6 +1,10 @@
 package okxApi
 
-import "github.com/EasyGolang/goTools/mOKX"
+import (
+	"fmt"
+
+	"github.com/EasyGolang/goTools/mOKX"
+)
 
 type AccountParam struct {
 	OkxKey mOKX.TypeOkxKey
@@ -10,10 +14,22 @@ type AccountObj struct {
 	OkxKey mOKX.TypeOkxKey
 }
 
-func NewAccount(opt AccountParam) *AccountObj {
+func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 	obj := AccountObj{}
+	resErr = nil
 
-	return &obj
+	if !opt.OkxKey.IsTrade {
+		resErr = fmt.Errorf("当前 Key 已被禁用: %+v", opt.OkxKey)
+		return
+	}
+	if len(opt.OkxKey.ApiKey) < 10 {
+		resErr = fmt.Errorf("需要 ApiKey: %+v", opt.OkxKey)
+		return
+	}
+	obj.OkxKey = opt.OkxKey
+
+	resObj = &obj
+	return
 }
 
 // 设置持仓模式

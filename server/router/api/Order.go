@@ -1,7 +1,10 @@
 package api
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/okxApi"
 	"CoinAI.net/server/okxApi/restApi/order"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
@@ -39,6 +42,12 @@ func Order(c *fiber.Ctx) error {
 	}
 
 	OkxKey := config.GetOKXKey(json.Index)
+
+	OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
+		OkxKey: OkxKey,
+	})
+
+	fmt.Println(OKXAccount, err)
 
 	if UserID != OkxKey.UserID {
 		return c.JSON(result.Fail.WithMsg("无权操作"))
