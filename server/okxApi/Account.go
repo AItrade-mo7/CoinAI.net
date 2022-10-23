@@ -19,11 +19,11 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 	resErr = nil
 
 	if !opt.OkxKey.IsTrade {
-		resErr = fmt.Errorf("当前 Key 已被禁用: %+v", opt.OkxKey)
+		resErr = fmt.Errorf("当前 Key 已被禁用")
 		return
 	}
 	if len(opt.OkxKey.ApiKey) < 10 {
-		resErr = fmt.Errorf("需要 ApiKey: %+v", opt.OkxKey)
+		resErr = fmt.Errorf("ApiKey 不能为空 ")
 		return
 	}
 	obj.OkxKey = opt.OkxKey

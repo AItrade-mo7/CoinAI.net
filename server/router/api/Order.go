@@ -5,7 +5,6 @@ import (
 
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxApi"
-	"CoinAI.net/server/okxApi/restApi/order"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
@@ -43,32 +42,33 @@ func Order(c *fiber.Ctx) error {
 
 	OkxKey := config.GetOKXKey(json.Index)
 
-	OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
-		OkxKey: OkxKey,
-	})
-
-	fmt.Println(OKXAccount, err)
-
 	if UserID != OkxKey.UserID {
 		return c.JSON(result.Fail.WithMsg("无权操作"))
 	}
 
-	if json.Type == "Buy" {
-		err = order.Buy(OkxKey)
-	}
-	if json.Type == "Sell" {
-		err = order.Sell(OkxKey)
-	}
-
-	if json.Type == "Close" {
-		err = order.Close(OkxKey)
-	}
-
-	if json.Type == "BuySPOT" {
-		err = order.BuySPOT(OkxKey)
-	}
+	OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
+		OkxKey: OkxKey,
+	})
 	if err != nil {
 		return c.JSON(result.Fail.WithMsg(err))
 	}
+
+	fmt.Println(OKXAccount)
+
+	// if json.Type == "Buy" {
+	// 	//
+	// }
+	// if json.Type == "Sell" {
+	// 	//
+	// }
+
+	// if json.Type == "Close" {
+	// 	//
+	// }
+
+	// if json.Type == "BuySPOT" {
+	// 	//
+	// }
+
 	return c.JSON(result.Succeed.WithData(json.Type))
 }
