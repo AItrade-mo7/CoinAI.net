@@ -102,3 +102,33 @@ func (_this *AccountObj) GetMaxSize() (resErr error) {
 	_this.MaxSize = resData
 	return
 }
+
+// 未成交订单信息
+func (_this *AccountObj) GetOrdersPending() (resErr error) {
+	account.GetOrdersPending(account.GetOrdersPendingParam{
+		OKXKey: _this.OkxKey,
+	})
+	return
+}
+
+// 未成交订单信息
+func (_this *AccountObj) CancelOrder() (resErr error) {
+	account.CancelOrder(account.CancelOrderParam{
+		OKXKey: _this.OkxKey,
+		InstID: _this.TradeInst.InstID,
+		OrdId:  "",
+	})
+	return
+}
+
+// 下单
+func (_this *AccountObj) Order() (resErr error) {
+	account.Order(account.OrderParam{
+		OKXKey: _this.OkxKey,
+		InstID: _this.TradeInst.InstID,
+		OrdId:  "",
+		Side:   "",
+		Sz:     "",
+	})
+	return
+}
