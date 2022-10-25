@@ -6,6 +6,7 @@ import (
 	"CoinAI.net/server/global/config"
 	"github.com/EasyGolang/goTools/mEncrypt"
 	"github.com/EasyGolang/goTools/mFetch"
+	"github.com/EasyGolang/goTools/mJson"
 )
 
 type RestOpt struct {
@@ -30,7 +31,7 @@ func NewRest(opt RestOpt) (resData []byte, resErr error) {
 	fetch := mFetch.NewHttp(mFetch.HttpOpt{
 		Origin: opt.Origin,
 		Path:   opt.Path,
-		Data:   opt.Data,
+		Data:   mJson.ToJson(opt.Data),
 		Header: map[string]string{
 			"Auth-Encrypt": config.ClientEncrypt(opt.Path + UserAgent),
 			"Auth-Token":   Token,
