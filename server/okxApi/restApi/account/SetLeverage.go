@@ -45,6 +45,10 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 			"mgnMode": "cross",
 		},
 	})
+
+	fmt.Println(string(res))
+	fmt.Println((err))
+
 	if err != nil {
 		resErr = err
 		global.LogErr("account.SetLeverage1", resErr)

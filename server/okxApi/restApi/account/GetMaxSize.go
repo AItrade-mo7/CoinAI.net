@@ -65,7 +65,6 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	jsoniter.Unmarshal(mJson.ToJson(resObj.Data), &result)
 	if len(result) > 0 {
 		resData = result[0]
-		global.LogErr("account.GetMaxSize3", resErr)
 		return
 	}
 
