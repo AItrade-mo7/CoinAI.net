@@ -59,10 +59,10 @@ func Order(c *fiber.Ctx) error {
 	// }
 
 	// 设置杠杆倍数
-	err = OKXAccount.SetLeverage()
-	if err != nil {
-		return c.JSON(result.ErrOKXAccount.WithMsg(err))
-	}
+	// err = OKXAccount.SetLeverage()
+	// if err != nil {
+	// 	return c.JSON(result.ErrOKXAccount.WithMsg(err))
+	// }
 
 	// 获取最大可开仓数量
 	err = OKXAccount.GetMaxSize()
@@ -78,6 +78,12 @@ func Order(c *fiber.Ctx) error {
 
 	// 取消所有未成交订单
 	err = OKXAccount.CancelOrder()
+	if err != nil {
+		return c.JSON(result.ErrOKXAccount.WithMsg(err))
+	}
+
+	// 下单
+	err = OKXAccount.Close()
 	if err != nil {
 		return c.JSON(result.ErrOKXAccount.WithMsg(err))
 	}

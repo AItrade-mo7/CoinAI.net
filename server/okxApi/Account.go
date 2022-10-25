@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/okxInfo"
+	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mOKX"
 )
 
@@ -70,6 +71,40 @@ func (_this *AccountObj) SetPositionMode() (resErr error) {
 	return
 }
 
+// 下单 买多
+func (_this *AccountObj) Buy() (resErr error) {
+	_this.GetOrdersPending() // 获取未成交订单
+	_this.CancelOrder()      // 取消所有未成交订单
+	_this.Close()            // 平仓
+	_this.SetPositionMode()  // 设置持仓模式
+	_this.SetLeverage()      // 设置杠杆倍数
+	_this.GetMaxSize()       // 获取最大开仓数量
+	account.Order(account.OrderParam{
+		OKXKey: _this.OkxKey,
+		InstID: _this.TradeInst.InstID,
+		Side:   "buy",
+		Sz:     _this.MaxSize.MaxBuy,
+	})
+	return
+}
+
+// 下单 买空
+func (_this *AccountObj) Sell() (resErr error) {
+	_this.GetOrdersPending() // 获取未成交订单
+	_this.CancelOrder()      // 取消所有未成交订单
+	_this.Close()            // 平仓
+	_this.SetPositionMode()  // 设置持仓模式
+	_this.SetLeverage()      // 设置杠杆倍数
+	_this.GetMaxSize()       // 获取最大开仓数量
+	account.Order(account.OrderParam{
+		OKXKey: _this.OkxKey,
+		InstID: _this.TradeInst.InstID,
+		Side:   "sell",
+		Sz:     _this.MaxSize.MaxSell,
+	})
+	return
+}
+
 // 设置杠杆倍数
 func (_this *AccountObj) SetLeverage() (resErr error) {
 	resErr = account.SetLeverage(account.SetLeverageParam{
@@ -131,35 +166,16 @@ func (_this *AccountObj) CancelOrder() (resErr error) {
 	return
 }
 
-// 下单 买多
-func (_this *AccountObj) Buy() (resErr error) {
-	account.Order(account.OrderParam{
-		OKXKey: _this.OkxKey,
-		InstID: _this.TradeInst.InstID,
-		Side:   "buy",
-		Sz:     _this.MaxSize.MaxBuy,
-	})
-	return
-}
-
-// 下单 买空
-func (_this *AccountObj) Sell() (resErr error) {
-	account.Order(account.OrderParam{
-		OKXKey: _this.OkxKey,
-		InstID: _this.TradeInst.InstID,
-		Side:   "sell",
-		Sz:     _this.MaxSize.MaxSell,
-	})
-	return
-}
-
-// 下单 平仓
+// 下单 平仓,平掉当前所有仓位
 func (_this *AccountObj) Close() (resErr error) {
-	account.Order(account.OrderParam{
-		OKXKey: _this.OkxKey,
-		InstID: _this.TradeInst.InstID,
-		Side:   "",
-		Sz:     "",
-	})
+	_this.GetPositions()
+	for _, Position := range _this.Positions {
+		if mCount.Le(Position.Pos, "0") > 0 {
+			_this.Sell()
+		}
+		if mCount.Le(Position.Pos, "0") < 0 {
+			_this.Buy()
+		}
+	}
 	return
 }

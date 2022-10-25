@@ -7,4 +7,4 @@ var TradeInst mOKX.TypeTicker
 var TradeLever = 2
 
 // 是否为现货
-var IsSPOT = true
+var IsSPOT = false
