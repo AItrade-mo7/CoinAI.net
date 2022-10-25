@@ -18,7 +18,7 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resErr error) {
 	resErr = nil
 
 	if len(opt.OKXKey.ApiKey) < 10 {
-		resErr = fmt.Errorf("account.SetLeverage opt.OKXKey.ApiKey 不能为空 %+v", opt.OKXKey.ApiKey)
+		resErr = fmt.Errorf("account.GetOrdersPending opt.OKXKey.ApiKey 不能为空 %+v", opt.OKXKey.ApiKey)
 		global.LogErr(resErr)
 		return
 	}
@@ -31,7 +31,7 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resErr error) {
 	if err != nil {
 		resErr = err
 		global.LogErr(resErr)
-		global.LogErr("account.SetLeverage1", resErr)
+		global.LogErr("account.GetOrdersPending1", resErr)
 		return
 	}
 
@@ -39,7 +39,7 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resErr error) {
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
-		global.LogErr("account.SetLeverage2", resErr)
+		global.LogErr("account.GetOrdersPending2", resErr)
 		return
 	}
 	return
