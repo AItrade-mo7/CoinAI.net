@@ -99,7 +99,7 @@ func Order(opt OrderParam) (resErr error) {
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.Order2 %+v", resObj.Data)
+		resErr = fmt.Errorf("account.Order2 %+v", res)
 		global.LogErr(resErr)
 		return
 	}
