@@ -19,7 +19,7 @@ func SetPositionMode(OKXKey mOKX.TypeOkxKey) (resErr error) {
 		},
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.SetPositionMode1 %+v", err)
+		resErr = fmt.Errorf("account.SetPositionMode1 %+v  %+v", err, OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -27,7 +27,7 @@ func SetPositionMode(OKXKey mOKX.TypeOkxKey) (resErr error) {
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.SetPositionMode2 %s", res)
+		resErr = fmt.Errorf("account.SetPositionMode2 %s  %+v", res, OKXKey.Name)
 		global.LogErr(resErr)
 
 		return

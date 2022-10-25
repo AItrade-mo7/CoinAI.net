@@ -54,7 +54,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 		},
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.GetMaxSize1 %+v", err)
+		resErr = fmt.Errorf("account.GetMaxSize1 %+v %+v", err, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -62,7 +62,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.GetMaxSize1 %+v", resObj.Data)
+		resErr = fmt.Errorf("account.GetMaxSize1 %s %+v", res, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
