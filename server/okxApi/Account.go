@@ -78,29 +78,35 @@ func (_this *AccountObj) SetPositionMode() (resErr error) {
 
 // 下单 买多
 func (_this *AccountObj) Buy() (resErr error) {
-	_this.Close()       // 平仓
-	_this.SetLeverage() // 设置杠杆倍数
-	_this.GetMaxSize()  // 获取最大开仓数量
-	account.Order(account.OrderParam{
+	_this.GetMaxSize() // 获取最大开仓数量
+	Sz := _this.MaxSize.MaxBuy
+	resErr = account.Order(account.OrderParam{
 		OKXKey:    _this.OkxKey,
 		TradeInst: _this.TradeInst,
 		Side:      "buy",
-		Sz:        _this.MaxSize.MaxBuy,
+		Sz:        Sz,
 	})
+	// 如果下单数量大于最大值，则再来一次
+	if mCount.Le(Sz, _this.TradeInst.MaxMktSz) > 0 {
+		_this.Buy()
+	}
 	return
 }
 
 // 下单 买空
 func (_this *AccountObj) Sell() (resErr error) {
-	_this.Close()       // 平仓
-	_this.SetLeverage() // 设置杠杆倍数
-	_this.GetMaxSize()  // 获取最大开仓数量
+	_this.GetMaxSize() // 获取最大开仓数量
+	Sz := _this.MaxSize.MaxSell
 	account.Order(account.OrderParam{
 		OKXKey:    _this.OkxKey,
 		TradeInst: _this.TradeInst,
 		Side:      "sell",
-		Sz:        _this.MaxSize.MaxSell,
+		Sz:        Sz,
 	})
+	// 如果下单数量大于最大值，则再来一次
+	if mCount.Le(Sz, _this.TradeInst.MaxMktSz) > 0 {
+		_this.Sell()
+	}
 	return
 }
 
@@ -169,6 +175,7 @@ func (_this *AccountObj) CancelOrder() (resErr error) {
 func (_this *AccountObj) Close() (resErr error) {
 	_this.GetPositions()
 	errArr := []error{}
+	isAgin := false
 	for _, Position := range _this.Positions {
 		TradeInst := okxInfo.InstAll[Position.InstID]
 		Side := ""
@@ -192,12 +199,19 @@ func (_this *AccountObj) Close() (resErr error) {
 			Side = "buy"
 			Sz = maxSize.MaxBuy
 		}
+
 		err = account.Order(account.OrderParam{
 			OKXKey:    _this.OkxKey,
 			TradeInst: TradeInst,
 			Side:      Side,
 			Sz:        Sz,
 		})
+		// 如果 Sz 大于了最大数量 , 则再来一次
+		if mCount.Le(Sz, TradeInst.MaxMktSz) > 0 {
+			isAgin = true
+			break
+		}
+
 		if err != nil {
 			err = fmt.Errorf("平仓 下单 失败")
 			errArr = append(errArr, err)
@@ -207,5 +221,11 @@ func (_this *AccountObj) Close() (resErr error) {
 	if len(errArr) > 0 {
 		resErr = fmt.Errorf("err:%+v", errArr)
 	}
+
+	// isAgin 为真，则再来一次
+	if isAgin {
+		_this.Close()
+	}
+
 	return
 }
