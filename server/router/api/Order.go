@@ -65,12 +65,14 @@ func Order(c *fiber.Ctx) error {
 	if err != nil {
 		return c.JSON(result.Fail.WithMsg(err))
 	}
-	fmt.Println("响应结束", err)
 
 	// 获取最大可开仓数量
-	OKXAccount.GetMaxSize()
-
-	fmt.Println(OKXAccount.TradeInst.InstID)
+	err = OKXAccount.GetMaxSize()
+	if err != nil {
+		return c.JSON(result.Fail.WithMsg(err))
+	}
+	fmt.Println("响应结束", err)
+	fmt.Println(OKXAccount.MaxSize)
 
 	// if json.Type == "Buy" {
 	// 	//

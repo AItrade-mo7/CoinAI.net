@@ -18,6 +18,7 @@ type AccountObj struct {
 	TradeLever int           // 杠杆倍数
 	Balance    []account.AccountBalance
 	Positions  []account.PositionsData
+	MaxSize    account.MaxSizeType
 }
 
 // 创建一个新账户
@@ -93,9 +94,11 @@ func (_this *AccountObj) GetPositions() (resErr error) {
 }
 
 // 获取最大可开仓数量
-func (_this *AccountObj) GetMaxSize() {
-	account.GetMaxSize(account.GetMaxSizeParam{
+func (_this *AccountObj) GetMaxSize() (resErr error) {
+	resData, resErr := account.GetMaxSize(account.GetMaxSizeParam{
 		InstID: _this.TradeInst.InstID,
 		OKXKey: _this.OkxKey,
 	})
+	_this.MaxSize = resData
+	return
 }

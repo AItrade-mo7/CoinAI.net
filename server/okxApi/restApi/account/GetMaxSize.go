@@ -3,6 +3,7 @@ package account
 import (
 	"fmt"
 
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
@@ -13,9 +14,17 @@ type GetMaxSizeParam struct {
 	OKXKey mOKX.TypeOkxKey
 }
 
+type MaxSizeType struct {
+	Ccy     string
+	InstID  string
+	MaxBuy  string
+	MaxSell string
+}
+
 // 获得最大可开仓数量
-func GetMaxSize(opt GetMaxSizeParam) (resErr error) {
+func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	resErr = nil
+	resData = MaxSizeType{}
 
 	if len(opt.InstID) < 3 {
 		resErr = fmt.Errorf("account.SetLeverage opt.InstID 不能为空 %+v", opt.InstID)
@@ -46,5 +55,13 @@ func GetMaxSize(opt GetMaxSizeParam) (resErr error) {
 		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
 		return
 	}
+
+	var result []MaxSizeType
+	jsoniter.Unmarshal(mJson.ToJson(resObj.Data), &result)
+	if len(result) > 0 {
+		resData = result[0]
+		return
+	}
+
 	return
 }
