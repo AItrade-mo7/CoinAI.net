@@ -49,6 +49,8 @@ func Order(opt OrderParam) (resErr error) {
 	fmt.Println(opt.TradeInst.InstID)
 	fmt.Println(opt.Side)
 	fmt.Println(opt.Sz)
+	fmt.Println(opt.TradeInst.MaxMktSz)
+	fmt.Println(opt.TradeInst.MinSz)
 
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/trade/order",
