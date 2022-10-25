@@ -3,6 +3,7 @@ package okxApi
 import (
 	"fmt"
 
+	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
@@ -167,24 +168,45 @@ func (_this *AccountObj) CancelOrder() (resErr error) {
 // 下单 平仓,平掉当前所有仓位
 func (_this *AccountObj) Close() (resErr error) {
 	_this.GetPositions()
+	_this.GetMaxSize()
+	errArr := []error{}
 	for _, Position := range _this.Positions {
 		InstID := Position.InstID
 		Side := ""
 		Sz := "0"
+
+		maxSize, err := account.GetMaxSize(account.GetMaxSizeParam{
+			InstID: InstID,
+			OKXKey: _this.OkxKey,
+		})
+		if err != nil {
+			err = fmt.Errorf("平仓 获取最大数量 失败")
+			global.LogErr(err)
+			errArr = append(errArr, err)
+		}
+
 		if mCount.Le(Position.Pos, "0") > 0 {
 			Side = "sell"
-			Sz = _this.MaxSize.MaxSell
+			Sz = maxSize.MaxSell
 		}
 		if mCount.Le(Position.Pos, "0") < 0 {
 			Side = "buy"
-			Sz = _this.MaxSize.MaxBuy
+			Sz = maxSize.MaxBuy
 		}
-		account.Order(account.OrderParam{
+		err = account.Order(account.OrderParam{
 			OKXKey: _this.OkxKey,
 			InstID: InstID,
 			Side:   Side,
 			Sz:     Sz,
 		})
+		if err != nil {
+			err = fmt.Errorf("平仓 下单 失败")
+			errArr = append(errArr, err)
+		}
+	}
+
+	if len(errArr) > 0 {
+		resErr = fmt.Errorf("err:%+v", errArr)
 	}
 	return
 }
