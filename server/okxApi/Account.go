@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"CoinAI.net/server/okxApi/restApi/account"
+	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mOKX"
 )
 
@@ -12,9 +13,12 @@ type AccountParam struct {
 }
 
 type AccountObj struct {
-	OkxKey mOKX.TypeOkxKey
+	OkxKey     mOKX.TypeOkxKey
+	TradeInst  mOKX.TypeTicker // 交易币种信息
+	TradeLever int             // 杠杆倍数
 }
 
+// 创建一个新账户
 func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 	obj := AccountObj{}
 	resErr = nil
@@ -27,7 +31,20 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 		resErr = fmt.Errorf("ApiKey 不能为空 ")
 		return
 	}
+
+	if len(okxInfo.TradeInst.InstID) < 3 {
+		resErr = fmt.Errorf("okxInfo.TradeInst.InstID 不能为空 %+v", okxInfo.TradeInst.InstID)
+		return
+	}
+
+	if (okxInfo.TradeLever) < 1 {
+		resErr = fmt.Errorf("okxInfo.TradeLever 不能为空 %+v", okxInfo.TradeLever)
+		return
+	}
+
 	obj.OkxKey = opt.OkxKey
+	obj.TradeInst = okxInfo.TradeInst
+	obj.TradeLever = okxInfo.TradeLever
 
 	resObj = &obj
 	return
@@ -35,14 +52,17 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 
 // 设置持仓模式
 func (_this *AccountObj) SetPositionMode() (resErr error) {
-	resErr = nil
-	account.SetPositionMode(_this.OkxKey)
+	resErr = account.SetPositionMode(_this.OkxKey)
 	return
 }
 
 // 设置杠杆倍数
 func (_this *AccountObj) SetLeverage() (resErr error) {
-	resErr = nil
+	resErr = account.SetLeverage(account.SetLeverageParam{
+		InstID: _this.TradeInst.InstID,
+		OKXKey: _this.OkxKey,
+		Lever:  _this.TradeLever,
+	})
 	return
 }
 
