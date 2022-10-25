@@ -2,6 +2,7 @@ package account
 
 import (
 	"fmt"
+	"strings"
 
 	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mJson"
@@ -37,13 +38,19 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 		return
 	}
 
+	tdMode := "cash" // 币币交易
+	find := strings.Contains(opt.InstID, "-SWAP")
+	if find {
+		tdMode = "cross" // 全仓杠杆
+	}
+
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/max-size",
 		Method: "GET",
 		OKXKey: opt.OKXKey,
 		Data: map[string]any{
 			"instId": opt.InstID,
-			"tdMode": "cross",
+			"tdMode": tdMode,
 		},
 	})
 	if err != nil {
@@ -55,7 +62,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.GetMaxSize1 %+v",resObj.Data)
+		resErr = fmt.Errorf("account.GetMaxSize1 %+v", resObj.Data)
 		global.LogErr(resErr)
 		return
 	}

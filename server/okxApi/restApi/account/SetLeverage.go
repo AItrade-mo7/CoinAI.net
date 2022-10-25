@@ -2,6 +2,7 @@ package account
 
 import (
 	"fmt"
+	"strings"
 
 	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -32,6 +33,12 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 	if len(opt.OKXKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("account.SetLeverage opt.OKXKey.ApiKey 不能为空 %+v", opt.OKXKey.ApiKey)
 		global.LogErr(resErr)
+		return
+	}
+
+	find := strings.Contains(opt.InstID, "-SWAP")
+
+	if !find {
 		return
 	}
 

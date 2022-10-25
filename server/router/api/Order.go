@@ -1,15 +1,12 @@
 package api
 
 import (
-	"fmt"
-
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxApi"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
 	"github.com/EasyGolang/goTools/mFiber"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
 )
@@ -56,10 +53,10 @@ func Order(c *fiber.Ctx) error {
 	}
 
 	// 设置持仓模式
-	err = OKXAccount.SetPositionMode()
-	if err != nil {
-		return c.JSON(result.ErrOKXAccount.WithMsg(err))
-	}
+	// err = OKXAccount.SetPositionMode()
+	// if err != nil {
+	// 	return c.JSON(result.ErrOKXAccount.WithMsg(err))
+	// }
 
 	// 设置杠杆倍数
 	err = OKXAccount.SetLeverage()
@@ -72,8 +69,18 @@ func Order(c *fiber.Ctx) error {
 	if err != nil {
 		return c.JSON(result.ErrOKXAccount.WithMsg(err))
 	}
-	fmt.Println("响应结束", err)
-	mJson.Println(OKXAccount)
+
+	// 获取未成交订单信息
+	err = OKXAccount.GetOrdersPending()
+	if err != nil {
+		return c.JSON(result.ErrOKXAccount.WithMsg(err))
+	}
+
+	// 取消所有未成交订单
+	err = OKXAccount.CancelOrder()
+	if err != nil {
+		return c.JSON(result.ErrOKXAccount.WithMsg(err))
+	}
 
 	// if json.Type == "Buy" {
 	// 	//

@@ -46,6 +46,10 @@ func Order(opt OrderParam) (resErr error) {
 		ordType = "optimal_limit_ioc"
 	}
 
+	fmt.Println(opt.InstID)
+	fmt.Println(opt.Side)
+	fmt.Println(opt.Sz)
+
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/trade/order",
 		Method: "POST",

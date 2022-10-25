@@ -13,12 +13,13 @@ type AccountParam struct {
 }
 
 type AccountObj struct {
-	OkxKey     mOKX.TypeOkxKey
-	TradeInst  mOKX.TypeInst // 交易币种信息
-	TradeLever int           // 杠杆倍数
-	Balance    []account.AccountBalance
-	Positions  []account.PositionsData
-	MaxSize    account.MaxSizeType
+	OkxKey       mOKX.TypeOkxKey
+	TradeInst    mOKX.TypeInst // 交易币种信息
+	TradeLever   int           // 杠杆倍数
+	Balance      []account.AccountBalance
+	Positions    []account.PositionsData
+	MaxSize      account.MaxSizeType
+	PendingOrder []account.PendingOrderType
 }
 
 // 创建一个新账户
@@ -105,28 +106,58 @@ func (_this *AccountObj) GetMaxSize() (resErr error) {
 
 // 未成交订单信息
 func (_this *AccountObj) GetOrdersPending() (resErr error) {
-	account.GetOrdersPending(account.GetOrdersPendingParam{
+	resData, resErr := account.GetOrdersPending(account.GetOrdersPendingParam{
 		OKXKey: _this.OkxKey,
 	})
+	_this.PendingOrder = resData
 	return
 }
 
-// 未成交订单信息
+// 取消所有未成交订单
 func (_this *AccountObj) CancelOrder() (resErr error) {
-	account.CancelOrder(account.CancelOrderParam{
-		OKXKey: _this.OkxKey,
-		InstID: _this.TradeInst.InstID,
-		OrdId:  "",
-	})
+	errArr := []error{}
+	for _, val := range _this.PendingOrder {
+		err := account.CancelOrder(account.CancelOrderParam{
+			OKXKey: _this.OkxKey,
+			Order:  val,
+		})
+		if err != nil {
+			errArr = append(errArr, err)
+		}
+	}
+	if len(errArr) > 0 {
+		resErr = fmt.Errorf("err:%+v", errArr)
+	}
 	return
 }
 
-// 下单
-func (_this *AccountObj) Order() (resErr error) {
+// 下单 买多
+func (_this *AccountObj) Buy() (resErr error) {
 	account.Order(account.OrderParam{
 		OKXKey: _this.OkxKey,
 		InstID: _this.TradeInst.InstID,
-		OrdId:  "",
+		Side:   "buy",
+		Sz:     _this.MaxSize.MaxBuy,
+	})
+	return
+}
+
+// 下单 买空
+func (_this *AccountObj) Sell() (resErr error) {
+	account.Order(account.OrderParam{
+		OKXKey: _this.OkxKey,
+		InstID: _this.TradeInst.InstID,
+		Side:   "sell",
+		Sz:     _this.MaxSize.MaxSell,
+	})
+	return
+}
+
+// 下单 平仓
+func (_this *AccountObj) Close() (resErr error) {
+	account.Order(account.OrderParam{
+		OKXKey: _this.OkxKey,
+		InstID: _this.TradeInst.InstID,
 		Side:   "",
 		Sz:     "",
 	})

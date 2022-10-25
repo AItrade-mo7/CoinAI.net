@@ -10,26 +10,20 @@ import (
 
 type CancelOrderParam struct {
 	OKXKey mOKX.TypeOkxKey
-	InstID string
-	OrdId  string
+	Order  PendingOrderType
 }
 
 // 取消订单
 func CancelOrder(opt CancelOrderParam) (resErr error) {
 	resErr = nil
 
-	if len(opt.InstID) < 3 {
-		resErr = fmt.Errorf("account.CancelOrder opt.InstID 不能为空 %+v", opt.InstID)
-		global.LogErr(resErr)
-		return
-	}
 	if len(opt.OKXKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("account.CancelOrder opt.OKXKey.ApiKey 不能为空 %+v", opt.OKXKey.ApiKey)
 		global.LogErr(resErr)
 		return
 	}
-	if len(opt.OrdId) < 3 {
-		resErr = fmt.Errorf("account.CancelOrder opt.OrdId 不能为空 %+v", opt.OrdId)
+	if len(opt.Order.InstID) < 3 {
+		resErr = fmt.Errorf("account.CancelOrder opt.Orders.InstID 不能为空 %+v", opt.Order.InstID)
 		global.LogErr(resErr)
 		return
 	}
@@ -39,8 +33,8 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 		Method: "POST",
 		OKXKey: opt.OKXKey,
 		Data: map[string]any{
-			"instId": opt.InstID,
-			"ordId":  opt.OrdId,
+			"instId": opt.Order.InstID,
+			"ordId":  opt.Order.OrdID,
 		},
 	})
 	if err != nil {
