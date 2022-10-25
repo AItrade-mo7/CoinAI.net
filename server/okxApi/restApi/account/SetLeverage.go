@@ -35,6 +35,8 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 		return
 	}
 
+	fmt.Println(opt)
+
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/set-leverage",
 		Method: "POST",
