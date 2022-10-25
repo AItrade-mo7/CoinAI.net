@@ -46,7 +46,7 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 		},
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.SetLeverage1 %+v", err)
+		resErr = fmt.Errorf("account.SetLeverage1 %+s", res)
 		global.LogErr(resErr)
 		return
 	}
@@ -54,7 +54,7 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.SetLeverage2 %+v", resObj.Data)
+		resErr = fmt.Errorf("account.SetLeverage2 %+s", res)
 		global.LogErr(resErr)
 		return
 	}

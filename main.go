@@ -31,25 +31,12 @@ func main() {
 		OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
 			OkxKey: OkxKey,
 		})
-		if err != nil {
-			fmt.Println("1111", err)
-		}
-		err = OKXAccount.SetPositionMode()
-		if err != nil {
-			fmt.Println("2222", err)
-		}
+
 		err = OKXAccount.SetLeverage()
 		if err != nil {
 			fmt.Println("3333", err)
 		}
-		err = OKXAccount.GetMaxSize()
-		if err != nil {
-			fmt.Println("4444", err)
-		}
-		err = OKXAccount.GetBalance()
-		if err != nil {
-			fmt.Println("5555", err)
-		}
+
 	}
 
 	// 启动路由
