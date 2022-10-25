@@ -14,6 +14,7 @@ type SetLeverageParam struct {
 	Lever  int
 }
 
+// 设置杠杆倍数
 func SetLeverage(opt SetLeverageParam) (resErr error) {
 	resErr = nil
 

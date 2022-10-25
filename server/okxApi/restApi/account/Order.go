@@ -17,6 +17,7 @@ type OrderParam struct {
 	Sz     string
 }
 
+// 下单接口
 func Order(opt OrderParam) (resErr error) {
 	resErr = nil
 

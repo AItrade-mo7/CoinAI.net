@@ -13,6 +13,7 @@ type GetMaxSizeParam struct {
 	OKXKey mOKX.TypeOkxKey
 }
 
+// 获得最大可开仓数量
 func GetMaxSize(opt GetMaxSizeParam) (resErr error) {
 	resErr = nil
 

@@ -14,6 +14,7 @@ type CancelOrderParam struct {
 	OrdId  string
 }
 
+// 取消订单
 func CancelOrder(opt CancelOrderParam) (resErr error) {
 	resErr = nil
 
@@ -35,8 +36,8 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 		Method: "POST",
 		OKXKey: opt.OKXKey,
 		Data: map[string]any{
-			"instId":  opt.InstID,
-			"ordId": opt.OrdId,
+			"instId": opt.InstID,
+			"ordId":  opt.OrdId,
 		},
 	})
 	if err != nil {

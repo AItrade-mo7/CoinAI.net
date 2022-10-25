@@ -29,6 +29,7 @@ type PositionsData struct {
 	Imr         string `bson:"Imr"`         // 初始保证金
 }
 
+// 查看持仓信息
 func GetOKXPositions(OKXKey mOKX.TypeOkxKey) (resData []PositionsData, resErr error) {
 	resData = []PositionsData{}
 	resErr = nil

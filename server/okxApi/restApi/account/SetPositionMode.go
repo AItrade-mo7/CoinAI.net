@@ -8,6 +8,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
+// 设置持仓模式
 func SetPositionMode(OKXKey mOKX.TypeOkxKey) (resErr error) {
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/set-position-mode",

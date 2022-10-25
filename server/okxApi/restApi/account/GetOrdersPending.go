@@ -12,6 +12,7 @@ type GetOrdersPendingParam struct {
 	OKXKey mOKX.TypeOkxKey
 }
 
+// 未成交订单信息
 func GetOrdersPending(opt GetOrdersPendingParam) (resErr error) {
 	resErr = nil
 

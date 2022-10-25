@@ -28,6 +28,7 @@ type AccountBalance struct {
 	Balance  string `bson:"Balance"` // 币种
 }
 
+// 查看账户余额
 func GetOKXBalance(OKXKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr error) {
 	resData = []AccountBalance{}
 	resErr = nil
