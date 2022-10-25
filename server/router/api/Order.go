@@ -9,6 +9,7 @@ import (
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
 	"github.com/EasyGolang/goTools/mFiber"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
 )
@@ -72,6 +73,7 @@ func Order(c *fiber.Ctx) error {
 		return c.JSON(result.ErrOKXAccount.WithMsg(err))
 	}
 	fmt.Println("响应结束", err)
+	mJson.Println(OKXAccount)
 
 	// if json.Type == "Buy" {
 	// 	//
