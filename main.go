@@ -2,13 +2,11 @@ package main
 
 import (
 	_ "embed"
-	"fmt"
-	"time"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/okxApi"
 	"CoinAI.net/server/ready"
+	"CoinAI.net/server/router"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -23,22 +21,6 @@ func main() {
 	// 数据准备
 	ready.Start()
 
-	OkxKey := config.GetOKXKey(0)
-
-	for i := 0; i < 20; i++ {
-		time.Sleep(time.Second / 3)
-		fmt.Println("======开始=======")
-		OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
-			OkxKey: OkxKey,
-		})
-
-		err = OKXAccount.SetLeverage()
-		if err != nil {
-			fmt.Println("3333", err)
-		}
-
-	}
-
 	// 启动路由
-	// router.Start()
+	router.Start()
 }
