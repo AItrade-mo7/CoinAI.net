@@ -21,4 +21,5 @@ var (
 	ErrAccountRepeat   = mRes.Response(-13, "该账号已存在")
 	ErrAddOkxKey       = mRes.Response(-14, "密钥创建失败")
 	ErrAddHunterServer = mRes.Response(-15, "服务创建失败")
+	ErrOKXAccount      = mRes.Response(-16, "OKX 接口失败")
 )

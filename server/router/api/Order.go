@@ -51,28 +51,27 @@ func Order(c *fiber.Ctx) error {
 		OkxKey: OkxKey,
 	})
 	if err != nil {
-		return c.JSON(result.Fail.WithMsg(err))
+		return c.JSON(result.ErrOKXAccount.WithMsg(err))
 	}
 
 	// 设置持仓模式
 	err = OKXAccount.SetPositionMode()
 	if err != nil {
-		return c.JSON(result.Fail.WithMsg(err))
+		return c.JSON(result.ErrOKXAccount.WithMsg(err))
 	}
 
 	// 设置杠杆倍数
 	err = OKXAccount.SetLeverage()
 	if err != nil {
-		return c.JSON(result.Fail.WithMsg(err))
+		return c.JSON(result.ErrOKXAccount.WithMsg(err))
 	}
 
 	// 获取最大可开仓数量
 	err = OKXAccount.GetMaxSize()
 	if err != nil {
-		return c.JSON(result.Fail.WithMsg(err))
+		return c.JSON(result.ErrOKXAccount.WithMsg(err))
 	}
 	fmt.Println("响应结束", err)
-	fmt.Println(OKXAccount.MaxSize)
 
 	// if json.Type == "Buy" {
 	// 	//

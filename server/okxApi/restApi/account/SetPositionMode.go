@@ -20,7 +20,6 @@ func SetPositionMode(OKXKey mOKX.TypeOkxKey) (resErr error) {
 	})
 	if err != nil {
 		resErr = err
-
 		return
 	}
 
