@@ -52,56 +52,19 @@ func Order(c *fiber.Ctx) error {
 		return c.JSON(result.ErrOKXAccount.WithMsg(err))
 	}
 
-	// 设置持仓模式
-	// err = OKXAccount.SetPositionMode()
-	// if err != nil {
-	// 	return c.JSON(result.ErrOKXAccount.WithMsg(err))
-	// }
+	if json.Type == "Buy" {
+		err = OKXAccount.Buy()
+	}
+	if json.Type == "Sell" {
+		err = OKXAccount.Sell()
+	}
+	if json.Type == "Close" {
+		err = OKXAccount.Close()
+	}
 
-	// 设置杠杆倍数
-	// err = OKXAccount.SetLeverage()
-	// if err != nil {
-	// 	return c.JSON(result.ErrOKXAccount.WithMsg(err))
-	// }
-
-	// 获取最大可开仓数量
-	err = OKXAccount.GetMaxSize()
 	if err != nil {
 		return c.JSON(result.ErrOKXAccount.WithMsg(err))
 	}
-
-	// 获取未成交订单信息
-	err = OKXAccount.GetOrdersPending()
-	if err != nil {
-		return c.JSON(result.ErrOKXAccount.WithMsg(err))
-	}
-
-	// 取消所有未成交订单
-	err = OKXAccount.CancelOrder()
-	if err != nil {
-		return c.JSON(result.ErrOKXAccount.WithMsg(err))
-	}
-
-	// 下单
-	err = OKXAccount.Close()
-	if err != nil {
-		return c.JSON(result.ErrOKXAccount.WithMsg(err))
-	}
-
-	// if json.Type == "Buy" {
-	// 	//
-	// }
-	// if json.Type == "Sell" {
-	// 	//
-	// }
-
-	// if json.Type == "Close" {
-	// 	//
-	// }
-
-	// if json.Type == "BuySPOT" {
-	// 	//
-	// }
 
 	return c.JSON(result.Succeed.WithData(json.Type))
 }

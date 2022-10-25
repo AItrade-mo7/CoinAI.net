@@ -62,6 +62,10 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 	obj.TradeLever = okxInfo.TradeLever
 
 	resObj = &obj
+
+	resObj.SetPositionMode()  // 设置持仓模式
+	resObj.GetOrdersPending() // 获取未成交订单
+	resObj.CancelOrder()      // 取消所有未成交订单
 	return
 }
 
@@ -73,12 +77,9 @@ func (_this *AccountObj) SetPositionMode() (resErr error) {
 
 // 下单 买多
 func (_this *AccountObj) Buy() (resErr error) {
-	_this.GetOrdersPending() // 获取未成交订单
-	_this.CancelOrder()      // 取消所有未成交订单
-	_this.Close()            // 平仓
-	_this.SetPositionMode()  // 设置持仓模式
-	_this.SetLeverage()      // 设置杠杆倍数
-	_this.GetMaxSize()       // 获取最大开仓数量
+	_this.Close()       // 平仓
+	_this.SetLeverage() // 设置杠杆倍数
+	_this.GetMaxSize()  // 获取最大开仓数量
 	account.Order(account.OrderParam{
 		OKXKey: _this.OkxKey,
 		InstID: _this.TradeInst.InstID,
@@ -90,12 +91,9 @@ func (_this *AccountObj) Buy() (resErr error) {
 
 // 下单 买空
 func (_this *AccountObj) Sell() (resErr error) {
-	_this.GetOrdersPending() // 获取未成交订单
-	_this.CancelOrder()      // 取消所有未成交订单
-	_this.Close()            // 平仓
-	_this.SetPositionMode()  // 设置持仓模式
-	_this.SetLeverage()      // 设置杠杆倍数
-	_this.GetMaxSize()       // 获取最大开仓数量
+	_this.Close()       // 平仓
+	_this.SetLeverage() // 设置杠杆倍数
+	_this.GetMaxSize()  // 获取最大开仓数量
 	account.Order(account.OrderParam{
 		OKXKey: _this.OkxKey,
 		InstID: _this.TradeInst.InstID,
@@ -170,12 +168,23 @@ func (_this *AccountObj) CancelOrder() (resErr error) {
 func (_this *AccountObj) Close() (resErr error) {
 	_this.GetPositions()
 	for _, Position := range _this.Positions {
+		InstID := Position.InstID
+		Side := ""
+		Sz := "0"
 		if mCount.Le(Position.Pos, "0") > 0 {
-			_this.Sell()
+			Side = "sell"
+			Sz = _this.MaxSize.MaxSell
 		}
 		if mCount.Le(Position.Pos, "0") < 0 {
-			_this.Buy()
+			Side = "buy"
+			Sz = _this.MaxSize.MaxBuy
 		}
+		account.Order(account.OrderParam{
+			OKXKey: _this.OkxKey,
+			InstID: InstID,
+			Side:   Side,
+			Sz:     Sz,
+		})
 	}
 	return
 }
