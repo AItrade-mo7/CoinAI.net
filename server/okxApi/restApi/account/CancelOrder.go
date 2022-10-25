@@ -46,7 +46,7 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 	})
 	if err != nil {
 		resErr = err
-		global.LogErr(resErr)
+		global.LogErr("account.CancelOrder1", resErr)
 		return
 	}
 
@@ -54,7 +54,7 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
-		global.LogErr(resErr)
+		global.LogErr("account.CancelOrder2", resErr)
 		return
 	}
 

@@ -1,6 +1,8 @@
 package account
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"github.com/EasyGolang/goTools/mCount"
@@ -34,6 +36,12 @@ func GetOKXBalance(OKXKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr err
 	resData = []AccountBalance{}
 	resErr = nil
 
+	if len(OKXKey.ApiKey) < 10 {
+		resErr = fmt.Errorf("account.GetOKXBalance OKXKey.ApiKey 不能为空 %+v", OKXKey.ApiKey)
+		global.LogErr(resErr)
+		return
+	}
+
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/balance",
 		Method: "GET",
@@ -41,7 +49,7 @@ func GetOKXBalance(OKXKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr err
 	})
 	if err != nil {
 		resErr = err
-		global.LogErr(resErr)
+		global.LogErr("account.GetOKXBalance", resErr)
 		return
 	}
 

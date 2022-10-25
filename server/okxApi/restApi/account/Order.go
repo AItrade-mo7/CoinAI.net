@@ -63,7 +63,7 @@ func Order(opt OrderParam) (resErr error) {
 	})
 	if err != nil {
 		resErr = err
-		global.LogErr(resErr)
+		global.LogErr("account.Order1", resErr)
 		return
 	}
 
@@ -71,7 +71,7 @@ func Order(opt OrderParam) (resErr error) {
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
-		global.LogErr(resErr)
+		global.LogErr("account.Order2", resErr)
 		return
 	}
 	return

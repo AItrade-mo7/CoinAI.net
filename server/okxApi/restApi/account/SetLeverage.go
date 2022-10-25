@@ -47,7 +47,7 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 	})
 	if err != nil {
 		resErr = err
-		global.LogErr(resErr)
+		global.LogErr("account.SetLeverage1", resErr)
 		return
 	}
 
@@ -55,7 +55,7 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
-		global.LogErr(resErr)
+		global.LogErr("account.SetLeverage2", resErr)
 		return
 	}
 

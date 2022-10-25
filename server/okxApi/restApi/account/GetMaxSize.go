@@ -49,7 +49,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	})
 	if err != nil {
 		resErr = err
-		global.LogErr(resErr)
+		global.LogErr("account.SetLeverage1", resErr)
 		return
 	}
 
@@ -57,7 +57,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
-		global.LogErr(resErr)
+		global.LogErr("account.SetLeverage2", resErr)
 		return
 	}
 
@@ -65,7 +65,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	jsoniter.Unmarshal(mJson.ToJson(resObj.Data), &result)
 	if len(result) > 0 {
 		resData = result[0]
-		global.LogErr(resErr)
+		global.LogErr("account.SetLeverage3", resErr)
 		return
 	}
 

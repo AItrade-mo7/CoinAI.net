@@ -1,6 +1,8 @@
 package account
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"github.com/EasyGolang/goTools/mFile"
@@ -35,6 +37,12 @@ func GetOKXPositions(OKXKey mOKX.TypeOkxKey) (resData []PositionsData, resErr er
 	resData = []PositionsData{}
 	resErr = nil
 
+	if len(OKXKey.ApiKey) < 10 {
+		resErr = fmt.Errorf("account.GetOKXPositions OKXKey.ApiKey 不能为空 %+v", OKXKey.ApiKey)
+		global.LogErr(resErr)
+		return
+	}
+
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/positions",
 		Method: "GET",
@@ -42,14 +50,14 @@ func GetOKXPositions(OKXKey mOKX.TypeOkxKey) (resData []PositionsData, resErr er
 	})
 	if err != nil {
 		resErr = err
-		global.LogErr(resErr)
+		global.LogErr("account.GetOKXPositions1", resErr)
 		return
 	}
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = err
-		global.LogErr(resErr)
+		global.LogErr("account.GetOKXPositions2", resErr)
 		return
 	}
 
