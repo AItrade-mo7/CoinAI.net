@@ -67,6 +67,9 @@ func Order(c *fiber.Ctx) error {
 	}
 	fmt.Println("响应结束", err)
 
+	// 获取最大可开仓数量
+	OKXAccount.GetMaxSize()
+
 	// if json.Type == "Buy" {
 	// 	//
 	// }

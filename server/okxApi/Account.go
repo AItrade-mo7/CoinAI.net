@@ -14,8 +14,10 @@ type AccountParam struct {
 
 type AccountObj struct {
 	OkxKey     mOKX.TypeOkxKey
-	TradeInst  mOKX.TypeTicker // 交易币种信息
-	TradeLever int             // 杠杆倍数
+	TradeInst  mOKX.TypeInst // 交易币种信息
+	TradeLever int           // 杠杆倍数
+	Balance    []account.AccountBalance
+	Positions  []account.PositionsData
 }
 
 // 创建一个新账户
@@ -32,8 +34,13 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 		return
 	}
 
-	if len(okxInfo.TradeInst.InstID) < 3 {
-		resErr = fmt.Errorf("okxInfo.TradeInst.InstID 不能为空 %+v", okxInfo.TradeInst.InstID)
+	if len(okxInfo.TradeInst.SWAP.InstID) < 3 {
+		resErr = fmt.Errorf("okxInfo.TradeInst.SWAP.InstID 不能为空 %+v", okxInfo.TradeInst.SWAP)
+		return
+	}
+
+	if len(okxInfo.TradeInst.SPOT.InstID) < 3 {
+		resErr = fmt.Errorf("okxInfo.TradeInst.SPOT.InstID 不能为空 %+v", okxInfo.TradeInst.SPOT)
 		return
 	}
 
@@ -42,8 +49,13 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 		return
 	}
 
+	if okxInfo.IsSPOT {
+		obj.TradeInst = okxInfo.TradeInst.SPOT
+	} else {
+		obj.TradeInst = okxInfo.TradeInst.SWAP
+	}
+
 	obj.OkxKey = opt.OkxKey
-	obj.TradeInst = okxInfo.TradeInst
 	obj.TradeLever = okxInfo.TradeLever
 
 	resObj = &obj
@@ -67,13 +79,23 @@ func (_this *AccountObj) SetLeverage() (resErr error) {
 }
 
 // 获取账户余额
-func (_this *AccountObj) GetBalance() {
+func (_this *AccountObj) GetBalance() (resErr error) {
+	resData, resErr := account.GetOKXBalance(_this.OkxKey)
+	_this.Balance = resData
+	return
 }
 
 // 获取持仓信息
-func (_this *AccountObj) GetPositions() {
+func (_this *AccountObj) GetPositions() (resErr error) {
+	resData, resErr := account.GetOKXPositions(_this.OkxKey)
+	_this.Positions = resData
+	return
 }
 
 // 获取最大可开仓数量
 func (_this *AccountObj) GetMaxSize() {
+	account.GetMaxSize(account.GetMaxSizeParam{
+		InstID: _this.TradeInst.InstID,
+		OKXKey: _this.OkxKey,
+	})
 }
