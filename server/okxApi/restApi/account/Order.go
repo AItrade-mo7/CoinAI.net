@@ -10,19 +10,19 @@ import (
 )
 
 type OrderParam struct {
-	InstID string
-	OKXKey mOKX.TypeOkxKey
-	OrdId  string
-	Side   string // buy  sell
-	Sz     string
+	TradeInst mOKX.TypeInst // 交易币种信息
+	OKXKey    mOKX.TypeOkxKey
+	OrdId     string
+	Side      string // buy  sell
+	Sz        string
 }
 
 // 下单接口
 func Order(opt OrderParam) (resErr error) {
 	resErr = nil
 
-	if len(opt.InstID) < 3 {
-		resErr = fmt.Errorf("account.Order opt.InstID 不能为空 %+v", opt.InstID)
+	if len(opt.TradeInst.InstID) < 3 {
+		resErr = fmt.Errorf("account.Order opt.InstID 不能为空 %+v", opt.TradeInst.InstID)
 		global.LogErr(resErr)
 		return
 	}
@@ -40,13 +40,13 @@ func Order(opt OrderParam) (resErr error) {
 
 	tdMode := "cash" // 币币交易
 	ordType := "market"
-	find := strings.Contains(opt.InstID, "-SWAP")
+	find := strings.Contains(opt.TradeInst.InstID, "-SWAP")
 	if find {
 		tdMode = "cross" // 全仓杠杆
 		ordType = "optimal_limit_ioc"
 	}
 
-	fmt.Println(opt.InstID)
+	fmt.Println(opt.TradeInst.InstID)
 	fmt.Println(opt.Side)
 	fmt.Println(opt.Sz)
 
@@ -55,7 +55,7 @@ func Order(opt OrderParam) (resErr error) {
 		Method: "POST",
 		OKXKey: opt.OKXKey,
 		Data: map[string]any{
-			"instId":  opt.InstID,
+			"instId":  opt.TradeInst.InstID,
 			"tdMode":  tdMode,
 			"clOrdId": opt.OrdId,
 			"side":    opt.Side,

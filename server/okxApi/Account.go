@@ -82,10 +82,10 @@ func (_this *AccountObj) Buy() (resErr error) {
 	_this.SetLeverage() // 设置杠杆倍数
 	_this.GetMaxSize()  // 获取最大开仓数量
 	account.Order(account.OrderParam{
-		OKXKey: _this.OkxKey,
-		InstID: _this.TradeInst.InstID,
-		Side:   "buy",
-		Sz:     _this.MaxSize.MaxBuy,
+		OKXKey:    _this.OkxKey,
+		TradeInst: _this.TradeInst,
+		Side:      "buy",
+		Sz:        _this.MaxSize.MaxBuy,
 	})
 	return
 }
@@ -96,10 +96,10 @@ func (_this *AccountObj) Sell() (resErr error) {
 	_this.SetLeverage() // 设置杠杆倍数
 	_this.GetMaxSize()  // 获取最大开仓数量
 	account.Order(account.OrderParam{
-		OKXKey: _this.OkxKey,
-		InstID: _this.TradeInst.InstID,
-		Side:   "sell",
-		Sz:     _this.MaxSize.MaxSell,
+		OKXKey:    _this.OkxKey,
+		TradeInst: _this.TradeInst,
+		Side:      "sell",
+		Sz:        _this.MaxSize.MaxSell,
 	})
 	return
 }
@@ -170,12 +170,12 @@ func (_this *AccountObj) Close() (resErr error) {
 	_this.GetPositions()
 	errArr := []error{}
 	for _, Position := range _this.Positions {
-		InstID := Position.InstID
+		TradeInst := okxInfo.InstAll[Position.InstID]
 		Side := ""
 		Sz := "0"
 
 		maxSize, err := account.GetMaxSize(account.GetMaxSizeParam{
-			InstID: InstID,
+			InstID: TradeInst.InstID,
 			OKXKey: _this.OkxKey,
 		})
 		if err != nil {
@@ -193,10 +193,10 @@ func (_this *AccountObj) Close() (resErr error) {
 			Sz = maxSize.MaxBuy
 		}
 		err = account.Order(account.OrderParam{
-			OKXKey: _this.OkxKey,
-			InstID: InstID,
-			Side:   Side,
-			Sz:     Sz,
+			OKXKey:    _this.OkxKey,
+			TradeInst: TradeInst,
+			Side:      Side,
+			Sz:        Sz,
 		})
 		if err != nil {
 			err = fmt.Errorf("平仓 下单 失败")

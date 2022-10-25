@@ -21,6 +21,8 @@ func Start() {
 */
 
 func GetAnalyData() {
+	okxInfo.InstAll = GetInstAll()
+
 	okxInfo.NowTicker = GetNowTickerAnaly()
 
 	okxInfo.TradeInst = okxInfo.NowTicker.TickerVol[1]
