@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/okxApi"
 	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
@@ -35,14 +36,14 @@ func GetAccountDetail(c *fiber.Ctx) error {
 	ApiKeyList := config.AppEnv.ApiKeyList
 
 	var ListErr error
-	ApiKey := mOKX.TypeOkxKey{}
+	OkxKey := mOKX.TypeOkxKey{}
 	for key, val := range ApiKeyList {
 		if key == json.Index {
 			if val.UserID != UserID {
 				ListErr = fmt.Errorf("无权操作")
 				break
 			}
-			ApiKey = val
+			OkxKey = val
 		}
 	}
 
@@ -50,21 +51,25 @@ func GetAccountDetail(c *fiber.Ctx) error {
 		return c.JSON(result.Fail.WithMsg(ListErr))
 	}
 
-	if len(ApiKey.ApiKey) < 20 {
-		return c.JSON(result.Fail.WithMsg("不存在的Key"))
+	// 新建账户
+	OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
+		OkxKey: OkxKey,
+	})
+	if err != nil {
+		return c.JSON(result.ErrOKXAccount.WithMsg(err))
 	}
 
-	Positions, err := account.GetOKXPositions(ApiKey)
+	err = OKXAccount.GetPositions()
 	if err != nil {
-		return c.JSON(result.Succeed.WithData("接口开发中"))
+		return c.JSON(result.ErrOKXAccount.WithMsg(err))
 	}
-	Balance, err := account.GetOKXBalance(ApiKey)
+	err = OKXAccount.GetBalance()
 	if err != nil {
-		return c.JSON(result.Succeed.WithData("接口开发中"))
+		return c.JSON(result.ErrOKXAccount.WithMsg(err))
 	}
 
 	return c.JSON(result.Succeed.WithData(AccountDetail{
-		Positions: Positions,
-		Balance:   Balance,
+		Positions: OKXAccount.Positions,
+		Balance:   OKXAccount.Balance,
 	}))
 }
