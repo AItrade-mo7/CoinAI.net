@@ -168,7 +168,6 @@ func (_this *AccountObj) CancelOrder() (resErr error) {
 // 下单 平仓,平掉当前所有仓位
 func (_this *AccountObj) Close() (resErr error) {
 	_this.GetPositions()
-	_this.GetMaxSize()
 	errArr := []error{}
 	for _, Position := range _this.Positions {
 		InstID := Position.InstID
