@@ -3,6 +3,7 @@ package account
 import (
 	"fmt"
 
+	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
@@ -20,6 +21,7 @@ func SetPositionMode(OKXKey mOKX.TypeOkxKey) (resErr error) {
 	})
 	if err != nil {
 		resErr = err
+		global.LogErr(resErr)
 		return
 	}
 
@@ -27,6 +29,7 @@ func SetPositionMode(OKXKey mOKX.TypeOkxKey) (resErr error) {
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
+		global.LogErr(resErr)
 		return
 	}
 

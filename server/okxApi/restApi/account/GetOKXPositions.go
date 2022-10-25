@@ -1,6 +1,7 @@
 package account
 
 import (
+	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
@@ -41,12 +42,14 @@ func GetOKXPositions(OKXKey mOKX.TypeOkxKey) (resData []PositionsData, resErr er
 	})
 	if err != nil {
 		resErr = err
+		global.LogErr(resErr)
 		return
 	}
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = err
+		global.LogErr(resErr)
 		return
 	}
 

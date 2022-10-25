@@ -3,6 +3,7 @@ package account
 import (
 	"fmt"
 
+	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
@@ -18,6 +19,7 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resErr error) {
 
 	if len(opt.OKXKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("account.SetLeverage opt.OKXKey.ApiKey 不能为空 %+v", opt.OKXKey.ApiKey)
+		global.LogErr(resErr)
 		return
 	}
 
@@ -28,6 +30,7 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resErr error) {
 	})
 	if err != nil {
 		resErr = err
+		global.LogErr(resErr)
 		return
 	}
 
@@ -35,6 +38,7 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resErr error) {
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
+		global.LogErr(resErr)
 		return
 	}
 	return

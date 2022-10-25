@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
@@ -23,15 +24,18 @@ func Order(opt OrderParam) (resErr error) {
 
 	if len(opt.InstID) < 3 {
 		resErr = fmt.Errorf("account.Order opt.InstID 不能为空 %+v", opt.InstID)
+		global.LogErr(resErr)
 		return
 	}
 	if len(opt.OKXKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("account.Order opt.OKXKey.ApiKey 不能为空 %+v", opt.OKXKey.ApiKey)
+		global.LogErr(resErr)
 		return
 	}
 	if opt.Side == "buy" || opt.Side == "sell" {
 	} else {
 		resErr = fmt.Errorf("account.Order opt.Side 不正确 %+v", opt.Side)
+		global.LogErr(resErr)
 		return
 	}
 
@@ -59,6 +63,7 @@ func Order(opt OrderParam) (resErr error) {
 	})
 	if err != nil {
 		resErr = err
+		global.LogErr(resErr)
 		return
 	}
 
@@ -66,6 +71,7 @@ func Order(opt OrderParam) (resErr error) {
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
+		global.LogErr(resErr)
 		return
 	}
 	return

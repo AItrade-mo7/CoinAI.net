@@ -3,6 +3,7 @@ package account
 import (
 	"fmt"
 
+	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
@@ -28,10 +29,12 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 
 	if len(opt.InstID) < 3 {
 		resErr = fmt.Errorf("account.SetLeverage opt.InstID 不能为空 %+v", opt.InstID)
+		global.LogErr(resErr)
 		return
 	}
 	if len(opt.OKXKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("account.SetLeverage opt.OKXKey.ApiKey 不能为空 %+v", opt.OKXKey.ApiKey)
+		global.LogErr(resErr)
 		return
 	}
 
@@ -46,6 +49,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	})
 	if err != nil {
 		resErr = err
+		global.LogErr(resErr)
 		return
 	}
 
@@ -53,6 +57,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
+		global.LogErr(resErr)
 		return
 	}
 
@@ -60,6 +65,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	jsoniter.Unmarshal(mJson.ToJson(resObj.Data), &result)
 	if len(result) > 0 {
 		resData = result[0]
+		global.LogErr(resErr)
 		return
 	}
 

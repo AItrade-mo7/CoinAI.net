@@ -1,6 +1,7 @@
 package account
 
 import (
+	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
@@ -40,6 +41,7 @@ func GetOKXBalance(OKXKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr err
 	})
 	if err != nil {
 		resErr = err
+		global.LogErr(resErr)
 		return
 	}
 
@@ -48,6 +50,7 @@ func GetOKXBalance(OKXKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr err
 
 	if resObj.Code != "0" {
 		resErr = err
+		global.LogErr(resErr)
 		return
 	}
 	var Data BalanceReq
