@@ -6,7 +6,6 @@ import (
 
 	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mOKX"
-	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -62,16 +61,16 @@ func Order(opt OrderParam) (resErr error) {
 		},
 	})
 	if err != nil {
-		resErr = err
-		global.LogErr("account.Order1", resErr)
+		resErr = fmt.Errorf("account.Order1 %+v", err)
+		global.LogErr(resErr)
 		return
 	}
 
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
-		global.LogErr("account.Order2", resErr)
+		resErr = fmt.Errorf("account.Order2 %+v", resObj.Data)
+		global.LogErr(resErr)
 		return
 	}
 	return

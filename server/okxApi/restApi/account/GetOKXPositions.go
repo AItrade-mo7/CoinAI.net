@@ -49,15 +49,15 @@ func GetOKXPositions(OKXKey mOKX.TypeOkxKey) (resData []PositionsData, resErr er
 		OKXKey: OKXKey,
 	})
 	if err != nil {
-		resErr = err
-		global.LogErr("account.GetOKXPositions1", resErr)
+		resErr = fmt.Errorf("account.GetOKXPositions1 %+v", err)
+		global.LogErr(resErr)
 		return
 	}
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = err
-		global.LogErr("account.GetOKXPositions2", resErr)
+		resErr = fmt.Errorf("account.GetOKXPositions2 %+v", OKXKey.ApiKey)
+		global.LogErr(resErr)
 		return
 	}
 

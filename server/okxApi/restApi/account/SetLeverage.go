@@ -35,8 +35,6 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 		return
 	}
 
-	fmt.Println(opt)
-
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/set-leverage",
 		Method: "POST",
@@ -47,21 +45,17 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 			"mgnMode": "cross",
 		},
 	})
-
-	fmt.Println(string(res))
-	fmt.Println((err))
-
 	if err != nil {
-		resErr = err
-		global.LogErr("account.SetLeverage1", resErr)
+		resErr = fmt.Errorf("account.SetLeverage1 %+v", err)
+		global.LogErr(resErr)
 		return
 	}
 
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
-		global.LogErr("account.SetLeverage2", resErr)
+		resErr = fmt.Errorf("account.SetLeverage2 %+v", resObj.Data)
+		global.LogErr(resErr)
 		return
 	}
 

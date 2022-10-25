@@ -5,7 +5,6 @@ import (
 
 	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mOKX"
-	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -29,17 +28,16 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resErr error) {
 		OKXKey: opt.OKXKey,
 	})
 	if err != nil {
-		resErr = err
+		resErr = fmt.Errorf("account.GetOrdersPending1 %+v", err)
 		global.LogErr(resErr)
-		global.LogErr("account.GetOrdersPending1", resErr)
 		return
 	}
 
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
-		global.LogErr("account.GetOrdersPending2", resErr)
+		resErr = fmt.Errorf("account.GetOrdersPending2 %+v", resObj.Data)
+		global.LogErr(resErr)
 		return
 	}
 	return

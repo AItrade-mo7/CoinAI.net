@@ -27,26 +27,26 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 	resErr = nil
 
 	if !opt.OkxKey.IsTrade {
-		resErr = fmt.Errorf("当前 Key 已被禁用")
+		resErr = fmt.Errorf("okxApi.NewAccount 当前 Key 已被禁用")
 		return
 	}
 	if len(opt.OkxKey.ApiKey) < 10 {
-		resErr = fmt.Errorf("ApiKey 不能为空 ")
+		resErr = fmt.Errorf("okxApi.NewAccount ApiKey 不能为空 ")
 		return
 	}
 
 	if len(okxInfo.TradeInst.SWAP.InstID) < 3 {
-		resErr = fmt.Errorf("okxInfo.TradeInst.SWAP.InstID 不能为空 %+v", okxInfo.TradeInst.SWAP)
+		resErr = fmt.Errorf("okxApi.NewAccount okxInfo.TradeInst.SWAP.InstID 不能为空 %+v", okxInfo.TradeInst.SWAP)
 		return
 	}
 
 	if len(okxInfo.TradeInst.SPOT.InstID) < 3 {
-		resErr = fmt.Errorf("okxInfo.TradeInst.SPOT.InstID 不能为空 %+v", okxInfo.TradeInst.SPOT)
+		resErr = fmt.Errorf("okxApi.NewAccount okxInfo.TradeInst.SPOT.InstID 不能为空 %+v", okxInfo.TradeInst.SPOT)
 		return
 	}
 
 	if (okxInfo.TradeLever) < 1 {
-		resErr = fmt.Errorf("okxInfo.TradeLever 不能为空 %+v", okxInfo.TradeLever)
+		resErr = fmt.Errorf("okxApi.NewAccount okxInfo.TradeLever 不能为空 %+v", okxInfo.TradeLever)
 		return
 	}
 

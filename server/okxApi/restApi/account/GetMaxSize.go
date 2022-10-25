@@ -6,7 +6,6 @@ import (
 	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
-	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -48,16 +47,16 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 		},
 	})
 	if err != nil {
-		resErr = err
-		global.LogErr("account.GetMaxSize1", resErr)
+		resErr = fmt.Errorf("account.GetMaxSize1 %+v", err)
+		global.LogErr(resErr)
 		return
 	}
 
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf(mStr.ToStr(resObj.Data))
-		global.LogErr("account.GetMaxSize2", resErr)
+		resErr = fmt.Errorf("account.GetMaxSize1 %+v",resObj.Data)
+		global.LogErr(resErr)
 		return
 	}
 
