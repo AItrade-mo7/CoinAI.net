@@ -43,3 +43,17 @@ func GetOKXKey(Index int) mOKX.TypeOkxKey {
 
 	return ReturnKey
 }
+
+type EmailInfo struct {
+	Account  string
+	Password string
+	To       []string
+}
+
+var Email = EmailInfo{
+	Account:  "trade@mo7.cc",
+	Password: "Mcl931750",
+	To: []string{
+		"meichangliang@mo7.cc",
+	},
+}

@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/tmpl"
 	"github.com/EasyGolang/goTools/mLog"
 	"github.com/EasyGolang/goTools/mTime"
 )
@@ -44,6 +45,15 @@ func LogInit() {
 
 func LogErr(sum ...any) {
 	str := fmt.Sprintf("系统错误 : %+v", sum)
-
+	Email := Email(EmailOpt{
+		To:       config.Email.To,
+		Subject:  "LogErr",
+		Template: tmpl.SysEmail,
+		SendData: tmpl.SysParam{
+			Message: str,
+			SysTime: mTime.IsoTime(),
+		},
+	})
 	Log.Println(str)
+	go Email.Send()
 }

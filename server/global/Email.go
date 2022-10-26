@@ -1,6 +1,7 @@
 package global
 
 import (
+	"CoinAI.net/server/global/config"
 	"github.com/EasyGolang/goTools/mEmail"
 )
 
@@ -14,8 +15,8 @@ type EmailOpt struct {
 func Email(opt EmailOpt) *mEmail.EmailInfo {
 	if len(opt.To) > 0 {
 		emailObj := mEmail.New(mEmail.Opt{
-			Account:     "trade@mo7.cc",
-			Password:    "Mcl931750",
+			Account:     config.Email.Account,
+			Password:    config.Email.Password,
 			To:          opt.To,
 			From:        "CoinAI 事件警报",
 			Subject:     opt.Subject,
