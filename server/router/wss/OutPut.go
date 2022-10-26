@@ -39,10 +39,15 @@ func GetOutPut() (resData OutPut) {
 	resData.TradeLever = okxInfo.TradeLever
 
 	// Ticker 信息
-	resData.NowTicker = okxInfo.NowTicker
+	resData.NowTicker.Unit = okxInfo.NowTicker.Unit
+	resData.NowTicker.WholeDir = okxInfo.NowTicker.WholeDir
+	resData.NowTicker.DirIndex = okxInfo.NowTicker.DirIndex
+	resData.NowTicker.TimeStr = okxInfo.NowTicker.TimeStr
 
 	// Coin 信息
-	resData.TradeCoin = okxInfo.TradeInst
+	resData.TradeCoin.Last = okxInfo.TradeInst.Last
+	resData.TradeCoin.TimeUnix = okxInfo.TradeInst.TimeUnix
+	resData.TradeCoin.TimeStr = okxInfo.TradeInst.TimeStr
 
 	return
 }
