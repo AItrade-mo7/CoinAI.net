@@ -3,7 +3,6 @@ package api
 import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
@@ -64,10 +63,10 @@ func SetKey(c *fiber.Ctx) error {
 	ApiKey.UserID = UserID
 
 	// 验证 Key 准确性
-	_, err = account.GetOKXBalance(ApiKey)
-	if err != nil {
-		return c.JSON(result.ErrLogin.WithMsg("Api Key 验证失败!"))
-	}
+	// _, err = account.GetOKXBalance(ApiKey)
+	// if err != nil {
+	// 	return c.JSON(result.ErrLogin.WithMsg("Api Key 验证失败!"))
+	// }
 
 	ApiKeyList := config.AppEnv.ApiKeyList
 	isRepeat := false
