@@ -20,6 +20,7 @@ func TokenAuth(c *fiber.Ctx) (Message string, err error) {
 	}
 
 	Claims, AuthOk := mEncrypt.ParseToken(Token, config.SecretKey)
+
 	if !AuthOk {
 		err = errors.New("Token验证失败")
 		return
@@ -40,9 +41,13 @@ func TokenAuth(c *fiber.Ctx) (Message string, err error) {
 		return
 	}
 
-	if UserID != config.AppEnv.UserID {
-		err = errors.New("Token包含信息有误")
-		return
+	// 这台为公共主机
+	if config.AppEnv.UserID == config.PublicUserID {
+	} else {
+		if UserID != config.AppEnv.UserID {
+			err = errors.New("Token包含信息有误")
+			return
+		}
 	}
 
 	return

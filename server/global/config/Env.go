@@ -57,3 +57,5 @@ var Email = EmailInfo{
 		"meichangliang@mo7.cc",
 	},
 }
+
+var PublicUserID = "468f3c7c0c684de181cad3b1fe34fab1"
