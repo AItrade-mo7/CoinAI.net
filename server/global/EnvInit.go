@@ -38,11 +38,9 @@ func AppEnvInit() {
 	ReadeDBAppEnv(config.AppEnv.ServeID)
 
 	if len(config.AppEnv.Name) < 1 {
-		config.AppEnv.Name = config.AppInfo.Name
+		config.AppEnv.Name = "我的 CoinAI"
 	}
-	if len(config.AppEnv.Version) < 1 {
-		config.AppEnv.Version = config.AppInfo.Version
-	}
+	config.AppEnv.Version = config.AppInfo.Version
 
 	WriteAppEnv()
 }
