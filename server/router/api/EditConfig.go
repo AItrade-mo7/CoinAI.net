@@ -3,6 +3,7 @@ package api
 import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
@@ -14,6 +15,7 @@ import (
 type EditConfigParam struct {
 	Password   string
 	ServerName string
+	Lever      int
 }
 
 func EditConfig(c *fiber.Ctx) error {
@@ -41,8 +43,16 @@ func EditConfig(c *fiber.Ctx) error {
 		return c.JSON(result.ErrLogin.WithMsg(err))
 	}
 
-	if len(json.ServerName) > 3 {
+	if len(json.ServerName) > 3 && len(json.ServerName) < 13 {
 		config.AppEnv.Name = json.ServerName
+	} else {
+		return c.JSON(result.Fail.WithMsg("名称长度不符合规范"))
+	}
+
+	if json.Lever > 1 && json.Lever < 11 {
+		okxInfo.TradeLever = json.Lever
+	} else {
+		return c.JSON(result.Fail.WithMsg("杠杆系数不符合规范"))
 	}
 
 	global.WriteAppEnv()
