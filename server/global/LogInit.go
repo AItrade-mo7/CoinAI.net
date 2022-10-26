@@ -47,7 +47,7 @@ func LogErr(sum ...any) {
 	str := fmt.Sprintf("系统错误 : %+v", sum)
 	Email := Email(EmailOpt{
 		To:       config.Email.To,
-		Subject:  "LogErr",
+		Subject:  "系统出错",
 		Template: tmpl.SysEmail,
 		SendData: tmpl.SysParam{
 			Message: str,

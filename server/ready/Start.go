@@ -52,9 +52,12 @@ func UpdateUserInfo() {
 	}
 
 	Message := mStr.Join(
-		"服务已启动,", "请访问:",
+		"服务已启动,",
 		`<br /> <a href="https://trade.mo7.cc/CoinServe"> https://trade.mo7.cc/CoinServe </a> <br />`,
-		"查看详情",
+		"用户昵称: ",
+		okxInfo.UserInfo.NickName,
+		"用户ID: ",
+		okxInfo.UserInfo.UserID,
 	)
 
 	global.Email(global.EmailOpt{
