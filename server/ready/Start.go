@@ -7,7 +7,6 @@ import (
 	"CoinAI.net/server/tmpl"
 	"CoinAI.net/server/utils/dbUser"
 	"github.com/EasyGolang/goTools/mClock"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
 )
@@ -67,6 +66,4 @@ func UpdateUserInfo() {
 			SysTime: mTime.IsoTime(),
 		},
 	}).Send()
-
-	global.RunLog.Println("启动服务", mJson.Format(config.Email.To), mJson.Format(config.AppEnv))
 }
