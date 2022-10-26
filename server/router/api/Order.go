@@ -48,6 +48,7 @@ func Order(c *fiber.Ctx) error {
 		if err != nil {
 			return c.JSON(result.ErrDB.WithMsg(mStr.ToStr(err)))
 		}
+
 		if UserID != config.AppEnv.UserID {
 			return c.JSON(result.Fail.WithMsg("无权操作"))
 		}
@@ -76,33 +77,34 @@ func Order(c *fiber.Ctx) error {
 			}
 		}
 
-	}
-	OkxKey := config.GetOKXKey(json.Index)
+	} else {
+		OkxKey := config.GetOKXKey(json.Index)
 
-	if UserID != OkxKey.UserID {
-		return c.JSON(result.Fail.WithMsg("无权操作"))
-	}
+		if UserID != OkxKey.UserID {
+			return c.JSON(result.Fail.WithMsg("无权操作"))
+		}
 
-	// 新建账户
-	OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
-		OkxKey: OkxKey,
-	})
-	if err != nil {
-		return c.JSON(result.ErrOKXAccount.WithMsg(err))
-	}
+		// 新建账户
+		OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
+			OkxKey: OkxKey,
+		})
+		if err != nil {
+			return c.JSON(result.ErrOKXAccount.WithMsg(err))
+		}
 
-	if json.Type == "Buy" {
-		err = OKXAccount.Buy()
-	}
-	if json.Type == "Sell" {
-		err = OKXAccount.Sell()
-	}
-	if json.Type == "Close" {
-		err = OKXAccount.Close()
-	}
+		if json.Type == "Buy" {
+			err = OKXAccount.Buy()
+		}
+		if json.Type == "Sell" {
+			err = OKXAccount.Sell()
+		}
+		if json.Type == "Close" {
+			err = OKXAccount.Close()
+		}
 
-	if err != nil {
-		return c.JSON(result.ErrOKXAccount.WithMsg(err))
+		if err != nil {
+			return c.JSON(result.ErrOKXAccount.WithMsg(err))
+		}
 	}
 
 	return c.JSON(result.Succeed.WithData(json.Type))
