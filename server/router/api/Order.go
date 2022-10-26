@@ -1,6 +1,8 @@
 package api
 
 import (
+	"time"
+
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxApi"
 	"CoinAI.net/server/router/middle"
@@ -75,6 +77,8 @@ func Order(c *fiber.Ctx) error {
 			if err != nil {
 				return c.JSON(result.ErrOKXAccount.WithMsg(err))
 			}
+
+			time.Sleep(time.Second / 3)
 		}
 
 	} else {
