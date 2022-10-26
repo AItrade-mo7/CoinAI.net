@@ -9,10 +9,12 @@ import (
 
 type OutPut struct {
 	config.AppEnvType
-	SysTime    int64         `bson:"SysTime"` // 系统时间
-	DataSource string        `bson:"DataSource"`
-	TradeInst  mOKX.TypeInst `bson:"TradeInst"`
-	TradeLever int           `bson:"TradeLever"`
+	SysTime    int64                   `bson:"SysTime"` // 系统时间
+	DataSource string                  `bson:"DataSource"`
+	TradeInst  mOKX.TypeInst           `bson:"TradeInst"`
+	TradeLever int                     `bson:"TradeLever"`
+	NowTicker  okxInfo.AnalyTickerType `bson:"NowTicker"`
+	TradeCoin  mOKX.TypeTicker         `bson:"NowTicker"`
 }
 
 func GetOutPut() (resData OutPut) {
@@ -35,6 +37,16 @@ func GetOutPut() (resData OutPut) {
 		resData.TradeInst = okxInfo.TradeInst.SWAP
 	}
 	resData.TradeLever = okxInfo.TradeLever
+
+	// Ticker 信息
+	resData.NowTicker.WholeDir = okxInfo.NowTicker.WholeDir
+	resData.NowTicker.TimeStr = okxInfo.NowTicker.TimeStr
+	resData.NowTicker.Unit = okxInfo.NowTicker.Unit
+	resData.NowTicker.DirIndex = okxInfo.NowTicker.DirIndex
+
+	// Coin 信息
+	resData.TradeCoin.InstID = okxInfo.TradeInst.InstID
+	resData.TradeCoin.Last = okxInfo.TradeInst.Last
 
 	return
 }
