@@ -25,6 +25,10 @@ func EditConfig(c *fiber.Ctx) error {
 		return c.JSON(result.ErrToken.WithData(mStr.ToStr(err)))
 	}
 
+	if UserID != config.AppEnv.UserID {
+		return c.JSON(result.Fail.WithMsg("无权操作"))
+	}
+
 	UserDB, err := dbUser.NewUserDB(dbUser.NewUserOpt{
 		UserID: UserID,
 	})
