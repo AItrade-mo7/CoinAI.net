@@ -25,6 +25,10 @@ func SetKey(c *fiber.Ctx) error {
 	var json SetKeyParam
 	mFiber.Parser(c, &json)
 
+	if len(config.AppEnv.ApiKeyList) > 12 {
+		return c.JSON(result.Fail.WithMsg("当前服务承载的 ApiKey 已达到上限!"))
+	}
+
 	if len(json.Name) < 2 {
 		return c.JSON(result.Fail.WithMsg("请填写一个备注名"))
 	}
