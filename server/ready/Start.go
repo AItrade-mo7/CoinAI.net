@@ -2,7 +2,9 @@ package ready
 
 import (
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
+	"CoinAI.net/server/utils/dbUser"
 	"github.com/EasyGolang/goTools/mClock"
 )
 
@@ -28,4 +30,12 @@ func GetAnalyData() {
 	okxInfo.TradeInst = okxInfo.NowTicker.TickerVol[1]
 
 	global.RunLog.Println("拉取一次数据接口")
+}
+
+func UpdateUserInfo() {
+	if len(config.AppEnv.UserID) > 10 {
+		dbUser.NewUserDB(dbUser.NewUserOpt{
+			UserID: config.AppEnv.UserID,
+		})
+	}
 }
