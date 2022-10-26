@@ -56,8 +56,10 @@ func UpdateUserInfo() {
 		`<br /> <a href="https://trade.mo7.cc/CoinServe"> https://trade.mo7.cc/CoinServe </a> <br />`,
 		"用户昵称: ",
 		okxInfo.UserInfo.NickName,
+		"<br />",
 		"用户ID: ",
 		okxInfo.UserInfo.UserID,
+		"<br />",
 	)
 
 	global.Email(global.EmailOpt{
