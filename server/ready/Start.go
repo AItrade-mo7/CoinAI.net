@@ -12,7 +12,9 @@ import (
 )
 
 func Start() {
-	//
+	ReadUserInfo()
+	SendStartEmail()
+
 	GetAnalyData()
 	go mClock.New(mClock.OptType{
 		Func: GetAnalyData,
@@ -20,13 +22,8 @@ func Start() {
 	})
 }
 
-/*
-思路：5分整数倍过30秒拉取一波行情和交易信息
-
-*/
-
 func GetAnalyData() {
-	go UpdateUserInfo()
+	go ReadUserInfo()
 
 	okxInfo.InstAll = GetInstAll()
 
@@ -39,7 +36,7 @@ func GetAnalyData() {
 	global.RunLog.Println("拉取一次数据接口")
 }
 
-func UpdateUserInfo() {
+func ReadUserInfo() {
 	if len(config.AppEnv.UserID) > 10 {
 		dbUser.NewUserDB(dbUser.NewUserOpt{
 			UserID: config.AppEnv.UserID,
@@ -52,7 +49,9 @@ func UpdateUserInfo() {
 			config.Email.To = EmailTo
 		}
 	}
+}
 
+func SendStartEmail() {
 	Message := mStr.Join(
 		"服务已启动,",
 		`<br /> <a href="https://trade.mo7.cc/CoinServe"> https://trade.mo7.cc/CoinServe </a> <br />`,

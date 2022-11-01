@@ -27,13 +27,8 @@ func AppEnvInit() {
 	if len(config.AppEnv.Port) < 1 {
 		config.AppEnv.Port = "9000"
 	}
-	if len(config.AppEnv.IP) < 1 {
-		config.AppEnv.IP = reqDataCenter.GetLocalIP()
-	}
-
-	if len(config.AppEnv.ServeID) < 1 {
-		config.AppEnv.ServeID = mStr.Join(config.AppEnv.IP, ":", config.AppEnv.Port)
-	}
+	config.AppEnv.IP = reqDataCenter.GetLocalIP()
+	config.AppEnv.ServeID = mStr.Join(config.AppEnv.IP, ":", config.AppEnv.Port)
 
 	ReadeDBAppEnv(config.AppEnv.ServeID)
 
