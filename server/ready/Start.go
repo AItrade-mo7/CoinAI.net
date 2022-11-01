@@ -32,7 +32,9 @@ func GetAnalyData() {
 
 	okxInfo.NowTicker = GetNowTickerAnaly()
 
-	okxInfo.TradeInst = okxInfo.NowTicker.TickerVol[1]
+	if len(okxInfo.NowTicker.TickerVol) > 0 {
+		okxInfo.TradeInst = okxInfo.NowTicker.TickerVol[1]
+	}
 
 	global.RunLog.Println("拉取一次数据接口")
 }
