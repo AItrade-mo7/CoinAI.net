@@ -11,9 +11,11 @@ import (
 )
 
 var (
-	Log    *log.Logger // 系统日志
-	WssLog *log.Logger // Wss 数据
-	RunLog *log.Logger // 运行过程
+	Log             *log.Logger // 系统日志
+	WssLog          *log.Logger // Wss 数据
+	KdataLog        *log.Logger //  OKX Kdata 日志
+	BinanceKdataLog *log.Logger //  币安 Kdata 日志
+	RunLog          *log.Logger // 运行过程
 )
 
 func LogInit() {
@@ -26,6 +28,15 @@ func LogInit() {
 	WssLog = mLog.NewLog(mLog.NewLogParam{
 		Path: config.Dir.Log,
 		Name: "Wss",
+	})
+	KdataLog = mLog.NewLog(mLog.NewLogParam{
+		Path: config.Dir.Log,
+		Name: "Kdata",
+	})
+
+	BinanceKdataLog = mLog.NewLog(mLog.NewLogParam{
+		Path: config.Dir.Log,
+		Name: "BinanceKdata",
 	})
 
 	RunLog = mLog.NewLog(mLog.NewLogParam{

@@ -181,7 +181,7 @@ func (_this *AccountObj) Close() (resErr error) {
 	errArr := []error{}
 	isAgin := false
 	for _, Position := range _this.Positions {
-		TradeInst := okxInfo.InstAll[Position.InstID]
+		TradeInst := okxInfo.Inst[Position.InstID]
 		Side := ""
 		Sz := "0"
 

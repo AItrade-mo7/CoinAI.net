@@ -19,4 +19,4 @@ type AnalyTickerType struct {
 
 var NowTicker AnalyTickerType
 
-var InstAll map[string]mOKX.TypeInst
+var Inst map[string]mOKX.TypeInst

@@ -25,7 +25,7 @@ func Start() {
 func GetAnalyData() {
 	go ReadUserInfo()
 
-	okxInfo.InstAll = GetInstAll()
+	okxInfo.Inst = GetInstAll()
 
 	okxInfo.NowTicker = GetNowTickerAnaly()
 
