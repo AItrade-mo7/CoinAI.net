@@ -18,7 +18,6 @@ type NewOpt struct {
 
 type NewObj struct {
 	StartTime int64 // 开始的时间节点
-	BaseList  []mOKX.TypeKd
 	RunList   []mOKX.TypeKd
 	Inst      mOKX.TypeInst
 }
@@ -42,32 +41,28 @@ func New(opt NewOpt) *NewObj {
 	} else {
 		obj.StartTime = mTime.GetUnixInt64()
 	}
-	obj.GetBaseKdata()
+	obj.RunList = obj.GetBaseKdata()
 
 	if opt.EndTime > 0 { // 如果存在 EndTime ， 则表示历史时间为固定字段
 		// 需要在这里回填历史 Start 至 EndTime
-	} else {
-		// 需要在这里启动 wss 监听
 	}
 
 	return &obj
 }
 
-func (_this *NewObj) GetBaseKdata() {
-	List := okxApi.GetKdata(okxApi.GetKdataOpt{
-		InstID: _this.Inst.InstID,
-		After:  _this.StartTime,
-	})
+func (_this *NewObj) GetBaseKdata() []mOKX.TypeKd {
+	KdataList := []mOKX.TypeKd{}
 
-	fmt.Println(List)
+	for i := 2; i >= 0; i-- {
+		fmt.Println(i)
+		List := okxApi.GetKdata(okxApi.GetKdataOpt{
+			InstID:  _this.Inst.InstID,
+			After:   _this.StartTime,
+			Current: i,
+		})
 
-	if len(List) > 0 {
-		fmt.Println(len(List),
-			List[0].TimeStr,
-			List[len(List)-1].TimeStr,
-		)
+		KdataList = append(KdataList, List...)
 	}
-}
 
-func GetHistoryKdata() {
+	return KdataList
 }
