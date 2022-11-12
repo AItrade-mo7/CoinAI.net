@@ -22,7 +22,9 @@ func main() {
 	ready.Start()
 
 	// 启动算法
-	hunter.New(hunter.NewOpt{})
+	hunter.New(hunter.NewOpt{
+		InstID: "ETH-USDT",
+	})
 
 	// 启动路由
 	// router.Start()

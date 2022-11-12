@@ -26,15 +26,12 @@ func GetKdata(opt GetKdataOpt) (KdataList []mOKX.TypeKd) {
 	if len(SPOT.InstID) < 3 {
 		return
 	}
+	opt.Size = 100
 
 	nowUnix := mTime.GetUnixInt64() - mTime.UnixTimeInt64.Minute*16
+
 	if opt.After > nowUnix {
 		opt.After = 0 // 当前
-	} else {
-		// 历史
-		if opt.Size > 100 {
-			opt.Size = 100
-		}
 	}
 
 	BinanceList := binanceApi.GetKdata(binanceApi.GetKdataParam{
