@@ -18,7 +18,7 @@ func Start() {
 	GetAnalyData()
 	go mClock.New(mClock.OptType{
 		Func: GetAnalyData,
-		Spec: "30 0,5,10,15,20,25,30,35,40,45,50,55 * * * ? ", // 5 分的整数过 30 秒
+		Spec: "30 1,6,11,16,21,26,31,36,41,46,51,56 * * * ? ", // 每隔5分钟比标准时间晚一分钟 执行查询
 	})
 }
 
