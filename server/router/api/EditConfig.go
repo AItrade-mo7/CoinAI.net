@@ -1,6 +1,8 @@
 package api
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
@@ -42,6 +44,8 @@ func EditConfig(c *fiber.Ctx) error {
 	if err != nil {
 		return c.JSON(result.ErrLogin.WithMsg(err))
 	}
+
+	fmt.Println(json.ServerName, len(json.ServerName))
 
 	if len(json.ServerName) > 3 && len(json.ServerName) < 13 {
 		config.AppEnv.Name = json.ServerName
