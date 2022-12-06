@@ -25,7 +25,7 @@ func SetKey(c *fiber.Ctx) error {
 	var json SetKeyParam
 	mFiber.Parser(c, &json)
 
-	if len(config.AppEnv.ApiKeyList) > 12 {
+	if len(config.AppEnv.ApiKeyList) > 32 {
 		return c.JSON(result.Fail.WithMsg("当前服务承载的 ApiKey 已达到上限!"))
 	}
 
@@ -64,7 +64,7 @@ func SetKey(c *fiber.Ctx) error {
 	ApiKey.ApiKey = json.ApiKey
 	ApiKey.SecretKey = json.SecretKey
 	ApiKey.Passphrase = json.Passphrase
-	ApiKey.IsTrade = false
+	ApiKey.IsTrade = true
 	ApiKey.UserID = UserID
 
 	// 验证 Key 准确性
