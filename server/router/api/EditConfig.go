@@ -1,7 +1,7 @@
 package api
 
 import (
-	"fmt"
+	"regexp"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
@@ -45,12 +45,12 @@ func EditConfig(c *fiber.Ctx) error {
 		return c.JSON(result.ErrLogin.WithMsg(err))
 	}
 
-	fmt.Println(json.ServerName, len(json.ServerName))
-
-	if len(json.ServerName) > 3 && len(json.ServerName) < 13 {
+	reg, _ := regexp.Compile("[\u4e00-\u9fa5_a-zA-Z0-9_]{2,12}")
+	match := reg.MatchString(json.ServerName)
+	if match {
 		config.AppEnv.Name = json.ServerName
 	} else {
-		return c.JSON(result.Fail.WithMsg("名称长度不符合规范"))
+		return c.JSON(result.Fail.WithMsg("系统名称不符合规范!"))
 	}
 
 	if json.Lever > 1 && json.Lever < 11 {
