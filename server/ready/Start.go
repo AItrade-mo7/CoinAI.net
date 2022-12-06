@@ -73,7 +73,7 @@ func SendStartEmail() {
 		Template: tmpl.SysEmail,
 		SendData: tmpl.SysParam{
 			Message: Message,
-			SysTime: mTime.IsoTime(),
+			SysTime: mTime.UnixFormat(mTime.GetUnixInt64()),
 		},
 	}).Send()
 }
