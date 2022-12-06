@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/utils/reqDataCenter"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
@@ -106,4 +107,34 @@ func WriteAppEnv() {
 		LogErr("config.AppEnv 数据更插失败", err)
 	}
 	RunLog.Println("config.AppEnv 已更新至数据库", mJson.Format(config.AppEnv))
+}
+
+// 设置公共主机ID
+
+func SetPublicUserID() {
+	db := mMongo.New(mMongo.Opt{
+		UserName: config.SysEnv.MongoUserName,
+		Password: config.SysEnv.MongoPassword,
+		Address:  config.SysEnv.MongoAddress,
+		DBName:   "AITrade",
+	}).Connect().Collection("Account")
+	defer db.Close()
+	err := db.Ping()
+	if err != nil {
+		LogErr("global.SetPublicUserID 公共主机读取失败", err)
+	}
+
+	FK := bson.D{{
+		Key:   "Email",
+		Value: "trade@mo7.cc",
+	}}
+
+	var result dbType.AccountTable
+	db.Table.FindOne(db.Ctx, FK).Decode(&result)
+
+	if len(result.UserID) < 10 {
+		LogErr("global.SetPublicUserID 公共主机读取失败2", err)
+	}
+
+	config.PublicUserID = result.UserID
 }
