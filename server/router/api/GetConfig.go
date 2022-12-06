@@ -24,6 +24,7 @@ func GetConfig(c *fiber.Ctx) error {
 	ConfigData := make(map[string]any)
 	ConfigData["AppEnv"] = config.AppEnv
 	ConfigData["GithubInfo"] = GithubInfo
+	ConfigData["LeverOpt"] = []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 	return c.JSON(result.Succeed.WithData(ConfigData))
 }
