@@ -53,7 +53,7 @@ func ReadUserInfo() {
 
 func SendStartEmail() {
 	Message := mStr.Join(
-		"服务已启动,",
+		"服务已启动,", config.AppEnv.ServeID,
 		`<br /> <a href="https://trade.mo7.cc/CoinServe"> https://trade.mo7.cc/CoinServe </a> <br />`,
 		"用户昵称: ",
 		okxInfo.UserInfo.NickName,
