@@ -18,6 +18,9 @@ import (
 )
 
 func AppEnvInit() {
+	// 读取公共账号信息
+	SetPublicUserID()
+
 	// 检查并读取配置文件
 	isEnvPath := mPath.Exists(config.File.AppEnv)
 	if isEnvPath {
