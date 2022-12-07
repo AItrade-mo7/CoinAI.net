@@ -56,7 +56,6 @@ func Start() {
 	r_api.Post("/GetAccountDetail", api.GetAccountDetail)
 	r_api.Post("/Order", api.Order)
 	r_api.Post("/EditConfig", api.EditConfig)
-	r_api.Post("/GetApiKeyList", api.GetApiKeyList)
 
 	// sys
 	s_api := app.Group("/CoinAI/sys")
