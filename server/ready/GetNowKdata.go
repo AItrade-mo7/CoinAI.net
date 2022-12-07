@@ -19,7 +19,7 @@ func GetNowKdata(InstID string) (resList []mOKX.TypeKd) {
 	resList = []mOKX.TypeKd{}
 
 	resData, err := reqDataCenter.NewRest(reqDataCenter.RestOpt{
-		Origin: "https://trade-api.mo7.cc",
+		Origin: config.Origin,
 		Path:   "/CoinMarket/public/GetNowKdata",
 		UserID: config.AppEnv.UserID,
 		Method: "Post",

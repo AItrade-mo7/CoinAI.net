@@ -19,7 +19,7 @@ func GetNowTickerAnaly() (resData okxInfo.AnalyTickerType) {
 	resData = okxInfo.AnalyTickerType{}
 
 	res, err := reqDataCenter.NewRest(reqDataCenter.RestOpt{
-		Origin: "https://trade-api.mo7.cc",
+		Origin: config.Origin,
 		Path:   "/CoinMarket/public/GetNowTickerAnaly",
 		UserID: config.AppEnv.UserID,
 		Method: "Post",

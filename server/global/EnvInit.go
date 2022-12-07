@@ -41,7 +41,12 @@ func AppEnvInit() {
 	}
 	config.AppEnv.Version = config.AppInfo.Version
 
+	CheckLocal()
+
 	WriteAppEnv()
+}
+
+func CheckLocal() {
 }
 
 func ReadeDBAppEnv(ServeID string) {
@@ -129,7 +134,7 @@ func SetPublicUserID() {
 
 	FK := bson.D{{
 		Key:   "Email",
-		Value: "trade@mo7.cc",
+		Value: config.SysEmail,
 	}}
 
 	var result dbType.AccountTable

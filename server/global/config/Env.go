@@ -19,6 +19,10 @@ var SysEnv = struct {
 	MongoUserName: "mo7",
 }
 
+var Origin = "https://trade-api.mo7.cc"
+
+var SysEmail = "trade@mo7.cc"
+
 type AppEnvType struct {
 	Name       string            `bson:"Name"`
 	Version    string            `bson:"Version"`
@@ -51,11 +55,9 @@ type EmailInfo struct {
 }
 
 var Email = EmailInfo{
-	Account:  "trade@mo7.cc",
+	Account:  SysEmail,
 	Password: "Mcl931750",
-	To: []string{
-		"meichangliang@mo7.cc",
-	},
+	To:       []string{},
 }
 
 var PublicUserID = ""
