@@ -16,7 +16,12 @@ type OutAnalyTickerType struct {
 type TradeCoinType struct{}
 
 type OutPut struct {
-	config.AppEnvType
+	Name         string             `bson:"Name"`
+	Version      string             `bson:"Version"`
+	Port         string             `bson:"Port"`
+	IP           string             `bson:"IP"`
+	ServeID      string             `bson:"ServeID"`
+	UserID       string             `bson:"UserID"`
 	SysTime      int64              `bson:"SysTime"` // 系统时间
 	DataSource   string             `bson:"DataSource"`
 	TradeInstID  string             `bson:"TradeInst"`
