@@ -20,7 +20,6 @@ var SysEnv = struct {
 }
 
 var (
-	Origin   = "https://trade-api.mo7.cc"
 	SysEmail = "trade@mo7.cc"
 	MyIP     = "3.1.68.15"
 )

@@ -1,7 +1,6 @@
 package reqDataCenter
 
 import (
-	"CoinAI.net/server/global/config"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -15,7 +14,7 @@ type PingDataType struct {
 
 func GetLocalIP() string {
 	resData, _ := NewRest(RestOpt{
-		Origin: config.Origin,
+		Origin: "https://trade-api.mo7.cc",
 		Path:   "/ping",
 		Method: "GET",
 	})

@@ -19,7 +19,7 @@ func GetInstAll() (resList map[string]mOKX.TypeInst) {
 	resList = map[string]mOKX.TypeInst{}
 
 	resData, err := reqDataCenter.NewRest(reqDataCenter.RestOpt{
-		Origin: config.Origin,
+		Origin: "https://trade-api.mo7.cc",
 		Path:   "/CoinMarket/public/GetInstAll",
 		UserID: config.AppEnv.UserID,
 		Method: "Post",
