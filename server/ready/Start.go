@@ -35,7 +35,6 @@ func GetAnalyData() {
 		okxInfo.TradeInst = okxInfo.NowTicker.TickerVol[1]
 	}
 	TickingFunc()
-	global.RunLog.Println("拉取一次数据接口")
 }
 
 func ReadUserInfo() {
