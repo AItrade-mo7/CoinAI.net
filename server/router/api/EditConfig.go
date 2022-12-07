@@ -59,6 +59,7 @@ func EditConfig(c *fiber.Ctx) error {
 		return c.JSON(result.Fail.WithMsg("杠杆系数不符合规范"))
 	}
 
+
 	global.WriteAppEnv()
 
 	return c.JSON(result.Succeed.WithData("操作完成"))
