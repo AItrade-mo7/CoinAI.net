@@ -68,7 +68,7 @@ func SetKey(c *fiber.Ctx) error {
 	ApiKey.IsTrade = true
 	ApiKey.UserID = UserID
 
-	// 验证 Key 准确性
+	// 验证 Key 可用性
 	_, err = account.GetOKXBalance(ApiKey)
 	if err != nil {
 		return c.JSON(result.ErrLogin.WithMsg("Api Key 验证失败!"))
