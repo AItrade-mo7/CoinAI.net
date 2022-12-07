@@ -22,8 +22,10 @@ func main() {
 	// 数据准备
 	ready.Start()
 
-	// 启动K线监听
-	hunter.Start()
+	// 插入时钟周期
+	ready.TickingFunc = func() {
+		hunter.Start()
+	}
 
 	// 启动路由
 	router.Start()

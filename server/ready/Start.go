@@ -11,6 +11,8 @@ import (
 	"github.com/EasyGolang/goTools/mTime"
 )
 
+var TickingFunc = func() {}
+
 func Start() {
 	ReadUserInfo()
 	SendStartEmail()
@@ -32,7 +34,7 @@ func GetAnalyData() {
 	if len(okxInfo.NowTicker.TickerVol) > 0 {
 		okxInfo.TradeInst = okxInfo.NowTicker.TickerVol[1]
 	}
-
+	TickingFunc()
 	global.RunLog.Println("拉取一次数据接口")
 }
 
