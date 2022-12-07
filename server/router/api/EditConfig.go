@@ -15,9 +15,10 @@ import (
 )
 
 type EditConfigParam struct {
-	Password   string
-	ServerName string
-	Lever      int
+	Password     string
+	ServerName   string
+	Lever        int
+	MaxApiKeyNum int
 }
 
 func EditConfig(c *fiber.Ctx) error {
@@ -59,6 +60,10 @@ func EditConfig(c *fiber.Ctx) error {
 		return c.JSON(result.Fail.WithMsg("杠杆系数不符合规范"))
 	}
 
+	if json.MaxApiKeyNum > 3 && json.MaxApiKeyNum > len(config.AppEnv.ApiKeyList)+3 {
+	} else {
+		return c.JSON(result.Fail.WithMsg("最大 ApiKey 数量不正确"))
+	}
 
 	global.WriteAppEnv()
 

@@ -4,6 +4,7 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxApi/restApi/account"
+	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
@@ -25,7 +26,7 @@ func SetKey(c *fiber.Ctx) error {
 	var json SetKeyParam
 	mFiber.Parser(c, &json)
 
-	if len(config.AppEnv.ApiKeyList) > 32 {
+	if len(config.AppEnv.ApiKeyList) > okxInfo.MaxApiKeyNum {
 		return c.JSON(result.Fail.WithMsg("当前服务承载的 ApiKey 已达到上限!"))
 	}
 

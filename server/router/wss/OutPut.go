@@ -3,18 +3,27 @@ package wss
 import (
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
-	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTime"
 )
 
+type OutAnalyTickerType struct {
+	Version  int    `bson:"Version"`
+	Unit     string `bson:"Unit"`
+	TimeUnix int64  `bson:"TimeUnix"`
+	TimeStr  string `bson:"TimeStr"`
+}
+
+type TradeCoinType struct{}
+
 type OutPut struct {
 	config.AppEnvType
-	SysTime    int64                   `bson:"SysTime"` // 系统时间
-	DataSource string                  `bson:"DataSource"`
-	TradeInst  mOKX.TypeInst           `bson:"TradeInst"`
-	TradeLever int                     `bson:"TradeLever"`
-	NowTicker  okxInfo.AnalyTickerType `bson:"NowTicker"`
-	TradeCoin  mOKX.TypeTicker         `bson:"NowTicker"`
+	SysTime      int64              `bson:"SysTime"` // 系统时间
+	DataSource   string             `bson:"DataSource"`
+	TradeInstID  string             `bson:"TradeInst"`
+	TradeLever   int                `bson:"TradeLever"`
+	NowTicker    OutAnalyTickerType `bson:"NowTicker"`
+	MaxApiKeyNum int                `bson:"MaxApiKeyNum"`
+	ApiKeyNum    int                `bson:"ApiKeyNum"`
 }
 
 func GetOutPut() (resData OutPut) {
@@ -26,51 +35,25 @@ func GetOutPut() (resData OutPut) {
 	resData.IP = config.AppEnv.IP
 	resData.ServeID = config.AppEnv.ServeID
 	resData.UserID = config.AppEnv.UserID
-	resData.ApiKeyList = GetFuzzyApiKey()
 	// 系统时间
 	resData.SysTime = mTime.GetUnixInt64()
 	resData.DataSource = "CoinAI.net"
 	// 下单信息
 	if okxInfo.IsSPOT {
-		resData.TradeInst = okxInfo.TradeInst.SPOT
+		resData.TradeInstID = okxInfo.TradeInst.SPOT.InstID
 	} else {
-		resData.TradeInst = okxInfo.TradeInst.SWAP
+		resData.TradeInstID = okxInfo.TradeInst.SWAP.InstID
 	}
 	resData.TradeLever = okxInfo.TradeLever
 
 	// Ticker 信息
 	resData.NowTicker.Unit = okxInfo.NowTicker.Unit
-	resData.NowTicker.WholeDir = okxInfo.NowTicker.WholeDir
-	resData.NowTicker.DirIndex = okxInfo.NowTicker.DirIndex
+	resData.NowTicker.TimeUnix = okxInfo.NowTicker.TimeUnix
 	resData.NowTicker.TimeStr = okxInfo.NowTicker.TimeStr
 
-	// Coin 信息
-	resData.TradeCoin.Last = okxInfo.TradeInst.Last
-	resData.TradeCoin.TimeUnix = okxInfo.TradeInst.TimeUnix
-	resData.TradeCoin.TimeStr = okxInfo.TradeInst.TimeStr
+	// ApiKey 信息
+	resData.MaxApiKeyNum = okxInfo.MaxApiKeyNum
+	resData.ApiKeyNum = len(config.AppEnv.ApiKeyList)
 
 	return
-}
-
-func GetFuzzyApiKey() []mOKX.TypeOkxKey {
-	ApiKeyList := config.AppEnv.ApiKeyList
-
-	NewKeyList := []mOKX.TypeOkxKey{}
-
-	for _, val := range ApiKeyList {
-		NewKeyList = append(NewKeyList, mOKX.TypeOkxKey{
-			Name:       val.Name,
-			ApiKey:     GetKeyFuzzy(val.ApiKey, 5),
-			SecretKey:  GetKeyFuzzy(val.SecretKey, 5),
-			Passphrase: GetKeyFuzzy(val.Passphrase, 1),
-			IsTrade:    val.IsTrade,
-			UserID:     val.UserID,
-		})
-	}
-
-	return NewKeyList
-}
-
-func GetKeyFuzzy(Ket string, num int) string {
-	return Ket[0:num] + "****" + Ket[len(Ket)-num-1:len(Ket)-1]
 }

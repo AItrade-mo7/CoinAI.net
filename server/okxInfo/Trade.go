@@ -8,3 +8,5 @@ var TradeLever = 5
 
 // 是否为现货
 var IsSPOT = false
+
+var MaxApiKeyNum = 32
