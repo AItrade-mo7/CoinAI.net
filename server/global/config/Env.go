@@ -19,11 +19,11 @@ var SysEnv = struct {
 	MongoUserName: "mo7",
 }
 
-var Origin = "https://trade-api.mo7.cc"
-
-var SysEmail = "trade@mo7.cc"
-
-var MyIP = "3.1.68.15"
+var (
+	Origin   = "https://trade-api.mo7.cc"
+	SysEmail = "trade@mo7.cc"
+	MyIP     = "3.1.68.15"
+)
 
 type AppEnvType struct {
 	Name       string            `bson:"Name"`

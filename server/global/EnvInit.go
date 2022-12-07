@@ -1,7 +1,6 @@
 package global
 
 import (
-	"fmt"
 	"os"
 
 	"CoinAI.net/server/global/config"
@@ -49,7 +48,7 @@ func AppEnvInit() {
 
 func CheckLocal() {
 	if config.MyIP == config.AppEnv.IP {
-		fmt.Println("这个是本机代理")
+		config.SysEnv.MongoAddress = "127.0.0.1:27017"
 	}
 }
 
