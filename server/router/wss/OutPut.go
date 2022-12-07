@@ -24,7 +24,7 @@ type OutPut struct {
 	UserID       string             `bson:"UserID"`
 	SysTime      int64              `bson:"SysTime"` // 系统时间
 	DataSource   string             `bson:"DataSource"`
-	TradeInstID  string             `bson:"TradeInst"`
+	TradeInstID  string             `bson:"TradeInstID"`
 	TradeLever   int                `bson:"TradeLever"`
 	NowTicker    OutAnalyTickerType `bson:"NowTicker"`
 	MaxApiKeyNum int                `bson:"MaxApiKeyNum"`

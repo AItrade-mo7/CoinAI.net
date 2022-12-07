@@ -61,6 +61,7 @@ func EditConfig(c *fiber.Ctx) error {
 	}
 
 	if json.MaxApiKeyNum > 3 && json.MaxApiKeyNum > len(config.AppEnv.ApiKeyList)+3 {
+		okxInfo.MaxApiKeyNum = json.MaxApiKeyNum
 	} else {
 		return c.JSON(result.Fail.WithMsg("最大 ApiKey 数量不正确"))
 	}
