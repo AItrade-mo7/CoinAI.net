@@ -38,5 +38,7 @@ func GetInstAll() (resList map[string]mOKX.TypeInst) {
 	}
 
 	resList = result.Data
+
+	// mFile.Write(config.Dir.JsonData+"/InstAll.json", string(mJson.ToJson(resList)))
 	return
 }
