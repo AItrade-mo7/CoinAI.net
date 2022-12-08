@@ -47,7 +47,7 @@ func AppEnvInit() {
 	}
 	// 设置  默认 最大 ApiKey 数量
 	if config.AppEnv.MaxApiKeyNum == 0 {
-		config.AppEnv.TradeLever = 32
+		config.AppEnv.MaxApiKeyNum = 32
 	}
 
 	CheckLocal()
