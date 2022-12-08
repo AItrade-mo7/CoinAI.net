@@ -37,6 +37,8 @@ type AppEnvType struct {
 	ApiKeyList   []mOKX.TypeOkxKey `bson:"ApiKeyList"`
 }
 
+var LeverOpt = []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
+
 var AppEnv AppEnvType
 
 func GetOKXKey(Index int) mOKX.TypeOkxKey {

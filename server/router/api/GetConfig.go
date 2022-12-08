@@ -28,7 +28,7 @@ func GetConfig(c *fiber.Ctx) error {
 	AppEnv.ApiKeyList = GetFuzzyApiKey()
 	ConfigData["AppEnv"] = AppEnv
 	ConfigData["GithubInfo"] = GithubInfo
-	ConfigData["LeverOpt"] = []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
+	ConfigData["LeverOpt"] = config.LeverOpt
 
 	return c.JSON(result.Succeed.WithData(ConfigData))
 }

@@ -5,7 +5,6 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
@@ -54,18 +53,20 @@ func EditConfig(c *fiber.Ctx) error {
 		return c.JSON(result.Fail.WithMsg("系统名称不符合规范!"))
 	}
 
-	if json.Lever > 1 && json.Lever < 11 {
-		okxInfo.TradeLever = json.Lever
+	AppEnv := config.AppEnv
+	if json.Lever >= config.LeverOpt[0] && json.Lever <= config.LeverOpt[len(config.LeverOpt)-1] {
+		AppEnv.TradeLever = json.Lever
 	} else {
 		return c.JSON(result.Fail.WithMsg("杠杆系数不符合规范"))
 	}
 
-	if json.MaxApiKeyNum > 3 && json.MaxApiKeyNum > len(config.AppEnv.ApiKeyList)+3 {
-		okxInfo.MaxApiKeyNum = json.MaxApiKeyNum
+	if json.MaxApiKeyNum > 1 && json.MaxApiKeyNum > len(config.AppEnv.ApiKeyList) {
+		AppEnv.MaxApiKeyNum = json.MaxApiKeyNum
 	} else {
 		return c.JSON(result.Fail.WithMsg("最大 ApiKey 数量不正确"))
 	}
 
+	config.AppEnv = AppEnv
 	global.WriteAppEnv()
 
 	return c.JSON(result.Succeed.WithData("操作完成"))
