@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
@@ -48,19 +49,19 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 		return
 	}
 
-	if (okxInfo.TradeLever) < 1 {
-		resErr = fmt.Errorf("okxApi.NewAccount okxInfo.TradeLever 不能为空 %+v", okxInfo.TradeLever)
+	if (config.AppEnv.TradeLever) < 1 {
+		resErr = fmt.Errorf("okxApi.NewAccount okxInfo.TradeLever 不能为空 %+v", config.AppEnv.TradeLever)
 		return
 	}
 
-	if okxInfo.IsSPOT {
+	if config.AppEnv.IsSPOT {
 		obj.TradeInst = okxInfo.TradeInst.SPOT
 	} else {
 		obj.TradeInst = okxInfo.TradeInst.SWAP
 	}
 
 	obj.OkxKey = opt.OkxKey
-	obj.TradeLever = okxInfo.TradeLever
+	obj.TradeLever = config.AppEnv.TradeLever
 
 	resObj = &obj
 
