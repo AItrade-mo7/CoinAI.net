@@ -41,6 +41,15 @@ func AppEnvInit() {
 	}
 	config.AppEnv.Version = config.AppInfo.Version
 
+	// 设置默认杠杆倍数 TradeLever
+	if config.AppEnv.TradeLever == 0 {
+		config.AppEnv.TradeLever = 5
+	}
+	// 设置  默认 最大 ApiKey 数量
+	if config.AppEnv.MaxApiKeyNum == 0 {
+		config.AppEnv.TradeLever = 32
+	}
+
 	CheckLocal()
 
 	WriteAppEnv()

@@ -44,12 +44,12 @@ func GetOutPut() (resData OutPut) {
 	resData.SysTime = mTime.GetUnixInt64()
 	resData.DataSource = "CoinAI.net"
 	// 下单信息
-	if okxInfo.IsSPOT {
+	if config.AppEnv.IsSPOT {
 		resData.TradeInstID = okxInfo.TradeInst.SPOT.InstID
 	} else {
 		resData.TradeInstID = okxInfo.TradeInst.SWAP.InstID
 	}
-	resData.TradeLever = okxInfo.TradeLever
+	resData.TradeLever = config.AppEnv.TradeLever
 
 	// Ticker 信息
 	resData.NowTicker.Unit = okxInfo.NowTicker.Unit
@@ -57,7 +57,7 @@ func GetOutPut() (resData OutPut) {
 	resData.NowTicker.TimeStr = okxInfo.NowTicker.TimeStr
 
 	// ApiKey 信息
-	resData.MaxApiKeyNum = okxInfo.MaxApiKeyNum
+	resData.MaxApiKeyNum = config.AppEnv.MaxApiKeyNum
 	resData.ApiKeyNum = len(config.AppEnv.ApiKeyList)
 
 	return
