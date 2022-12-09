@@ -3,8 +3,8 @@ package binanceApi
 import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"github.com/EasyGolang/goTools/mBinance"
 	"github.com/EasyGolang/goTools/mFile"
-	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -67,7 +67,7 @@ type InstType struct {
 func GetInst() (InstList []SymbolType) {
 	Kdata_file := mStr.Join(config.Dir.JsonData, "/B-Inst", ".json")
 
-	resData, err := mOKX.FetchBinance(mOKX.FetchBinanceOpt{
+	resData, err := mBinance.FetchBinance(mBinance.OptFetchBinance{
 		Path:          "/api/v3/exchangeInfo",
 		Method:        "get",
 		LocalJsonPath: Kdata_file,
