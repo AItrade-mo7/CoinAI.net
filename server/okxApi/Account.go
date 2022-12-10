@@ -39,13 +39,8 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 		return
 	}
 
-	if len(okxInfo.TradeInst.SWAP.InstID) < 3 {
-		resErr = fmt.Errorf("okxApi.NewAccount okxInfo.TradeInst.SWAP.InstID 不能为空 %+v", okxInfo.TradeInst.SWAP)
-		return
-	}
-
-	if len(okxInfo.TradeInst.SPOT.InstID) < 3 {
-		resErr = fmt.Errorf("okxApi.NewAccount okxInfo.TradeInst.SPOT.InstID 不能为空 %+v", okxInfo.TradeInst.SPOT)
+	if len(okxInfo.TradeInst.InstID) < 3 {
+		resErr = fmt.Errorf("okxApi.NewAccount okxInfo.TradeInst.SWAP.InstID 不能为空 %+v", okxInfo.TradeInst.InstID)
 		return
 	}
 
@@ -55,9 +50,7 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 	}
 
 	if config.AppEnv.IsSPOT {
-		obj.TradeInst = okxInfo.TradeInst.SPOT
-	} else {
-		obj.TradeInst = okxInfo.TradeInst.SWAP
+		obj.TradeInst = okxInfo.TradeInst
 	}
 
 	obj.OkxKey = opt.OkxKey

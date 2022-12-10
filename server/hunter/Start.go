@@ -13,6 +13,12 @@ func Start() {
 	}
 }
 
+func FileBaseKdata() {
+	// List := mOKX.GetKdata(mOKX.GetKdataOpt{
+	// 	InstID: item.InstID,
+	// })
+}
+
 func Running() {
 	// mFile.Write(config.Dir.JsonData+"/NowTicker.json", string(mJson.ToJson(okxInfo.Inst)))
 }

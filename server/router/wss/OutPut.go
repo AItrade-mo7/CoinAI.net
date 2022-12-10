@@ -45,9 +45,7 @@ func GetOutPut() (resData OutPut) {
 	resData.DataSource = "CoinAI.net"
 	// 下单信息
 	if config.AppEnv.IsSPOT {
-		resData.TradeInstID = okxInfo.TradeInst.SPOT.InstID
-	} else {
-		resData.TradeInstID = okxInfo.TradeInst.SWAP.InstID
+		resData.TradeInstID = okxInfo.TradeInst.InstID
 	}
 	resData.TradeLever = config.AppEnv.TradeLever
 
