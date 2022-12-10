@@ -126,7 +126,7 @@ func WriteAppEnv() {
 	if err != nil {
 		LogErr("config.AppEnv 数据更插失败", err)
 	}
-	RunLog.Println("config.AppEnv 已更新至数据库", mJson.Format(config.AppEnv))
+	Log.Println("config.AppEnv 已更新至数据库", mJson.Format(config.AppEnv))
 }
 
 // 设置公共主机ID

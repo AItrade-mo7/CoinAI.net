@@ -21,11 +21,8 @@ func main() {
 
 	// 数据准备
 	ready.Start()
-
+	hunter.Start()
 	// 插入时钟周期
-	ready.TickingFunc = func() {
-		hunter.Start()
-	}
 
 	// 启动路由
 	router.Start()

@@ -11,8 +11,6 @@ import (
 	"github.com/EasyGolang/goTools/mTime"
 )
 
-var TickingFunc = func() {}
-
 func Start() {
 	ReadUserInfo()
 	SendStartEmail()
@@ -31,7 +29,7 @@ func GetAnalyData() {
 
 	okxInfo.NowTicker = GetNowTickerAnaly()
 
-	TickingFunc()
+	okxInfo.Ticking <- "Tick"
 }
 
 func ReadUserInfo() {
