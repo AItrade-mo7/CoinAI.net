@@ -31,9 +31,6 @@ func GetAnalyData() {
 
 	okxInfo.NowTicker = GetNowTickerAnaly()
 
-	if len(okxInfo.NowTicker.TickerVol) > 0 {
-		okxInfo.TradeInst = okxInfo.NowTicker.TickerVol[1]
-	}
 	TickingFunc()
 }
 
