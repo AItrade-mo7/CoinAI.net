@@ -9,5 +9,9 @@ import (
 func Start() {
 	for ok := range okxInfo.Ticking {
 		global.RunLog.Println("hunter.Start 执行", mTime.UnixFormat(mTime.GetUnixInt64()), ok)
+		Running()
 	}
+}
+
+func Running() {
 }
