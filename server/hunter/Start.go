@@ -1,8 +1,11 @@
 package hunter
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
+	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTime"
 )
 
@@ -13,12 +16,27 @@ func Start() {
 	}
 }
 
-func FileBaseKdata() {
-	// List := mOKX.GetKdata(mOKX.GetKdataOpt{
-	// 	InstID: item.InstID,
-	// })
+func Running() {
+	// 检测数据
+	if len(okxInfo.TradeInst.InstID) < 2 {
+		global.LogErr("hunter.Running", "okxInfo.TradeInst.InstID 为空")
+		return
+	}
+
+	FileBaseKdata()
 }
 
-func Running() {
-	// mFile.Write(config.Dir.JsonData+"/NowTicker.json", string(mJson.ToJson(okxInfo.Inst)))
+func FileBaseKdata() {
+	if len(okxInfo.TradeKdata) < 100 {
+		// 回填历史数据 1 组
+		List := mOKX.GetKdata(mOKX.GetKdataOpt{
+			InstID: okxInfo.TradeInst.InstID,
+			After:  mTime.GetUnixInt64(),
+			Page:   1,
+		})
+
+		for _, val := range List {
+			fmt.Println(val.TimeStr)
+		}
+	}
 }
