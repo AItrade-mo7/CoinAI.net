@@ -2,7 +2,9 @@ package hunter
 
 import (
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
+	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTalib"
@@ -45,7 +47,9 @@ func FormatTradeKdata() {
 		"CAP_EMA": Last.CAP_EMA,
 		"CAP_MA":  Last.CAP_MA,
 	}
-	global.RunLog.Println("数据整理完毕", mJson.Format(LastPrint))
+	WriteFilePath := config.Dir.JsonData + "/TradeKdataList.json"
+	global.RunLog.Println("数据整理完毕,写入", WriteFilePath, mJson.Format(LastPrint))
+	mFile.Write(WriteFilePath, string(mJson.ToJson(TradeKdataList)))
 }
 
 func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata TradeKdType) {
@@ -82,7 +86,7 @@ func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata 
 		Period: 3,
 	}).CAP().ToStr()
 
-	global.Log.Println("数据整理", EMA_Arr[len(EMA_Arr)-1], MA_Arr[len(MA_Arr)-1], mJson.JsonFormat((mJson.ToJson(TradeKdata))))
+	// global.Log.Println("数据整理", mJson.JsonFormat((mJson.ToJson(TradeKdata))))
 
 	return
 }
