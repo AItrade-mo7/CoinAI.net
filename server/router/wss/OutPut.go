@@ -16,19 +16,19 @@ type OutAnalyTickerType struct {
 type TradeCoinType struct{}
 
 type OutPut struct {
-	Name         string             `bson:"Name"`
-	Version      string             `bson:"Version"`
-	Port         string             `bson:"Port"`
-	IP           string             `bson:"IP"`
-	ServeID      string             `bson:"ServeID"`
-	UserID       string             `bson:"UserID"`
-	SysTime      int64              `bson:"SysTime"` // 系统时间
-	DataSource   string             `bson:"DataSource"`
-	TradeInstID  string             `bson:"TradeInstID"`
-	TradeLever   int                `bson:"TradeLever"`
-	NowTicker    OutAnalyTickerType `bson:"NowTicker"`
-	MaxApiKeyNum int                `bson:"MaxApiKeyNum"`
-	ApiKeyNum    int                `bson:"ApiKeyNum"`
+	Name           string              `bson:"Name"`
+	Version        string              `bson:"Version"`
+	Port           string              `bson:"Port"`
+	IP             string              `bson:"IP"`
+	ServeID        string              `bson:"ServeID"`
+	UserID         string              `bson:"UserID"`
+	SysTime        int64               `bson:"SysTime"` // 系统时间
+	DataSource     string              `bson:"DataSource"`
+	TradeLever     int                 `bson:"TradeLever"`
+	NowTicker      OutAnalyTickerType  `bson:"NowTicker"`
+	MaxApiKeyNum   int                 `bson:"MaxApiKeyNum"`
+	ApiKeyNum      int                 `bson:"ApiKeyNum"`
+	TradeKdataLast okxInfo.TradeKdType `bson:"TradeKdataLast"`
 }
 
 func GetOutPut() (resData OutPut) {
@@ -43,10 +43,10 @@ func GetOutPut() (resData OutPut) {
 	// 系统时间
 	resData.SysTime = mTime.GetUnixInt64()
 	resData.DataSource = "CoinAI.net"
-	// 下单信息
-	if config.AppEnv.IsSPOT {
-		resData.TradeInstID = okxInfo.TradeInst.InstID
-	}
+	// 监听币种信息
+	resData.TradeKdataLast = okxInfo.TradeKdataList[len(okxInfo.TradeKdataList)-1]
+
+	// 杠杆
 	resData.TradeLever = config.AppEnv.TradeLever
 
 	// Ticker 信息

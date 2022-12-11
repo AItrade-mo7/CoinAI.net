@@ -22,7 +22,7 @@ func FormatTradeKdata() {
 		return
 	}
 	// 执行一次清理
-	TradeKdataList = []TradeKdType{}
+	okxInfo.TradeKdataList = []okxInfo.TradeKdType{}
 	EMA_Arr = []string{}
 	MA_Arr = []string{}
 
@@ -32,12 +32,12 @@ func FormatTradeKdata() {
 		FormatEnd = append(FormatEnd, Kdata)
 		TradeKdata := NewTradeKdata(Kdata, FormatEnd)
 
-		TradeKdataList = append(TradeKdataList, TradeKdata)
+		okxInfo.TradeKdataList = append(okxInfo.TradeKdataList, TradeKdata)
 	}
 
-	Last := TradeKdataList[len(TradeKdataList)-1]
+	Last := okxInfo.TradeKdataList[len(okxInfo.TradeKdataList)-1]
 	LastPrint := map[string]any{
-		"AllLen":  len(TradeKdataList),
+		"AllLen":  len(okxInfo.TradeKdataList),
 		"TimeStr": Last.TimeStr,
 		"C":       Last.C,
 		"InstID":  Last.InstID,
@@ -49,10 +49,10 @@ func FormatTradeKdata() {
 	}
 	WriteFilePath := config.Dir.JsonData + "/TradeKdataList.json"
 	global.RunLog.Println("数据整理完毕,写入", WriteFilePath, mJson.Format(LastPrint))
-	mFile.Write(WriteFilePath, string(mJson.ToJson(TradeKdataList)))
+	mFile.Write(WriteFilePath, string(mJson.ToJson(okxInfo.TradeKdataList)))
 }
 
-func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata TradeKdType) {
+func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata okxInfo.TradeKdType) {
 	jsonByte := mJson.ToJson(Kdata)
 	jsoniter.Unmarshal(jsonByte, &TradeKdata)
 
