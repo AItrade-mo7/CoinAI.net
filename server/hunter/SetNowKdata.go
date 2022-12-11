@@ -46,8 +46,11 @@ func SetNowKdata() {
 		}
 		preItem := okxInfo.NowKdata[preIndex]
 		nowItem := okxInfo.NowKdata[key]
-		if nowItem.TimeUnix-preItem.TimeUnix != (3600000) {
-			global.Log.Println("错误数据", val.TimeStr, key)
+		if key > 0 {
+			if nowItem.TimeUnix-preItem.TimeUnix != (3600000) {
+				global.LogErr("出现了错误数据", val.InstID, val.TimeStr, key)
+				break
+			}
 		}
 	}
 }
