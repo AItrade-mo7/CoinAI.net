@@ -38,6 +38,11 @@ func SetNowKdata() {
 		}
 	}
 
+	if len(okxInfo.NowKdataList)-okxInfo.MaxLen > 0 {
+		okxInfo.NowKdataList = okxInfo.NowKdataList[len(okxInfo.NowKdataList)-okxInfo.MaxLen:]
+		global.RunLog.Println("长度超出，裁剪", len(okxInfo.NowKdataList))
+	}
+
 	// 数据检查
 	for key, val := range okxInfo.NowKdataList {
 		preIndex := key - 1

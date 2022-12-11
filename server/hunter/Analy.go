@@ -19,7 +19,7 @@ var TradeKdataList []TradeKdType
 
 func Analy() {
 	if len(TradeKdataList) < 100 || len(TradeKdataList) != len(okxInfo.NowKdataList) {
-		global.LogErr("hunter.Analy 数据长度错误", len(TradeKdataList))
+		global.LogErr("hunter.Analy 数据长度错误", len(TradeKdataList), len(okxInfo.NowKdataList))
 		return
 	}
 	Last := TradeKdataList[len(TradeKdataList)-1]

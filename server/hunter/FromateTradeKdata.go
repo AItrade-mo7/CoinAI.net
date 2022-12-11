@@ -14,12 +14,13 @@ func FormatTradeKdata() {
 		global.LogErr("hunter.FormatTradeKdata 数据不足")
 		return
 	}
+	TradeKdataList = []TradeKdType{} // 执行一次清理
 
 	FormatEnd := []mOKX.TypeKd{}
 
 	for _, Kdata := range okxInfo.NowKdataList {
-		TradeKdata := NewTradeKdata(Kdata, FormatEnd)
 		FormatEnd = append(FormatEnd, Kdata)
+		TradeKdata := NewTradeKdata(Kdata, FormatEnd)
 
 		TradeKdataList = append(TradeKdataList, TradeKdata)
 	}
