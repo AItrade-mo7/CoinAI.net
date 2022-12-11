@@ -26,6 +26,8 @@ func Running() {
 	}
 
 	FileBaseKdata()
+
+	SetNowKdata()
 }
 
 func FileBaseKdata() {
@@ -53,34 +55,6 @@ func FileBaseKdata() {
 			go SendEmail("切换监听币种为: " + okxInfo.KdataInst.InstID)
 		}
 	}
-
-	// 数据检查
-	// for key, val := range okxInfo.NowKdata {
-	// 	preIndex := key - 1
-	// 	if preIndex < 0 {
-	// 		preIndex = 0
-	// 	}
-	// 	preItem := okxInfo.NowKdata[preIndex]
-	// 	nowItem := okxInfo.NowKdata[key]
-	// 	global.Log.Println(val.TimeStr, nowItem.TimeUnix-preItem.TimeUnix)
-	// }
-
-	//
-	// nowList := mOKX.GetKdata(mOKX.GetKdataOpt{
-	// 	InstID: okxInfo.KdataInst.InstID,
-	// 	After:  mTime.GetUnixInt64(),
-	// 	Page:   0,
-	// })
-
-	// for _, val := range nowList {
-	// 	okxInfo.NowKdata = append(okxInfo.NowKdata, val)
-	// }
-
-	// okxInfo.NowKdata = okxInfo.NowKdata[len(okxInfo.NowKdata)-okxInfo.MaxLen:]
-
-	// 检查并转化
-	// for _, v := range v {
-	// }
 }
 
 func SendEmail(Message string) {
