@@ -8,6 +8,7 @@ import (
 	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/ready"
 	"CoinAI.net/server/router"
+	"CoinAI.net/server/utils/backTest"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -18,6 +19,20 @@ func main() {
 	jsoniter.Unmarshal(AppPackage, &config.AppInfo)
 	// 初始化系统参数
 	global.Start()
+
+	// 数据回测
+
+	start := backTest.GetTimeUnix("2022-12-02")
+	end := backTest.GetTimeUnix("2022-11-25")
+
+	tesObj := backTest.NewTest(backTest.TestOpt{
+		StartTime: start,
+		EndTime:   end,
+		CcyName:   "ETH",
+	})
+	tesObj.GetDBKdata()
+
+	select {}
 
 	// 数据准备
 	ready.Start()
