@@ -47,8 +47,10 @@ func SetNowKdata() {
 		preItem := okxInfo.NowKdata[preIndex]
 		nowItem := okxInfo.NowKdata[key]
 		if key > 0 {
-			if nowItem.TimeUnix-preItem.TimeUnix != (3600000) {
-				global.LogErr("出现了错误数据", val.InstID, val.TimeStr, key)
+			if nowItem.TimeUnix-preItem.TimeUnix != mTime.UnixTimeInt64.Hour {
+				global.LogErr("数据检查出错, 系统正在自行恢复", val.InstID, val.TimeStr, key)
+				okxInfo.NowKdata = []mOKX.TypeKd{} // 清空历史数据
+				Running()                          // 立即重新执行一次 Running
 				break
 			}
 		}

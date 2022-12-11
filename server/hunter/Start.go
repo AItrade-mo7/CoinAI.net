@@ -1,7 +1,6 @@
 package hunter
 
 import (
-	"fmt"
 	"time"
 
 	"CoinAI.net/server/global"
@@ -53,7 +52,6 @@ func FileBaseKdata() {
 		if okxInfo.KdataInst.InstID != okxInfo.NowKdata[len(okxInfo.NowKdata)-1].InstID {
 			okxInfo.NowKdata = []mOKX.TypeKd{} // 清空历史数据
 			Running()                          // 立即重新执行一次 Running
-			fmt.Println("重新执行")
 			go SendEmail("切换监听币种为: " + okxInfo.KdataInst.InstID)
 		}
 	}
