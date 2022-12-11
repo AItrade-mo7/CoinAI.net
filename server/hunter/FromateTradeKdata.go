@@ -9,12 +9,20 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
+var (
+	EMA_Arr = []string{}
+	MA_Arr  = []string{}
+)
+
 func FormatTradeKdata() {
 	if len(okxInfo.NowKdataList) < 100 {
 		global.LogErr("hunter.FormatTradeKdata 数据不足")
 		return
 	}
-	TradeKdataList = []TradeKdType{} // 执行一次清理
+	// 执行一次清理
+	TradeKdataList = []TradeKdType{}
+	EMA_Arr = []string{}
+	MA_Arr = []string{}
 
 	FormatEnd := []mOKX.TypeKd{}
 
@@ -44,12 +52,37 @@ func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata 
 	jsonByte := mJson.ToJson(Kdata)
 	jsoniter.Unmarshal(jsonByte, &TradeKdata)
 
+	// EMA
 	TradeKdata.EMA_18 = mTalib.ClistNew(mTalib.ClistOpt{
-		KDList: TradeKdataList, // 数据
-		Period: 18,             // 周期
+		KDList: TradeKdataList,
+		Period: 18,
 	}).EMA().ToStr()
+	EMA_Arr = append(EMA_Arr, TradeKdata.EMA_18)
 
-	global.Log.Println("数据整理", mJson.JsonFormat((mJson.ToJson(TradeKdata))))
+	// MA
+	TradeKdata.MA_18 = mTalib.ClistNew(mTalib.ClistOpt{
+		KDList: TradeKdataList,
+		Period: 18,
+	}).MA().ToStr()
+	MA_Arr = append(MA_Arr, TradeKdata.MA_18)
+
+	// RSI_18
+	TradeKdata.RSI_18 = mTalib.ClistNew(mTalib.ClistOpt{
+		KDList: TradeKdataList,
+		Period: 18,
+	}).RSI().ToStr()
+
+	// CAP
+	TradeKdata.CAP_EMA = mTalib.ClistNew(mTalib.ClistOpt{
+		CList:  EMA_Arr,
+		Period: 3,
+	}).CAP().ToStr()
+	TradeKdata.CAP_MA = mTalib.ClistNew(mTalib.ClistOpt{
+		CList:  MA_Arr,
+		Period: 3,
+	}).CAP().ToStr()
+
+	global.Log.Println("数据整理", EMA_Arr[len(EMA_Arr)-1], MA_Arr[len(MA_Arr)-1], mJson.JsonFormat((mJson.ToJson(TradeKdata))))
 
 	return
 }
