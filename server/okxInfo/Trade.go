@@ -18,4 +18,6 @@ type TradeKdType struct {
 	CAP_MA  string
 }
 
-var TradeKdata = []TradeKdType{}
+var MaxLen = 500
+
+var NowKdata = []mOKX.TypeKd{}
