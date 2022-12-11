@@ -14,7 +14,7 @@ func SetNowKdata() {
 		After:  mTime.GetUnixInt64(),
 	})
 
-	if len(NowList) < 100 || len(okxInfo.NowKdata) < 100 {
+	if len(NowList) < 100 || len(okxInfo.NowKdataList) < 100 {
 		global.LogErr("hunter.SetNowKdata 数据不足")
 		return
 	}
@@ -22,7 +22,7 @@ func SetNowKdata() {
 	for _, NowItem := range NowList {
 		Fund := false
 		FundKey := 0
-		for key, Item := range okxInfo.NowKdata {
+		for key, Item := range okxInfo.NowKdataList {
 			if NowItem.TimeUnix == Item.TimeUnix { // 相等的直接替换
 				Fund = true
 				FundKey = key
@@ -31,28 +31,32 @@ func SetNowKdata() {
 		}
 
 		if Fund {
-			okxInfo.NowKdata[FundKey] = NowItem
+			okxInfo.NowKdataList[FundKey] = NowItem
 		} else {
 			global.RunLog.Println("新增")
-			okxInfo.NowKdata = append(okxInfo.NowKdata, NowItem)
+			okxInfo.NowKdataList = append(okxInfo.NowKdataList, NowItem)
 		}
 	}
 
 	// 数据检查
-	for key, val := range okxInfo.NowKdata {
+	for key, val := range okxInfo.NowKdataList {
 		preIndex := key - 1
 		if preIndex < 0 {
 			preIndex = 0
 		}
-		preItem := okxInfo.NowKdata[preIndex]
-		nowItem := okxInfo.NowKdata[key]
+		preItem := okxInfo.NowKdataList[preIndex]
+		nowItem := okxInfo.NowKdataList[key]
 		if key > 0 {
 			if nowItem.TimeUnix-preItem.TimeUnix != mTime.UnixTimeInt64.Hour {
 				global.LogErr("数据检查出错, 系统正在自行恢复", val.InstID, val.TimeStr, key)
-				okxInfo.NowKdata = []mOKX.TypeKd{} // 清空历史数据
-				Running()                          // 立即重新执行一次 Running
+				okxInfo.NowKdataList = []mOKX.TypeKd{} // 清空历史数据
+				Running()                              // 立即重新执行一次 Running
 				break
 			}
 		}
 	}
+
+	Last := okxInfo.NowKdataList[len(okxInfo.NowKdataList)-1]
+
+	global.RunLog.Println("更新一次最新数据", Last.TimeStr, Last.C, len(okxInfo.NowKdataList))
 }
