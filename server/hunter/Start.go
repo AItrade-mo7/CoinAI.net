@@ -28,6 +28,8 @@ func Running() {
 	FileBaseKdata()
 
 	SetNowKdata()
+
+	FormatTradeKdata()
 }
 
 func FileBaseKdata() {
