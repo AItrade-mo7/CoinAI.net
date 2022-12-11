@@ -31,10 +31,9 @@ func SetNowKdata() {
 		}
 
 		if Fund {
-			global.Log.Println("替换", FundKey)
 			okxInfo.NowKdata[FundKey] = NowItem
 		} else {
-			global.Log.Println("新增")
+			global.RunLog.Println("新增")
 			okxInfo.NowKdata = append(okxInfo.NowKdata, NowItem)
 		}
 	}
@@ -47,6 +46,8 @@ func SetNowKdata() {
 		}
 		preItem := okxInfo.NowKdata[preIndex]
 		nowItem := okxInfo.NowKdata[key]
-		global.Log.Println(val.TimeStr, nowItem.TimeUnix-preItem.TimeUnix, key)
+		if nowItem.TimeUnix-preItem.TimeUnix != (3600000) {
+			global.Log.Println("错误数据", val.TimeStr, key)
+		}
 	}
 }
