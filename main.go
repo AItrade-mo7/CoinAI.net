@@ -22,6 +22,7 @@ func main() {
 	global.Start()
 
 	// 数据回测
+	ready.ReadUserInfo()
 
 	start := dbType.ParseTime("2022-12-02")
 	end := dbType.ParseTime("2022-11-25")
