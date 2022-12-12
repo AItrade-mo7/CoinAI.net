@@ -2,10 +2,10 @@ package backTest
 
 import (
 	"fmt"
-	"time"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -27,14 +27,23 @@ type TestObj struct {
 	EndTime   int64
 	TableName string
 	InstID    string
+	KdataList []mOKX.TypeKd
 }
 
 func NewTest(opt TestOpt) *TestObj {
 	obj := TestObj{}
 	now := mTime.GetUnixInt64()
 
-	if opt.EndTime < now-mTime.UnixTimeInt64.Day*2190 {
+	if opt.EndTime < dbType.MinTime { // 如果太小，则变成当前
 		opt.EndTime = now
+	}
+
+	if opt.StartTime < dbType.MinTime { // 如果太小，则自动变成过去一个月
+		opt.StartTime = mTime.UnixTimeInt64.Day * 30
+	}
+
+	if opt.StartTime < dbType.DBKdataStart {
+		opt.StartTime = dbType.DBKdataStart
 	}
 
 	obj.StartTime = opt.StartTime
@@ -64,10 +73,6 @@ func (_this *TestObj) GetDBKdata() *TestObj {
 	defer global.RunLog.Println("关闭数据库连接", _this.TableName)
 	defer db.Close()
 
-	fmt.Println(config.SysEnv)
-	fmt.Println(_this.TableName)
-	fmt.Println(Timeout)
-
 	findOpt := options.Find()
 	findOpt.SetSort(map[string]int{
 		"TimeUnix": 1,
@@ -94,19 +99,32 @@ func (_this *TestObj) GetDBKdata() *TestObj {
 		return nil
 	}
 
-	var dbKdataList []mOKX.TypeKd
+	_this.KdataList = []mOKX.TypeKd{}
+
 	for cur.Next(db.Ctx) {
 		var result mOKX.TypeKd
 		cur.Decode(&result)
 		fmt.Println(result.TimeStr)
 		global.RunLog.Println(mJson.ToStr(result))
-		dbKdataList = append(dbKdataList, result)
+		_this.KdataList = append(_this.KdataList, result)
 	}
 
 	return _this
 }
 
-func GetTimeUnix(str string) int64 {
-	t1, _ := time.ParseInLocation("2006-01-02", str, time.Local)
-	return mTime.ToUnixMsec(t1)
+func (_this *TestObj) CheckKdataList() {
+	for key, val := range _this.KdataList {
+		preIndex := key - 1
+		if preIndex < 0 {
+			preIndex = 0
+		}
+		preItem := _this.KdataList[preIndex]
+		nowItem := _this.KdataList[key]
+		if key > 0 {
+			if nowItem.TimeUnix-preItem.TimeUnix != mTime.UnixTimeInt64.Hour {
+				global.LogErr("数据检查出错 backTest.CheckKdataList", val.InstID, val.TimeStr, key)
+				break
+			}
+		}
+	}
 }

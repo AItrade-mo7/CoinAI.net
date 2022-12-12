@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/ready"
 	"CoinAI.net/server/router"
@@ -22,8 +23,8 @@ func main() {
 
 	// 数据回测
 
-	start := backTest.GetTimeUnix("2022-12-02")
-	end := backTest.GetTimeUnix("2022-11-25")
+	start := dbType.ParseTime("2022-12-02")
+	end := dbType.ParseTime("2022-11-25")
 
 	tesObj := backTest.NewTest(backTest.TestOpt{
 		StartTime: start,
@@ -31,7 +32,6 @@ func main() {
 		CcyName:   "ETH",
 	})
 	tesObj.GetDBKdata()
-
 	select {}
 
 	// 数据准备
