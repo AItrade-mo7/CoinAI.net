@@ -46,6 +46,10 @@ func NewTest(opt TestOpt) *TestObj {
 		opt.StartTime = dbType.DBKdataStart
 	}
 
+	if opt.StartTime > opt.EndTime {
+		global.LogErr("backTest.NewTest 开始时间不可以大于结束时间")
+	}
+
 	obj.StartTime = opt.StartTime
 	obj.EndTime = opt.EndTime
 
@@ -57,6 +61,10 @@ func NewTest(opt TestOpt) *TestObj {
 
 func (_this *TestObj) GetDBKdata() *TestObj {
 	total := (_this.EndTime - _this.StartTime) / mTime.UnixTimeInt64.Hour
+
+	if total < 1 {
+		return nil
+	}
 
 	Timeout := int(total) * 10
 	if Timeout < 100 {
@@ -113,6 +121,10 @@ func (_this *TestObj) GetDBKdata() *TestObj {
 }
 
 func (_this *TestObj) CheckKdataList() {
+	if len(_this.KdataList) < 1 {
+		return 
+	}
+
 	for key, val := range _this.KdataList {
 		preIndex := key - 1
 		if preIndex < 0 {
@@ -120,6 +132,7 @@ func (_this *TestObj) CheckKdataList() {
 		}
 		preItem := _this.KdataList[preIndex]
 		nowItem := _this.KdataList[key]
+		global.Log.Println(nowItem.TimeUnix - preItem.TimeUnix)
 		if key > 0 {
 			if nowItem.TimeUnix-preItem.TimeUnix != mTime.UnixTimeInt64.Hour {
 				global.LogErr("数据检查出错 backTest.CheckKdataList", val.InstID, val.TimeStr, key)

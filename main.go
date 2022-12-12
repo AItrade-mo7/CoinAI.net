@@ -32,6 +32,7 @@ func main() {
 		CcyName:   "ETH",
 	})
 	tesObj.GetDBKdata()
+	// tesObj.CheckKdataList()
 	select {}
 
 	// 数据准备
