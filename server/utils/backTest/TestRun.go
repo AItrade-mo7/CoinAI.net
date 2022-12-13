@@ -137,7 +137,7 @@ func (_this *TestObj) CheckKdataList() (resErr error) {
 		nowItem := _this.KdataList[key]
 		if key > 0 {
 			if nowItem.TimeUnix-preItem.TimeUnix != mTime.UnixTimeInt64.Hour {
-				resErr = fmt.Errorf("数据检查出错,$+v", nowItem.TimeUnix-preItem.TimeUnix)
+				resErr = fmt.Errorf("数据检查出错, %+v", nowItem.TimeUnix-preItem.TimeUnix)
 				global.LogErr("数据检查出错 backTest.CheckKdataList", val.InstID, val.TimeStr, key)
 				break
 			}
@@ -157,8 +157,6 @@ func (_this *TestObj) MockData() {
 			time.Sleep(time.Second)
 			hunter.FormatTradeKdata()
 			hunter.Analy()
-
 		}
-		// 整理数据
 	}
 }
