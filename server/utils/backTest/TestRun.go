@@ -160,14 +160,11 @@ func (_this *TestObj) MockData() {
 	FormatEnd := []mOKX.TypeKd{}
 
 	for _, Kdata := range _this.KdataList {
-		// 回填历史数据
-		okxInfo.NowKdataList = append(okxInfo.NowKdataList, Kdata)
-		if len(okxInfo.NowKdataList) >= 100 {
-			// 开始执行整理
-			FormatEnd = append(FormatEnd, Kdata)
-			TradeKdata := hunter.NewTradeKdata(Kdata, FormatEnd)
-			okxInfo.TradeKdataList = append(okxInfo.TradeKdataList, TradeKdata)
-
+		// 开始执行整理
+		FormatEnd = append(FormatEnd, Kdata)
+		TradeKdata := hunter.NewTradeKdata(Kdata, FormatEnd)
+		okxInfo.TradeKdataList = append(okxInfo.TradeKdataList, TradeKdata)
+		if len(okxInfo.TradeKdataList) >= 100 {
 			// 开始执行分析
 			hunter.Analy()
 		}
