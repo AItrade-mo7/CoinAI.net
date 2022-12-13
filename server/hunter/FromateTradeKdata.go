@@ -48,7 +48,7 @@ func FormatTradeKdata() {
 		"CAP_MA":  Last.CAP_MA,
 	}
 	WriteFilePath := config.Dir.JsonData + "/TradeKdataList.json"
-	global.RunLog.Println("数据整理完毕,写入", WriteFilePath, mJson.Format(LastPrint))
+	global.RunLog.Println("数据整理完毕,写入", len(okxInfo.TradeKdataList), WriteFilePath, mJson.Format(LastPrint))
 	mFile.Write(WriteFilePath, string(mJson.ToJson(okxInfo.TradeKdataList)))
 }
 

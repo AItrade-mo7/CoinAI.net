@@ -39,7 +39,10 @@ func RunTest() {
 		CcyName:   "ETH",
 	})
 	tesObj.GetDBKdata()
-	tesObj.CheckKdataList()
+	err := tesObj.CheckKdataList()
+	if err == nil {
+		tesObj.MockData()
+	}
 }
 
 func RunIng() {

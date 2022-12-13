@@ -2,11 +2,13 @@ package backTest
 
 import (
 	"fmt"
+	"time"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
-	"github.com/EasyGolang/goTools/mJson"
+	"CoinAI.net/server/hunter"
+	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTime"
@@ -112,7 +114,6 @@ func (_this *TestObj) GetDBKdata() *TestObj {
 	for cur.Next(db.Ctx) {
 		var result mOKX.TypeKd
 		cur.Decode(&result)
-		global.RunLog.Println(mJson.ToStr(result))
 		_this.KdataList = append(_this.KdataList, result)
 	}
 
@@ -134,7 +135,6 @@ func (_this *TestObj) CheckKdataList() (resErr error) {
 		}
 		preItem := _this.KdataList[preIndex]
 		nowItem := _this.KdataList[key]
-		global.Log.Println(nowItem.TimeUnix - preItem.TimeUnix)
 		if key > 0 {
 			if nowItem.TimeUnix-preItem.TimeUnix != mTime.UnixTimeInt64.Hour {
 				resErr = fmt.Errorf("数据检查出错,$+v", nowItem.TimeUnix-preItem.TimeUnix)
@@ -145,4 +145,20 @@ func (_this *TestObj) CheckKdataList() (resErr error) {
 	}
 
 	return
+}
+
+func (_this *TestObj) MockData() {
+	// 在这里开始执行模拟数据流的流动
+	for _, Kdata := range _this.KdataList {
+		// 回填历史数据
+		okxInfo.NowKdataList = append(okxInfo.NowKdataList, Kdata)
+		if len(okxInfo.NowKdataList) >= 100 {
+			// 开始执行分析
+			time.Sleep(time.Second)
+			hunter.FormatTradeKdata()
+			hunter.Analy()
+
+		}
+		// 整理数据
+	}
 }

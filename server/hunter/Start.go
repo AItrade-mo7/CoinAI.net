@@ -36,7 +36,7 @@ func Running() {
 
 func FileBaseKdata() {
 	Page := 2 // 如果数组为空，则填充 300 条进去
-	if len(okxInfo.NowKdataList) < 1 {
+	if len(okxInfo.NowKdataList) < 100 {
 		// 回填历史数据 1 组
 		for i := Page; i >= 0; i-- {
 			time.Sleep(time.Second / 3)
