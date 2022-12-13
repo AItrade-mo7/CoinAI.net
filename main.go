@@ -16,11 +16,21 @@ import (
 //go:embed package.json
 var AppPackage []byte
 
+var Test = true
+
 func main() {
 	jsoniter.Unmarshal(AppPackage, &config.AppInfo)
 	// 初始化系统参数
 	global.Start()
 
+	if Test {
+		RunTest()
+	} else {
+		RunIng()
+	}
+}
+
+func RunTest() {
 	// 数据回测
 	ready.ReadUserInfo()
 
@@ -33,9 +43,10 @@ func main() {
 		CcyName:   "ETH",
 	})
 	tesObj.GetDBKdata()
-	// tesObj.CheckKdataList()
-	select {}
+	tesObj.CheckKdataList()
+}
 
+func RunIng() {
 	// 数据准备
 	ready.Start()
 
