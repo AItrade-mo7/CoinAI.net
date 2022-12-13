@@ -8,6 +8,7 @@ import (
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
+	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTime"
@@ -147,26 +148,43 @@ func (_this *TestObj) CheckKdataList() (resErr error) {
 }
 
 var (
-	EMA_Arr = []string{}
-	MA_Arr  = []string{}
+	EMA_Arr        = []string{}
+	MA_Arr         = []string{}
+	TradeKdataList = []okxInfo.TradeKdType{}
+	FormatEnd      = []mOKX.TypeKd{}
 )
 
 func (_this *TestObj) MockData() {
 	// 在这里开始执行模拟数据流的流动
 	// 执行一次清理
-	okxInfo.TradeKdataList = []okxInfo.TradeKdType{}
+	TradeKdataList = []okxInfo.TradeKdType{}
 	EMA_Arr = []string{}
 	MA_Arr = []string{}
-	FormatEnd := []mOKX.TypeKd{}
+	FormatEnd = []mOKX.TypeKd{}
 
 	for _, Kdata := range _this.KdataList {
 		// 开始执行整理
 		FormatEnd = append(FormatEnd, Kdata)
 		TradeKdata := hunter.NewTradeKdata(Kdata, FormatEnd)
-		okxInfo.TradeKdataList = append(okxInfo.TradeKdataList, TradeKdata)
+		TradeKdataList = append(okxInfo.TradeKdataList, TradeKdata)
+
 		if len(okxInfo.TradeKdataList) >= 100 {
 			// 开始执行分析
-			hunter.Analy()
+			Analy()
 		}
 	}
+}
+
+func Analy() {
+	Last := TradeKdataList[len(TradeKdataList)-1]
+	global.TradeLog.Printf(
+		"%v EMA:%8v CAP_EMA:%8v %2v; MA:%8v CAP_MA:%8v %2v \n",
+		Last.TimeStr,                 // 1
+		Last.EMA_18,                  // 2
+		Last.CAP_EMA,                 // 3
+		mCount.Le(Last.CAP_EMA, "0"), // 4
+		Last.MA_18,                   // 5
+		Last.CAP_MA,                  // 6
+		mCount.Le(Last.CAP_MA, "0"),  // 7
+	)
 }
