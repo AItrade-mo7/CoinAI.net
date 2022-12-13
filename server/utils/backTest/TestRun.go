@@ -112,7 +112,6 @@ func (_this *TestObj) GetDBKdata() *TestObj {
 	for cur.Next(db.Ctx) {
 		var result mOKX.TypeKd
 		cur.Decode(&result)
-		fmt.Println(result.TimeStr)
 		global.RunLog.Println(mJson.ToStr(result))
 		_this.KdataList = append(_this.KdataList, result)
 	}
@@ -120,9 +119,12 @@ func (_this *TestObj) GetDBKdata() *TestObj {
 	return _this
 }
 
-func (_this *TestObj) CheckKdataList() {
+func (_this *TestObj) CheckKdataList() (resErr error) {
+	resErr = nil
+
 	if len(_this.KdataList) < 1 {
-		return 
+		resErr = fmt.Errorf("KdataList 长度不正确")
+		return
 	}
 
 	for key, val := range _this.KdataList {
@@ -135,9 +137,12 @@ func (_this *TestObj) CheckKdataList() {
 		global.Log.Println(nowItem.TimeUnix - preItem.TimeUnix)
 		if key > 0 {
 			if nowItem.TimeUnix-preItem.TimeUnix != mTime.UnixTimeInt64.Hour {
+				resErr = fmt.Errorf("数据检查出错,$+v", nowItem.TimeUnix-preItem.TimeUnix)
 				global.LogErr("数据检查出错 backTest.CheckKdataList", val.InstID, val.TimeStr, key)
 				break
 			}
 		}
 	}
+
+	return
 }
