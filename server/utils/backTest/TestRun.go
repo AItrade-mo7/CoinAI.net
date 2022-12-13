@@ -9,6 +9,7 @@ import (
 	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTime"
@@ -177,6 +178,7 @@ func (_this *TestObj) MockData() {
 
 func Analy() {
 	Last := TradeKdataList[len(TradeKdataList)-1]
+	global.TradeLog.Println(mJson.ToJson(Last))
 	global.TradeLog.Printf(
 		"%v EMA:%8v CAP_EMA:%8v %2v; MA:%8v CAP_MA:%8v %2v \n",
 		Last.TimeStr,                 // 1
