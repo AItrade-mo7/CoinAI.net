@@ -30,8 +30,8 @@ func RunTest() {
 	// 数据回测
 	ready.ReadUserInfo()
 
-	start := dbType.ParseTime("2022-11-02")
-	end := dbType.ParseTime("2022-12-25")
+	start := dbType.ParseTime("2022-10-27")
+	end := dbType.ParseTime("2022-12-1")
 
 	tesObj := backTest.NewTest(backTest.TestOpt{
 		StartTime: start,

@@ -9,6 +9,7 @@ import (
 	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
+	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -167,26 +168,74 @@ func (_this *TestObj) MockData() {
 		// 开始执行整理
 		FormatEnd = append(FormatEnd, Kdata)
 		TradeKdata := hunter.NewTradeKdata(Kdata, FormatEnd)
-		TradeKdataList = append(okxInfo.TradeKdataList, TradeKdata)
+		TradeKdataList = append(TradeKdataList, TradeKdata)
 
-		if len(okxInfo.TradeKdataList) >= 100 {
+		if len(TradeKdataList) >= 100 {
 			// 开始执行分析
 			Analy()
 		}
 	}
+	WriteFilePath := config.Dir.JsonData + "/TestRun.json"
+	mFile.Write(WriteFilePath, string(mJson.ToJson(TradeKdataList)))
 }
 
 func Analy() {
+	// Pre := TradeKdataList[len(TradeKdataList)-2]
 	Last := TradeKdataList[len(TradeKdataList)-1]
-	global.TradeLog.Println(mJson.ToJson(Last))
+
+	// CAP_EMA 方法 ==========
+	// PreEMADiff := mCount.Le(Pre.CAP_EMA, "0")
+	// PreMADiff := mCount.Le(Pre.CAP_MA, "0")
+	// PreDiff := PreEMADiff + PreMADiff
+
+	LastEMADiff := mCount.Le(Last.CAP_EMA, "0") // 1 0 -1
+	LastMADiff := mCount.Le(Last.CAP_MA, "0")   // -1 0 1
+	DiffAdd := mCount.Add(Last.CAP_EMA, Last.CAP_MA)
+	LastDiff := LastEMADiff + LastMADiff //
+	if LastDiff == 0 {
+		LastDiff = mCount.Le(DiffAdd, "0")
+	}
+
 	global.TradeLog.Printf(
-		"%v EMA:%8v CAP_EMA:%8v %2v; MA:%8v CAP_MA:%8v %2v \n",
-		Last.TimeStr,                 // 1
-		Last.EMA_18,                  // 2
-		Last.CAP_EMA,                 // 3
-		mCount.Le(Last.CAP_EMA, "0"), // 4
-		Last.MA_18,                   // 5
-		Last.CAP_MA,                  // 6
-		mCount.Le(Last.CAP_MA, "0"),  // 7
+		"%v %2v RSI:%8v \n",
+		Last.TimeStr,
+		LastDiff,
+		Last.RSI_18,
 	)
+
+	/*
+		// RSI 方法 =========
+			part30 := mCount.Le(Last.RSI_18, "30")
+			part70 := mCount.Le(Last.RSI_18, "70")
+
+			if part70 > 0 {
+				global.TradeLog.Printf(
+					"%v  %2v  CAP_EMA:%8v \n",
+					Last.TimeStr,
+					-1,
+					Last.CAP_EMA,
+				)
+			}
+
+			if part30 < 0 {
+				global.TradeLog.Printf(
+					"%v  %2v  CAP_EMA:%8v \n",
+					Last.TimeStr,
+					1,
+					Last.CAP_EMA,
+				)
+			}
+
+	*/
+
+	// global.TradeLog.Printf(
+	// 	"%v EMA:%8v CAP_EMA:%8v %2v;RSI:%8v EM:%5v Per:%5v \n",
+	// 	Last.TimeStr,                 // 1
+	// 	Last.EMA_18,                  // 2
+	// 	Last.CAP_EMA,                 // 3
+	// 	mCount.Le(Last.CAP_EMA, "0"), // 4
+	// 	Last.RSI_18,                  // 4
+	// 	diffEM,
+	// 	Last.RosePer,
+	// )
 }
