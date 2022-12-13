@@ -16,6 +16,7 @@ var (
 	KdataLog        *log.Logger //  OKX Kdata 日志
 	BinanceKdataLog *log.Logger //  币安 Kdata 日志
 	RunLog          *log.Logger // 运行过程
+	TradeLog        *log.Logger // 运行过程
 )
 
 func LogInit() {
@@ -42,6 +43,11 @@ func LogInit() {
 	RunLog = mLog.NewLog(mLog.NewLogParam{
 		Path: config.Dir.Log,
 		Name: "Run",
+	})
+
+	TradeLog = mLog.NewLog(mLog.NewLogParam{
+		Path: config.Dir.Log,
+		Name: "Trade",
 	})
 
 	// 设定清除log

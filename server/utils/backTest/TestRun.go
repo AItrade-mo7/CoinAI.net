@@ -2,7 +2,6 @@ package backTest
 
 import (
 	"fmt"
-	"time"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
@@ -147,15 +146,28 @@ func (_this *TestObj) CheckKdataList() (resErr error) {
 	return
 }
 
+var (
+	EMA_Arr = []string{}
+	MA_Arr  = []string{}
+)
+
 func (_this *TestObj) MockData() {
 	// 在这里开始执行模拟数据流的流动
+	// 执行一次清理
+	okxInfo.TradeKdataList = []okxInfo.TradeKdType{}
+	EMA_Arr = []string{}
+	MA_Arr = []string{}
+	FormatEnd := []mOKX.TypeKd{}
+
 	for _, Kdata := range _this.KdataList {
 		// 回填历史数据
 		okxInfo.NowKdataList = append(okxInfo.NowKdataList, Kdata)
 		if len(okxInfo.NowKdataList) >= 100 {
 			// 开始执行分析
-			time.Sleep(time.Second)
-			hunter.FormatTradeKdata()
+			FormatEnd = append(FormatEnd, Kdata)
+			TradeKdata := hunter.NewTradeKdata(Kdata, FormatEnd)
+			okxInfo.TradeKdataList = append(okxInfo.TradeKdataList, TradeKdata)
+
 			hunter.Analy()
 		}
 	}
