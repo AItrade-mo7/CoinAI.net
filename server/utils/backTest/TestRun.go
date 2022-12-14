@@ -180,21 +180,16 @@ func (_this *TestObj) MockData() {
 }
 
 func Analy() {
-	// Pre := TradeKdataList[len(TradeKdataList)-2]
 	Last := TradeKdataList[len(TradeKdataList)-1]
 
-	// CAP_EMA 方法 ==========
-	// PreEMADiff := mCount.Le(Pre.CAP_EMA, "0")
-	// PreMADiff := mCount.Le(Pre.CAP_MA, "0")
-	// PreDiff := PreEMADiff + PreMADiff
-
+	// CAP_EMA 和 CAP_MA 方法 ==========
 	LastEMADiff := mCount.Le(Last.CAP_EMA, "0") // 1 0 -1
 	LastMADiff := mCount.Le(Last.CAP_MA, "0")   // -1 0 1
 
-	LastDiff := LastEMADiff + LastMADiff //
+	LastDiff := LastEMADiff + LastMADiff // -2 说明 都为 跌， 2 说明都为涨 0 说明 一涨一跌。
 	if LastDiff == 0 {
-		DiffAdd := mCount.Add(Last.CAP_EMA, Last.CAP_MA)
-		LastDiff = mCount.Le(DiffAdd, "0")
+		DiffAdd := mCount.Add(Last.CAP_EMA, Last.CAP_MA) // 则两者相加 得 结果
+		LastDiff = mCount.Le(DiffAdd, "0")               // 取值
 	}
 
 	global.TradeLog.Printf(
