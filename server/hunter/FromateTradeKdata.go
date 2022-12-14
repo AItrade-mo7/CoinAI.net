@@ -79,11 +79,11 @@ func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata 
 	// CAP
 	TradeKdata.CAP_EMA = mTalib.ClistNew(mTalib.ClistOpt{
 		CList:  EMA_Arr,
-		Period: 3,
+		Period: 2,
 	}).CAP().ToStr()
 	TradeKdata.CAP_MA = mTalib.ClistNew(mTalib.ClistOpt{
 		CList:  MA_Arr,
-		Period: 3,
+		Period: 2,
 	}).CAP().ToStr()
 
 	// global.Log.Println("数据整理", mJson.JsonFormat((mJson.ToJson(TradeKdata))))

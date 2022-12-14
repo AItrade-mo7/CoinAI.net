@@ -190,9 +190,10 @@ func Analy() {
 
 	LastEMADiff := mCount.Le(Last.CAP_EMA, "0") // 1 0 -1
 	LastMADiff := mCount.Le(Last.CAP_MA, "0")   // -1 0 1
-	DiffAdd := mCount.Add(Last.CAP_EMA, Last.CAP_MA)
+
 	LastDiff := LastEMADiff + LastMADiff //
 	if LastDiff == 0 {
+		DiffAdd := mCount.Add(Last.CAP_EMA, Last.CAP_MA)
 		LastDiff = mCount.Le(DiffAdd, "0")
 	}
 
