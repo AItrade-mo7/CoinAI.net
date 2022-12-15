@@ -8,7 +8,6 @@ import (
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
-	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
@@ -182,19 +181,12 @@ func (_this *TestObj) MockData() {
 func Analy() {
 	Last := TradeKdataList[len(TradeKdataList)-1]
 
-	// CAP_EMA 和 CAP_MA 方法 ==========
-	Last_EMA_diff := mCount.Le(Last.CAP_EMA, "0") // 1 0 -1  EMA
-	Last_MA_diff := mCount.Le(Last.CAP_MA, "0")   // -1 0 1  MA
-
-	LastDiff := Last_EMA_diff
-	if Last_MA_diff == Last_EMA_diff {
-		LastDiff = Last_EMA_diff + Last_MA_diff
-	}
+	// 主调： CAPIdx
 
 	global.TradeLog.Printf(
 		"%v %2v RSI:%8v \n",
 		Last.TimeStr,
-		LastDiff,
+		Last.CAPIdx,
 		Last.RSI_18,
 	)
 
