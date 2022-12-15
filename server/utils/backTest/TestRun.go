@@ -186,10 +186,6 @@ func Analy() {
 	preIdx := hunter.CAPIdxToText(Pre.CAPIdx)
 	lastIdx := hunter.CAPIdxToText(Last.CAPIdx)
 
-	if lastIdx == "nil" {
-		lastIdx = preIdx
-	}
-
 	PreList := Last.PreList
 	RsiRegion_Down := hunter.Is_RsiRegion_GoDown(PreList)
 	RsiRegion_Up := hunter.Is_RsiRegion_GoUp(PreList)
@@ -205,7 +201,7 @@ func Analy() {
 
 	// 主调 CAPIdx
 	if lastIdx != preIdx {
-		if Last.CAPIdx > 0 {
+		if Last.CAPIdx == 2 {
 			// 包括当前在内 RsiRegion 是为升序 // 且 在过去一段时间 RsiRegion 内存在 非 1 的情况
 			if RsiRegion_Up && RsiRegion_Gte2 {
 				// Buy
@@ -224,7 +220,7 @@ func Analy() {
 			}
 		}
 
-		if Last.CAPIdx < 0 { // sell
+		if Last.CAPIdx == -2 { // sell
 			if RsiRegion_Down && RsiRegion_Gte2 {
 				// Sell
 				global.TradeLog.Printf(
