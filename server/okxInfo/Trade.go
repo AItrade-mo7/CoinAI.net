@@ -20,8 +20,8 @@ type TradeKdType struct {
 	RSI_18    string
 	CAP_EMA   string
 	CAP_MA    string
-	CAPIdx    int //  CAP_EMA 的比值  1 0 -1
-	RsiRegion int // Rsi 的震荡区域
+	CAPIdx    int //  CAP_EMA 的比值 2 1 0 -1  -2
+	RsiRegion int // Rsi 的震荡区域  -3 -2 -1 0 1 2 3
 }
 
 var TradeKdataList []TradeKdType

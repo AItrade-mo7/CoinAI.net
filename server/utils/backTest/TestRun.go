@@ -193,17 +193,19 @@ func Analy() {
 			BuyStr = "空"
 		}
 		global.TradeLog.Printf(
-			"%v %2v RSI:%8v \n",
+			"%v %2v RSI:%2v %v \n",
 			Last.TimeStr,
 			BuyStr,
 			Last.RsiRegion,
+			Last.RSI_18,
 		)
 	} else {
 		global.TradeLog.Printf(
-			"%v %2v RSI:%8v \n",
+			"%v %2v RSI:%2v %v \n",
 			Last.TimeStr,
 			Last.CAPIdx,
 			Last.RsiRegion,
+			Last.RSI_18,
 		)
 	}
 
