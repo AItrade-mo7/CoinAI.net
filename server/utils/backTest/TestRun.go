@@ -171,7 +171,7 @@ func (_this *TestObj) MockData() {
 
 		if len(TradeKdataList) >= 100 {
 			// 开始执行分析
-			Analy()
+			hunter.Analy()
 		}
 	}
 	WriteFilePath := config.Dir.JsonData + "/TestRun.json"
@@ -182,20 +182,21 @@ func Analy() {
 	Pre := TradeKdataList[len(TradeKdataList)-2]
 	Last := TradeKdataList[len(TradeKdataList)-1]
 
+	preIdx := hunter.CAPIdxToText(Pre.CAPIdx)
+
+	lastIdx := hunter.CAPIdxToText(Last.CAPIdx)
+
+	if lastIdx == "nil" {
+		lastIdx = preIdx
+	}
+
 	// 主调： CAPIdx
 
-	if Last.CAPIdx != Pre.CAPIdx {
-		BuyStr := "nil"
-		if Last.CAPIdx > 0 {
-			BuyStr = "多"
-		}
-		if Last.CAPIdx < 0 {
-			BuyStr = "空"
-		}
+	if lastIdx != preIdx {
 		global.TradeLog.Printf(
 			"%v %2v RSI:%2v %v \n",
 			Last.TimeStr,
-			BuyStr,
+			lastIdx,
 			Last.RsiRegion,
 			Last.RSI_18,
 		)
@@ -208,40 +209,4 @@ func Analy() {
 			Last.RSI_18,
 		)
 	}
-
-	/*
-		// RSI 方法 =========
-			part30 := mCount.Le(Last.RSI_18, "30")
-			part70 := mCount.Le(Last.RSI_18, "70")
-
-			if part70 > 0 {
-				global.TradeLog.Printf(
-					"%v  %2v  CAP_EMA:%8v \n",
-					Last.TimeStr,
-					-1,
-					Last.CAP_EMA,
-				)
-			}
-
-			if part30 < 0 {
-				global.TradeLog.Printf(
-					"%v  %2v  CAP_EMA:%8v \n",
-					Last.TimeStr,
-					1,
-					Last.CAP_EMA,
-				)
-			}
-
-	*/
-
-	// global.TradeLog.Printf(
-	// 	"%v EMA:%8v CAP_EMA:%8v %2v;RSI:%8v EM:%5v Per:%5v \n",
-	// 	Last.TimeStr,                 // 1
-	// 	Last.EMA_18,                  // 2
-	// 	Last.CAP_EMA,                 // 3
-	// 	mCount.Le(Last.CAP_EMA, "0"), // 4
-	// 	Last.RSI_18,                  // 4
-	// 	diffEM,
-	// 	Last.RosePer,
-	// )
 }

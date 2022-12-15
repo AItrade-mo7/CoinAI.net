@@ -4,7 +4,6 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
-	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -96,63 +95,4 @@ func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata 
 	// global.Log.Println("数据整理", mJson.JsonFormat((mJson.ToJson(TradeKdata))))
 
 	return
-}
-
-func GetCAPIdx(now okxInfo.TradeKdType) int {
-	now_EMA_diff := mCount.Le(now.CAP_EMA, "0") // 1 0 -1  EMA
-	now_MA_diff := mCount.Le(now.CAP_MA, "0")   // -1 0 1  MA
-
-	nowDiff := now_EMA_diff
-	if now_MA_diff == now_EMA_diff {
-		nowDiff = now_MA_diff + now_EMA_diff
-	}
-
-	return nowDiff
-}
-
-/*
-3   大于70  超买区
-2   60-70   多买区
-1   50-60   上震荡区
--1  40-50   下震荡区
--2  30-40   多卖区
--3  小于 30  超卖区
-*/
-func GetRsiRegion(now okxInfo.TradeKdType) int {
-	RSI := now.RSI_18
-	// 1 50-60
-	if mCount.Le(RSI, "50") > 0 && mCount.Le(RSI, "60") <= 0 {
-		return 1
-	}
-
-	// 2 60-70
-	if mCount.Le(RSI, "60") > 0 && mCount.Le(RSI, "70") < 0 {
-		return 2
-	}
-
-	// 3 大于70
-	if mCount.Le(RSI, "70") >= 0 {
-		return 3
-	}
-
-	if mCount.Le(RSI, "50") == 0 {
-		return 0
-	}
-
-	// -1 40-50
-	if mCount.Le(RSI, "40") >= 0 && mCount.Le(RSI, "50") < 0 {
-		return -1
-	}
-
-	// -2 30-40
-	if mCount.Le(RSI, "30") > 0 && mCount.Le(RSI, "40") < 0 {
-		return -2
-	}
-
-	// -3 30-40
-	if mCount.Le(RSI, "30") <= 0 {
-		return -3
-	}
-
-	return 0
 }
