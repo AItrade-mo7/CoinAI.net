@@ -112,12 +112,12 @@ func GetCAPIdx(now okxInfo.TradeKdType) int {
 }
 
 /*
-3   大于70
-2   60-70
-1   50-60
--1  40-50
--2  30-40
--3  小于 30
+3   大于70  超买区
+2   60-70   多买区
+1   50-60   上震荡区
+-1  40-50   下震荡区
+-2  30-40   多卖区
+-3  小于 30  超卖区
 */
 func GetRsiRegion(now okxInfo.TradeKdType) int {
 	RSI := now.RSI_18
