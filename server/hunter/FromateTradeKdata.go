@@ -90,6 +90,10 @@ func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata 
 	// CAPIdx 计算
 	TradeKdata.CAPIdx = GetCAPIdx(TradeKdata)
 
+	// 区域计算
+
+	TradeKdata.RsiRegion = GetRsiRegion(TradeKdata)
+
 	// global.Log.Println("数据整理", mJson.JsonFormat((mJson.ToJson(TradeKdata))))
 
 	return
@@ -105,4 +109,51 @@ func GetCAPIdx(now okxInfo.TradeKdType) int {
 	}
 
 	return nowDiff
+}
+
+/*
+3   大于70
+2   60-70
+1   50-60
+-1  40-50
+-2  30-40
+-3  小于 30
+*/
+func GetRsiRegion(now okxInfo.TradeKdType) int {
+	RSI := now.RSI_18
+	// 1 50-60
+	if mCount.Le(RSI, "50") > 0 && mCount.Le(RSI, "60") <= 0 {
+		return 1
+	}
+
+	// 2 60-70
+	if mCount.Le(RSI, "60") > 0 && mCount.Le(RSI, "70") < 0 {
+		return 2
+	}
+
+	// 3 大于70
+	if mCount.Le(RSI, "70") >= 0 {
+		return 3
+	}
+
+	if mCount.Le(RSI, "50") == 0 {
+		return 0
+	}
+
+	// -1 40-50
+	if mCount.Le(RSI, "40") >= 0 && mCount.Le(RSI, "50") < 0 {
+		return -1
+	}
+
+	// -2 30-40
+	if mCount.Le(RSI, "30") > 0 && mCount.Le(RSI, "40") < 0 {
+		return -2
+	}
+
+	// -3 30-40
+	if mCount.Le(RSI, "30") <= 0 {
+		return -3
+	}
+
+	return 0
 }

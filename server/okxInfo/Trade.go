@@ -15,12 +15,13 @@ var NowKdataList = []mOKX.TypeKd{}
 
 type TradeKdType struct {
 	mOKX.TypeKd
-	EMA_18  string
-	MA_18   string
-	RSI_18  string
-	CAP_EMA string
-	CAP_MA  string
-	CAPIdx  int
+	EMA_18    string
+	MA_18     string
+	RSI_18    string
+	CAP_EMA   string
+	CAP_MA    string
+	CAPIdx    int //  CAP_EMA 的比值  1 0 -1
+	RsiRegion int // Rsi 的震荡区域
 }
 
 var TradeKdataList []TradeKdType

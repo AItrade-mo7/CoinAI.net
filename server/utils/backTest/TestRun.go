@@ -179,16 +179,33 @@ func (_this *TestObj) MockData() {
 }
 
 func Analy() {
+	Pre := TradeKdataList[len(TradeKdataList)-2]
 	Last := TradeKdataList[len(TradeKdataList)-1]
 
 	// 主调： CAPIdx
 
-	global.TradeLog.Printf(
-		"%v %2v RSI:%8v \n",
-		Last.TimeStr,
-		Last.CAPIdx,
-		Last.RSI_18,
-	)
+	if Last.CAPIdx != Pre.CAPIdx {
+		BuyStr := "nil"
+		if Last.CAPIdx > 0 {
+			BuyStr = "多"
+		}
+		if Last.CAPIdx < 0 {
+			BuyStr = "空"
+		}
+		global.TradeLog.Printf(
+			"%v %2v RSI:%8v \n",
+			Last.TimeStr,
+			BuyStr,
+			Last.RSI_18,
+		)
+	} else {
+		global.TradeLog.Printf(
+			"%v %2v RSI:%8v \n",
+			Last.TimeStr,
+			Last.CAPIdx,
+			Last.RSI_18,
+		)
+	}
 
 	/*
 		// RSI 方法 =========
