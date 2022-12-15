@@ -184,18 +184,14 @@ func Analy() {
 
 	// CAP_EMA 和 CAP_MA 方法 ==========
 	LastEMADiff := mCount.Le(Last.CAP_EMA, "0") // 1 0 -1
-	// LastMADiff := mCount.Le(Last.CAP_MA, "0")   // -1 0 1
+	LastMADiff := mCount.Le(Last.CAP_MA, "0")   // -1 0 1
 
-	// LastDiff := LastEMADiff + LastMADiff // -2 说明 都为 跌， 2 说明都为涨 0 说明 一涨一跌。
-	// if LastDiff == 0 {
-	// 	DiffAdd := mCount.Add(Last.CAP_EMA, Last.CAP_MA) // 则两者相加 得 结果
-	// 	LastDiff = mCount.Le(DiffAdd, "0")               // 取值
-	// }
+	LastDiff := LastEMADiff + LastMADiff // -2 说明 都为 跌， 2 说明都为涨 0 说明 一涨一跌。
 
 	global.TradeLog.Printf(
 		"%v %2v RSI:%8v \n",
 		Last.TimeStr,
-		LastEMADiff,
+		LastDiff,
 		Last.RSI_18,
 	)
 
