@@ -193,8 +193,9 @@ func Analy() {
 	PreList := Last.PreList
 	RsiRegion_Down := hunter.Is_RsiRegion_GoDown(PreList)
 	RsiRegion_Up := hunter.Is_RsiRegion_GoUp(PreList)
-	RsiRegionDir := 0
+	RsiRegion_Gte2 := hunter.Is_RsiRegion_Gte2(PreList)
 
+	RsiRegionDir := 0
 	if RsiRegion_Down {
 		RsiRegionDir = -1
 	}
@@ -205,21 +206,25 @@ func Analy() {
 	// 主调： CAPIdx
 	if lastIdx != preIdx {
 		global.TradeLog.Printf(
-			"%v %4v RSI:%2v %8v RsiDir: %5v \n",
+			"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v \n",
 			Last.TimeStr,
 			lastIdx,
 			Last.RsiRegion,
 			Last.RSI_18,
 			RsiRegionDir,
+			RsiRegion_Gte2,
+			PreList[0].RSI_18,
 		)
 	} else {
 		global.TradeLog.Printf(
-			"%v %4v RSI:%2v %8v RsiDir: %5v \n",
+			"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v   \n",
 			Last.TimeStr,
 			Last.CAPIdx,
 			Last.RsiRegion,
 			Last.RSI_18,
 			RsiRegionDir,
+			RsiRegion_Gte2,
+			PreList[0].RSI_18,
 		)
 	}
 }

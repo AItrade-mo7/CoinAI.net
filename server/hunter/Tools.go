@@ -194,7 +194,7 @@ func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) bool {
 }
 
 // preArr 的 RsiRegion 是否有大于2  的存在
-func Is_RsiRegion_Than2(preArr []okxInfo.TradeKdType) (result bool) {
+func Is_RsiRegion_Gte2(preArr []okxInfo.TradeKdType) (result bool) {
 	result = false
 	if len(preArr) < 3 {
 		return
