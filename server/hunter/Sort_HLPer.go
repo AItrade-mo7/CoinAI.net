@@ -1,4 +1,4 @@
-package ready
+package hunter
 
 import (
 	"github.com/EasyGolang/goTools/mCount"

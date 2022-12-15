@@ -25,6 +25,12 @@ func Running() {
 		return
 	}
 
+	err := SetTradeInst() // 每次平仓之后才会触发这个
+	if err != nil {
+		global.LogErr(err)
+		return
+	}
+
 	FileBaseKdata()
 
 	SetNowKdata()
