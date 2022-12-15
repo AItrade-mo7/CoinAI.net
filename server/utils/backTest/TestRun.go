@@ -8,6 +8,7 @@ import (
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
+	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
@@ -204,20 +205,20 @@ func Analy() {
 
 	// 主调 CAPIdx
 	if lastIdx != preIdx {
-		// 则开始交易
 		if Last.CAPIdx > 0 {
 			// 包括当前在内 RsiRegion 是为升序 // 且 在过去一段时间 RsiRegion 内存在 非 1 的情况
 			if RsiRegion_Up && RsiRegion_Gte2 {
 				// Buy
 				global.TradeLog.Printf(
-					"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v \n",
+					"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v CAP_EMA: %8v  \n",
 					Last.TimeStr,
-					lastIdx,
+					lastIdx+fmt.Sprint(Last.CAPIdx),
 					Last.RsiRegion,
 					Last.RSI_18,
 					RsiRegionDir,
 					RsiRegion_Gte2,
 					PreList[0].RSI_18,
+					Last.CAP_EMA,
 				)
 				return
 			}
@@ -227,22 +228,40 @@ func Analy() {
 			if RsiRegion_Down && RsiRegion_Gte2 {
 				// Sell
 				global.TradeLog.Printf(
-					"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v \n",
+					"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v CAP_EMA: %8v \n",
 					Last.TimeStr,
-					lastIdx,
+					lastIdx+fmt.Sprint(Last.CAPIdx),
 					Last.RsiRegion,
 					Last.RSI_18,
 					RsiRegionDir,
 					RsiRegion_Gte2,
 					PreList[0].RSI_18,
+					Last.CAP_EMA,
 				)
 				return
 			}
 		}
 	}
 
+	// 在这里进行防火作业
+	CAPIdxAbs := mCount.Abs(fmt.Sprint(Last.CAPIdx))
+	if mCount.Le(CAPIdxAbs, "2") >= 0 && Last.CAPIdx == Last.RsiRegion {
+		global.TradeLog.Printf(
+			"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v CAP_EMA: %8v  \n",
+			Last.TimeStr,
+			lastIdx+fmt.Sprint(Last.CAPIdx),
+			Last.RsiRegion,
+			Last.RSI_18,
+			RsiRegionDir,
+			RsiRegion_Gte2,
+			PreList[0].RSI_18,
+			Last.CAP_EMA,
+		)
+		return
+	}
+
 	global.TradeLog.Printf(
-		"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v   \n",
+		"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v  CAP_EMA: %8v  \n",
 		Last.TimeStr,
 		Last.CAPIdx,
 		Last.RsiRegion,
@@ -250,5 +269,6 @@ func Analy() {
 		RsiRegionDir,
 		RsiRegion_Gte2,
 		PreList[0].RSI_18,
+		Last.CAP_EMA,
 	)
 }
