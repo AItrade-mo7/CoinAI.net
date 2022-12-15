@@ -191,6 +191,8 @@ func Analy() {
 	}
 	PreList := Last.PreList
 
+	hunter.Is_RsiRegion_GoDown(PreList)
+
 	// 主调： CAPIdx
 	if lastIdx != preIdx {
 		global.TradeLog.Printf(

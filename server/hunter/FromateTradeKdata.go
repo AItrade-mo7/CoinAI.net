@@ -96,7 +96,7 @@ func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata 
 
 	PreList = append(PreList, TradeKdata)
 	if len(PreList) > 5 {
-		PreList = PreList[len(PreList)-5:]
+		PreList = PreList[len(PreList)-6:]
 	}
 
 	TradeKdata.PreList = PreList

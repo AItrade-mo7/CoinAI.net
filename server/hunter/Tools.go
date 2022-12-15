@@ -107,3 +107,86 @@ func GetRsiRegion(now okxInfo.TradeKdType) int {
 	return 0
 }
 
+// RsiRegion 是否为降序
+func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) bool {
+	cacheArr := []int{}
+	Last := okxInfo.TradeKdType{}
+
+	if len(preArr) > 3 {
+		Last = preArr[len(preArr)-1]
+	} else {
+		return false
+	}
+
+	cacheArr = append(cacheArr, Last.RsiRegion)
+	/*
+		cacheArr 长度原本为 1
+		当前与 cacheArr 最后一位 比对 ，一定相等 则 长度为2
+		当前 与 cacheArr 最后一位 比对 , 不一定相等
+				若此时大于等于 则 长度为 3
+				若此时  小  于 则 长度为2 并结束
+	*/
+	for i := len(preArr); i >= 0; i-- {
+		item := preArr[i]
+		cacheLast := cacheArr[len(cacheArr)-1]
+
+		if item.RsiRegion >= cacheLast {
+			cacheArr = append(cacheArr, item.RsiRegion)
+		} else {
+			break
+		}
+	}
+	if len(cacheArr) < 3 {
+		return false
+	}
+	cacheLast := cacheArr[len(cacheArr)-1]
+	cacheFirst := cacheArr[0]
+
+	if cacheLast-cacheFirst > 0 {
+		return true
+	}
+
+	return false
+}
+
+// RsiRegion 是否为升序
+func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) bool {
+	cacheArr := []int{}
+	Last := okxInfo.TradeKdType{}
+
+	if len(preArr) > 3 {
+		Last = preArr[len(preArr)-1]
+	} else {
+		return false
+	}
+
+	cacheArr = append(cacheArr, Last.RsiRegion)
+	/*
+		cacheArr 长度原本为 1
+		当前与 cacheArr 最后一位 比对 ，一定相等 则 长度为2
+		当前 与 cacheArr 最后一位 比对 , 不一定相等
+				若此时 则 长度为 3
+				若此时  小  于 则 长度为2 并结束
+	*/
+	for i := len(preArr); i >= 0; i-- {
+		item := preArr[i]
+		cacheLast := cacheArr[len(cacheArr)-1]
+
+		if item.RsiRegion <= cacheLast {
+			cacheArr = append(cacheArr, item.RsiRegion)
+		} else {
+			break
+		}
+	}
+	if len(cacheArr) < 3 {
+		return false
+	}
+	cacheLast := cacheArr[len(cacheArr)-1]
+	cacheFirst := cacheArr[0]
+
+	if cacheLast-cacheFirst < 0 {
+		return true
+	}
+
+	return false
+}
