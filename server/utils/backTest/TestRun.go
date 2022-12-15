@@ -171,7 +171,7 @@ func (_this *TestObj) MockData() {
 
 		if len(TradeKdataList) >= 100 {
 			// 开始执行分析
-			hunter.Analy()
+			Analy()
 		}
 	}
 	WriteFilePath := config.Dir.JsonData + "/TestRun.json"
@@ -189,24 +189,28 @@ func Analy() {
 	if lastIdx == "nil" {
 		lastIdx = preIdx
 	}
+	PreList := Last.PreList
 
 	// 主调： CAPIdx
-
 	if lastIdx != preIdx {
 		global.TradeLog.Printf(
-			"%v %2v RSI:%2v %v \n",
+			"%v %4v RSI:%2v %8v l:%2v %8v \n",
 			Last.TimeStr,
 			lastIdx,
 			Last.RsiRegion,
 			Last.RSI_18,
+			PreList[0].RsiRegion,
+			PreList[0].RSI_18,
 		)
 	} else {
 		global.TradeLog.Printf(
-			"%v %2v RSI:%2v %v \n",
+			"%v %4v RSI:%2v %8v l:%2v %8v \n",
 			Last.TimeStr,
 			Last.CAPIdx,
 			Last.RsiRegion,
 			Last.RSI_18,
+			PreList[0].RsiRegion,
+			PreList[0].RSI_18,
 		)
 	}
 }

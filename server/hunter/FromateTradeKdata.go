@@ -52,6 +52,8 @@ func FormatTradeKdata() {
 	mFile.Write(WriteFilePath, string(mJson.ToJson(okxInfo.TradeKdataList)))
 }
 
+var PreList = []okxInfo.TradeKdType{}
+
 func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata okxInfo.TradeKdType) {
 	jsonByte := mJson.ToJson(Kdata)
 	jsoniter.Unmarshal(jsonByte, &TradeKdata)
@@ -91,6 +93,13 @@ func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata 
 
 	// 区域计算
 	TradeKdata.RsiRegion = GetRsiRegion(TradeKdata)
+
+	PreList = append(PreList, TradeKdata)
+	if len(PreList) > 5 {
+		PreList = PreList[len(PreList)-5:]
+	}
+
+	TradeKdata.PreList = PreList
 
 	// global.Log.Println("数据整理", mJson.JsonFormat((mJson.ToJson(TradeKdata))))
 

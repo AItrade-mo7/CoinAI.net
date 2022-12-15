@@ -106,3 +106,4 @@ func GetRsiRegion(now okxInfo.TradeKdType) int {
 
 	return 0
 }
+
