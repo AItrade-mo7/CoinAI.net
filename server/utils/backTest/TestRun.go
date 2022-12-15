@@ -183,7 +183,6 @@ func Analy() {
 	Last := TradeKdataList[len(TradeKdataList)-1]
 
 	preIdx := hunter.CAPIdxToText(Pre.CAPIdx)
-
 	lastIdx := hunter.CAPIdxToText(Last.CAPIdx)
 
 	if lastIdx == "nil" {
@@ -203,28 +202,53 @@ func Analy() {
 		RsiRegionDir = 1
 	}
 
-	// 主调： CAPIdx
+	// 主调 CAPIdx
 	if lastIdx != preIdx {
-		global.TradeLog.Printf(
-			"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v \n",
-			Last.TimeStr,
-			lastIdx,
-			Last.RsiRegion,
-			Last.RSI_18,
-			RsiRegionDir,
-			RsiRegion_Gte2,
-			PreList[0].RSI_18,
-		)
-	} else {
-		global.TradeLog.Printf(
-			"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v   \n",
-			Last.TimeStr,
-			Last.CAPIdx,
-			Last.RsiRegion,
-			Last.RSI_18,
-			RsiRegionDir,
-			RsiRegion_Gte2,
-			PreList[0].RSI_18,
-		)
+		// 则开始交易
+		if Last.CAPIdx > 0 {
+			// 包括当前在内 RsiRegion 是为升序 // 且 在过去一段时间 RsiRegion 内存在 非 1 的情况
+			if RsiRegion_Up && RsiRegion_Gte2 {
+				// Buy
+				global.TradeLog.Printf(
+					"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v \n",
+					Last.TimeStr,
+					lastIdx,
+					Last.RsiRegion,
+					Last.RSI_18,
+					RsiRegionDir,
+					RsiRegion_Gte2,
+					PreList[0].RSI_18,
+				)
+				return
+			}
+		}
+
+		if Last.CAPIdx < 0 { // sell
+			if RsiRegion_Down && RsiRegion_Gte2 {
+				// Sell
+				global.TradeLog.Printf(
+					"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v \n",
+					Last.TimeStr,
+					lastIdx,
+					Last.RsiRegion,
+					Last.RSI_18,
+					RsiRegionDir,
+					RsiRegion_Gte2,
+					PreList[0].RSI_18,
+				)
+				return
+			}
+		}
 	}
+
+	global.TradeLog.Printf(
+		"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v   \n",
+		Last.TimeStr,
+		Last.CAPIdx,
+		Last.RsiRegion,
+		Last.RSI_18,
+		RsiRegionDir,
+		RsiRegion_Gte2,
+		PreList[0].RSI_18,
+	)
 }
