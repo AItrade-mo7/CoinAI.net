@@ -183,10 +183,13 @@ func Analy() {
 	Last := TradeKdataList[len(TradeKdataList)-1]
 
 	// CAP_EMA 和 CAP_MA 方法 ==========
-	LastEMADiff := mCount.Le(Last.CAP_EMA, "0") // 1 0 -1
-	LastMADiff := mCount.Le(Last.CAP_MA, "0")   // -1 0 1
+	Last_EMA_diff := mCount.Le(Last.CAP_EMA, "0") // 1 0 -1  EMA
+	Last_MA_diff := mCount.Le(Last.CAP_MA, "0")   // -1 0 1  MA
 
-	LastDiff := LastEMADiff + LastMADiff // -2 说明 都为 跌， 2 说明都为涨 0 说明 一涨一跌。
+	LastDiff := Last_EMA_diff
+	if Last_MA_diff == Last_EMA_diff {
+		LastDiff = Last_EMA_diff + Last_MA_diff
+	}
 
 	global.TradeLog.Printf(
 		"%v %2v RSI:%8v \n",

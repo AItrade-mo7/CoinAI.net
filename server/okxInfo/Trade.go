@@ -20,6 +20,7 @@ type TradeKdType struct {
 	RSI_18  string
 	CAP_EMA string
 	CAP_MA  string
+	CAPIdx  int
 }
 
 var TradeKdataList []TradeKdType

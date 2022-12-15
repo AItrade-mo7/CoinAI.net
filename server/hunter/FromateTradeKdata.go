@@ -4,6 +4,7 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
+	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -86,7 +87,22 @@ func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata 
 		Period: 2,
 	}).CAP().ToStr()
 
+	// CAPIdx 计算
+	TradeKdata.CAPIdx = GetCAPIdx(TradeKdata)
+
 	// global.Log.Println("数据整理", mJson.JsonFormat((mJson.ToJson(TradeKdata))))
 
 	return
+}
+
+func GetCAPIdx(now okxInfo.TradeKdType) int {
+	now_EMA_diff := mCount.Le(now.CAP_EMA, "0") // 1 0 -1  EMA
+	now_MA_diff := mCount.Le(now.CAP_MA, "0")   // -1 0 1  MA
+
+	nowDiff := now_EMA_diff
+	if now_MA_diff == now_EMA_diff {
+		nowDiff = now_MA_diff + now_EMA_diff
+	}
+
+	return nowDiff
 }
