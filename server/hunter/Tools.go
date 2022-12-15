@@ -1,6 +1,8 @@
 package hunter
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -126,7 +128,7 @@ func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) bool {
 				若此时大于等于 则 长度为 3
 				若此时  小  于 则 长度为2 并结束
 	*/
-	for i := len(preArr); i >= 0; i-- {
+	for i := len(preArr) - 1; i >= 0; i-- {
 		item := preArr[i]
 		cacheLast := cacheArr[len(cacheArr)-1]
 
@@ -166,9 +168,9 @@ func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) bool {
 		当前与 cacheArr 最后一位 比对 ，一定相等 则 长度为2
 		当前 与 cacheArr 最后一位 比对 , 不一定相等
 				若此时 则 长度为 3
-				若此时  小  于 则 长度为2 并结束
+				若此时 小  于 则 长度为2 并结束
 	*/
-	for i := len(preArr); i >= 0; i-- {
+	for i := len(preArr) - 1; i >= 0; i-- {
 		item := preArr[i]
 		cacheLast := cacheArr[len(cacheArr)-1]
 
@@ -189,4 +191,23 @@ func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) bool {
 	}
 
 	return false
+}
+
+// preArr 的 RsiRegion 是否有大于2  的存在
+func Is_RsiRegion_Than2(preArr []okxInfo.TradeKdType) (result bool) {
+	result = false
+	if len(preArr) < 3 {
+		return
+	}
+
+	for i := len(preArr) - 1; i >= 0; i-- {
+		RsiRegion := preArr[i].RsiRegion
+		valAbs := mCount.Abs(fmt.Sprint(RsiRegion))
+		if mCount.Le(valAbs, "2") >= 0 {
+			result = true
+			break
+		}
+	}
+
+	return
 }
