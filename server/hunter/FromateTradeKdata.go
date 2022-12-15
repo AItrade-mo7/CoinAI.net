@@ -91,7 +91,6 @@ func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata 
 	TradeKdata.CAPIdx = GetCAPIdx(TradeKdata)
 
 	// 区域计算
-
 	TradeKdata.RsiRegion = GetRsiRegion(TradeKdata)
 
 	// global.Log.Println("数据整理", mJson.JsonFormat((mJson.ToJson(TradeKdata))))
