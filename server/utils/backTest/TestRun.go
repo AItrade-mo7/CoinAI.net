@@ -211,13 +211,31 @@ func Analy() {
 			if len(RsiRegion_Up) > 1 && RsiRegion_Gte2 {
 				Open = 1
 			}
+
+			if len(RSIMax.RSI_18) > 1 && mCount.Le(RSIMax.RSI_18, "35") > 0 {
+				Open = 1
+				RSIMax = okxInfo.TradeKdType{}
+			}
 		}
 
 		if Now.CAPIdx < 0 { // sell
 			if len(RsiRegion_Down) > 1 && RsiRegion_Gte2 {
 				Open = -1
 			}
+
+			if len(RSIMax.RSI_18) > 1 && mCount.Le(RSIMax.RSI_18, "65") > 0 {
+				Open = -1
+				RSIMax = okxInfo.TradeKdType{}
+			}
 		}
+	}
+
+	// 副调 ，记录 RSI 的超买超买记录
+	if mCount.Le(Now.RSI_18, "65") > 0 {
+		RSIMax = Now
+	}
+	if mCount.Le(Now.RSI_18, "35") < 0 {
+		RSIMax = Now
 	}
 
 	PrintLnResult := func() {
