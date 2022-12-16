@@ -193,10 +193,10 @@ var (
 )
 
 func Analy() {
-	Pre := TradeKdataList[len(TradeKdataList)-2]
+	// Pre := TradeKdataList[len(TradeKdataList)-2]
 	Now := TradeKdataList[len(TradeKdataList)-1]
 
-	preIdx := hunter.CAPIdxToText(Pre.CAPIdx)
+	// preIdx := hunter.CAPIdxToText(Pre.CAPIdx)
 	nowIdx := hunter.CAPIdxToText(Now.CAPIdx)
 
 	PreList5 := TradeKdataList[len(TradeKdataList)-6:]
@@ -205,28 +205,30 @@ func Analy() {
 	RsiRegion_Gte2 := hunter.Is_RsiRegion_Gte2(PreList5)
 
 	Open := 0
+	// 副调 RSI 超买超卖
+	// if len(RSIMax.RSI_18) > 1 {
+	// 	if mCount.Le(RSIMax.RSI_18, "35") < 0 && Now.CAPIdx > 0 {
+	// 		Open = 1
+	// 	}
+	// 	if mCount.Le(RSIMax.RSI_18, "65") > 0 && Now.CAPIdx < 0 {
+	// 		Open = -1
+	// 	}
+	// }
+
 	// 主调  Last.CAPIdx
-	if nowIdx != preIdx {
-		if Now.CAPIdx > 0 { // Buy
-			if len(RsiRegion_Up) > 1 && RsiRegion_Gte2 {
-				Open = 1
-			}
-
-			// if len(RSIMax.RSI_18) > 1 && mCount.Le(RSIMax.RSI_18, "35") > 0 {
-			// 	Open = 1
-			// }
-		}
-
-		if Now.CAPIdx < 0 { // sell
-			if len(RsiRegion_Down) > 1 && RsiRegion_Gte2 {
-				Open = -1
-			}
-
-			// if len(RSIMax.RSI_18) > 1 && mCount.Le(RSIMax.RSI_18, "65") > 0 {
-			// 	Open = -1
-			// }
+	// if nowIdx != preIdx {
+	if Now.CAPIdx > 0 && len(RsiRegion_Up) > 2 { // Buy
+		if RsiRegion_Gte2 {
+			Open = 1
 		}
 	}
+
+	if Now.CAPIdx < 0 && len(RsiRegion_Down) > 2 { // sell
+		if RsiRegion_Gte2 {
+			Open = -1
+		}
+	}
+	// }
 
 	// 副调 ，记录 RSI 的超买超买记录
 	if mCount.Le(Now.RSI_18, "65") > 0 {
@@ -236,7 +238,10 @@ func Analy() {
 		RSIMax = Now
 	}
 
+	// 输出显示区
+
 	PrintLnResult := func() {
+		RSIMax = okxInfo.TradeKdType{}
 		if Open != NowOpen.Dir {
 			OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
 
