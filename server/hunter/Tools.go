@@ -130,7 +130,8 @@ func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) int {
 		cacheLast := cacheArr[len(cacheArr)-1]
 		if item.RsiRegion >= cacheLast {
 			cacheArr = append(cacheArr, item.RsiRegion)
-			if item.RsiRegion > cacheLast {
+
+			if item.RsiRegion > cacheArr[0] {
 				downArr = append(downArr, item.RsiRegion)
 			}
 		} else {
@@ -162,7 +163,8 @@ func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) int {
 
 		if item.RsiRegion <= cacheLast {
 			cacheArr = append(cacheArr, item.RsiRegion)
-			if item.RsiRegion < cacheLast {
+
+			if item.RsiRegion < cacheArr[0] {
 				upArr = append(upArr, item.RsiRegion)
 			}
 		} else {

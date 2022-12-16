@@ -191,7 +191,7 @@ func Analy() {
 
 	PrintLnResult := func() {
 		global.TradeLog.Printf(
-			"%v %6v RSI:%2v %8v CAP_EMA: %8v RsiDown: %+v RsiUp: %+v \n",
+			"%v %6v RSI:%2v %8v CAP_EMA:%7v RsiDown:%+v RsiUp:%+v \n",
 			Last.TimeStr, lastIdx+fmt.Sprint(Last.CAPIdx),
 			Last.RsiRegion, Last.RSI_18,
 			Last.CAP_EMA,
@@ -220,5 +220,12 @@ func Analy() {
 
 	// 在这里进行防火作业
 
-	PrintLnResult()
+	global.TradeLog.Printf(
+		"%v %6v RSI:%2v %8v CAP_EMA:%7v RsiDown:%+v RsiUp:%+v \n",
+		Last.TimeStr, fmt.Sprint(Last.CAPIdx),
+		Last.RsiRegion, Last.RSI_18,
+		Last.CAP_EMA,
+		RsiRegion_Down,
+		RsiRegion_Up,
+	)
 }
