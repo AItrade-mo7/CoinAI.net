@@ -189,33 +189,30 @@ func Analy() {
 	RsiRegion_Down := hunter.Is_RsiRegion_GoDown(PreList)
 	RsiRegion_Up := hunter.Is_RsiRegion_GoUp(PreList)
 
+	PrintLnResult := func() {
+		global.TradeLog.Printf(
+			"%v %6v RSI:%2v %8v CAP_EMA: %8v RsiDown: %+v RsiUp: %+v \n",
+			Last.TimeStr, lastIdx+fmt.Sprint(Last.CAPIdx),
+			Last.RsiRegion, Last.RSI_18,
+			Last.CAP_EMA,
+			RsiRegion_Down,
+			RsiRegion_Up,
+		)
+	}
+
 	// 主调 CAPIdx
 	if lastIdx != preIdx {
 		if Last.CAPIdx > 0 { // Buy
 			// 包括当前在内 RsiRegion 是为升序 // 且 在过去一段时间 RsiRegion 内存在 非 1 的情况
 			if RsiRegion_Up > 0 {
-				global.TradeLog.Printf(
-					"%v %6v RSI:%2v %8v CAP_EMA: %8v RsiDown: %+v RsiUp: %+v \n",
-					Last.TimeStr, lastIdx+fmt.Sprint(Last.CAPIdx),
-					Last.RsiRegion, Last.RSI_18,
-					Last.CAP_EMA,
-					RsiRegion_Down,
-					RsiRegion_Up,
-				)
+				PrintLnResult()
 				return
 			}
 		}
 
 		if Last.CAPIdx < 0 { // sell
 			if RsiRegion_Down > 0 {
-				global.TradeLog.Printf(
-					"%v %6v RSI:%2v %8v CAP_EMA: %8v RsiDown: %+v RsiUp: %+v \n",
-					Last.TimeStr, lastIdx+fmt.Sprint(Last.CAPIdx),
-					Last.RsiRegion, Last.RSI_18,
-					Last.CAP_EMA,
-					RsiRegion_Down,
-					RsiRegion_Up,
-				)
+				PrintLnResult()
 				return
 			}
 		}
@@ -223,12 +220,5 @@ func Analy() {
 
 	// 在这里进行防火作业
 
-	global.TradeLog.Printf(
-		"%v %6v RSI:%2v %8v CAP_EMA: %8v RsiDown: %+v RsiUp: %+v \n",
-		Last.TimeStr, lastIdx+fmt.Sprint(Last.CAPIdx),
-		Last.RsiRegion, Last.RSI_18,
-		Last.CAP_EMA,
-		RsiRegion_Down,
-		RsiRegion_Up,
-	)
+	PrintLnResult()
 }
