@@ -190,10 +190,27 @@ func Analy() {
 	RsiRegion_Up := hunter.Is_RsiRegion_GoUp(PreList5)
 	// RsiRegion_Gte2 := hunter.Is_RsiRegion_Gte2(PreList5)
 
+	Open := 0 // 0  不管 ， 1  开多 ， 2 开空
+
+	// 主调  Last.CAPIdx
+	if lastIdx != preIdx {
+		if Last.CAPIdx > 0 { // Buy
+			if len(RsiRegion_Up) > 1 {
+				Open = 1
+			}
+		}
+
+		if Last.CAPIdx < 0 { // sell
+			if len(RsiRegion_Down) > 1 {
+				Open = -1
+			}
+		}
+	}
+
 	PrintLnResult := func() {
 		global.TradeLog.Printf(
 			"%v %6v RSI:%2v %8v CAP_EMA:%7v RsiDown:%+v RsiUp:%+v \n",
-			Last.TimeStr, lastIdx+fmt.Sprint(Last.CAPIdx),
+			Last.TimeStr, fmt.Sprint(Open)+lastIdx+fmt.Sprint(Last.CAPIdx),
 			Last.RsiRegion, Last.RSI_18,
 			Last.CAP_EMA,
 			RsiRegion_Down,
@@ -201,25 +218,14 @@ func Analy() {
 		)
 	}
 
-	// 主调 CAPIdx
-	if lastIdx != preIdx {
-		if Last.CAPIdx > 0 { // Buy
-			// 包括当前在内 RsiRegion 是为升序 // 且 在过去一段时间 RsiRegion 内存在 非 1 的情况
-			// if len(RsiRegion_Up) > 0 && RsiRegion_Gte2 {
-			PrintLnResult()
-			return
-			// }
-		}
-
-		if Last.CAPIdx < 0 { // sell
-			// if len(RsiRegion_Down) > 0 && RsiRegion_Gte2 {
-			PrintLnResult()
-			return
-			// }
-		}
+	if Open > 0 {
+		PrintLnResult()
+		return
 	}
-
-	// 在这里进行防火作业
+	if Open < 0 {
+		PrintLnResult()
+		return
+	}
 
 	global.TradeLog.Printf(
 		"%v %6v RSI:%2v %8v CAP_EMA:%7v RsiDown:%+v RsiUp:%+v \n",
