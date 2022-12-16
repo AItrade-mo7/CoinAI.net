@@ -8,6 +8,7 @@ import (
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
+	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
@@ -178,60 +179,91 @@ func (_this *TestObj) MockData() {
 	mFile.Write(WriteFilePath, string(mJson.ToJson(TradeKdataList)))
 }
 
+type TypeOpen struct {
+	Dir         int    // 开仓方向
+	AvgPx       string // 开仓价格
+	UplRatio    string // 未实现收益率
+	OpenTimeStr string // 开仓时间
+}
+
+var (
+	RSIMax  = okxInfo.TradeKdType{}
+	NowOpen TypeOpen
+	OpenArr []TypeOpen
+)
+
 func Analy() {
 	Pre := TradeKdataList[len(TradeKdataList)-2]
-	Last := TradeKdataList[len(TradeKdataList)-1]
+	Now := TradeKdataList[len(TradeKdataList)-1]
 
 	preIdx := hunter.CAPIdxToText(Pre.CAPIdx)
-	lastIdx := hunter.CAPIdxToText(Last.CAPIdx)
+	nowIdx := hunter.CAPIdxToText(Now.CAPIdx)
 
 	PreList5 := TradeKdataList[len(TradeKdataList)-6:]
 	RsiRegion_Down := hunter.Is_RsiRegion_GoDown(PreList5)
 	RsiRegion_Up := hunter.Is_RsiRegion_GoUp(PreList5)
-	// RsiRegion_Gte2 := hunter.Is_RsiRegion_Gte2(PreList5)
+	RsiRegion_Gte2 := hunter.Is_RsiRegion_Gte2(PreList5)
 
-	Open := 0 // 0  不管 ， 1  开多 ， 2 开空
-
+	Open := 0
 	// 主调  Last.CAPIdx
-	if lastIdx != preIdx {
-		if Last.CAPIdx > 0 { // Buy
-			if len(RsiRegion_Up) > 1 {
+	if nowIdx != preIdx {
+		if Now.CAPIdx > 0 { // Buy
+			if len(RsiRegion_Up) > 1 && RsiRegion_Gte2 {
 				Open = 1
 			}
 		}
 
-		if Last.CAPIdx < 0 { // sell
-			if len(RsiRegion_Down) > 1 {
+		if Now.CAPIdx < 0 { // sell
+			if len(RsiRegion_Down) > 1 && RsiRegion_Gte2 {
 				Open = -1
 			}
 		}
 	}
 
 	PrintLnResult := func() {
+		if Open != NowOpen.Dir {
+			OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
+
+			// 开仓
+			NowOpen.Dir = Open
+			NowOpen.AvgPx = Now.C
+			NowOpen.UplRatio = ""
+			NowOpen.OpenTimeStr = Now.TimeStr
+		}
+
 		global.TradeLog.Printf(
 			"%v %6v RSI:%2v %8v CAP_EMA:%7v RsiDown:%+v RsiUp:%+v \n",
-			Last.TimeStr, fmt.Sprint(Open)+lastIdx+fmt.Sprint(Last.CAPIdx),
-			Last.RsiRegion, Last.RSI_18,
-			Last.CAP_EMA,
+			Now.TimeStr, fmt.Sprint(Open)+nowIdx+fmt.Sprint(Now.CAPIdx),
+			Now.RsiRegion, Now.RSI_18,
+			Now.CAP_EMA,
 			RsiRegion_Down,
 			RsiRegion_Up,
 		)
 	}
 
-	if Open > 0 {
+	// 计算收益
+	if len(NowOpen.AvgPx) > 0 {
+		NowOpen.UplRatio = mCount.RoseCent(Now.C, NowOpen.AvgPx)
+		if NowOpen.Dir < 0 {
+			NowOpen.UplRatio = mCount.Sub("0", NowOpen.UplRatio)
+		}
+	}
+
+	if Open > 0 { // buy
 		PrintLnResult()
 		return
 	}
-	if Open < 0 {
+	if Open < 0 { // sell
 		PrintLnResult()
 		return
 	}
 
 	global.TradeLog.Printf(
-		"%v %6v RSI:%2v %8v CAP_EMA:%7v RsiDown:%+v RsiUp:%+v \n",
-		Last.TimeStr, fmt.Sprint(Last.CAPIdx),
-		Last.RsiRegion, Last.RSI_18,
-		Last.CAP_EMA,
+		"%v %6v RSI:%2v %8v CAP_EMA:%7v Upl:%10v RsiDown:%+v RsiUp:%+v     \n",
+		Now.TimeStr, fmt.Sprint(Now.CAPIdx),
+		Now.RsiRegion, Now.RSI_18,
+		Now.CAP_EMA,
+		NowOpen.UplRatio+","+fmt.Sprint(NowOpen.Dir),
 		RsiRegion_Down,
 		RsiRegion_Up,
 	)
