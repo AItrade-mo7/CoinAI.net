@@ -188,7 +188,6 @@ func Analy() {
 	PreList := TradeKdataList[len(TradeKdataList)-6:]
 	RsiRegion_Down := hunter.Is_RsiRegion_GoDown(PreList)
 	RsiRegion_Up := hunter.Is_RsiRegion_GoUp(PreList)
-	RsiRegion_Gte2 := hunter.Is_RsiRegion_Gte2(PreList)
 
 	// 主调 CAPIdx
 	if lastIdx != preIdx {
@@ -203,6 +202,7 @@ func Analy() {
 					Last.RSI_18,
 					Last.CAP_EMA,
 					RsiRegion_Down,
+					RsiRegion_Up,
 				)
 				return
 			}
@@ -218,6 +218,7 @@ func Analy() {
 					Last.RSI_18,
 					Last.CAP_EMA,
 					RsiRegion_Down,
+					RsiRegion_Up,
 				)
 				return
 			}
@@ -234,5 +235,6 @@ func Analy() {
 		Last.RSI_18,
 		Last.CAP_EMA,
 		RsiRegion_Down,
+		RsiRegion_Up,
 	)
 }
