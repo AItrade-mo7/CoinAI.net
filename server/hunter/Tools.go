@@ -205,10 +205,72 @@ func Is_RsiRegion_Gte2(preArr []okxInfo.TradeKdType) (result bool) {
 
 // CAP_EMA 是否为升序
 func Is_CAP_EMA_GoUp(preArr []okxInfo.TradeKdType) bool {
+	cacheArr := []string{}
+	/*
+		cacheArr 长度原本为 1
+		当前与 cacheArr 最后一位 比对 ，一定相等 则 长度为2
+		当前 与 cacheArr 最后一位 比对 , 不一定相等
+				若此时 则 长度为 3
+				若此时 小  于 则 长度为2 并结束
+	*/
+	for i := len(preArr) - 1; i >= 0; i-- {
+		item := preArr[i]
+		if len(cacheArr) < 1 {
+			cacheArr = append(cacheArr, item.CAP_EMA)
+		}
+		cacheLast := cacheArr[len(cacheArr)-1]
+
+		if mCount.Le(item.CAP_EMA, cacheLast) <= 0 {
+			cacheArr = append(cacheArr, item.CAP_EMA)
+		} else {
+			break
+		}
+	}
+	if len(cacheArr) < 4 {
+		return false
+	}
+	cacheLast := cacheArr[len(cacheArr)-1]
+	cacheFirst := cacheArr[0]
+
+	if mCount.Le(cacheLast, cacheFirst) < 0 {
+		return true
+	}
+
 	return false
 }
 
 // CAP_EMA 是否为升序
 func Is_CAP_EMA_GoDown(preArr []okxInfo.TradeKdType) bool {
+	cacheArr := []string{}
+	/*
+		cacheArr 长度原本为 1
+		当前与 cacheArr 最后一位 比对 ，一定相等 则 长度为2
+		当前 与 cacheArr 最后一位 比对 , 不一定相等
+				若此时 则 长度为 3
+				若此时 小  于 则 长度为2 并结束
+	*/
+	for i := len(preArr) - 1; i >= 0; i-- {
+		item := preArr[i]
+		if len(cacheArr) < 1 {
+			cacheArr = append(cacheArr, item.CAP_EMA)
+		}
+		cacheLast := cacheArr[len(cacheArr)-1]
+
+		if mCount.Le(item.CAP_EMA, cacheLast) >= 0 {
+			cacheArr = append(cacheArr, item.CAP_EMA)
+		} else {
+			break
+		}
+	}
+	if len(cacheArr) < 4 {
+		return false
+	}
+	cacheLast := cacheArr[len(cacheArr)-1]
+	cacheFirst := cacheArr[0]
+
+	if mCount.Le(cacheLast, cacheFirst) > 0 {
+		return true
+	}
+
 	return false
 }
