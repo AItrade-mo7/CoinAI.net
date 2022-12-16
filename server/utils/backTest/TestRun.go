@@ -195,11 +195,9 @@ func Analy() {
 			// 包括当前在内 RsiRegion 是为升序 // 且 在过去一段时间 RsiRegion 内存在 非 1 的情况
 			if RsiRegion_Up > 0 {
 				global.TradeLog.Printf(
-					"%v Idx:%4v RSI:%2v %8v CAP_EMA: %8v RsiDown: %+v RsiUp: %+v \n",
-					Last.TimeStr,
-					lastIdx+fmt.Sprint(Last.CAPIdx),
-					Last.RsiRegion,
-					Last.RSI_18,
+					"%v %6v RSI:%2v %8v CAP_EMA: %8v RsiDown: %+v RsiUp: %+v \n",
+					Last.TimeStr, lastIdx+fmt.Sprint(Last.CAPIdx),
+					Last.RsiRegion, Last.RSI_18,
 					Last.CAP_EMA,
 					RsiRegion_Down,
 					RsiRegion_Up,
@@ -211,11 +209,9 @@ func Analy() {
 		if Last.CAPIdx < 0 { // sell
 			if RsiRegion_Down > 0 {
 				global.TradeLog.Printf(
-					"%v Idx:%4v RSI:%2v %8v CAP_EMA: %8v RsiDown: %+v RsiUp: %+v \n",
-					Last.TimeStr,
-					lastIdx+fmt.Sprint(Last.CAPIdx),
-					Last.RsiRegion,
-					Last.RSI_18,
+					"%v %6v RSI:%2v %8v CAP_EMA: %8v RsiDown: %+v RsiUp: %+v \n",
+					Last.TimeStr, lastIdx+fmt.Sprint(Last.CAPIdx),
+					Last.RsiRegion, Last.RSI_18,
 					Last.CAP_EMA,
 					RsiRegion_Down,
 					RsiRegion_Up,
@@ -228,11 +224,9 @@ func Analy() {
 	// 在这里进行防火作业
 
 	global.TradeLog.Printf(
-		"%v Idx:%4v RSI:%2v %8v CAP_EMA: %8v RsiDown: %+v RsiUp: %+v \n",
-		Last.TimeStr,
-		lastIdx+fmt.Sprint(Last.CAPIdx),
-		Last.RsiRegion,
-		Last.RSI_18,
+		"%v %6v RSI:%2v %8v CAP_EMA: %8v RsiDown: %+v RsiUp: %+v \n",
+		Last.TimeStr, lastIdx+fmt.Sprint(Last.CAPIdx),
+		Last.RsiRegion, Last.RSI_18,
 		Last.CAP_EMA,
 		RsiRegion_Down,
 		RsiRegion_Up,
