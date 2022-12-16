@@ -110,7 +110,7 @@ func GetRsiRegion(now okxInfo.TradeKdType) int {
 }
 
 // RsiRegion 是否为降序
-func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) int {
+func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) []int {
 	cacheArr := []int{}
 	downArr := []int{}
 
@@ -139,11 +139,11 @@ func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) int {
 		}
 	}
 
-	return len(downArr)
+	return downArr
 }
 
 // RsiRegion 是否为升序
-func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) int {
+func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) []int {
 	cacheArr := []int{}
 	upArr := []int{}
 	/*
@@ -172,7 +172,7 @@ func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) int {
 		}
 	}
 
-	return len(upArr)
+	return upArr
 }
 
 // preArr 的 RsiRegion 是否有大于2  的存在

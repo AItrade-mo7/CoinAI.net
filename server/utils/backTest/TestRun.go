@@ -188,6 +188,7 @@ func Analy() {
 	PreList := TradeKdataList[len(TradeKdataList)-6:]
 	RsiRegion_Down := hunter.Is_RsiRegion_GoDown(PreList)
 	RsiRegion_Up := hunter.Is_RsiRegion_GoUp(PreList)
+	RsiRegion_Gte2 := hunter.Is_RsiRegion_Gte2(PreList)
 
 	PrintLnResult := func() {
 		global.TradeLog.Printf(
@@ -204,14 +205,14 @@ func Analy() {
 	if lastIdx != preIdx {
 		if Last.CAPIdx > 0 { // Buy
 			// 包括当前在内 RsiRegion 是为升序 // 且 在过去一段时间 RsiRegion 内存在 非 1 的情况
-			if RsiRegion_Up > 0 {
+			if len(RsiRegion_Up) > 1 && RsiRegion_Gte2 {
 				PrintLnResult()
 				return
 			}
 		}
 
 		if Last.CAPIdx < 0 { // sell
-			if RsiRegion_Down > 0 {
+			if len(RsiRegion_Down) > 1 && RsiRegion_Gte2 {
 				PrintLnResult()
 				return
 			}
