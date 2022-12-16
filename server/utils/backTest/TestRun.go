@@ -8,7 +8,6 @@ import (
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
-	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
@@ -191,6 +190,9 @@ func Analy() {
 	RsiRegion_Up := hunter.Is_RsiRegion_GoUp(PreList)
 	RsiRegion_Gte2 := hunter.Is_RsiRegion_Gte2(PreList)
 
+	CAP_EMA_GoDown := hunter.Is_CAP_EMA_GoDown(PreList)
+	CAP_EMA_GoUp := hunter.Is_CAP_EMA_GoUp(PreList)
+
 	RsiRegionDir := 0
 	if RsiRegion_Down {
 		RsiRegionDir = -1
@@ -203,7 +205,7 @@ func Analy() {
 	if lastIdx != preIdx {
 		if Last.CAPIdx > 0 {
 			// 包括当前在内 RsiRegion 是为升序 // 且 在过去一段时间 RsiRegion 内存在 非 1 的情况
-			if RsiRegion_Up {
+			if CAP_EMA_GoUp {
 				// Buy
 				global.TradeLog.Printf(
 					"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v CAP_EMA: %8v  \n",
@@ -221,7 +223,7 @@ func Analy() {
 		}
 
 		if Last.CAPIdx < 0 { // sell
-			if RsiRegion_Down {
+			if CAP_EMA_GoDown {
 				// Sell
 				global.TradeLog.Printf(
 					"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v CAP_EMA: %8v \n",
@@ -240,21 +242,21 @@ func Analy() {
 	}
 
 	// 在这里进行防火作业
-	CAPIdxAbs := mCount.Abs(fmt.Sprint(Last.CAPIdx))
-	if mCount.Le(CAPIdxAbs, "2") >= 0 && Last.CAPIdx == Last.RsiRegion {
-		global.TradeLog.Printf(
-			"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v CAP_EMA: %8v  \n",
-			Last.TimeStr,
-			lastIdx+fmt.Sprint(Last.CAPIdx),
-			Last.RsiRegion,
-			Last.RSI_18,
-			RsiRegionDir,
-			RsiRegion_Gte2,
-			PreList[0].RSI_18,
-			Last.CAP_EMA,
-		)
-		return
-	}
+	// CAPIdxAbs := mCount.Abs(fmt.Sprint(Last.CAPIdx))
+	// if mCount.Le(CAPIdxAbs, "2") >= 0 && Last.CAPIdx == Last.RsiRegion {
+	// 	global.TradeLog.Printf(
+	// 		"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v CAP_EMA: %8v  \n",
+	// 		Last.TimeStr,
+	// 		lastIdx+fmt.Sprint(Last.CAPIdx),
+	// 		Last.RsiRegion,
+	// 		Last.RSI_18,
+	// 		RsiRegionDir,
+	// 		RsiRegion_Gte2,
+	// 		PreList[0].RSI_18,
+	// 		Last.CAP_EMA,
+	// 	)
+	// 	return
+	// }
 
 	global.TradeLog.Printf(
 		"%v %4v RSI:%2v %8v RsiDir: %2v Gte2: %5v Pre0: %8v  CAP_EMA: %8v  \n",
