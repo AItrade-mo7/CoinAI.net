@@ -51,16 +51,16 @@ func Sort_HLPer(data []mOKX.AnalySliceType) []mOKX.AnalySliceType {
 }
 
 func GetCAPIdx(now okxInfo.TradeKdType) int {
-	// now_EMA_diff := mCount.Le(now.CAP_EMA, "0") // 1 0 -1  EMA
-	// now_MA_diff := mCount.Le(now.CAP_MA, "0")   // -1 0 1  MA
-	// nowDiff := now_EMA_diff
+	now_EMA_diff := mCount.Le(now.CAP_EMA, "0") // 1 0 -1  EMA
+	now_MA_diff := mCount.Le(now.CAP_MA, "0")   // -1 0 1  MA
+	nowDiff := now_EMA_diff
 
-	// if now_MA_diff == now_EMA_diff {
-	// 	nowDiff = now_MA_diff + now_EMA_diff
-	// }
+	if now_MA_diff == now_EMA_diff {
+		nowDiff = now_MA_diff + now_EMA_diff
+	}
 
-	diffAdd := mCount.Add(now.CAP_EMA, now.CAP_MA)
-	nowDiff := mCount.Le(diffAdd, "0")
+	// diffAdd := mCount.Add(now.CAP_EMA, now.CAP_MA)
+	// nowDiff := mCount.Le(diffAdd, "0")
 
 	return nowDiff
 }
