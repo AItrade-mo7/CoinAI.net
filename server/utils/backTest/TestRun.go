@@ -212,10 +212,10 @@ func Analy() {
 				Open = 1
 			}
 
-			if len(RSIMax.RSI_18) > 1 && mCount.Le(RSIMax.RSI_18, "35") > 0 {
-				Open = 1
-				RSIMax = okxInfo.TradeKdType{}
-			}
+			// if len(RSIMax.RSI_18) > 1 && mCount.Le(RSIMax.RSI_18, "35") > 0 {
+			// 	Open = 1
+			// 	RSIMax = okxInfo.TradeKdType{}
+			// }
 		}
 
 		if Now.CAPIdx < 0 { // sell
@@ -223,10 +223,10 @@ func Analy() {
 				Open = -1
 			}
 
-			if len(RSIMax.RSI_18) > 1 && mCount.Le(RSIMax.RSI_18, "65") > 0 {
-				Open = -1
-				RSIMax = okxInfo.TradeKdType{}
-			}
+			// if len(RSIMax.RSI_18) > 1 && mCount.Le(RSIMax.RSI_18, "65") > 0 {
+			// 	Open = -1
+			// 	RSIMax = okxInfo.TradeKdType{}
+			// }
 		}
 	}
 
