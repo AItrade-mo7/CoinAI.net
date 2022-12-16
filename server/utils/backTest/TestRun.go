@@ -214,7 +214,6 @@ func Analy() {
 
 			// if len(RSIMax.RSI_18) > 1 && mCount.Le(RSIMax.RSI_18, "35") > 0 {
 			// 	Open = 1
-			// 	RSIMax = okxInfo.TradeKdType{}
 			// }
 		}
 
@@ -225,7 +224,6 @@ func Analy() {
 
 			// if len(RSIMax.RSI_18) > 1 && mCount.Le(RSIMax.RSI_18, "65") > 0 {
 			// 	Open = -1
-			// 	RSIMax = okxInfo.TradeKdType{}
 			// }
 		}
 	}
@@ -250,10 +248,11 @@ func Analy() {
 		}
 
 		global.TradeLog.Printf(
-			"%v %6v RSI:%2v %8v CAP_EMA:%7v RsiDown:%+v RsiUp:%+v \n",
+			"%v %6v RSI:%2v %8v CAP_EMA:%7v Gte2:%v RsiDown:%+v RsiUp:%+v \n",
 			Now.TimeStr, fmt.Sprint(Open)+nowIdx+fmt.Sprint(Now.CAPIdx),
 			Now.RsiRegion, Now.RSI_18,
 			Now.CAP_EMA,
+			RsiRegion_Gte2,
 			RsiRegion_Down,
 			RsiRegion_Up,
 		)
