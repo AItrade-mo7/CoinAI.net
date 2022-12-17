@@ -213,7 +213,6 @@ func PrintResult() {
 	Money := "1000"
 
 	for _, val := range OpenList {
-		fmt.Println(val)
 		if val.Dir > 0 {
 			BuyNum++
 		}
