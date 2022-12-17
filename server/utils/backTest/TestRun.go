@@ -177,6 +177,8 @@ func (_this *TestObj) MockData() {
 	}
 	WriteFilePath := config.Dir.JsonData + "/TestRun.json"
 	mFile.Write(WriteFilePath, string(mJson.ToJson(TradeKdataList)))
+
+	PrintResult()
 }
 
 type TypeOpen struct {
@@ -191,6 +193,80 @@ var (
 	NowOpen TypeOpen
 	OpenArr []TypeOpen
 )
+
+// 打印结结果
+func PrintResult() {
+	OpenList := OpenArr[1:]
+
+	SellNum := 0    // 开空次数
+	BuyNum := 0     // 开多次数
+	AllNum := 0     // 总开仓次数
+	Win := 0        // 盈利次数
+	Lose := 0       // 亏损次数
+	WinRatio := ""  // 盈利的比例
+	LoseRatio := "" //  亏损的比例
+	MaxWin := ""    //  最大盈利
+	MaxLose := ""   //  最大亏损
+	StartTime := OpenList[0].OpenTimeStr
+	EndTime := OpenList[len(OpenList)-1].OpenTimeStr
+
+	Money := "1000"
+
+	for _, val := range OpenList {
+		fmt.Println(val)
+		if val.Dir > 0 {
+			BuyNum++
+		}
+		if val.Dir < 0 {
+			SellNum++
+		}
+
+		if mCount.Le(val.UplRatio, "0") > 0 {
+			Win++
+			WinRatio = mCount.Add(val.UplRatio, WinRatio)
+		}
+
+		if mCount.Le(val.UplRatio, "0") < 0 {
+			Lose++
+			LoseRatio = mCount.Add(val.UplRatio, LoseRatio)
+		}
+
+		if mCount.Le(val.UplRatio, MaxLose) < 0 {
+			MaxLose = val.UplRatio
+		}
+
+		if mCount.Le(val.UplRatio, MaxWin) > 0 {
+			MaxWin = val.UplRatio
+		}
+
+		Upl := mCount.Div(val.UplRatio, "100")
+
+		nowMoney := mCount.Mul(Money, Upl)
+		Money = mCount.Add(Money, nowMoney)
+
+		AllNum++
+	}
+
+	fmt.Printf(
+		`开空次数：%+v; 
+		 开多次数：%+v; 
+		 总开仓次数: %+v;
+		 盈利次数: %+v; 
+		 亏损次数: %+v; 
+		 总盈利比例: %+v; 
+		 总亏损的比例: %+v; 
+		 开始时间: %+v; 
+		 结束时间: %+v; 
+		 最大单次盈利: %+v; 
+		 最大单次亏损: %+v; 
+		 1000 结余: %+v; 
+		`, SellNum, BuyNum, AllNum, Win, Lose, WinRatio, LoseRatio,
+		StartTime, EndTime,
+		MaxWin, MaxLose, Money,
+	)
+
+	mFile.Write(config.Dir.JsonData+"/Open.json", string(mJson.ToJson(OpenList)))
+}
 
 func Analy() {
 	// Pre := TradeKdataList[len(TradeKdataList)-2]
@@ -250,17 +326,17 @@ func Analy() {
 			NowOpen.AvgPx = Now.C
 			NowOpen.UplRatio = ""
 			NowOpen.OpenTimeStr = Now.TimeStr
-		}
 
-		global.TradeLog.Printf(
-			"%v %6v RSI:%2v %8v CAP_EMA:%7v Gte2:%v RsiDown:%+v RsiUp:%+v \n",
-			Now.TimeStr, fmt.Sprint(Open)+nowIdx+fmt.Sprint(Now.CAPIdx),
-			Now.RsiRegion, Now.RSI_18,
-			Now.CAP_EMA,
-			RsiRegion_Gte2,
-			RsiRegion_Down,
-			RsiRegion_Up,
-		)
+			global.TradeLog.Printf(
+				"%v %6v RSI:%2v %8v CAP_EMA:%7v Gte2:%v RsiDown:%+v RsiUp:%+v \n",
+				Now.TimeStr, fmt.Sprint(Open)+nowIdx+fmt.Sprint(Now.CAPIdx),
+				Now.RsiRegion, Now.RSI_18,
+				Now.CAP_EMA,
+				RsiRegion_Gte2,
+				RsiRegion_Down,
+				RsiRegion_Up,
+			)
+		}
 	}
 
 	// 计算收益
