@@ -212,6 +212,11 @@ func PrintResult() {
 
 	Money := "1000"
 
+	Lever := "1"
+
+	Charge := mCount.Div("0.02", "100")
+	ChargeAll := "0"
+
 	for _, val := range OpenList {
 		if val.Dir > 0 {
 			BuyNum++
@@ -239,29 +244,38 @@ func PrintResult() {
 		}
 
 		Upl := mCount.Div(val.UplRatio, "100")
+		LeverUpl := mCount.Mul(Upl, Lever)
 
-		nowMoney := mCount.Mul(Money, Upl)
+		nowMoney := mCount.Mul(Money, LeverUpl)
 		Money = mCount.Add(Money, nowMoney)
+
+		Money = mCount.Cent(Money, 2)
+
+		nowCharge := mCount.Mul(Money, Charge)
+		ChargeAll = mCount.Add(ChargeAll, nowCharge)
+
+		ChargeAll = mCount.Cent(ChargeAll, 2)
 
 		AllNum++
 	}
 
 	fmt.Printf(
 		`开空次数：%+v; 
-		 开多次数：%+v; 
-		 总开仓次数: %+v;
-		 盈利次数: %+v; 
-		 亏损次数: %+v; 
-		 总盈利比例: %+v; 
-		 总亏损的比例: %+v; 
-		 开始时间: %+v; 
-		 结束时间: %+v; 
-		 最大单次盈利: %+v; 
-		 最大单次亏损: %+v; 
-		 1000 结余: %+v; 
-		`, SellNum, BuyNum, AllNum, Win, Lose, WinRatio, LoseRatio,
+开多次数：%+v; 
+总开仓次数: %+v;
+盈利次数: %+v; 
+亏损次数: %+v; 
+总盈利比例: %+v; 
+总亏损的比例: %+v; 
+开始时间: %+v; 
+结束时间: %+v; 
+最大单次盈利: %+v; 
+最大单次亏损: %+v; 
+1000 结余: %+v; 
+总手续费: %+v; 
+`, SellNum, BuyNum, AllNum, Win, Lose, WinRatio, LoseRatio,
 		StartTime, EndTime,
-		MaxWin, MaxLose, Money,
+		MaxWin, MaxLose, Money, ChargeAll,
 	)
 
 	mFile.Write(config.Dir.JsonData+"/Open.json", string(mJson.ToJson(OpenList)))
@@ -292,26 +306,30 @@ func Analy() {
 
 	// 主调  Last.CAPIdx
 	// if nowIdx != preIdx {
-	if Now.CAPIdx > 0 && len(RsiRegion_Up) > 2 { // Buy
+	if Now.CAPIdx > 0 { // Buy
+		// if len(RsiRegion_Up) > 2 {
 		if RsiRegion_Gte2 {
 			Open = 1
 		}
+		// }
 	}
 
-	if Now.CAPIdx < 0 && len(RsiRegion_Down) > 2 { // sell
+	if Now.CAPIdx < 0 { // sell
+		// if len(RsiRegion_Down) > 2 {
 		if RsiRegion_Gte2 {
 			Open = -1
 		}
+		// }
 	}
 	// }
 
 	// 副调 ，记录 RSI 的超买超买记录
-	if mCount.Le(Now.RSI_18, "65") > 0 {
-		RSIMax = Now
-	}
-	if mCount.Le(Now.RSI_18, "35") < 0 {
-		RSIMax = Now
-	}
+	// if mCount.Le(Now.RSI_18, "65") > 0 {
+	// 	RSIMax = Now
+	// }
+	// if mCount.Le(Now.RSI_18, "35") < 0 {
+	// 	RSIMax = Now
+	// }
 
 	// 输出显示区
 
