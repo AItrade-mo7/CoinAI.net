@@ -254,7 +254,9 @@ func PrintResult() {
 		nowCharge := mCount.Mul(Money, Charge)
 		ChargeAll = mCount.Add(ChargeAll, nowCharge)
 
-		ChargeAll = mCount.Cent(ChargeAll, 2)
+		Money = mCount.Sub(Money, nowCharge)
+
+		Money = mCount.Cent(Money, 2)
 
 		AllNum++
 	}
@@ -271,7 +273,7 @@ func PrintResult() {
 结束时间: %+v; 
 最大单次盈利: %+v; 
 最大单次亏损: %+v; 
-1000 结余: %+v; 
+1000 扣除手续费后结余: %+v; 
 总手续费: %+v; 
 `, SellNum, BuyNum, AllNum, Win, Lose, WinRatio, LoseRatio,
 		StartTime, EndTime,
