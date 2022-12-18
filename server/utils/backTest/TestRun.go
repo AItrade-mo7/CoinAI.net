@@ -196,8 +196,7 @@ var (
 
 // 打印结结果
 func PrintResult() {
-	OpenList := OpenArr[1:]
-
+	NilNum := 0     // 空仓次数
 	SellNum := 0    // 开空次数
 	BuyNum := 0     // 开多次数
 	AllNum := 0     // 总开仓次数
@@ -207,8 +206,8 @@ func PrintResult() {
 	LoseRatio := "" //  亏损的比例
 	MaxWin := ""    //  最大盈利
 	MaxLose := ""   //  最大亏损
-	StartTime := OpenList[0].OpenTimeStr
-	EndTime := OpenList[len(OpenList)-1].OpenTimeStr
+	StartTime := OpenArr[0].OpenTimeStr
+	EndTime := OpenArr[len(OpenArr)-1].OpenTimeStr
 
 	Money := "1000"
 
@@ -217,7 +216,20 @@ func PrintResult() {
 	Charge := mCount.Div("0.02", "100")
 	ChargeAll := "0"
 
-	for _, val := range OpenList {
+	for _, val := range OpenArr {
+
+		if val.Dir == 0 {
+			NilNum++
+			continue
+		}
+		if len(StartTime) < 1 {
+			StartTime = val.OpenTimeStr
+		}
+
+		if len(val.OpenTimeStr) > 1 {
+			EndTime = val.OpenTimeStr
+		}
+
 		if val.Dir > 0 {
 			BuyNum++
 		}
@@ -262,7 +274,8 @@ func PrintResult() {
 	}
 
 	fmt.Printf(
-		`开空次数：%+v;
+		`空仓次数: %+v;
+开空次数：%+v;
 开多次数：%+v;
 总开仓次数: %+v;
 盈利次数: %+v;
@@ -275,12 +288,12 @@ func PrintResult() {
 最大单次亏损: %+v;
 1000 扣除手续费后结余: %+v;
 总手续费: %+v;
-`, SellNum, BuyNum, AllNum, Win, Lose, WinRatio, LoseRatio,
+`, NilNum, SellNum, BuyNum, AllNum, Win, Lose, WinRatio, LoseRatio,
 		StartTime, EndTime,
 		MaxWin, MaxLose, Money, ChargeAll,
 	)
 
-	mFile.Write(config.Dir.JsonData+"/Open.json", string(mJson.ToJson(OpenList)))
+	mFile.Write(config.Dir.JsonData+"/Open.json", string(mJson.ToJson(OpenArr)))
 }
 
 func Analy() {
@@ -309,19 +322,19 @@ func Analy() {
 	// 主调  Last.CAPIdx
 	// if nowIdx != preIdx {
 	if Now.CAPIdx > 0 { // Buy
-		if len(RsiRegion_Up) > 2 {
-			if RsiRegion_Gte2 {
-				Open = 1
-			}
+		// if len(RsiRegion_Up) > 2 {
+		if RsiRegion_Gte2 {
+			Open = 1
 		}
+		// }
 	}
 
 	if Now.CAPIdx < 0 { // sell
-		if len(RsiRegion_Down) > 2 {
-			if RsiRegion_Gte2 {
-				Open = -1
-			}
+		// if len(RsiRegion_Down) > 2 {
+		if RsiRegion_Gte2 {
+			Open = -1
 		}
+		// }
 	}
 	// }
 
@@ -354,6 +367,15 @@ func Analy() {
 		if NowOpen.Dir < 0 {
 			NowOpen.UplRatio = mCount.Sub("0", NowOpen.UplRatio)
 		}
+	}
+
+	// 平仓 的风险防范
+	if NowOpen.Dir != Now.CAPIdx {
+		OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
+		NowOpen.Dir = 0
+		NowOpen.AvgPx = ""
+		NowOpen.UplRatio = ""
+		NowOpen.OpenTimeStr = ""
 	}
 
 	if Open > 0 { // buy
