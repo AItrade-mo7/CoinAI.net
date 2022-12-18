@@ -213,12 +213,16 @@ func PrintResult() {
 
 	Lever := "1"
 
-	Charge := mCount.Div("0.02", "100")
+	Charge := mCount.Div("0.2", "100")
 	ChargeAll := "0"
 
 	for _, val := range OpenArr {
 
+		nowCharge := mCount.Mul(Money, Charge)
+		ChargeAll = mCount.Add(ChargeAll, nowCharge)
+
 		if val.Dir == 0 {
+			Money = mCount.Sub(Money, nowCharge)
 			NilNum++
 			continue
 		}
@@ -262,9 +266,6 @@ func PrintResult() {
 		Money = mCount.Add(Money, nowMoney)
 
 		Money = mCount.Cent(Money, 2)
-
-		nowCharge := mCount.Mul(Money, Charge)
-		ChargeAll = mCount.Add(ChargeAll, nowCharge)
 
 		Money = mCount.Sub(Money, nowCharge)
 
@@ -322,7 +323,7 @@ func Analy() {
 	// 主调  Last.CAPIdx
 	// if nowIdx != preIdx {
 	if Now.CAPIdx > 0 { // Buy
-		// if len(RsiRegion_Up) > 2 {
+		// if len(RsiRegion_Up) > 1 {
 		if RsiRegion_Gte2 {
 			Open = 1
 		}
@@ -330,7 +331,7 @@ func Analy() {
 	}
 
 	if Now.CAPIdx < 0 { // sell
-		// if len(RsiRegion_Down) > 2 {
+		// if len(RsiRegion_Down) > 1 {
 		if RsiRegion_Gte2 {
 			Open = -1
 		}
@@ -370,25 +371,25 @@ func Analy() {
 	}
 
 	// 平仓 的风险防范
-	if NowOpen.Dir > 0 {
-		if Now.CAPIdx < 0 {
-			OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
-			NowOpen.Dir = 0
-			NowOpen.AvgPx = ""
-			NowOpen.UplRatio = ""
-			NowOpen.OpenTimeStr = ""
-		}
-	}
+	// if NowOpen.Dir > 0 {
+	// 	if Now.CAPIdx < 0 {
+	// 		OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
+	// 		NowOpen.Dir = 0
+	// 		NowOpen.AvgPx = ""
+	// 		NowOpen.UplRatio = ""
+	// 		NowOpen.OpenTimeStr = ""
+	// 	}
+	// }
 
-	if NowOpen.Dir < 0 {
-		if Now.CAPIdx > 0 {
-			OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
-			NowOpen.Dir = 0
-			NowOpen.AvgPx = ""
-			NowOpen.UplRatio = ""
-			NowOpen.OpenTimeStr = ""
-		}
-	}
+	// if NowOpen.Dir < 0 {
+	// 	if Now.CAPIdx > 0 {
+	// 		OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
+	// 		NowOpen.Dir = 0
+	// 		NowOpen.AvgPx = ""
+	// 		NowOpen.UplRatio = ""
+	// 		NowOpen.OpenTimeStr = ""
+	// 	}
+	// }
 
 	if Open > 0 { // buy
 		PrintLnResult()
