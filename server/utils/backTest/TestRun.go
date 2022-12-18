@@ -309,19 +309,19 @@ func Analy() {
 	// 主调  Last.CAPIdx
 	// if nowIdx != preIdx {
 	if Now.CAPIdx > 0 { // Buy
-		// if len(RsiRegion_Up) > 2 {
-		if RsiRegion_Gte2 {
-			Open = 1
+		if len(RsiRegion_Up) > 2 {
+			if RsiRegion_Gte2 {
+				Open = 1
+			}
 		}
-		// }
 	}
 
 	if Now.CAPIdx < 0 { // sell
-		// if len(RsiRegion_Down) > 2 {
-		if RsiRegion_Gte2 {
-			Open = -1
+		if len(RsiRegion_Down) > 2 {
+			if RsiRegion_Gte2 {
+				Open = -1
+			}
 		}
-		// }
 	}
 	// }
 
@@ -335,16 +335,17 @@ func Analy() {
 			NowOpen.UplRatio = ""
 			NowOpen.OpenTimeStr = Now.TimeStr
 
-			global.TradeLog.Printf(
-				"%v %6v RSI:%2v %8v CAP_EMA:%7v Gte2:%v RsiDown:%+v RsiUp:%+v \n",
-				Now.TimeStr, fmt.Sprint(Open)+nowIdx+fmt.Sprint(Now.CAPIdx),
-				Now.RsiRegion, Now.RSI_18,
-				Now.CAP_EMA,
-				RsiRegion_Gte2,
-				RsiRegion_Down,
-				RsiRegion_Up,
-			)
 		}
+
+		global.TradeLog.Printf(
+			"%v %6v RSI:%2v %8v CAP_EMA:%7v Gte2:%v RsiDown:%+v RsiUp:%+v \n",
+			Now.TimeStr, fmt.Sprint(Open)+nowIdx+fmt.Sprint(Now.CAPIdx),
+			Now.RsiRegion, Now.RSI_18,
+			Now.CAP_EMA,
+			RsiRegion_Gte2,
+			RsiRegion_Down,
+			RsiRegion_Up,
+		)
 	}
 
 	// 计算收益
