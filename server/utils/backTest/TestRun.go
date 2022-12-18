@@ -301,7 +301,7 @@ func Analy() {
 	Now := TradeKdataList[len(TradeKdataList)-1]
 
 	// preIdx := hunter.CAPIdxToText(Pre.CAPIdx)
-	nowIdx := hunter.CAPIdxToText(Now.CAPIdx)
+	// nowIdx := hunter.CAPIdxToText(Now.CAPIdx)
 
 	PreList5 := TradeKdataList[len(TradeKdataList)-6:]
 	RsiRegion_Down := hunter.Is_RsiRegion_GoDown(PreList5)
@@ -352,7 +352,7 @@ func Analy() {
 
 		global.TradeLog.Printf(
 			"%v %6v RSI:%2v %8v CAP_EMA:%7v Gte2:%v RsiDown:%+v RsiUp:%+v \n",
-			Now.TimeStr, fmt.Sprint(Open)+nowIdx+fmt.Sprint(Now.CAPIdx),
+			Now.TimeStr, fmt.Sprint(Open)+hunter.CAPIdxToText(NowOpen.Dir)+fmt.Sprint(Now.CAPIdx),
 			Now.RsiRegion, Now.RSI_18,
 			Now.CAP_EMA,
 			RsiRegion_Gte2,
@@ -370,12 +370,24 @@ func Analy() {
 	}
 
 	// 平仓 的风险防范
-	if NowOpen.Dir != Now.CAPIdx {
-		OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
-		NowOpen.Dir = 0
-		NowOpen.AvgPx = ""
-		NowOpen.UplRatio = ""
-		NowOpen.OpenTimeStr = ""
+	if NowOpen.Dir > 0 {
+		if Now.CAPIdx < 0 {
+			OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
+			NowOpen.Dir = 0
+			NowOpen.AvgPx = ""
+			NowOpen.UplRatio = ""
+			NowOpen.OpenTimeStr = ""
+		}
+	}
+
+	if NowOpen.Dir < 0 {
+		if Now.CAPIdx > 0 {
+			OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
+			NowOpen.Dir = 0
+			NowOpen.AvgPx = ""
+			NowOpen.UplRatio = ""
+			NowOpen.OpenTimeStr = ""
+		}
 	}
 
 	if Open > 0 { // buy
