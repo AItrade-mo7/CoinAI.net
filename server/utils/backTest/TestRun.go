@@ -262,19 +262,19 @@ func PrintResult() {
 	}
 
 	fmt.Printf(
-		`开空次数：%+v; 
-开多次数：%+v; 
+		`开空次数：%+v;
+开多次数：%+v;
 总开仓次数: %+v;
-盈利次数: %+v; 
-亏损次数: %+v; 
-总盈利比例: %+v; 
-总亏损的比例: %+v; 
-开始时间: %+v; 
-结束时间: %+v; 
-最大单次盈利: %+v; 
-最大单次亏损: %+v; 
-1000 扣除手续费后结余: %+v; 
-总手续费: %+v; 
+盈利次数: %+v;
+亏损次数: %+v;
+总盈利比例: %+v;
+总亏损的比例: %+v;
+开始时间: %+v;
+结束时间: %+v;
+最大单次盈利: %+v;
+最大单次亏损: %+v;
+1000 扣除手续费后结余: %+v;
+总手续费: %+v;
 `, SellNum, BuyNum, AllNum, Win, Lose, WinRatio, LoseRatio,
 		StartTime, EndTime,
 		MaxWin, MaxLose, Money, ChargeAll,
