@@ -325,18 +325,7 @@ func Analy() {
 	}
 	// }
 
-	// 副调 ，记录 RSI 的超买超买记录
-	// if mCount.Le(Now.RSI_18, "65") > 0 {
-	// 	RSIMax = Now
-	// }
-	// if mCount.Le(Now.RSI_18, "35") < 0 {
-	// 	RSIMax = Now
-	// }
-
-	// 输出显示区
-
 	PrintLnResult := func() {
-		RSIMax = okxInfo.TradeKdType{}
 		if Open != NowOpen.Dir {
 			OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
 
