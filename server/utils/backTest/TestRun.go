@@ -374,27 +374,6 @@ func Analy() {
 		}
 	}
 
-	// 平仓 的风险防范
-	// if NowOpen.Dir > 0 {
-	// 	if Now.CAPIdx < 0 {
-	// 		OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
-	// 		NowOpen.Dir = 0
-	// 		NowOpen.AvgPx = ""
-	// 		NowOpen.UplRatio = ""
-	// 		NowOpen.OpenTimeStr = ""
-	// 	}
-	// }
-
-	// if NowOpen.Dir < 0 {
-	// 	if Now.CAPIdx > 0 {
-	// 		OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
-	// 		NowOpen.Dir = 0
-	// 		NowOpen.AvgPx = ""
-	// 		NowOpen.UplRatio = ""
-	// 		NowOpen.OpenTimeStr = ""
-	// 	}
-	// }
-
 	if Open > 0 { // buy
 		PrintLnResult()
 		return
