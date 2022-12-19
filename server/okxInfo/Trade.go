@@ -18,6 +18,7 @@ type TradeKdType struct {
 	EMA_18    string // 与原价格接近 string 类型
 	MA_18     string // 与原价格接近 string 类型
 	RSI_18    string // 0-100 的浮点类型
+	RSI_EMA_9 string // 0-100 的浮点类型
 	CAP_EMA   string // 0-100 的浮点类型
 	CAP_MA    string // 浮点类型
 	CAPIdx    int    // 整型  CAP_EMA 的比值 2 1 0 -1  -2

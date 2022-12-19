@@ -38,7 +38,7 @@ func SetTradeInst() (resErr error) {
 		}
 	}
 
-	if len(CoinId) < 0 {
+	if len(CoinId) < 1 {
 		resErr = fmt.Errorf("数据异常 ready.SetTradeInst CoinId %+v", CoinId)
 		return
 	}

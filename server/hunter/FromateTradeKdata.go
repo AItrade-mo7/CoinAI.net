@@ -14,6 +14,7 @@ import (
 var (
 	EMA_Arr = []string{}
 	MA_Arr  = []string{}
+	RSI_Arr = []string{}
 )
 
 func FormatTradeKdata() {
@@ -25,6 +26,7 @@ func FormatTradeKdata() {
 	okxInfo.TradeKdataList = []okxInfo.TradeKdType{}
 	EMA_Arr = []string{}
 	MA_Arr = []string{}
+	RSI_Arr = []string{}
 
 	FormatEnd := []mOKX.TypeKd{}
 
@@ -74,6 +76,12 @@ func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata 
 	TradeKdata.RSI_18 = mTalib.ClistNew(mTalib.ClistOpt{
 		KDList: TradeKdataList,
 		Period: 18,
+	}).RSI().ToStr()
+	RSI_Arr = append(RSI_Arr, TradeKdata.RSI_18)
+
+	TradeKdata.RSI_EMA_9 = mTalib.ClistNew(mTalib.ClistOpt{
+		CList:  RSI_Arr,
+		Period: 9,
 	}).RSI().ToStr()
 
 	// CAP

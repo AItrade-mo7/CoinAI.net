@@ -52,9 +52,11 @@ func FileBaseKdata() {
 				After:  mTime.GetUnixInt64(),
 			})
 
-			for _, val := range List {
-				okxInfo.NowKdataList = append(okxInfo.NowKdataList, val)
-			}
+			okxInfo.NowKdataList = append(okxInfo.NowKdataList, List...)
+
+			// for _, val := range List {
+			// 	okxInfo.NowKdataList = append(okxInfo.NowKdataList, val)
+			// }
 		}
 		global.RunLog.Println("历史数据回填完毕", len(okxInfo.NowKdataList))
 	} else { // 如果不为空 则检查当前的数组和持仓币种的关系
