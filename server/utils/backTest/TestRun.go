@@ -213,19 +213,21 @@ func PrintResult() {
 
 	Lever := "1"
 
-	Charge := mCount.Div("0.2", "100")
+	Charge := mCount.Div("0.02", "100")
 	ChargeAll := "0"
 
 	for _, val := range OpenArr {
 
-		nowCharge := mCount.Mul(Money, Charge)
-		ChargeAll = mCount.Add(ChargeAll, nowCharge)
-
 		if val.Dir == 0 {
+			nowCharge := mCount.Mul(Money, Charge)
 			Money = mCount.Sub(Money, nowCharge)
+			Money = mCount.Cent(Money, 2)
+
+			ChargeAll = mCount.Add(ChargeAll, nowCharge)
 			NilNum++
 			continue
 		}
+
 		if len(StartTime) < 1 {
 			StartTime = val.OpenTimeStr
 		}
@@ -265,11 +267,12 @@ func PrintResult() {
 		nowMoney := mCount.Mul(Money, LeverUpl)
 		Money = mCount.Add(Money, nowMoney)
 
-		Money = mCount.Cent(Money, 2)
-
+		nowCharge := mCount.Mul(Money, Charge)
 		Money = mCount.Sub(Money, nowCharge)
 
 		Money = mCount.Cent(Money, 2)
+
+		ChargeAll = mCount.Add(ChargeAll, nowCharge)
 
 		AllNum++
 	}
@@ -323,23 +326,34 @@ func Analy() {
 	// 主调  Last.CAPIdx
 	// if nowIdx != preIdx {
 	if Now.CAPIdx > 0 { // Buy
-		// if len(RsiRegion_Up) > 1 {
-		if RsiRegion_Gte2 {
-			Open = 1
+		if len(RsiRegion_Up) > 1 {
+			if RsiRegion_Gte2 {
+				Open = 1
+			}
 		}
-		// }
 	}
 
 	if Now.CAPIdx < 0 { // sell
-		// if len(RsiRegion_Down) > 1 {
-		if RsiRegion_Gte2 {
-			Open = -1
+		if len(RsiRegion_Down) > 1 {
+			if RsiRegion_Gte2 {
+				Open = -1
+			}
 		}
-		// }
 	}
 	// }
 
 	PrintLnResult := func() {
+		global.TradeLog.Printf(
+			"%v %6v RSI:%2v %8v CAP_EMA:%7v Upl:%10v Gte2:%v RsiDown:%+v RsiUp:%+v \n",
+			Now.TimeStr, fmt.Sprint(Open)+hunter.CAPIdxToText(Open)+fmt.Sprint(Now.CAPIdx),
+			Now.RsiRegion, Now.RSI_18,
+			Now.CAP_EMA,
+			NowOpen.UplRatio+","+fmt.Sprint(NowOpen.Dir),
+			RsiRegion_Gte2,
+			RsiRegion_Down,
+			RsiRegion_Up,
+		)
+
 		if Open != NowOpen.Dir {
 			OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
 
@@ -350,16 +364,6 @@ func Analy() {
 			NowOpen.OpenTimeStr = Now.TimeStr
 
 		}
-
-		global.TradeLog.Printf(
-			"%v %6v RSI:%2v %8v CAP_EMA:%7v Gte2:%v RsiDown:%+v RsiUp:%+v \n",
-			Now.TimeStr, fmt.Sprint(Open)+hunter.CAPIdxToText(NowOpen.Dir)+fmt.Sprint(Now.CAPIdx),
-			Now.RsiRegion, Now.RSI_18,
-			Now.CAP_EMA,
-			RsiRegion_Gte2,
-			RsiRegion_Down,
-			RsiRegion_Up,
-		)
 	}
 
 	// 计算收益
