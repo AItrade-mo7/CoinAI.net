@@ -82,7 +82,7 @@ func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata 
 	TradeKdata.RSI_EMA_9 = mTalib.ClistNew(mTalib.ClistOpt{
 		CList:  RSI_Arr,
 		Period: 9,
-	}).RSI().ToStr()
+	}).EMA().ToStr()
 
 	// CAP
 	TradeKdata.CAP_EMA = mTalib.ClistNew(mTalib.ClistOpt{

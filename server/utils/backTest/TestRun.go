@@ -386,7 +386,7 @@ func Analy() {
 	global.TradeLog.Printf(
 		"%v %6v RSI:%2v %8v CAP_EMA:%7v Upl:%10v RsiDown:%+v RsiUp:%+v     \n",
 		Now.TimeStr, fmt.Sprint(Now.CAPIdx),
-		Now.RsiRegion, Now.RSI_18,
+		Now.RsiRegion, Now.RSI_18+","+Now.RSI_EMA_9,
 		Now.CAP_EMA,
 		NowOpen.UplRatio+","+fmt.Sprint(NowOpen.Dir),
 		RsiRegion_Down,

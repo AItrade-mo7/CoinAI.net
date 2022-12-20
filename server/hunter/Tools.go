@@ -74,45 +74,45 @@ func GetCAPIdx(now okxInfo.TradeKdType) int {
 -3  小于 30  超卖区
 */
 func GetRsiRegion(now okxInfo.TradeKdType) int {
-	RSI := now.RSI_18
+	RSI_EMA := now.RSI_EMA_9
 	// 1 50-60
-	if mCount.Le(RSI, "50") > 0 && mCount.Le(RSI, "60") <= 0 {
+	if mCount.Le(RSI_EMA, "50") > 0 && mCount.Le(RSI_EMA, "60") <= 0 {
 		return 1
 	}
 
 	// 2 60-70
-	if mCount.Le(RSI, "60") > 0 && mCount.Le(RSI, "70") < 0 {
+	if mCount.Le(RSI_EMA, "60") > 0 && mCount.Le(RSI_EMA, "70") < 0 {
 		return 2
 	}
 
 	// 3 大于70
-	if mCount.Le(RSI, "70") >= 0 {
+	if mCount.Le(RSI_EMA, "70") >= 0 {
 		return 3
 	}
 
-	if mCount.Le(RSI, "50") == 0 {
+	if mCount.Le(RSI_EMA, "50") == 0 {
 		return 0
 	}
 
 	// -1 40-50
-	if mCount.Le(RSI, "40") >= 0 && mCount.Le(RSI, "50") < 0 {
+	if mCount.Le(RSI_EMA, "40") >= 0 && mCount.Le(RSI_EMA, "50") < 0 {
 		return -1
 	}
 
 	// -2 30-40
-	if mCount.Le(RSI, "30") > 0 && mCount.Le(RSI, "40") < 0 {
+	if mCount.Le(RSI_EMA, "30") > 0 && mCount.Le(RSI_EMA, "40") < 0 {
 		return -2
 	}
 
 	// -3 30-40
-	if mCount.Le(RSI, "30") <= 0 {
+	if mCount.Le(RSI_EMA, "30") <= 0 {
 		return -3
 	}
 
 	return 0
 }
 
-// RsiRegion 是否为降序
+// RsiRegion EMA 是否为降序
 func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) []int {
 	cacheArr := []int{}
 	downArr := []int{}
@@ -145,7 +145,7 @@ func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) []int {
 	return downArr
 }
 
-// RsiRegion 是否为升序
+// RsiRegion EMA 是否为升序
 func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) []int {
 	cacheArr := []int{}
 	upArr := []int{}
