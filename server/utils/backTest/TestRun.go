@@ -301,72 +301,9 @@ func PrintResult() {
 }
 
 func Analy() {
-	// Pre := TradeKdataList[len(TradeKdataList)-2]
 	Now := TradeKdataList[len(TradeKdataList)-1]
 
-	// preIdx := hunter.CAPIdxToText(Pre.CAPIdx)
-	// nowIdx := hunter.CAPIdxToText(Now.CAPIdx)
-
 	Open := 0
-	// 副调 RSI 超买超卖
-	// if len(RSIMax.RSI_18) > 1 {
-	// 	if mCount.Le(RSIMax.RSI_18, "35") < 0 && Now.CAPIdx > 0 {
-	// 		Open = 1
-	// 	}
-	// 	if mCount.Le(RSIMax.RSI_18, "65") > 0 && Now.CAPIdx < 0 {
-	// 		Open = -1
-	// 	}
-	// }
-
-	// 主调  Last.CAPIdx
-	// PreList5 := TradeKdataList[len(TradeKdataList)-6:]
-	// RsiRegion_Down := hunter.Is_RsiRegion_GoDown(PreList5)
-	// RsiRegion_Up := hunter.Is_RsiRegion_GoUp(PreList5)
-	// if Now.CAPIdx > 0 { // Buy
-	// 	if len(RsiRegion_Up) > 1 {
-	// 		Open = 1
-	// 	}
-	// }
-
-	// if Now.CAPIdx < 0 { // sell
-	// 	if len(RsiRegion_Down) > 1 {
-	// 		Open = -1
-	// 	}
-	// }
-
-	// 新主调  RSI_EMA  只要是从 30 40 60 70 这4个数字穿过的，都算
-	//  Now.RSI_EMA_9 下穿 70 或者 60 则开空
-
-	// preRsiEma := Pre.RSI_EMA_9
-	// nowRsiEma := Now.RSI_EMA_9
-
-	// if mCount.Le(preRsiEma, "70") >= 0 && mCount.Le(nowRsiEma, "70") < 0 {
-	// 	Open = -1
-	// }
-	// if mCount.Le(preRsiEma, "70") <= 0 && mCount.Le(nowRsiEma, "70") > 0 {
-	// 	Open = 1
-	// }
-
-	// if mCount.Le(preRsiEma, "60") >= 0 && mCount.Le(nowRsiEma, "60") < 0 {
-	// 	Open = -1
-	// }
-	// if mCount.Le(preRsiEma, "60") <= 0 && mCount.Le(nowRsiEma, "60") > 0 {
-	// 	Open = 1
-	// }
-
-	// if mCount.Le(preRsiEma, "40") >= 0 && mCount.Le(nowRsiEma, "40") < 0 {
-	// 	Open = -1
-	// }
-	// if mCount.Le(preRsiEma, "40") <= 0 && mCount.Le(nowRsiEma, "40") > 0 {
-	// 	Open = 1
-	// }
-
-	// if mCount.Le(preRsiEma, "30") >= 0 && mCount.Le(nowRsiEma, "30") < 0 {
-	// 	Open = -1
-	// }
-	// if mCount.Le(preRsiEma, "30") <= 0 && mCount.Le(nowRsiEma, "30") > 0 {
-	// 	Open = 1
-	// }
 
 	PrintLnResult := func() {
 		global.TradeLog.Printf(
