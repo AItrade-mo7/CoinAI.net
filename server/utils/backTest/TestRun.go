@@ -301,16 +301,18 @@ func PrintResult() {
 }
 
 func Analy() {
-	// Pre := TradeKdataList[len(TradeKdataList)-2]
+	Pre := TradeKdataList[len(TradeKdataList)-2]
 	Now := TradeKdataList[len(TradeKdataList)-1]
+	preRsiEma := Pre.RSI_EMA_9
+	nowRsiEma := Now.RSI_EMA_9
 
 	// preIdx := hunter.CAPIdxToText(Pre.CAPIdx)
 	// nowIdx := hunter.CAPIdxToText(Now.CAPIdx)
 
-	PreList5 := TradeKdataList[len(TradeKdataList)-6:]
-	RsiRegion_Down := hunter.Is_RsiRegion_GoDown(PreList5)
-	RsiRegion_Up := hunter.Is_RsiRegion_GoUp(PreList5)
-	RsiRegion_Gte2 := hunter.Is_RsiRegion_Gte2(PreList5)
+	// PreList5 := TradeKdataList[len(TradeKdataList)-6:]
+	// RsiRegion_Down := hunter.Is_RsiRegion_GoDown(PreList5)
+	// RsiRegion_Up := hunter.Is_RsiRegion_GoUp(PreList5)
+	// RsiRegion_Gte2 := hunter.Is_RsiRegion_Gte2(PreList5)
 
 	Open := 0
 	// 副调 RSI 超买超卖
@@ -324,34 +326,58 @@ func Analy() {
 	// }
 
 	// 主调  Last.CAPIdx
-	// if nowIdx != preIdx {
-	if Now.CAPIdx > 0 { // Buy
-		if len(RsiRegion_Up) > 1 {
-			if RsiRegion_Gte2 {
-				Open = 1
-			}
-		}
+	// if Now.CAPIdx > 0 { // Buy
+	// 	if len(RsiRegion_Up) > 1 {
+	// 		if RsiRegion_Gte2 {
+	// 			Open = 1
+	// 		}
+	// 	}
+	// }
+
+	// if Now.CAPIdx < 0 { // sell
+	// 	if len(RsiRegion_Down) > 1 {
+	// 		if RsiRegion_Gte2 {
+	// 			Open = -1
+	// 		}
+	// 	}
+	// }
+
+	// 新主调  RSI_EMA  只要是从 30 40 60 70 这4个数字穿过的，都算
+	//  Now.RSI_EMA_9 下穿 70 或者 60 则开空
+	if mCount.Le(preRsiEma, "70") >= 0 && mCount.Le(nowRsiEma, "70") < 0 {
+		Open = -1
+	}
+	if mCount.Le(preRsiEma, "70") <= 0 && mCount.Le(nowRsiEma, "70") > 0 {
+		Open = 1
 	}
 
-	if Now.CAPIdx < 0 { // sell
-		if len(RsiRegion_Down) > 1 {
-			if RsiRegion_Gte2 {
-				Open = -1
-			}
-		}
+	if mCount.Le(preRsiEma, "60") >= 0 && mCount.Le(nowRsiEma, "60") < 0 {
+		Open = -1
 	}
-	// }
+	if mCount.Le(preRsiEma, "60") <= 0 && mCount.Le(nowRsiEma, "60") > 0 {
+		Open = 1
+	}
+
+	if mCount.Le(preRsiEma, "40") >= 0 && mCount.Le(nowRsiEma, "40") < 0 {
+		Open = -1
+	}
+	if mCount.Le(preRsiEma, "40") <= 0 && mCount.Le(nowRsiEma, "40") > 0 {
+		Open = 1
+	}
+
+	if mCount.Le(preRsiEma, "30") >= 0 && mCount.Le(nowRsiEma, "30") < 0 {
+		Open = -1
+	}
+	if mCount.Le(preRsiEma, "30") <= 0 && mCount.Le(nowRsiEma, "30") > 0 {
+		Open = 1
+	}
 
 	PrintLnResult := func() {
 		global.TradeLog.Printf(
-			"%v %6v RSI:%2v %8v CAP_EMA:%7v Upl:%10v Gte2:%v RsiDown:%+v RsiUp:%+v \n",
-			Now.TimeStr, fmt.Sprint(Open)+hunter.CAPIdxToText(Open)+fmt.Sprint(Now.CAPIdx),
-			Now.RsiRegion, Now.RSI_18,
-			Now.CAP_EMA,
+			"%v %8v RSI:%2v %8v %8v Upl:%10v  \n",
+			Now.TimeStr, fmt.Sprint(Open)+hunter.CAPIdxToText(Open),
+			Now.RsiRegion, Now.RSI_18, Now.RSI_EMA_9,
 			NowOpen.UplRatio+","+fmt.Sprint(NowOpen.Dir),
-			RsiRegion_Gte2,
-			RsiRegion_Down,
-			RsiRegion_Up,
 		)
 
 		if Open != NowOpen.Dir {
@@ -384,12 +410,9 @@ func Analy() {
 	}
 
 	global.TradeLog.Printf(
-		"%v %6v RSI:%2v %8v CAP_EMA:%7v Upl:%10v RsiDown:%+v RsiUp:%+v     \n",
-		Now.TimeStr, fmt.Sprint(Now.CAPIdx),
-		Now.RsiRegion, Now.RSI_18+","+Now.RSI_EMA_9,
-		Now.CAP_EMA,
+		"%v %8v RSI:%2v %8v %8v Upl:%10v  \n",
+		Now.TimeStr, fmt.Sprint(Open)+hunter.CAPIdxToText(Open),
+		Now.RsiRegion, Now.RSI_18, Now.RSI_EMA_9,
 		NowOpen.UplRatio+","+fmt.Sprint(NowOpen.Dir),
-		RsiRegion_Down,
-		RsiRegion_Up,
 	)
 }
