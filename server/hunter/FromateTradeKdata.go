@@ -104,3 +104,12 @@ func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata 
 
 	return
 }
+
+/*
+MACD： 快线 13
+
+慢线： 34
+
+信号长度 9
+
+*/
