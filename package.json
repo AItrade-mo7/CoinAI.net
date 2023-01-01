@@ -1,6 +1,6 @@
 {
   "name": "coin-ai",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "scripts": {
     "git": "./_shell/gitSet.sh",
     "sync": "./_shell/gitSync.sh",
