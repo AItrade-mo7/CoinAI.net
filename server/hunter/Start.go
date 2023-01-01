@@ -20,14 +20,15 @@ func Start() {
 
 func Running() {
 	global.RunLog.Println(" === hunter.Running === ", okxInfo.KdataInst.InstID)
-	if len(okxInfo.KdataInst.InstID) < 2 || len(okxInfo.TradeInst.InstID) < 2 {
-		global.LogErr("hunter.Running", "okxInfo.TradeInst.InstID 为空")
+
+	err := SetTradeInst() // 在这里要先读取持仓, 每次平仓之后才会触发这个
+	if err != nil {
+		global.LogErr(err)
 		return
 	}
 
-	err := SetTradeInst() // 每次平仓之后才会触发这个
-	if err != nil {
-		global.LogErr(err)
+	if len(okxInfo.KdataInst.InstID) < 2 || len(okxInfo.TradeInst.InstID) < 2 {
+		global.LogErr("hunter.Running", "okxInfo.TradeInst.InstID 为空")
 		return
 	}
 

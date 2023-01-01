@@ -2,10 +2,9 @@ package okxInfo
 
 import "github.com/EasyGolang/goTools/mOKX"
 
-var (
-	KdataInst mOKX.TypeInst
-	TradeInst mOKX.TypeInst
-)
+var KdataInst mOKX.TypeInst
+
+var TradeInst mOKX.TypeInst
 
 var Ticking = make(chan string, 2)
 
