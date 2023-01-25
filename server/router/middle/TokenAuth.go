@@ -2,11 +2,15 @@ package middle
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mEncrypt"
+	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func TokenAuth(c *fiber.Ctx) (Message string, err error) {
@@ -20,7 +24,6 @@ func TokenAuth(c *fiber.Ctx) (Message string, err error) {
 	}
 
 	Claims, AuthOk := mEncrypt.ParseToken(Token, config.SecretKey)
-
 	if !AuthOk {
 		err = errors.New("Token验证失败")
 		return
@@ -41,14 +44,35 @@ func TokenAuth(c *fiber.Ctx) (Message string, err error) {
 		return
 	}
 
-	// 这台为公共主机
-	if config.AppEnv.UserID == config.PublicUserID {
-	} else {
-		if UserID != config.AppEnv.UserID {
-			err = errors.New("Token包含信息有误")
-			return
-		}
+	// 数据库验证
+	db := mMongo.New(mMongo.Opt{
+		UserName: config.SysEnv.MongoUserName,
+		Password: config.SysEnv.MongoPassword,
+		Address:  config.SysEnv.MongoAddress,
+		DBName:   "AITrade",
+	}).Connect().Collection("Token")
+	defer db.Close()
+	err = db.Ping()
+	if err != nil {
+		db.Close()
+		err = fmt.Errorf("token 验证失败1")
+		return
 	}
+
+	var dbRes dbType.TokenTable
+	FK := bson.D{{
+		Key:   "UserID",
+		Value: UserID,
+	}}
+	db.Table.FindOne(db.Ctx, FK).Decode(&dbRes)
+
+	if dbRes.Token != Token {
+		db.Close()
+		err = fmt.Errorf("token 验证失败2")
+		return
+	}
+
+	db.Close()
 
 	return
 }
