@@ -26,6 +26,17 @@ func main() {
 	RunIng() // 正式服务
 }
 
+func RunIng() {
+	// 数据准备
+	ready.Start()
+
+	// 启动 hunter 计算
+	go hunter.Start()
+
+	// 启动路由
+	router.Start()
+}
+
 func RunTest() {
 	// 数据回测
 	ready.ReadUserInfo()
@@ -43,15 +54,4 @@ func RunTest() {
 	if err == nil {
 		tesObj.MockData()
 	}
-}
-
-func RunIng() {
-	// 数据准备
-	ready.Start()
-
-	// 启动 hunter 计算
-	go hunter.Start()
-
-	// 启动路由
-	router.Start()
 }
