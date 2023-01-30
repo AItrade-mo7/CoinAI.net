@@ -305,6 +305,14 @@ func Analy() {
 
 	Open := 0
 
+	if mCount.Le(Now.CAP_EMA, "0") > 0 {
+		Open = 1
+	}
+
+	if mCount.Le(Now.CAP_EMA, "0") < 0 {
+		Open = -1
+	}
+
 	PrintLnResult := func() {
 		global.TradeLog.Printf(
 			"%v %8v RSI:%2v %8v %8v Upl:%10v  \n",

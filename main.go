@@ -21,9 +21,9 @@ func main() {
 	// 初始化系统参数
 	global.Start()
 
-	// RunTest() // 回测
+	RunTest() // 回测
 
-	RunIng() // 正式服务
+	// RunIng() // 正式服务
 }
 
 func RunIng() {
@@ -41,8 +41,8 @@ func RunTest() {
 	// 数据回测
 	ready.ReadUserInfo()
 
-	start := dbType.ParseTime("2020-1-1")
-	end := dbType.ParseTime("2022-12-30")
+	start := dbType.ParseTime("2022-10-1")
+	end := dbType.ParseTime("2023-1-30")
 
 	tesObj := backTest.NewTest(backTest.TestOpt{
 		StartTime: start,
