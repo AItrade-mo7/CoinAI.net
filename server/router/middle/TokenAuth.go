@@ -49,7 +49,7 @@ func TokenAuth(c *fiber.Ctx) (Message string, err error) {
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
-		DBName:   "AITrade",
+		DBName:   "AItrade",
 	}).Connect().Collection("Token")
 	defer db.Close()
 	err = db.Ping()

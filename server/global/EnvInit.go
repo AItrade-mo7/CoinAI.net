@@ -66,7 +66,7 @@ func ReadeDBAppEnv(ServeID string) {
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
-		DBName:   "AITrade",
+		DBName:   "AItrade",
 	}).Connect().Collection("CoinAINet")
 	defer db.Close()
 
@@ -95,7 +95,7 @@ func WriteAppEnv() {
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
-		DBName:   "AITrade",
+		DBName:   "AItrade",
 	}).Connect().Collection("CoinAINet")
 	defer db.Close()
 
@@ -136,7 +136,7 @@ func SetPublicUserID() {
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
-		DBName:   "AITrade",
+		DBName:   "AItrade",
 	}).Connect().Collection("Account")
 	defer db.Close()
 	err := db.Ping()

@@ -13,7 +13,7 @@ func GetConfig(c *fiber.Ctx) error {
 	// 在这里请求数据
 	GithubReqData, _ := mFetch.NewHttp(mFetch.HttpOpt{
 		Origin: "https://raw.githubusercontent.com",
-		Path:   "/AITrade-mo7/CoinAIPackage/main/package.json",
+		Path:   "/AItrade-mo7/CoinAIPackage/main/package.json",
 	}).Get()
 
 	var GithubInfo struct {

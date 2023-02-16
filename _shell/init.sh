@@ -23,4 +23,4 @@ BuildName=${StartName}
 OutPutPath=${NowPath}"/dist"
 
 # 部署目录
-DeployPath="git@github.com:AITrade-mo7/CoinAIPackage.git"
+DeployPath="git@github.com:AItrade-mo7/CoinAIPackage.git"

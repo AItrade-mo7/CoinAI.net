@@ -22,7 +22,7 @@ func NewRest(opt RestOpt) (resData []byte, resErr error) {
 		SecretKey: config.SecretKey,              // key
 		ExpiresAt: time.Now().Add(time.Hour / 2), // 过期时间 半小时
 		Message:   opt.UserID,
-		Issuer:    "AITrade.net",
+		Issuer:    "AItrade.net",
 		Subject:   "UserToken",
 	}).Generate()
 
