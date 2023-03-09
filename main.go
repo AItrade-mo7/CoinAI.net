@@ -21,7 +21,7 @@ func main() {
 	// 初始化系统参数
 	global.Start()
 
-	RunTest() // 回测
+	// RunTest() // 回测
 
 	// RunIng() // 正式服务
 }

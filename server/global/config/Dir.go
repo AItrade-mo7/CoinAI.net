@@ -8,14 +8,12 @@ import (
 	"github.com/EasyGolang/goTools/mStr"
 )
 
-type DirType struct {
+var Dir struct {
 	Home     string // Home 根目录
 	App      string // APP 根目录
 	Log      string // 日志文件目录
 	JsonData string // json 数据存放目录
 }
-
-var Dir DirType
 
 type FileType struct {
 	AppEnv   string // ./app_env.json
@@ -60,12 +58,18 @@ func DirInit() {
 		"Shutdown.sh",
 	)
 
-	// 检测 logs 目录
-	if !mPath.Exists(Dir.Log) {
-		os.MkdirAll(Dir.Log, 0o777)
-	}
-	if !mPath.Exists(Dir.JsonData) {
+	// 检测 JsonData 目录
+	isJsonDataPath := mPath.Exists(Dir.JsonData)
+	if !isJsonDataPath {
+		// 不存在则创建 JsonData 目录
 		os.MkdirAll(Dir.JsonData, 0o777)
+	}
+
+	// 检测 logs 目录
+	isLogPath := mPath.Exists(Dir.Log)
+	if !isLogPath {
+		// 不存在则创建 logs 目录
+		os.MkdirAll(Dir.Log, 0o777)
 	}
 
 	if !mPath.Exists(File.Shutdown) {
