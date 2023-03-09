@@ -18,5 +18,5 @@ func Start() {
 	}).Start()
 
 	// 加载App启动配置文件
-	AppEnvInit()
+	// AppEnvInit()
 }

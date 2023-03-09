@@ -4,6 +4,8 @@ import (
 	"github.com/EasyGolang/goTools/mOKX"
 )
 
+var SysName = "CoinAI.net"
+
 var AppInfo struct {
 	Name    string `bson:"name"`
 	Version string `bson:"version"`
