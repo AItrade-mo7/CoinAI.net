@@ -25,7 +25,7 @@ func GetConfig(c *fiber.Ctx) error {
 	ConfigData := make(map[string]any)
 
 	AppEnv := config.AppEnv
-	AppEnv.ApiKeyList = GetFuzzyApiKey()
+	// AppEnv.ApiKeyList = GetFuzzyApiKey()
 	ConfigData["AppEnv"] = AppEnv
 	ConfigData["GithubInfo"] = GithubInfo
 	ConfigData["LeverOpt"] = config.LeverOpt
@@ -34,20 +34,20 @@ func GetConfig(c *fiber.Ctx) error {
 }
 
 func GetFuzzyApiKey() []mOKX.TypeOkxKey {
-	ApiKeyList := config.AppEnv.ApiKeyList
+	// ApiKeyList := config.AppEnv.ApiKeyList
 
 	NewKeyList := []mOKX.TypeOkxKey{}
 
-	for _, val := range ApiKeyList {
-		NewKeyList = append(NewKeyList, mOKX.TypeOkxKey{
-			Name:       val.Name,
-			ApiKey:     GetKeyFuzzy(val.ApiKey, 5),
-			SecretKey:  GetKeyFuzzy(val.SecretKey, 5),
-			Passphrase: GetKeyFuzzy(val.Passphrase, 1),
-			// IsTrade:    val.IsTrade,
-			UserID: val.UserID,
-		})
-	}
+	// for _, val := range ApiKeyList {
+	// 	NewKeyList = append(NewKeyList, mOKX.TypeOkxKey{
+	// 		Name:       val.Name,
+	// 		ApiKey:     GetKeyFuzzy(val.ApiKey, 5),
+	// 		SecretKey:  GetKeyFuzzy(val.SecretKey, 5),
+	// 		Passphrase: GetKeyFuzzy(val.Passphrase, 1),
+	// 		// IsTrade:    val.IsTrade,
+	// 		UserID: val.UserID,
+	// 	})
+	// }
 
 	return NewKeyList
 }

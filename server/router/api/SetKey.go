@@ -73,20 +73,20 @@ func SetKey(c *fiber.Ctx) error {
 		return c.JSON(result.ErrLogin.WithMsg("Api Key 验证失败!"))
 	}
 
-	ApiKeyList := config.AppEnv.ApiKeyList
+	// ApiKeyList := config.AppEnv.ApiKeyList
 	isRepeat := false
 	isName := false
-	for _, val := range ApiKeyList {
+	// for _, val := range ApiKeyList {
 
-		if ApiKey.ApiKey == val.ApiKey || ApiKey.SecretKey == val.SecretKey {
-			isRepeat = true
-			break
-		}
-		if ApiKey.Name == val.Name {
-			isName = true
-			break
-		}
-	}
+	// 	if ApiKey.ApiKey == val.ApiKey || ApiKey.SecretKey == val.SecretKey {
+	// 		isRepeat = true
+	// 		break
+	// 	}
+	// 	if ApiKey.Name == val.Name {
+	// 		isName = true
+	// 		break
+	// 	}
+	// }
 	if isName {
 		return c.JSON(result.ErrLogin.WithMsg("备注名重复"))
 	}
@@ -95,7 +95,7 @@ func SetKey(c *fiber.Ctx) error {
 		return c.JSON(result.ErrLogin.WithMsg("Api key已存在"))
 	}
 
-	config.AppEnv.ApiKeyList = append(config.AppEnv.ApiKeyList, ApiKey)
+	// config.AppEnv.ApiKeyList = append(config.AppEnv.ApiKeyList, ApiKey)
 
 	global.WriteAppEnv()
 

@@ -116,3 +116,15 @@ func WriteAppEnv() {
 	}
 	Log.Println("config.AppEnv 已更新至数据库", mJson.Format(config.AppEnv))
 }
+
+// 方法
+// func GetOKXKey(Index int) mOKX.TypeOkxKey {
+// 	// ReturnKey := mOKX.TypeOkxKey{}
+// 	// for key, val := range AppEnv.ApiKeyList {
+// 	// 	if key == Index {
+// 	// 		ReturnKey = val
+// 	// 		break
+// 	// 	}
+// 	// }
+// 	return ReturnKey
+// }

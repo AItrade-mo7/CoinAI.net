@@ -1,15 +1,11 @@
 package api
 
 import (
-	"fmt"
-
 	"CoinAI.net/server/global"
-	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
 	"github.com/EasyGolang/goTools/mFiber"
-	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
 )
@@ -41,35 +37,34 @@ func HandleKey(c *fiber.Ctx) error {
 		return c.JSON(result.ErrLogin.WithMsg(err))
 	}
 
-	ApiKeyList := config.AppEnv.ApiKeyList
+	// ApiKeyList := config.AppEnv.ApiKeyList
 
-	NewApiKey := []mOKX.TypeOkxKey{}
+	// NewApiKey := []mOKX.TypeOkxKey{}
 
 	var ListErr error
-	for key, val := range ApiKeyList {
-		OkxKey := val
-		if key == json.Index {
-
-			if val.UserID != UserID {
-				ListErr = fmt.Errorf("无权操作")
-				break
-			}
-			// if json.Type == "embed" {
-			// 	OkxKey.IsTrade = !OkxKey.IsTrade
-			// }
-			if json.Type == "del" {
-				continue
-			}
-		}
-		NewApiKey = append(NewApiKey, OkxKey)
-	}
+	// for key, val := range ApiKeyList {
+	// OkxKey := val
+	// if key == json.Index {
+	// if val.UserID != UserID {
+	// 	ListErr = fmt.Errorf("无权操作")
+	// 	break
+	// }
+	// if json.Type == "embed" {
+	// 	OkxKey.IsTrade = !OkxKey.IsTrade
+	// }
+	// if json.Type == "del" {
+	// 	continue
+	// }
+	// }
+	// NewApiKey = append(NewApiKey, OkxKey)
+	// }
 
 	if ListErr != nil {
 		return c.JSON(result.Fail.WithMsg(ListErr))
 	}
 
-	config.AppEnv.ApiKeyList = []mOKX.TypeOkxKey{}
-	config.AppEnv.ApiKeyList = NewApiKey
+	// config.AppEnv.ApiKeyList = []mOKX.TypeOkxKey{}
+	// config.AppEnv.ApiKeyList = NewApiKey
 
 	global.WriteAppEnv()
 
