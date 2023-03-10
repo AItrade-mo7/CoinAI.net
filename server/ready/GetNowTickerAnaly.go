@@ -1,12 +1,7 @@
 package ready
 
 import (
-	"CoinAI.net/server/global"
-	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
-	"CoinAI.net/server/utils/reqDataCenter"
-	"github.com/EasyGolang/goTools/mStr"
-	jsoniter "github.com/json-iterator/go"
 )
 
 type ReqCoinMarketType struct {
@@ -18,25 +13,25 @@ type ReqCoinMarketType struct {
 func GetNowTickerAnaly() (resData okxInfo.AnalyTickerType) {
 	resData = okxInfo.AnalyTickerType{}
 
-	res, err := reqDataCenter.NewRest(reqDataCenter.RestOpt{
-		Origin: "https://trade-api.mo7.cc",
-		Path:   "/CoinMarket/public/GetNowTickerAnaly",
-		UserID: config.AppEnv.UserID,
-		Method: "Post",
-	})
-	if err != nil {
-		global.LogErr("ready.GetCoinMarket", err)
-		return
-	}
+	// res, err := reqDataCenter.NewRest(reqDataCenter.RestOpt{
+	// 	Origin: "https://trade-api.mo7.cc",
+	// 	Path:   "/CoinMarket/public/GetNowTickerAnaly",
+	// 	UserID: config.AppEnv.UserID,
+	// 	Method: "Post",
+	// })
+	// if err != nil {
+	// 	global.LogErr("ready.GetCoinMarket", err)
+	// 	return
+	// }
 
-	var result ReqCoinMarketType
-	jsoniter.Unmarshal(res, &result)
+	// var result ReqCoinMarketType
+	// jsoniter.Unmarshal(res, &result)
 
-	if result.Code < 0 {
-		global.LogErr("ready.GetCoinMarket", "Err", result.Code, mStr.ToStr(resData))
-		return
-	}
+	// if result.Code < 0 {
+	// 	global.LogErr("ready.GetCoinMarket", "Err", result.Code, mStr.ToStr(resData))
+	// 	return
+	// }
 
-	resData = result.Data
+	// resData = result.Data
 	return
 }
