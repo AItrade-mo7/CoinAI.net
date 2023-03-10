@@ -54,9 +54,9 @@ func HandleKey(c *fiber.Ctx) error {
 				ListErr = fmt.Errorf("无权操作")
 				break
 			}
-			if json.Type == "embed" {
-				OkxKey.IsTrade = !OkxKey.IsTrade
-			}
+			// if json.Type == "embed" {
+			// 	OkxKey.IsTrade = !OkxKey.IsTrade
+			// }
 			if json.Type == "del" {
 				continue
 			}

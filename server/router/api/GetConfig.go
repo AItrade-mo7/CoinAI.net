@@ -44,8 +44,8 @@ func GetFuzzyApiKey() []mOKX.TypeOkxKey {
 			ApiKey:     GetKeyFuzzy(val.ApiKey, 5),
 			SecretKey:  GetKeyFuzzy(val.SecretKey, 5),
 			Passphrase: GetKeyFuzzy(val.Passphrase, 1),
-			IsTrade:    val.IsTrade,
-			UserID:     val.UserID,
+			// IsTrade:    val.IsTrade,
+			UserID: val.UserID,
 		})
 	}
 

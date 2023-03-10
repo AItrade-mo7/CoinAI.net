@@ -64,7 +64,7 @@ func SetKey(c *fiber.Ctx) error {
 	ApiKey.ApiKey = json.ApiKey
 	ApiKey.SecretKey = json.SecretKey
 	ApiKey.Passphrase = json.Passphrase
-	ApiKey.IsTrade = true
+	// ApiKey.IsTrade = true
 	ApiKey.UserID = UserID
 
 	// 验证 Key 可用性
