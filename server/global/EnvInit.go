@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/utils/reqDataCenter"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
@@ -18,9 +17,6 @@ import (
 )
 
 func AppEnvInit() {
-	// 读取公共账号信息
-	SetPublicUserID()
-
 	// 检查并读取配置文件
 	isEnvPath := mPath.Exists(config.File.AppEnv)
 	if isEnvPath {
@@ -36,15 +32,15 @@ func AppEnvInit() {
 
 	ReadeDBAppEnv(config.AppEnv.ServeID)
 
-	if len(config.AppEnv.Name) < 1 {
-		config.AppEnv.Name = "我的 CoinAI"
-	}
-	config.AppEnv.Version = config.AppInfo.Version
+	// if len(config.AppEnv.Name) < 1 {
+	// 	config.AppEnv.Name = "我的 CoinAI"
+	// }
+	// config.AppEnv.Version = config.AppInfo.Version
 
 	// 设置默认杠杆倍数 TradeLever
-	if config.AppEnv.TradeLever == 0 {
-		config.AppEnv.TradeLever = 5
-	}
+	// if config.AppEnv.TradeLever == 0 {
+	// 	config.AppEnv.TradeLever = 5
+	// }
 	// 设置  默认 最大 ApiKey 数量
 	if config.AppEnv.MaxApiKeyNum == 0 {
 		config.AppEnv.MaxApiKeyNum = 32
@@ -119,34 +115,4 @@ func WriteAppEnv() {
 		LogErr("config.AppEnv 数据更插失败", err)
 	}
 	Log.Println("config.AppEnv 已更新至数据库", mJson.Format(config.AppEnv))
-}
-
-// 设置公共主机ID
-
-func SetPublicUserID() {
-	db := mMongo.New(mMongo.Opt{
-		UserName: config.SysEnv.MongoUserName,
-		Password: config.SysEnv.MongoPassword,
-		Address:  config.SysEnv.MongoAddress,
-		DBName:   "AItrade",
-	}).Connect().Collection("Account")
-	defer db.Close()
-	err := db.Ping()
-	if err != nil {
-		LogErr("global.SetPublicUserID 公共主机读取失败", err)
-	}
-
-	FK := bson.D{{
-		Key:   "Email",
-		Value: config.SysEmail,
-	}}
-
-	var result dbType.AccountTable
-	db.Table.FindOne(db.Ctx, FK).Decode(&result)
-
-	if len(result.UserID) < 10 {
-		LogErr("global.SetPublicUserID 公共主机读取失败2", err)
-	}
-
-	// config.PublicUserID = result.UserID
 }

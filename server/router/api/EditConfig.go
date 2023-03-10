@@ -48,14 +48,14 @@ func EditConfig(c *fiber.Ctx) error {
 	reg, _ := regexp.Compile("[\u4e00-\u9fa5_a-zA-Z0-9_]{2,12}")
 	match := reg.MatchString(json.ServerName)
 	if match {
-		config.AppEnv.Name = json.ServerName
+		// config.AppEnv.Name = json.ServerName
 	} else {
 		return c.JSON(result.Fail.WithMsg("系统名称不符合规范!"))
 	}
 
 	AppEnv := config.AppEnv
 	if json.Lever >= config.LeverOpt[0] && json.Lever <= config.LeverOpt[len(config.LeverOpt)-1] {
-		AppEnv.TradeLever = json.Lever
+		// AppEnv.TradeLever = json.Lever
 	} else {
 		return c.JSON(result.Fail.WithMsg("杠杆系数不符合规范"))
 	}

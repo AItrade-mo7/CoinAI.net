@@ -17,6 +17,8 @@ func Start() {
 		SleepTime: time.Hour * 24,
 	}).Start()
 
-	// 加载App启动配置文件
-	// AppEnvInit()
+	// 加载基础的配置
+	config.DefaultSysEnv()
+
+	AppEnvInit()
 }

@@ -34,8 +34,8 @@ type OutPut struct {
 func GetOutPut() (resData OutPut) {
 	resData = OutPut{}
 	// 系统运行信息
-	resData.Name = config.AppEnv.Name
-	resData.Version = config.AppEnv.Version
+	// resData.Name = config.AppEnv.Name
+	// resData.Version = config.AppEnv.Version
 	resData.Port = config.AppEnv.Port
 	resData.IP = config.AppEnv.IP
 	resData.ServeID = config.AppEnv.ServeID
@@ -47,7 +47,7 @@ func GetOutPut() (resData OutPut) {
 	resData.TradeKdataLast = okxInfo.TradeKdataList[len(okxInfo.TradeKdataList)-1]
 
 	// 杠杆
-	resData.TradeLever = config.AppEnv.TradeLever
+	// resData.TradeLever = config.AppEnv.TradeLever
 
 	// Ticker 信息
 	resData.NowTicker.Unit = okxInfo.NowTicker.Unit

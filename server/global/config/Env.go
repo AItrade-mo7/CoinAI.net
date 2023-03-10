@@ -1,9 +1,5 @@
 package config
 
-import (
-	"github.com/EasyGolang/goTools/mOKX"
-)
-
 var SysName = "CoinAI.net"
 
 var AppInfo struct {
@@ -24,18 +20,3 @@ func DefaultSysEnv() {
 	SysEnv.MongoUserName = "asdasd55555"
 	SysEnv.MessageBaseUrl = "http://msg.mo7.cc"
 }
-
-type AppEnvType struct {
-	Name         string            `bson:"Name"`
-	Version      string            `bson:"Version"`
-	Port         string            `bson:"Port"`
-	IP           string            `bson:"IP"`
-	ServeID      string            `bson:"ServeID"`
-	UserID       string            `bson:"UserID"`
-	TradeLever   int               `bson:"TradeLever"`
-	IsSPOT       bool              `bson:"IsSPOT"`
-	MaxApiKeyNum int               `bson:"MaxApiKeyNum"`
-	ApiKeyList   []mOKX.TypeOkxKey `bson:"ApiKeyList"`
-}
-
-var AppEnv AppEnvType
