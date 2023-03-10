@@ -11,20 +11,19 @@ var AppInfo struct {
 	Version string `bson:"version"`
 }
 
-var SysEnv = struct {
-	MongoAddress  string
-	MongoPassword string
-	MongoUserName string
-}{
-	MongoAddress:  "aws.mo7.cc:17017",
-	MongoPassword: "asdasd55555",
-	MongoUserName: "mo7",
+var SysEnv struct {
+	MongoAddress   string
+	MongoPassword  string
+	MongoUserName  string
+	MessageBaseUrl string
 }
 
-var (
-	SysEmail = "trade@mo7.cc"
-	MyIP     = "3.1.68.15"
-)
+func DefaultSysEnv() {
+	SysEnv.MongoAddress = "tcy.mo7.cc:17017"
+	SysEnv.MongoPassword = "mo7"
+	SysEnv.MongoUserName = "asdasd55555"
+	SysEnv.MessageBaseUrl = "http://msg.mo7.cc"
+}
 
 type AppEnvType struct {
 	Name         string            `bson:"Name"`

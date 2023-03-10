@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/utils/taskPush"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mLog"
 	"github.com/EasyGolang/goTools/mStr"

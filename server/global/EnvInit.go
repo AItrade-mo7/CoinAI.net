@@ -50,15 +50,7 @@ func AppEnvInit() {
 		config.AppEnv.MaxApiKeyNum = 32
 	}
 
-	CheckLocal()
-
 	WriteAppEnv()
-}
-
-func CheckLocal() {
-	if config.MyIP == config.AppEnv.IP {
-		config.SysEnv.MongoAddress = "127.0.0.1:27017"
-	}
 }
 
 func ReadeDBAppEnv(ServeID string) {
