@@ -148,5 +148,5 @@ func SetPublicUserID() {
 		LogErr("global.SetPublicUserID 公共主机读取失败2", err)
 	}
 
-	config.PublicUserID = result.UserID
+	// config.PublicUserID = result.UserID
 }

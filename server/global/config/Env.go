@@ -38,33 +38,4 @@ type AppEnvType struct {
 	ApiKeyList   []mOKX.TypeOkxKey `bson:"ApiKeyList"`
 }
 
-var LeverOpt = []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
-
 var AppEnv AppEnvType
-
-func GetOKXKey(Index int) mOKX.TypeOkxKey {
-	ReturnKey := mOKX.TypeOkxKey{}
-
-	for key, val := range AppEnv.ApiKeyList {
-		if key == Index {
-			ReturnKey = val
-			break
-		}
-	}
-
-	return ReturnKey
-}
-
-type EmailInfo struct {
-	Account  string
-	Password string
-	To       []string
-}
-
-var Email = EmailInfo{
-	Account:  SysEmail,
-	Password: "Mcl931750",
-	To:       []string{},
-}
-
-var PublicUserID = ""

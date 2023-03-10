@@ -1,14 +1,10 @@
 package ready
 
 import (
-	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
-	"CoinAI.net/server/tmpl"
 	"CoinAI.net/server/utils/dbUser"
 	"github.com/EasyGolang/goTools/mClock"
-	"github.com/EasyGolang/goTools/mStr"
-	"github.com/EasyGolang/goTools/mTime"
 )
 
 func Start() {
@@ -38,38 +34,38 @@ func ReadUserInfo() {
 			UserID: config.AppEnv.UserID,
 		})
 
-		if len(okxInfo.UserInfo.Email) > 3 {
-			EmailTo := []string{}
-			EmailTo = append(EmailTo, config.Email.Account)
-			EmailTo = append(EmailTo, okxInfo.UserInfo.Email)
-			config.Email.To = EmailTo
-		}
+		// if len(okxInfo.UserInfo.Email) > 3 {
+		// 	EmailTo := []string{}
+		// 	EmailTo = append(EmailTo, config.Email.Account)
+		// 	EmailTo = append(EmailTo, okxInfo.UserInfo.Email)
+		// 	config.Email.To = EmailTo
+		// }
 	}
 }
 
 func SendStartEmail() {
-	Message := mStr.Join(
-		"服务已启动: ", config.AppEnv.ServeID,
-		`<br /> <a href="https://trade.mo7.cc/CoinServe/CoinAI?id=`,
-		config.AppEnv.ServeID,
-		`"> https://trade.mo7.cc/CoinServe/CoinAI?id=`,
-		config.AppEnv.ServeID,
-		`</a> <br />`,
-		"用户昵称: ",
-		okxInfo.UserInfo.NickName,
-		"<br />",
-		"用户ID: ",
-		okxInfo.UserInfo.UserID,
-		"<br />",
-	)
+	// Message := mStr.Join(
+	// 	"服务已启动: ", config.AppEnv.ServeID,
+	// 	`<br /> <a href="https://trade.mo7.cc/CoinServe/CoinAI?id=`,
+	// 	config.AppEnv.ServeID,
+	// 	`"> https://trade.mo7.cc/CoinServe/CoinAI?id=`,
+	// 	config.AppEnv.ServeID,
+	// 	`</a> <br />`,
+	// 	"用户昵称: ",
+	// 	okxInfo.UserInfo.NickName,
+	// 	"<br />",
+	// 	"用户ID: ",
+	// 	okxInfo.UserInfo.UserID,
+	// 	"<br />",
+	// )
 
-	global.Email(global.EmailOpt{
-		To:       config.Email.To,
-		Subject:  "系统提示",
-		Template: tmpl.SysEmail,
-		SendData: tmpl.SysParam{
-			Message: Message,
-			SysTime: mTime.UnixFormat(mTime.GetUnixInt64()),
-		},
-	}).Send()
+	// global.Email(global.EmailOpt{
+	// 	To:       config.Email.To,
+	// 	Subject:  "系统提示",
+	// 	Template: tmpl.SysEmail,
+	// 	SendData: tmpl.SysParam{
+	// 		Message: Message,
+	// 		SysTime: mTime.UnixFormat(mTime.GetUnixInt64()),
+	// 	},
+	// }).Send()
 }

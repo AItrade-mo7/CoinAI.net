@@ -4,9 +4,7 @@ import (
 	"time"
 
 	"CoinAI.net/server/global"
-	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
-	"CoinAI.net/server/tmpl"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTime"
 )
@@ -73,13 +71,13 @@ func FileBaseKdata() {
 }
 
 func SendEmail(Message string) {
-	global.Email(global.EmailOpt{
-		To:       config.Email.To,
-		Subject:  "系统提示",
-		Template: tmpl.SysEmail,
-		SendData: tmpl.SysParam{
-			Message: Message,
-			SysTime: mTime.UnixFormat(mTime.GetUnixInt64()),
-		},
-	}).Send()
+	// global.Email(global.EmailOpt{
+	// 	To:       config.Email.To,
+	// 	Subject:  "系统提示",
+	// 	Template: tmpl.SysEmail,
+	// 	SendData: tmpl.SysParam{
+	// 		Message: Message,
+	// 		SysTime: mTime.UnixFormat(mTime.GetUnixInt64()),
+	// 	},
+	// }).Send()
 }
