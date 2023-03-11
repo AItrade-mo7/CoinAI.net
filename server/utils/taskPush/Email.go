@@ -31,7 +31,7 @@ func SysEmail(opt SysEmailOpt) error {
 	}
 
 	if len(opt.To) < 1 {
-		opt.To = config.SysEmail
+		opt.To = []string{config.SysEmail}
 	}
 
 	Cont := mJson.StructToMap(mTask.SysEmail{

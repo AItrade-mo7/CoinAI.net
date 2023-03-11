@@ -1,7 +1,7 @@
 package config
 
 // 系统通知的邮箱
-var SysEmail = []string{"meichangliang@outlook.com"}
+var SysEmail = "meichangliang@outlook.com"
 
 var LeverOpt = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 

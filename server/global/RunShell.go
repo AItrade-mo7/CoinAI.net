@@ -1,4 +1,4 @@
-package shellControl
+package global
 
 import (
 	"CoinAI.net/server/global/config"

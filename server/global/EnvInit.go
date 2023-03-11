@@ -1,9 +1,11 @@
 package global
 
 import (
+	"fmt"
 	"os"
 
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/utils/taskPush"
 	"github.com/EasyGolang/goTools/mJson"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -20,6 +22,8 @@ func AppEnvInit() {
 	if len(config.AppEnv.UserID) < 1 {
 		panic("启动错误，缺少 AppEnv.UserID 字段")
 	}
+
+	GetLocalAPI()
 
 	// config.AppEnv.IP = reqDataCenter.GetLocalIP()
 	// config.AppEnv.ServeID = mStr.Join(config.AppEnv.IP, ":", config.AppEnv.Port)
@@ -126,8 +130,10 @@ func AppEnvInit() {
 // }
 
 func GetLocalAPI() {
-	// res, err := Request(RequestOpt{
-	// 	Origin: "",
-	// 	Path:   "",
-	// })
+	res, err := taskPush.Request(taskPush.RequestOpt{
+		Origin: "",
+		Path:   "",
+	})
+
+	fmt.Println(string(res), err)
 }
