@@ -1,12 +1,12 @@
 package global
 
 import (
-	"fmt"
 	"os"
 
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/utils/taskPush"
-	"github.com/EasyGolang/goTools/mJson"
+	"github.com/EasyGolang/goTools/mStr"
+	"github.com/EasyGolang/goTools/mVerify"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -23,12 +23,15 @@ func AppEnvInit() {
 		panic("启动错误，缺少 AppEnv.UserID 字段")
 	}
 
-	GetLocalAPI()
+	// 在这里 获取 用户 信息
 
-	// config.AppEnv.IP = reqDataCenter.GetLocalIP()
-	// config.AppEnv.ServeID = mStr.Join(config.AppEnv.IP, ":", config.AppEnv.Port)
+	config.AppEnv.IP = GetLocalAPI()
 
-	mJson.Println(config.AppEnv)
+	if !mVerify.IsIP(config.AppEnv.IP) {
+		panic("ip 获取失败")
+	}
+
+	config.AppEnv.ServeID = mStr.Join(config.AppEnv.IP, ":", config.AppEnv.Port)
 
 	// ReadeDBAppEnv(config.AppEnv.ServeID)
 
@@ -129,11 +132,37 @@ func AppEnvInit() {
 // 	return ReturnKey
 // }
 
-func GetLocalAPI() {
-	res, err := taskPush.Request(taskPush.RequestOpt{
-		Origin: "",
-		Path:   "",
-	})
+type PublicPingType struct {
+	Code int64 `json:"Code"`
+	Data struct {
+		APIInfo struct {
+			Name    string `json:"Name"`
+			Version string `json:"Version"`
+		} `json:"ApiInfo"`
+		IP        string         `json:"IP"`
+		Method    string         `json:"Method"`
+		Path      string         `json:"Path"`
+		ResParam  map[string]any `json:"ResParam"`
+		UserAgent string         `json:"UserAgent"`
+	} `json:"Data"`
+	Msg string `json:"Msg"`
+}
 
-	fmt.Println(string(res), err)
+func GetLocalAPI() (ip string) {
+	res, err := taskPush.Request(taskPush.RequestOpt{
+		Origin: config.SysEnv.MessageBaseUrl,
+		Path:   "/ping",
+	})
+	if err != nil {
+		LogErr(err)
+		return ""
+	}
+	var resData PublicPingType
+	jsoniter.Unmarshal(res, &resData)
+	if resData.Code < 0 {
+		LogErr(resData.Msg)
+		return ""
+	}
+	ip = resData.Data.IP
+	return
 }

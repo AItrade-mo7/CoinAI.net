@@ -6,11 +6,9 @@ import (
 	"time"
 
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mEncrypt"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/gofiber/fiber/v2"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 func TokenAuth(c *fiber.Ctx) (Message string, err error) {
@@ -59,18 +57,18 @@ func TokenAuth(c *fiber.Ctx) (Message string, err error) {
 		return
 	}
 
-	var dbRes dbType.TokenTable
-	FK := bson.D{{
-		Key:   "UserID",
-		Value: UserID,
-	}}
-	db.Table.FindOne(db.Ctx, FK).Decode(&dbRes)
+	// var dbRes dbType.TokenTable
+	// FK := bson.D{{
+	// 	Key:   "UserID",
+	// 	Value: UserID,
+	// }}
+	// db.Table.FindOne(db.Ctx, FK).Decode(&dbRes)
 
-	if dbRes.Token != Token {
-		db.Close()
-		err = fmt.Errorf("token 验证失败2")
-		return
-	}
+	// if dbRes.Token != Token {
+	// 	db.Close()
+	// 	err = fmt.Errorf("token 验证失败2")
+	// 	return
+	// }
 
 	db.Close()
 

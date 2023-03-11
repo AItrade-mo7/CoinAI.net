@@ -5,7 +5,6 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
@@ -36,19 +35,19 @@ type TestObj struct {
 
 func NewTest(opt TestOpt) *TestObj {
 	obj := TestObj{}
-	now := mTime.GetUnixInt64()
+	// now := mTime.GetUnixInt64()
 
-	if opt.EndTime < dbType.MinTime { // 如果太小，则变成当前
-		opt.EndTime = now
-	}
+	// if opt.EndTime < dbType.MinTime { // 如果太小，则变成当前
+	// 	opt.EndTime = now
+	// }
 
-	if opt.StartTime < dbType.MinTime { // 如果太小，则自动变成过去一个月
-		opt.StartTime = mTime.UnixTimeInt64.Day * 30
-	}
+	// if opt.StartTime < dbType.MinTime { // 如果太小，则自动变成过去一个月
+	// 	opt.StartTime = mTime.UnixTimeInt64.Day * 30
+	// }
 
-	if opt.StartTime < dbType.DBKdataStart {
-		opt.StartTime = dbType.DBKdataStart
-	}
+	// if opt.StartTime < dbType.DBKdataStart {
+	// 	opt.StartTime = dbType.DBKdataStart
+	// }
 
 	if opt.StartTime > opt.EndTime {
 		global.LogErr("backTest.NewTest 开始时间不可以大于结束时间")
