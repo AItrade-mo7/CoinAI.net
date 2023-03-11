@@ -1,10 +1,13 @@
 package global
 
 import (
+	"fmt"
 	"os"
 
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/utils/dbUser"
 	"CoinAI.net/server/utils/taskPush"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mVerify"
 	jsoniter "github.com/json-iterator/go"
@@ -16,14 +19,34 @@ func AppEnvInit() {
 	jsoniter.Unmarshal(byteCont, &config.AppEnv)
 
 	if len(config.AppEnv.Port) < 1 {
-		panic("启动错误，缺少 AppEnv.Port 字段")
+		err := fmt.Errorf("启动错误，缺少 AppEnv.Port 字段: %v", mJson.ToStr(config.AppEnv))
+		LogErr(err)
+		panic(err)
 	}
 
 	if len(config.AppEnv.UserID) < 1 {
-		panic("启动错误，缺少 AppEnv.UserID 字段")
+		err := fmt.Errorf("启动错误，缺少 AppEnv.UserID 字段: %v", mJson.ToStr(config.AppEnv))
+		LogErr(err)
+		panic(err)
 	}
 
 	// 在这里 获取 用户 信息
+	UserDB, err := dbUser.NewUserDB(dbUser.NewUserOpt{
+		UserID: config.AppEnv.UserID,
+	})
+	if err != nil {
+		UserDB.DB.Close()
+		err := fmt.Errorf("启动错误，数据库链接失败: %v", err)
+		LogErr(err)
+		panic(err)
+	}
+	defer UserDB.DB.Close()
+
+	if len(UserDB.UserID) < 1 {
+		err := fmt.Errorf("启动错误，用户未找到: %v", UserDB.UserID)
+		LogErr(err)
+		panic(err)
+	}
 
 	config.AppEnv.IP = GetLocalAPI()
 
