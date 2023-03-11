@@ -1,5 +1,7 @@
 package config
 
+import "CoinAI.net/server/global/dbType"
+
 // 系统通知的邮箱
 var SysEmail = "meichangliang@outlook.com"
 
@@ -19,3 +21,5 @@ type AppEnvType struct {
 }
 
 var AppEnv AppEnvType
+
+var MainUser dbType.UserTable

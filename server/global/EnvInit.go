@@ -8,15 +8,20 @@ import (
 	"CoinAI.net/server/utils/dbUser"
 	"CoinAI.net/server/utils/taskPush"
 	"github.com/EasyGolang/goTools/mJson"
+	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mVerify"
 	jsoniter "github.com/json-iterator/go"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func AppEnvInit() {
 	// 检查并读取配置文件
 	byteCont, _ := os.ReadFile(config.File.AppEnv)
 	jsoniter.Unmarshal(byteCont, &config.AppEnv)
+
+	config.AppEnv.SysVersion = config.AppInfo.Version
 
 	if len(config.AppEnv.Port) < 1 {
 		err := fmt.Errorf("启动错误，缺少 AppEnv.Port 字段: %v", mJson.ToStr(config.AppEnv))
@@ -48,6 +53,8 @@ func AppEnvInit() {
 		panic(err)
 	}
 
+	config.MainUser = UserDB.Data
+
 	config.AppEnv.IP = GetLocalAPI()
 
 	if !mVerify.IsIP(config.AppEnv.IP) {
@@ -57,7 +64,7 @@ func AppEnvInit() {
 
 	config.AppEnv.ServeID = mStr.Join(config.AppEnv.IP, ":", config.AppEnv.Port)
 
-	// ReadeDBAppEnv(config.AppEnv.ServeID)
+	ReadeDBAppEnv(config.AppEnv.ServeID)
 
 	// if len(config.AppEnv.Name) < 1 {
 	// 	config.AppEnv.Name = "我的 CoinAI"
@@ -76,31 +83,31 @@ func AppEnvInit() {
 	// WriteAppEnv()
 }
 
-// func ReadeDBAppEnv(ServeID string) {
-// 	db := mMongo.New(mMongo.Opt{
-// 		UserName: config.SysEnv.MongoUserName,
-// 		Password: config.SysEnv.MongoPassword,
-// 		Address:  config.SysEnv.MongoAddress,
-// 		DBName:   "AItrade",
-// 	}).Connect().Collection("CoinAINet")
-// 	defer db.Close()
+func ReadeDBAppEnv(ServeID string) {
+	db := mMongo.New(mMongo.Opt{
+		UserName: config.SysEnv.MongoUserName,
+		Password: config.SysEnv.MongoPassword,
+		Address:  config.SysEnv.MongoAddress,
+		DBName:   "AItrade",
+	}).Connect().Collection("CoinAINet")
+	defer db.Close()
 
-// 	findOpt := options.FindOne()
-// 	findOpt.SetSort(map[string]int{
-// 		"TimeUnix": 1,
-// 	})
-// 	FK := bson.D{{
-// 		Key:   "ServeID",
-// 		Value: ServeID,
-// 	}}
+	findOpt := options.FindOne()
+	findOpt.SetSort(map[string]int{
+		"TimeUnix": 1,
+	})
+	FK := bson.D{{
+		Key:   "ServeID",
+		Value: ServeID,
+	}}
 
-// 	var AppEnv config.AppEnvType
-// 	db.Table.FindOne(db.Ctx, FK, findOpt).Decode(&AppEnv)
+	var AppEnv config.AppEnvType
+	db.Table.FindOne(db.Ctx, FK, findOpt).Decode(&AppEnv)
 
-// 	if len(AppEnv.ServeID) > 4 && len(AppEnv.UserID) > 4 {
-// 		config.AppEnv = AppEnv
-// 	}
-// }
+	if len(AppEnv.ServeID) > 4 && len(AppEnv.UserID) > 4 {
+		config.AppEnv = AppEnv
+	}
+}
 
 // // 写入 config.AppEnv
 // func WriteAppEnv() {
