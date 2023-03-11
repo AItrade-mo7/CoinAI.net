@@ -28,6 +28,7 @@ func AppEnvInit() {
 	config.AppEnv.IP = GetLocalAPI()
 
 	if !mVerify.IsIP(config.AppEnv.IP) {
+		LogErr("启动错误，缺少 AppEnv.UserID 字段")
 		panic("ip 获取失败")
 	}
 
