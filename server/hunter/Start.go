@@ -10,14 +10,14 @@ import (
 )
 
 func Start() {
-	for ok := range okxInfo.Ticking {
-		global.RunLog.Println(" ===== hunter.Start 执行 ===== ", mTime.UnixFormat(mTime.GetUnixInt64()), ok)
-		Running()
-	}
+	// for ok := range okxInfo.Ticking {
+	// 	// global.RunLog.Println(" ===== hunter.Start 执行 ===== ", mTime.UnixFormat(mTime.GetUnixInt64()), ok)
+	// 	Running()
+	// }
 }
 
 func Running() {
-	global.RunLog.Println(" === hunter.Running === ", okxInfo.KdataInst.InstID)
+	// global.RunLog.Println(" === hunter.Running === ", okxInfo.KdataInst.InstID)
 
 	err := SetTradeInst() // 在这里要先读取持仓, 每次平仓之后才会触发这个
 	if err != nil {
@@ -57,14 +57,14 @@ func FileBaseKdata() {
 			// 	okxInfo.NowKdataList = append(okxInfo.NowKdataList, val)
 			// }
 		}
-		global.RunLog.Println("历史数据回填完毕", len(okxInfo.NowKdataList))
+		// global.RunLog.Println("历史数据回填完毕", len(okxInfo.NowKdataList))
 	} else { // 如果不为空 则检查当前的数组和持仓币种的关系
 		// 在这里执行重启
 		if okxInfo.KdataInst.InstID != okxInfo.NowKdataList[len(okxInfo.NowKdataList)-1].InstID {
 			okxInfo.NowKdataList = []mOKX.TypeKd{} // 清空历史数据
 			Running()                              // 立即重新执行一次 Running
 			warnStr := "切换监听币种为: " + okxInfo.KdataInst.InstID
-			global.RunLog.Println(warnStr)
+			// global.RunLog.Println(warnStr)
 			go SendEmail(warnStr)
 		}
 	}

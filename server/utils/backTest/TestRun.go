@@ -81,7 +81,7 @@ func (_this *TestObj) GetDBKdata() *TestObj {
 		DBName:   "AItrade",
 		Timeout:  Timeout,
 	}).Connect().Collection(_this.TableName)
-	defer global.RunLog.Println("关闭数据库连接", _this.TableName)
+	// defer global.RunLog.Println("关闭数据库连接", _this.TableName)
 	defer db.Close()
 
 	findOpt := options.Find()

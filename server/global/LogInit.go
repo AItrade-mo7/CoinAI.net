@@ -14,9 +14,9 @@ import (
 
 var (
 	Log      *log.Logger // 系统日志
+	Run      *log.Logger // 运行日志
 	WssLog   *log.Logger // Wss 数据
 	KdataLog *log.Logger // Kdata 日志
-	RunLog   *log.Logger // 运行过程
 	TradeLog *log.Logger // 交易API
 )
 
@@ -36,7 +36,7 @@ func LogInit() {
 		Name: "Kdata",
 	})
 
-	RunLog = mLog.NewLog(mLog.NewLogParam{
+	Run = mLog.NewLog(mLog.NewLogParam{
 		Path: config.Dir.Log,
 		Name: "Run",
 	})

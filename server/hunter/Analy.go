@@ -13,7 +13,7 @@ func Analy() {
 	}
 	Last := okxInfo.TradeKdataList[len(okxInfo.TradeKdataList)-1]
 	// Pre := okxInfo.TradeKdataList[len(okxInfo.TradeKdataList)-2]
-	global.RunLog.Println("hunter.Analy 开始分析", Last.TimeStr)
+	// global.RunLog.Println("hunter.Analy 开始分析", Last.TimeStr)
 
 	// CAP_l_p_diff = mCount.Sub(Last.CAP_EMA, Pre.CAP_EMA)
 

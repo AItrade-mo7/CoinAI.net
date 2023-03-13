@@ -37,20 +37,20 @@ func FormatTradeKdata() {
 		okxInfo.TradeKdataList = append(okxInfo.TradeKdataList, TradeKdata)
 	}
 
-	Last := okxInfo.TradeKdataList[len(okxInfo.TradeKdataList)-1]
-	LastPrint := map[string]any{
-		"AllLen":  len(okxInfo.TradeKdataList),
-		"TimeStr": Last.TimeStr,
-		"C":       Last.C,
-		"InstID":  Last.InstID,
-		"EMA_18":  Last.EMA_18,
-		"MA_18":   Last.MA_18,
-		"RSI_18":  Last.RSI_18,
-		"CAP_EMA": Last.CAP_EMA,
-		"CAP_MA":  Last.CAP_MA,
-	}
+	// Last := okxInfo.TradeKdataList[len(okxInfo.TradeKdataList)-1]
+	// LastPrint := map[string]any{
+	// 	"AllLen":  len(okxInfo.TradeKdataList),
+	// 	"TimeStr": Last.TimeStr,
+	// 	"C":       Last.C,
+	// 	"InstID":  Last.InstID,
+	// 	"EMA_18":  Last.EMA_18,
+	// 	"MA_18":   Last.MA_18,
+	// 	"RSI_18":  Last.RSI_18,
+	// 	"CAP_EMA": Last.CAP_EMA,
+	// 	"CAP_MA":  Last.CAP_MA,
+	// }
 	WriteFilePath := config.Dir.JsonData + "/TradeKdataList.json"
-	global.RunLog.Println("数据整理完毕,写入", len(okxInfo.TradeKdataList), WriteFilePath, mJson.Format(LastPrint))
+	// global.RunLog.Println("数据整理完毕,写入", len(okxInfo.TradeKdataList), WriteFilePath, mJson.Format(LastPrint))
 	mFile.Write(WriteFilePath, string(mJson.ToJson(okxInfo.TradeKdataList)))
 }
 

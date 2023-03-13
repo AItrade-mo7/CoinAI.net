@@ -33,15 +33,15 @@ func SetNowKdata() {
 		if Fund {
 			okxInfo.NowKdataList[FundKey] = NowItem
 		} else {
-			global.RunLog.Println("新增")
+			// global.RunLog.Println("新增")
 			okxInfo.NowKdataList = append(okxInfo.NowKdataList, NowItem)
 		}
 	}
 
-	if len(okxInfo.NowKdataList)-okxInfo.MaxLen > 0 {
-		okxInfo.NowKdataList = okxInfo.NowKdataList[len(okxInfo.NowKdataList)-okxInfo.MaxLen:]
-		global.RunLog.Println("长度超出，裁剪", len(okxInfo.NowKdataList))
-	}
+	// if len(okxInfo.NowKdataList)-okxInfo.MaxLen > 0 {
+	// 	okxInfo.NowKdataList = okxInfo.NowKdataList[len(okxInfo.NowKdataList)-okxInfo.MaxLen:]
+	// 	global.RunLog.Println("长度超出，裁剪", len(okxInfo.NowKdataList))
+	// }
 
 	// 数据检查
 	for key, val := range okxInfo.NowKdataList {
@@ -61,7 +61,7 @@ func SetNowKdata() {
 		}
 	}
 
-	Last := okxInfo.NowKdataList[len(okxInfo.NowKdataList)-1]
+	// Last := okxInfo.NowKdataList[len(okxInfo.NowKdataList)-1]
 
-	global.RunLog.Println("更新一次最新数据", Last.TimeStr, Last.C, len(okxInfo.NowKdataList))
+	// global.RunLog.Println("更新一次最新数据", Last.TimeStr, Last.C, len(okxInfo.NowKdataList))
 }

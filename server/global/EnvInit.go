@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/utils/dbUser"
 	"CoinAI.net/server/utils/taskPush"
 	"github.com/EasyGolang/goTools/mFile"
@@ -138,22 +139,6 @@ func WriteAppEnv() {
 	Log.Println("config.AppEnv 已更新至数据库", mJson.Format(config.AppEnv))
 }
 
-type PublicPingType struct {
-	Code int64 `json:"Code"`
-	Data struct {
-		APIInfo struct {
-			Name    string `json:"Name"`
-			Version string `json:"Version"`
-		} `json:"ApiInfo"`
-		IP        string         `json:"IP"`
-		Method    string         `json:"Method"`
-		Path      string         `json:"Path"`
-		ResParam  map[string]any `json:"ResParam"`
-		UserAgent string         `json:"UserAgent"`
-	} `json:"Data"`
-	Msg string `json:"Msg"`
-}
-
 func GetLocalAPI() (ip string) {
 	res, err := taskPush.Request(taskPush.RequestOpt{
 		Origin: config.SysEnv.MessageBaseUrl,
@@ -163,7 +148,23 @@ func GetLocalAPI() (ip string) {
 		LogErr(err)
 		return ""
 	}
-	var resData PublicPingType
+
+	var resData struct {
+		Code int64 `json:"Code"`
+		Data struct {
+			APIInfo struct {
+				Name    string `json:"Name"`
+				Version string `json:"Version"`
+			} `json:"ApiInfo"`
+			IP        string         `json:"IP"`
+			Method    string         `json:"Method"`
+			Path      string         `json:"Path"`
+			ResParam  map[string]any `json:"ResParam"`
+			UserAgent string         `json:"UserAgent"`
+		} `json:"Data"`
+		Msg string `json:"Msg"`
+	}
+
 	jsoniter.Unmarshal(res, &resData)
 	if resData.Code < 0 {
 		LogErr(resData.Msg)
@@ -191,11 +192,16 @@ func GetMainUser() {
 		LogErr(err)
 		panic(err)
 	}
+	// 清空通知邮箱
+	config.NoticeEmail = []string{}
+	// 清空 MainUser
+	config.MainUser = dbType.UserTable{}
+
 	// 回填通知邮箱
 	NoticeEmail := []string{}
-	NoticeEmail = append(NoticeEmail, config.SysEmail)
 	NoticeEmail = append(NoticeEmail, UserDB.Data.Email)
 	config.NoticeEmail = NoticeEmail
+
 	// 回填用户信息
 	config.MainUser = UserDB.Data
 }
