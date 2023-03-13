@@ -6,15 +6,14 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/middle"
 	"CoinAI.net/server/router/api"
 	"CoinAI.net/server/router/api/sys"
-	"CoinAI.net/server/router/middle"
 	"CoinAI.net/server/router/wss"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/favicon"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
@@ -33,19 +32,20 @@ func Start() {
 		ServerHeader: "CoinAI.net",
 	})
 
-	// 跨域
-	app.Use(cors.New())
-	// 限流
-	app.Use(limiter.New(limiter.Config{
-		Max:        200,
-		Expiration: 1 * time.Second,
-	}))
-	// 日志中间件
-	app.Use(logger.New(logger.Config{
-		Format:     "[${time}] [${ip}:${port}] ${status} - ${method} ${latency} ${path} \n",
-		TimeFormat: "2006-01-02 - 15:04:05",
-		Output:     logFile,
-	}), middle.Public, compress.New(), favicon.New())
+	app.Use(
+		limiter.New(limiter.Config{
+			Max:        100,
+			Expiration: 1 * time.Second,
+		}), // 限流
+		logger.New(logger.Config{
+			Format:     "[${time}] [${ip}:${port}] ${status} - ${method} ${latency} ${path} \n",
+			TimeFormat: "2006-01-02 - 15:04:05",
+			Output:     logFile,
+		}), // 日志
+		cors.New(),     // 允许跨域
+		compress.New(), // 压缩
+		middle.Public,  // 授权验证
+	)
 
 	// CoinAI
 	r_api := app.Group("/CoinAI")
