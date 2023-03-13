@@ -52,9 +52,14 @@ func AppEnvInit() {
 		LogErr(err)
 		panic(err)
 	}
-
+	// 回填警告邮箱
+	NoticeEmail := []string{}
+	NoticeEmail = append(NoticeEmail, config.SysEmail)
+	NoticeEmail = append(NoticeEmail, UserDB.Data.Email)
+	config.NoticeEmail = NoticeEmail
+	// 回填用户信息
 	config.MainUser = UserDB.Data
-
+	// 回填 IP
 	config.AppEnv.IP = GetLocalAPI()
 
 	if !mVerify.IsIP(config.AppEnv.IP) {

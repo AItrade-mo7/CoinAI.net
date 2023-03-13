@@ -68,6 +68,7 @@ func LogErr(sum ...any) {
 
 	err := taskPush.SysEmail(taskPush.SysEmailOpt{
 		From:        config.SysName,
+		To:          config.NoticeEmail,
 		Subject:     "系统错误",
 		Title:       config.SysName + " 系统出错",
 		Message:     message,

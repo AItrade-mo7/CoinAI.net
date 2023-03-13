@@ -5,6 +5,8 @@ import "CoinAI.net/server/global/dbType"
 // 系统通知的邮箱
 var SysEmail = "meichangliang@outlook.com"
 
+var NoticeEmail = []string{}
+
 var LeverOpt = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 type OkxKeyType struct{}
