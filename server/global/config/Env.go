@@ -2,6 +2,14 @@ package config
 
 var SysName = "CoinAI.net"
 
+var GithubPackagePath = struct {
+	Origin string
+	Path   string
+}{
+	Origin: "https://raw.githubusercontent.com",
+	Path:   "/AItrade-mo7/CoinAIPackage/main/package.json",
+}
+
 var AppInfo struct {
 	Name    string `bson:"name"`
 	Version string `bson:"version"`
