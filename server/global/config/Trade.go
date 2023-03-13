@@ -18,7 +18,8 @@ type AppEnvType struct {
 	ServeID      string       `bson:"ServeID"`      // ServeID ，  ip+端口
 	MaxApiKeyNum int          `bson:"MaxApiKeyNum"` // 最大 Api 数量限制
 	IsPublic     bool         `bson:"IsPublic"`     // 是否公开
-	ApiKeyList   []OkxKeyType `bson:"ApiKeyList"`   // ApiKey 列表
+	Type         string       `bson:"Type"`
+	ApiKeyList   []OkxKeyType `bson:"ApiKeyList"` // ApiKey 列表
 }
 
 var AppEnv AppEnvType

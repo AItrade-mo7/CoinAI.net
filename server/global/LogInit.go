@@ -66,11 +66,17 @@ func LogErr(sum ...any) {
 	}
 	content := mJson.Format(sum)
 
+	TitleName := config.SysName
+
+	if len(config.AppEnv.SysName) > 0 {
+		TitleName = config.AppEnv.SysName
+	}
+
 	err := taskPush.SysEmail(taskPush.SysEmailOpt{
 		From:        config.SysName,
 		To:          config.NoticeEmail,
 		Subject:     "系统错误",
-		Title:       config.SysName + " 系统出错",
+		Title:       TitleName + " 系统出错",
 		Message:     message,
 		Content:     content,
 		Description: "出现系统错误",

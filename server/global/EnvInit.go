@@ -59,6 +59,7 @@ func AppEnvInit() {
 	}
 	config.AppEnv.SysVersion = config.AppInfo.Version
 	config.AppEnv.IsPublic = false
+	config.AppEnv.Type = config.SysName
 
 	WriteAppEnv()
 }
