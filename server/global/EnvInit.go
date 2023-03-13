@@ -83,7 +83,7 @@ func ReadeDBAppEnv(ServeID string) {
 		Value: ServeID,
 	}}
 
-	var AppEnv config.AppEnvType
+	var AppEnv dbType.AppEnvType
 	db.Table.FindOne(db.Ctx, FK, findOpt).Decode(&AppEnv)
 
 	if len(AppEnv.ServeID) > 4 && len(AppEnv.UserID) > 4 {
