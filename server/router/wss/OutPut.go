@@ -1,7 +1,6 @@
 package wss
 
 import (
-	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mTime"
 )
@@ -36,27 +35,27 @@ func GetOutPut() (resData OutPut) {
 	// 系统运行信息
 	// resData.Name = config.AppEnv.Name
 	// resData.Version = config.AppEnv.Version
-	resData.Port = config.AppEnv.Port
-	resData.IP = config.AppEnv.IP
-	resData.ServeID = config.AppEnv.ServeID
-	resData.UserID = config.AppEnv.UserID
+	// resData.Port = config.AppEnv.Port
+	// resData.IP = config.AppEnv.IP
+	// resData.ServeID = config.AppEnv.ServeID
+	// resData.UserID = config.AppEnv.UserID
 	// 系统时间
 	resData.SysTime = mTime.GetUnixInt64()
 	resData.DataSource = "CoinAI.net"
 	// 监听币种信息
-	resData.TradeKdataLast = okxInfo.TradeKdataList[len(okxInfo.TradeKdataList)-1]
+	// resData.TradeKdataLast = okxInfo.TradeKdataList[len(okxInfo.TradeKdataList)-1]
 
 	// 杠杆
 	// resData.TradeLever = config.AppEnv.TradeLever
 
 	// Ticker 信息
-	resData.NowTicker.Unit = okxInfo.NowTicker.Unit
-	resData.NowTicker.TimeUnix = okxInfo.NowTicker.TimeUnix
-	resData.NowTicker.TimeStr = okxInfo.NowTicker.TimeStr
+	// resData.NowTicker.Unit = okxInfo.NowTicker.Unit
+	// resData.NowTicker.TimeUnix = okxInfo.NowTicker.TimeUnix
+	// resData.NowTicker.TimeStr = okxInfo.NowTicker.TimeStr
 
 	// ApiKey 信息
-	resData.MaxApiKeyNum = config.AppEnv.MaxApiKeyNum
-	resData.ApiKeyNum = len(config.AppEnv.ApiKeyList)
+	// resData.MaxApiKeyNum = config.AppEnv.MaxApiKeyNum
+	// resData.ApiKeyNum = len(config.AppEnv.ApiKeyList)
 
 	return
 }
