@@ -11,7 +11,7 @@ type OkxKeyType struct {
 	ApiKey     string `bson:"ApiKey"`
 	SecretKey  string `bson:"SecretKey"`
 	Passphrase string `bson:"Passphrase"`
-	UserID     string `bson:"UserID"` // 用户名字 必填项  ， 禁止野生主机的存在
+	UserID     string `bson:"UserID"` // 用户 ID 必填项 ，禁止野生账户的存在
 }
 
 type AppEnvType struct {
