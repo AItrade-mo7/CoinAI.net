@@ -1,16 +1,7 @@
 package ready
 
-import (
-	"CoinAI.net/server/global/config"
-	"github.com/EasyGolang/goTools/mJson"
-)
-
 func Start() {
 	StartEmail()
-
-	mJson.Println(config.AppEnv)
-	mJson.Println(config.MainUser)
-	mJson.Println(config.NoticeEmail)
 
 	// GetAnalyData()
 	// go mClock.New(mClock.OptType{

@@ -26,7 +26,7 @@ func StartEmail() {
 	)
 
 	err := taskPush.SysEmail(taskPush.SysEmailOpt{
-		From:        config.AppEnv.SysName,
+		From:        config.SysName,
 		To:          config.NoticeEmail,
 		Subject:     "系统启动",
 		Title:       config.SysName + " 系统启动",
