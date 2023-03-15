@@ -8,22 +8,39 @@ import (
 )
 
 func StartEmail() {
-	Content := mStr.Join(
-		"服务已启动: ", config.AppEnv.ServeID,
-		`<br /> <a href="https://trade.mo7.cc/CoinServe/CoinAI?id=`,
-		config.AppEnv.ServeID,
-		`"> https://trade.mo7.cc/CoinServe/CoinAI?id=`,
-		config.AppEnv.ServeID,
-		`</a> <br />`,
-		"用户昵称: ",
-		config.MainUser.NickName,
-		"<br />",
-		"服务名称: ",
-		config.AppEnv.SysName,
-		"服务版本: ",
-		config.AppEnv.SysVersion,
-		"<br />",
-	)
+	layout := `
+<div>
+	<span class="label">服务名称:</span>
+	<span class="val">${SysName}</span>
+</div>
+<div>
+	<span class="label">服务地址:</span>
+	<a class="val" href="http://${ServeID}" target="_blank">
+		${ServeID}
+	</a>
+</div>
+<div>
+	<span class="label">管理界面:</span>
+	<a class="val" href="https://trade.mo7.cc/CoinServe/CoinAI?id=${ServeID}" target="_blank">
+		https://trade.mo7.cc/CoinServe/CoinAI?id=${ServeID}
+	</a>
+</div>
+<div>
+	<span class="label">服务版本:</span>
+	<span class="val">${SysVersion}</span>
+</div>
+<div>
+	<span class="label">所属用户:</span>
+	<span class="val">${NickName}</span>
+</div>
+`
+
+	Content := mStr.Temp(layout, map[string]string{
+		"SysName":    config.AppEnv.SysName,
+		"ServeID":    config.AppEnv.ServeID,
+		"SysVersion": config.AppEnv.SysVersion,
+		"NickName":   config.MainUser.NickName,
+	})
 
 	err := taskPush.SysEmail(taskPush.SysEmailOpt{
 		From:        config.SysName,
