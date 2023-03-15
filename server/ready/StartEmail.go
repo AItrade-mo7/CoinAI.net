@@ -21,8 +21,8 @@ func StartEmail() {
 </div>
 <div>
 	<span class="label">管理界面:</span>
-	<a class="val" href="https://trade.mo7.cc/CoinServe/CoinAI?id=${ServeID}" target="_blank">
-		https://trade.mo7.cc/CoinServe/CoinAI?id=${ServeID}
+	<a class="val" href="https://trade.mo7.cc/SatelliteServe/CoinAI?id=${ServeID}" target="_blank">
+		https://trade.mo7.cc/SatelliteServe/CoinAI?id=${ServeID}
 	</a>
 </div>
 <div>
