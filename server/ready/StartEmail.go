@@ -46,8 +46,7 @@ func StartEmail() {
 		From:        config.SysName,
 		To:          config.NoticeEmail,
 		Subject:     "系统启动",
-		Title:       config.SysName + " 系统启动",
-		Message:     "系统启动",
+		Title:       config.SysName + " 服务启动",
 		Content:     Content,
 		Description: "系统启动邮件",
 	})
