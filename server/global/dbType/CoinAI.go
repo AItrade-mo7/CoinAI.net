@@ -22,7 +22,6 @@ type AppEnvType struct {
 	IP           string       `bson:"IP"`           // 系统运行的 IP, 为自动获取回填
 	ServeID      string       `bson:"ServeID"`      // ServeID ，  ip+端口
 	MaxApiKeyNum int          `bson:"MaxApiKeyNum"` // 最大 Api 数量限制
-	IsPublic     bool         `bson:"IsPublic"`     // 是否公开
 	Type         string       `bson:"Type"`
 	ApiKeyList   []OkxKeyType `bson:"ApiKeyList"` // ApiKey 列表
 }

@@ -59,7 +59,6 @@ func AppEnvInit() {
 		config.AppEnv.MaxApiKeyNum = 32
 	}
 	config.AppEnv.SysVersion = config.AppInfo.Version
-	config.AppEnv.IsPublic = false
 	config.AppEnv.Type = config.SysName
 
 	WriteAppEnv()
