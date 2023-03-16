@@ -17,7 +17,7 @@ var Dir struct {
 
 type FileType struct {
 	AppEnv   string // ./app_env.json
-	ReBoot   string // ./ReBoot.sh
+	Reboot   string // ./Reboot.sh
 	Shutdown string // ./Shutdown.sh
 }
 
@@ -46,10 +46,10 @@ func DirInit() {
 		"app_env.json",
 	)
 
-	File.ReBoot = mStr.Join(
+	File.Reboot = mStr.Join(
 		Dir.App,
 		mStr.ToStr(os.PathSeparator),
-		"ReBoot.sh",
+		"Reboot.sh",
 	)
 
 	File.Shutdown = mStr.Join(
@@ -82,8 +82,8 @@ func DirInit() {
 		panic(err)
 	}
 
-	if !mPath.Exists(File.ReBoot) {
-		err := fmt.Errorf("缺少文件 %+v", File.ReBoot)
+	if !mPath.Exists(File.Reboot) {
+		err := fmt.Errorf("缺少文件 %+v", File.Reboot)
 		panic(err)
 	}
 }
