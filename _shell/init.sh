@@ -25,7 +25,7 @@ OutPutPath="${NowPath}/dist"
 DeployPath="git@github.com:AItrade-mo7/CoinAIPackage.git"
 
 # 远程仓库的本地目录
-DeployLocalPath="${NowPath}/blog.mo7.cc"
+DeployLocalPath="${NowPath}/CoinAIPackage"
 
 echo "
 ===== 初始化变量 =====
