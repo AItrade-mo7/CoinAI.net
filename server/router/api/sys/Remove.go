@@ -61,5 +61,6 @@ func Remove(c *fiber.Ctx) error {
 
 	go global.SysRemove()
 
+	taskPush.DelEmailCode(UserDB.Data.Email)
 	return c.JSON(result.Succeed.WithMsg("指令已发送"))
 }
