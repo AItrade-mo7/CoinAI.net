@@ -123,6 +123,8 @@ func WriteAppEnv() {
 		Value: config.AppEnv.ServeID,
 	}}
 	UK := bson.D{}
+	config.AppEnv.UpdateTime = mTime.GetUnixInt64()
+
 	mStruct.Traverse(config.AppEnv, func(key string, val any) {
 		UK = append(UK, bson.E{
 			Key: "$set",
@@ -134,15 +136,7 @@ func WriteAppEnv() {
 			},
 		})
 	})
-	UK = append(UK, bson.E{
-		Key: "$set",
-		Value: bson.D{
-			{
-				Key:   "UpdateTime",
-				Value: mTime.GetUnixInt64(),
-			},
-		},
-	})
+
 	upOpt := options.Update()
 	upOpt.SetUpsert(true)
 	_, err := db.Table.UpdateOne(db.Ctx, FK, UK, upOpt)
