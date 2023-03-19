@@ -7,7 +7,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.42.0
 	github.com/gofiber/websocket/v2 v2.1.4
 	github.com/json-iterator/go v1.1.12
-	go.mongodb.org/mongo-driver v1.11.2
+	go.mongodb.org/mongo-driver v1.11.3
 )
 
 require (
