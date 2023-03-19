@@ -13,6 +13,7 @@ import (
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mStruct"
+	"github.com/EasyGolang/goTools/mTime"
 	"github.com/EasyGolang/goTools/mVerify"
 	jsoniter "github.com/json-iterator/go"
 	"go.mongodb.org/mongo-driver/bson"
@@ -48,10 +49,14 @@ func AppEnvInit() {
 	}
 	config.AppEnv.ServeID = mStr.Join(config.AppEnv.IP, ":", config.AppEnv.Port)
 
-	ReadeDBAppEnv(config.AppEnv.ServeID)
+	ReadeDBAppEnv()
 
 	if len(config.AppEnv.SysName) < 1 {
 		config.AppEnv.SysName = mStr.Join(config.MainUser.NickName, "的 CoinAI")
+	}
+
+	if config.AppEnv.CreateTime < mTime.TimeParse(mTime.Lay_Y, "2022") { // 表示没有创建时间
+		config.AppEnv.CreateTime = mTime.GetUnixInt64()
 	}
 
 	// 设置  默认 最大 ApiKey 数量
@@ -64,7 +69,7 @@ func AppEnvInit() {
 	WriteAppEnv()
 }
 
-func ReadeDBAppEnv(ServeID string) {
+func ReadeDBAppEnv() {
 	db := mMongo.New(mMongo.Opt{
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
@@ -79,7 +84,7 @@ func ReadeDBAppEnv(ServeID string) {
 	})
 	FK := bson.D{{
 		Key:   "ServeID",
-		Value: ServeID,
+		Value: config.AppEnv.ServeID,
 	}}
 
 	var AppEnv dbType.AppEnvType
@@ -128,6 +133,15 @@ func WriteAppEnv() {
 				},
 			},
 		})
+	})
+	UK = append(UK, bson.E{
+		Key: "$set",
+		Value: bson.D{
+			{
+				Key:   "UpdateTime",
+				Value: mTime.GetUnixInt64(),
+			},
+		},
 	})
 	upOpt := options.Update()
 	upOpt.SetUpsert(true)

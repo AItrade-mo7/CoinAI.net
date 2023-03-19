@@ -23,5 +23,7 @@ type AppEnvType struct {
 	ServeID      string       `bson:"ServeID"`      // ServeID ，  ip+端口
 	MaxApiKeyNum int          `bson:"MaxApiKeyNum"` // 最大 Api 数量限制
 	Type         string       `bson:"Type"`
+	CreateTime   int64        `bson:"CreateTime"` // 创建时间
+	UpdateTime   int64        `bson:"UpdateTime"` // 更新时间
 	ApiKeyList   []OkxKeyType `bson:"ApiKeyList"` // ApiKey 列表
 }
