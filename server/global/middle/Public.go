@@ -36,7 +36,7 @@ func Public(c *fiber.Ctx) error {
 
 	isCrawler := CrawlerIS(c)
 	if isCrawler {
-		return c.JSON(result.ErrLogin.WithData("设备异常"))
+		return c.JSON(result.ErrLogin.With("访问失败", "设备异常"))
 	}
 
 	return c.Next()
