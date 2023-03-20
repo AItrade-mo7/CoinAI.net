@@ -52,7 +52,7 @@ func AppEnvInit() {
 	ReadeDBAppEnv()
 
 	if len(config.AppEnv.SysName) < 1 {
-		config.AppEnv.SysName = mStr.Join(config.MainUser.NickName, "的 CoinAI")
+		config.AppEnv.SysName = mStr.Join(config.MainUser.NickName, "的CoinAI")
 	}
 
 	if config.AppEnv.CreateTime < mTime.TimeParse(mTime.Lay_Y, "2022") { // 表示没有创建时间
