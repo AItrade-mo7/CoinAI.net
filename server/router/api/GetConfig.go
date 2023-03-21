@@ -39,13 +39,11 @@ func GetFuzzyApiKey() []dbType.OkxKeyType {
 	NewKeyList := []dbType.OkxKeyType{}
 
 	for _, val := range ApiKeyList {
-		NewKeyList = append(NewKeyList, dbType.OkxKeyType{
-			Name:       val.Name,
-			ApiKey:     mStr.GetKeyFuzzy(val.ApiKey, 3),
-			SecretKey:  mStr.GetKeyFuzzy(val.SecretKey, 3),
-			Passphrase: mStr.GetKeyFuzzy(val.Passphrase, 1),
-			UserID:     val.UserID,
-		})
+		okxKey := val
+		okxKey.ApiKey = mStr.GetKeyFuzzy(val.ApiKey, 3, 1)
+		okxKey.SecretKey = mStr.GetKeyFuzzy(val.SecretKey, 3, 1)
+		okxKey.Passphrase = mStr.GetKeyFuzzy(val.Passphrase, 1, 1)
+		NewKeyList = append(NewKeyList, okxKey)
 	}
 
 	return NewKeyList

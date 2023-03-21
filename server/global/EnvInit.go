@@ -103,7 +103,11 @@ func ReadeDBAppEnv() {
 
 // 写入 config.AppEnv
 func WriteAppEnv() {
-	mFile.Write(config.File.AppEnv, mJson.JsonFormat(mJson.ToJson(config.AppEnv)))
+	mFile.Write(config.File.AppEnv, mJson.JsonFormat(mJson.ToJson(map[string]string{
+		"UserID": config.AppEnv.UserID,
+		"Port":   config.AppEnv.Port,
+	})))
+	// mFile.Write(config.File.AppEnv, mJson.JsonFormat(mJson.ToJson(config.AppEnv)))
 
 	db := mMongo.New(mMongo.Opt{
 		UserName: config.SysEnv.MongoUserName,
