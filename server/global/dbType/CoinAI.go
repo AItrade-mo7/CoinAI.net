@@ -11,7 +11,8 @@ type OkxKeyType struct {
 	ApiKey     string `bson:"ApiKey"` // 当做ID用
 	SecretKey  string `bson:"SecretKey"`
 	Passphrase string `bson:"Passphrase"`
-	UserID     string `bson:"UserID"` // 用户 ID 必填项 ，禁止野生账户的存在
+	UserID     string `bson:"UserID"`  // 用户 ID 必填项 ，禁止野生账户的存在
+	IsTrade    bool   `bson:"IsTrade"` // 是否启用
 }
 
 type AppEnvType struct {

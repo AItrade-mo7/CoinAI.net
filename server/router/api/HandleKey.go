@@ -7,9 +7,9 @@ import (
 )
 
 type HandleKeyParam struct {
-	Index    int
+	Name     string
 	Password string
-	Type     string // del //  embed
+	Type     string // close enable  del
 }
 
 func HandleKey(c *fiber.Ctx) error {
