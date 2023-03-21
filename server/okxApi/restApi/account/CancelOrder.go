@@ -38,7 +38,7 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 		},
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.CancelOrder1 %+v %+v", err, opt.OKXKey.Name)
+		resErr = fmt.Errorf("account.CancelOrder1 %+v %+v", err, opt.OKXKey)
 		global.LogErr(resErr)
 		return
 	}
@@ -46,7 +46,7 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.CancelOrder2 %s %+v",res, opt.OKXKey.Name)
+		resErr = fmt.Errorf("account.CancelOrder2 %s %+v", res, opt.OKXKey)
 		global.LogErr(resErr)
 		return
 	}

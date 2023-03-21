@@ -48,7 +48,7 @@ func GetOKXBalance(OKXKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr err
 		OKXKey: OKXKey,
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.GetOKXBalance1 %s %+v", err, OKXKey.Name)
+		resErr = fmt.Errorf("account.GetOKXBalance1 %s %+v", err, OKXKey)
 		global.LogErr(resErr)
 		return
 	}
@@ -57,7 +57,7 @@ func GetOKXBalance(OKXKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr err
 	jsoniter.Unmarshal(res, &resObj)
 
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.GetOKXBalance2 %s %+v", res, OKXKey.Name)
+		resErr = fmt.Errorf("account.GetOKXBalance2 %s %+v", res, OKXKey)
 		global.LogErr(resErr)
 		return
 	}

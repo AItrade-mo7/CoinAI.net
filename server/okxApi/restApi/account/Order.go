@@ -70,7 +70,7 @@ func Order(opt OrderParam) (resErr error) {
 	if mCount.Le(opt.Sz, opt.TradeInst.MaxMktSz) > 0 {
 		opt.Sz = mCount.Mul(opt.TradeInst.MaxMktSz, "0.8")
 
-		resErr = fmt.Errorf("交易数量超出限制 %+v %+v", opt.Sz, opt.OKXKey.Name)
+		resErr = fmt.Errorf("交易数量超出限制 %+v %+v", opt.Sz, opt.OKXKey)
 		global.LogErr(resErr)
 	}
 
@@ -91,7 +91,7 @@ func Order(opt OrderParam) (resErr error) {
 		},
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.Order1 %+v %+v", err, opt.OKXKey.Name)
+		resErr = fmt.Errorf("account.Order1 %+v %+v", err, opt.OKXKey)
 		global.LogErr(resErr)
 		return
 	}
@@ -99,7 +99,7 @@ func Order(opt OrderParam) (resErr error) {
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.Order2 %+v %+v", res, opt.OKXKey.Name)
+		resErr = fmt.Errorf("account.Order2 %+v %+v", res, opt.OKXKey)
 		global.LogErr(resErr)
 		return
 	}
