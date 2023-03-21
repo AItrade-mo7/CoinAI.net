@@ -1,6 +1,7 @@
 package api
 
 import (
+	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/global/middle"
@@ -118,6 +119,8 @@ func SetKey(c *fiber.Ctx) error {
 	}
 
 	config.AppEnv.ApiKeyList = append(config.AppEnv.ApiKeyList, ApiKey)
+
+	global.WriteAppEnv()
 
 	return c.JSON(result.Succeed.WithData("成功添加"))
 }
