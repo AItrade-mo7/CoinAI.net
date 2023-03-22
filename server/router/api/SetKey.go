@@ -10,7 +10,6 @@ import (
 	"CoinAI.net/server/utils/dbUser"
 	"github.com/EasyGolang/goTools/mFiber"
 	"github.com/EasyGolang/goTools/mMongo"
-	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mVerify"
 	"github.com/gofiber/fiber/v2"
@@ -76,13 +75,10 @@ func SetKey(c *fiber.Ctx) error {
 	ApiKey.Passphrase = json.Passphrase
 	ApiKey.UserID = UserID
 	ApiKey.Status = "disable"
+	ApiKey.TradeLever = config.LeverOpt[0]
 
 	// 验证 Key 可用性
-	_, err = account.GetOKXBalance(mOKX.TypeOkxKey{
-		ApiKey:     ApiKey.ApiKey,
-		SecretKey:  ApiKey.SecretKey,
-		Passphrase: ApiKey.Passphrase,
-	})
+	_, err = account.GetOKXBalance(ApiKey)
 	if err != nil {
 		return c.JSON(result.ErrLogin.WithMsg("Api Key 验证失败!"))
 	}

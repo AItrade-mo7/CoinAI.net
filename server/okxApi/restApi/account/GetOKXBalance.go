@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
@@ -32,7 +33,7 @@ type AccountBalance struct {
 }
 
 // 查看账户余额
-func GetOKXBalance(OKXKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr error) {
+func GetOKXBalance(OKXKey dbType.OkxKeyType) (resData []AccountBalance, resErr error) {
 	resData = []AccountBalance{}
 	resErr = nil
 
@@ -45,7 +46,11 @@ func GetOKXBalance(OKXKey mOKX.TypeOkxKey) (resData []AccountBalance, resErr err
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/balance",
 		Method: "GET",
-		OKXKey: OKXKey,
+		OKXKey: mOKX.TypeOkxKey{
+			ApiKey:     OKXKey.ApiKey,
+			SecretKey:  OKXKey.SecretKey,
+			Passphrase: OKXKey.Passphrase,
+		},
 	})
 	if err != nil {
 		resErr = fmt.Errorf("account.GetOKXBalance1 %s %+v", err, OKXKey)

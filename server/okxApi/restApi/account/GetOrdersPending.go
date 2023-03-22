@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -12,7 +13,7 @@ import (
 )
 
 type GetOrdersPendingParam struct {
-	OKXKey mOKX.TypeOkxKey
+	OKXKey dbType.OkxKeyType
 }
 
 type PendingOrderType struct {
@@ -68,7 +69,11 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resData []PendingOrderType, re
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/trade/orders-pending",
 		Method: "GET",
-		OKXKey: opt.OKXKey,
+		OKXKey: mOKX.TypeOkxKey{
+			ApiKey:     opt.OKXKey.ApiKey,
+			SecretKey:  opt.OKXKey.SecretKey,
+			Passphrase: opt.OKXKey.Passphrase,
+		},
 	})
 
 	mFile.Write(config.Dir.JsonData+"/OrdersPending.json", string(res))

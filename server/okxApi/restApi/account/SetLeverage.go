@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
@@ -12,8 +13,7 @@ import (
 
 type SetLeverageParam struct {
 	InstID string
-	OKXKey mOKX.TypeOkxKey
-	Lever  int
+	OKXKey dbType.OkxKeyType
 }
 
 // 设置杠杆倍数
@@ -25,8 +25,8 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 		global.LogErr(resErr)
 		return
 	}
-	if opt.Lever < 1 {
-		resErr = fmt.Errorf("account.SetLeverage opt.Lever 不能为0 %+v", opt.Lever)
+	if opt.OKXKey.TradeLever < 1 {
+		resErr = fmt.Errorf("account.SetLeverage opt.Lever 不能为0 %+v", opt.OKXKey.TradeLever)
 		global.LogErr(resErr)
 		return
 	}
@@ -45,10 +45,14 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/set-leverage",
 		Method: "POST",
-		OKXKey: opt.OKXKey,
+		OKXKey: mOKX.TypeOkxKey{
+			ApiKey:     opt.OKXKey.ApiKey,
+			SecretKey:  opt.OKXKey.SecretKey,
+			Passphrase: opt.OKXKey.Passphrase,
+		},
 		Data: map[string]any{
 			"instId":  opt.InstID,
-			"lever":   mStr.ToStr(opt.Lever),
+			"lever":   mStr.ToStr(opt.OKXKey.TradeLever),
 			"mgnMode": "cross",
 		},
 	})

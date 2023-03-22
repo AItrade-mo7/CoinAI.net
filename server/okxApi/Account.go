@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
@@ -11,13 +13,12 @@ import (
 )
 
 type AccountParam struct {
-	OkxKey mOKX.TypeOkxKey
+	OkxKey dbType.OkxKeyType
 }
 
 type AccountObj struct {
-	OkxKey       mOKX.TypeOkxKey
+	OkxKey       dbType.OkxKeyType
 	TradeInst    mOKX.TypeInst // 交易币种信息
-	TradeLever   int           // 杠杆倍数
 	Balance      []account.AccountBalance
 	Positions    []account.PositionsData
 	MaxSize      account.MaxSizeType
@@ -29,31 +30,24 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 	obj := AccountObj{}
 	resErr = nil
 
-	// if !opt.OkxKey.IsTrade {
-	// 	resErr = fmt.Errorf("okxApi.NewAccount 当前 Key 已被禁用")
-	// 	return
-	// }
+	if opt.OkxKey.Status == "disable" {
+		resErr = fmt.Errorf("okxApi.NewAccount 当前 Key 已被禁用")
+		return
+	}
 	if len(opt.OkxKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("okxApi.NewAccount ApiKey 不能为空 ")
 		return
 	}
 
-	if len(okxInfo.TradeInst.InstID) < 3 {
-		resErr = fmt.Errorf("okxApi.NewAccount okxInfo.TradeInst.SWAP.InstID 不能为空 %+v", okxInfo.TradeInst.InstID)
-		return
+	if opt.OkxKey.TradeLever < config.LeverOpt[0] {
+		opt.OkxKey.TradeLever = config.LeverOpt[0]
 	}
 
-	// if (config.AppEnv.TradeLever) < 1 {
-	// 	resErr = fmt.Errorf("okxApi.NewAccount okxInfo.TradeLever 不能为空 %+v", config.AppEnv.TradeLever)
-	// 	return
-	// }
-
-	// if config.AppEnv.IsSPOT {
-	// 	obj.TradeInst = okxInfo.TradeInst
-	// }
+	if opt.OkxKey.TradeLever > config.LeverOpt[len(config.LeverOpt)-1] {
+		opt.OkxKey.TradeLever = config.LeverOpt[len(config.LeverOpt)-1]
+	}
 
 	obj.OkxKey = opt.OkxKey
-	// obj.TradeLever = config.AppEnv.TradeLever
 
 	resObj = &obj
 
@@ -110,7 +104,6 @@ func (_this *AccountObj) SetLeverage() (resErr error) {
 	resErr = account.SetLeverage(account.SetLeverageParam{
 		InstID: _this.TradeInst.InstID,
 		OKXKey: _this.OkxKey,
-		Lever:  _this.TradeLever,
 	})
 	return
 }

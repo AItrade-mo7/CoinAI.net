@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -33,7 +34,7 @@ type PositionsData struct {
 }
 
 // 查看持仓信息
-func GetOKXPositions(OKXKey mOKX.TypeOkxKey) (resData []PositionsData, resErr error) {
+func GetOKXPositions(OKXKey dbType.OkxKeyType) (resData []PositionsData, resErr error) {
 	resData = []PositionsData{}
 	resErr = nil
 
@@ -46,7 +47,11 @@ func GetOKXPositions(OKXKey mOKX.TypeOkxKey) (resData []PositionsData, resErr er
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/positions",
 		Method: "GET",
-		OKXKey: OKXKey,
+		OKXKey: mOKX.TypeOkxKey{
+			ApiKey:     OKXKey.ApiKey,
+			SecretKey:  OKXKey.SecretKey,
+			Passphrase: OKXKey.Passphrase,
+		},
 	})
 	if err != nil {
 		resErr = fmt.Errorf("account.GetOKXPositions1 %+v %+v", err, OKXKey)

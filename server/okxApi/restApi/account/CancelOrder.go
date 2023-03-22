@@ -4,12 +4,13 @@ import (
 	"fmt"
 
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mOKX"
 	jsoniter "github.com/json-iterator/go"
 )
 
 type CancelOrderParam struct {
-	OKXKey mOKX.TypeOkxKey
+	OKXKey dbType.OkxKeyType
 	Order  PendingOrderType
 }
 
@@ -31,7 +32,11 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/trade/cancel-order",
 		Method: "POST",
-		OKXKey: opt.OKXKey,
+		OKXKey: mOKX.TypeOkxKey{
+			ApiKey:     opt.OKXKey.ApiKey,
+			SecretKey:  opt.OKXKey.SecretKey,
+			Passphrase: opt.OKXKey.Passphrase,
+		},
 		Data: map[string]any{
 			"instId": opt.Order.InstID,
 			"ordId":  opt.Order.OrdID,

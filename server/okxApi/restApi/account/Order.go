@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mOKX"
 	jsoniter "github.com/json-iterator/go"
@@ -12,7 +13,7 @@ import (
 
 type OrderParam struct {
 	TradeInst mOKX.TypeInst // 交易币种信息
-	OKXKey    mOKX.TypeOkxKey
+	OKXKey    dbType.OkxKeyType
 	OrdId     string
 	Side      string // buy  sell
 	Sz        string
@@ -79,7 +80,11 @@ func Order(opt OrderParam) (resErr error) {
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/trade/order",
 		Method: "POST",
-		OKXKey: opt.OKXKey,
+		OKXKey: mOKX.TypeOkxKey{
+			ApiKey:     opt.OKXKey.ApiKey,
+			SecretKey:  opt.OKXKey.SecretKey,
+			Passphrase: opt.OKXKey.Passphrase,
+		},
 		Data: map[string]any{
 			"instId":  opt.TradeInst.InstID,
 			"tdMode":  tdMode,

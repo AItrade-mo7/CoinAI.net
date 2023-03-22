@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	jsoniter "github.com/json-iterator/go"
@@ -12,7 +13,7 @@ import (
 
 type GetMaxSizeParam struct {
 	InstID string
-	OKXKey mOKX.TypeOkxKey
+	OKXKey dbType.OkxKeyType
 }
 
 type MaxSizeType struct {
@@ -47,7 +48,11 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/max-size",
 		Method: "GET",
-		OKXKey: opt.OKXKey,
+		OKXKey: mOKX.TypeOkxKey{
+			ApiKey:     opt.OKXKey.ApiKey,
+			SecretKey:  opt.OKXKey.SecretKey,
+			Passphrase: opt.OKXKey.Passphrase,
+		},
 		Data: map[string]any{
 			"instId": opt.InstID,
 			"tdMode": tdMode,
