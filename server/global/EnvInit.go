@@ -61,7 +61,7 @@ func AppEnvInit() {
 
 	// 设置  默认 最大 ApiKey 数量
 	if config.AppEnv.MaxApiKeyNum == 0 {
-		config.AppEnv.MaxApiKeyNum = 32
+		config.AppEnv.MaxApiKeyNum = 24
 	}
 	config.AppEnv.SysVersion = config.AppInfo.Version
 	config.AppEnv.Type = config.SysName
