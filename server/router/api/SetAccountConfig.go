@@ -14,14 +14,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type SetTradeLeverParam struct {
+type SetAccountConfigParam struct {
 	Name       string
 	Password   string
 	TradeLever int // disable  enable  delete
 }
 
-func SetTradeLever(c *fiber.Ctx) error {
-	var json SetTradeLeverParam
+func SetAccountConfig(c *fiber.Ctx) error {
+	var json SetAccountConfigParam
 	mFiber.Parser(c, &json)
 
 	if json.TradeLever < config.LeverOpt[0] {
