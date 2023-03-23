@@ -44,6 +44,10 @@ func EditConfig(c *fiber.Ctx) error {
 		return c.JSON(result.Fail.WithMsg("ApiKey数量错误"))
 	}
 
+	if json.MaxApiKeyNum > 30 {
+		return c.JSON(result.Fail.WithMsg("单个卫星服务ApiKey数量不应该超过30"))
+	}
+
 	isName := mVerify.IsNickName(json.SysName)
 	if !isName {
 		return c.JSON(result.Fail.WithMsg("系统名称不符合规范!"))

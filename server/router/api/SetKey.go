@@ -37,6 +37,9 @@ func SetKey(c *fiber.Ctx) error {
 	if !isName {
 		return c.JSON(result.Fail.WithMsg("备注名不规范"))
 	}
+	if json.Name == "ALL" {
+		return c.JSON(result.Fail.WithMsg("禁止使用该名称"))
+	}
 	if len(json.ApiKey) < 10 {
 		return c.JSON(result.Fail.WithMsg("缺少有效的 API key"))
 	}

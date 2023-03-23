@@ -50,6 +50,9 @@ func GetAccountDetail(c *fiber.Ctx) error {
 	if ListErr != nil {
 		return c.JSON(result.Fail.WithMsg(ListErr))
 	}
+	if len(OkxKey.ApiKey) < 3 {
+		return c.JSON(result.Fail.WithMsg("Key不存在"))
+	}
 
 	// 新建账户对象
 	OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
