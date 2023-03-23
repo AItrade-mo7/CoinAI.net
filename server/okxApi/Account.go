@@ -51,8 +51,9 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 
 	resObj = &obj
 
-	resObj.GetPositions()
+	resObj.GetPositions()    // 获取当前持仓
 	resObj.SetPositionMode() // 设置持仓模式
+	resObj.SetLeverage()     // 设置杠杆倍数
 	return
 }
 
@@ -61,7 +62,6 @@ func (_this *AccountObj) SetPositionMode() (resErr error) {
 	if len(_this.Positions) < 1 {
 		resErr = account.SetPositionMode(_this.OkxKey)
 	}
-
 	return
 }
 
@@ -163,6 +163,7 @@ func (_this *AccountObj) CancelOrder() (resErr error) {
 func (_this *AccountObj) Close() (resErr error) {
 	_this.GetOrdersPending() // 获取未成交订单
 	_this.CancelOrder()      // 取消所有未成交订单
+	_this.GetPositions()     // 获取所有持仓
 
 	errArr := []error{}
 	isAgin := false

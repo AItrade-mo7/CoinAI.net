@@ -69,7 +69,7 @@ func Order(opt OrderParam) (resErr error) {
 
 	// 大于最大数量 则 最大数乘以 0.8
 	if mCount.Le(opt.Sz, opt.TradeInst.MaxMktSz) > 0 {
-		opt.Sz = mCount.Mul(opt.TradeInst.MaxMktSz, "0.8")
+		opt.Sz = mCount.Mul(opt.TradeInst.MaxMktSz, "0.7")
 
 		resErr = fmt.Errorf("交易数量超出限制 %+v %+v", opt.Sz, opt.OKXKey)
 		global.LogErr(resErr)
