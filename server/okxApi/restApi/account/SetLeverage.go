@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -37,7 +38,7 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 		return
 	}
 
-	find := strings.Contains(opt.InstID, "-SWAP")
+	find := strings.Contains(opt.InstID, config.SWAP_suffix)
 
 	if !find {
 		return

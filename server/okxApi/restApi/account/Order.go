@@ -2,7 +2,6 @@ package account
 
 import (
 	"fmt"
-	"strings"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbType"
@@ -56,8 +55,7 @@ func Order(opt OrderParam) (resErr error) {
 
 	tdMode := "cash" // 币币交易
 	ordType := "market"
-	find := strings.Contains(opt.TradeInst.InstID, "-SWAP")
-	if find {
+	if opt.TradeInst.InstType == "SWAP" {
 		tdMode = "cross" // 全仓杠杆
 		ordType = "optimal_limit_ioc"
 	}
@@ -115,7 +113,7 @@ func Order(opt OrderParam) (resErr error) {
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.Order2 %+v Name:%+v", mStr.ToStr(err), opt.OKXKey.Name)
+		resErr = fmt.Errorf("account.Order2 %+v Name:%+v", mStr.ToStr(res), opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}

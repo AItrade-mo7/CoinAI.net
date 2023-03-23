@@ -4,9 +4,9 @@ import "github.com/EasyGolang/goTools/mOKX"
 
 var Ticking = make(chan string, 2) // 计算频率
 
-var KdataInst mOKX.TypeInst
+var KdataInst mOKX.TypeInst // 这里一定为现货
 
-var TradeInst mOKX.TypeInst
+var TradeInst mOKX.TypeInst // 这里一定为合约
 
 var MaxLen = 500
 

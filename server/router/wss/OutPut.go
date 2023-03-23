@@ -23,20 +23,26 @@ type NowTicker struct {
 	TimeID   string `bson:"TimeID"`   // TimeID
 }
 
+type TradeInstType struct {
+	InstID   string `bson:"InstID"`
+	QuoteCcy string `bson:"QuoteCcy"`
+}
+
 type OutPut struct {
-	SysName        string      `bson:"SysName"`
-	SysVersion     string      `bson:"SysVersion"`
-	Port           string      `bson:"Port"`
-	IP             string      `bson:"IP"`
-	ServeID        string      `bson:"ServeID"`
-	UserID         string      `bson:"UserID"`
-	SysTime        int64       `bson:"SysTime"` // 系统时间
-	DataSource     string      `bson:"DataSource"`
-	MaxApiKeyNum   int         `bson:"MaxApiKeyNum"`
-	ApiKeyNum      int         `bson:"ApiKeyNum"`
-	Type           string      `bson:"Type"`
-	TradeKdataLast mOKX.TypeKd `bson:"TradeKdataLast"`
-	NowTicker      NowTicker   `bson:"Type"`
+	SysName        string        `bson:"SysName"`
+	SysVersion     string        `bson:"SysVersion"`
+	Port           string        `bson:"Port"`
+	IP             string        `bson:"IP"`
+	ServeID        string        `bson:"ServeID"`
+	UserID         string        `bson:"UserID"`
+	SysTime        int64         `bson:"SysTime"` // 系统时间
+	DataSource     string        `bson:"DataSource"`
+	MaxApiKeyNum   int           `bson:"MaxApiKeyNum"`
+	ApiKeyNum      int           `bson:"ApiKeyNum"`
+	Type           string        `bson:"Type"`
+	TradeKdataLast mOKX.TypeKd   `bson:"TradeKdataLast"`
+	NowTicker      NowTicker     `bson:"Type"`
+	TradeInst      TradeInstType `bson:"TradeInst"`
 }
 
 func GetOutPut() (resData OutPut) {
@@ -62,11 +68,19 @@ func GetOutPut() (resData OutPut) {
 
 	resData.NowTicker = GetNowTicker()
 
+	resData.TradeInst = GetTradeInst()
+
 	return
 }
 
 func GetNowTicker() NowTicker {
 	var resData NowTicker
 	jsoniter.Unmarshal(mJson.ToJson(okxInfo.NowTicker), &resData)
+	return resData
+}
+
+func GetTradeInst() TradeInstType {
+	var resData TradeInstType
+	jsoniter.Unmarshal(mJson.ToJson(okxInfo.TradeInst), &resData)
 	return resData
 }

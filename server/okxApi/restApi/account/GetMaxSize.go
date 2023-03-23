@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -41,7 +42,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	}
 
 	tdMode := "cash" // 币币交易
-	find := strings.Contains(opt.InstID, "-SWAP")
+	find := strings.Contains(opt.InstID, config.SWAP_suffix)
 	if find {
 		tdMode = "cross" // 全仓杠杆
 	}
