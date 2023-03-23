@@ -1,7 +1,12 @@
 package ready
 
 import (
+	"CoinAI.net/server/global"
+	"CoinAI.net/server/utils/taskPush"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
+	"github.com/EasyGolang/goTools/mStr"
+	jsoniter "github.com/json-iterator/go"
 )
 
 type ReqCoinAnalyKdataType struct {
@@ -13,28 +18,28 @@ type ReqCoinAnalyKdataType struct {
 func GetNowKdata(InstID string) (resList []mOKX.TypeKd) {
 	resList = []mOKX.TypeKd{}
 
-	// resData, err := reqDataCenter.NewRest(reqDataCenter.RestOpt{
-	// 	Origin: "https://trade-api.mo7.cc",
-	// 	Path:   "/CoinMarket/public/GetNowKdata",
-	// 	UserID: config.AppEnv.UserID,
-	// 	Method: "Post",
-	// 	Data: map[string]any{
-	// 		"InstID": InstID,
-	// 	},
-	// })
-	// if err != nil {
-	// 	global.LogErr("ready.GetCoinAnalyKdata", err)
-	// 	return
-	// }
+	Data := map[string]any{
+		"InstID": InstID,
+	}
 
-	// var result ReqCoinAnalyKdataType
-	// jsoniter.Unmarshal(resData, &result)
+	resData, err := taskPush.Request(taskPush.RequestOpt{
+		Origin: "https://trade-api.mo7.cc",
+		Path:   "/CoinMarket/public/GetNowKdata",
+		Data:   mJson.ToJson(Data),
+	})
+	if err != nil {
+		global.LogErr("ready.GetNowKdata", err)
+		return
+	}
 
-	// if result.Code < 0 {
-	// 	// global.LogErr("ready.GetCoinAnalyKdata", "Err", result.Code, InstID, mStr.ToStr(resData))
-	// 	return
-	// }
+	var result ReqCoinAnalyKdataType
+	jsoniter.Unmarshal(resData, &result)
 
-	// resList = result.Data
+	if result.Code < 0 {
+		global.LogErr("ready.GetNowKdata", "Err", result.Code, InstID, mStr.ToStr(resData))
+		return
+	}
+
+	resList = result.Data
 	return
 }

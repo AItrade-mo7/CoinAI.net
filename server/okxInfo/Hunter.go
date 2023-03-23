@@ -2,11 +2,11 @@ package okxInfo
 
 import "github.com/EasyGolang/goTools/mOKX"
 
+var Ticking = make(chan string, 2) // 计算频率
+
 var KdataInst mOKX.TypeInst
 
 var TradeInst mOKX.TypeInst
-
-var Ticking = make(chan string, 2)
 
 var MaxLen = 500
 

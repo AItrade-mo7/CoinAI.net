@@ -10,14 +10,14 @@ import (
 )
 
 func Start() {
-	// for ok := range okxInfo.Ticking {
-	// 	// global.RunLog.Println(" ===== hunter.Start 执行 ===== ", mTime.UnixFormat(mTime.GetUnixInt64()), ok)
-	// 	Running()
-	// }
+	for ok := range okxInfo.Ticking {
+		global.TradeLog.Println(" ===== hunter.Start 执行 ===== ", mTime.UnixFormat(mTime.GetUnixInt64()), ok)
+		// Running()
+	}
 }
 
 func Running() {
-	// global.RunLog.Println(" === hunter.Running === ", okxInfo.KdataInst.InstID)
+	global.TradeLog.Println(" === hunter.Running === ", okxInfo.KdataInst.InstID)
 
 	err := SetTradeInst() // 在这里要先读取持仓, 每次平仓之后才会触发这个
 	if err != nil {
