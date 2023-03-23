@@ -53,7 +53,6 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 
 	resObj.GetPositions()    // 获取当前持仓
 	resObj.SetPositionMode() // 设置持仓模式
-	resObj.SetLeverage()     // 设置杠杆倍数
 	return
 }
 
@@ -124,6 +123,7 @@ func (_this *AccountObj) GetPositions() (resErr error) {
 
 // 获取最大可开仓数量
 func (_this *AccountObj) GetMaxSize() (resErr error) {
+	_this.SetLeverage() // 设置杠杆倍数
 	resData, resErr := account.GetMaxSize(account.GetMaxSizeParam{
 		InstID: _this.TradeInst.InstID,
 		OKXKey: _this.OkxKey,
