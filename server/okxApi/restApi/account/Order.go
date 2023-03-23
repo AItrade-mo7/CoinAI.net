@@ -7,6 +7,7 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mCount"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
@@ -78,6 +79,15 @@ func Order(opt OrderParam) (resErr error) {
 
 	opt.Sz = mCount.Cent(opt.Sz, 0)
 
+	Data := map[string]any{
+		"instId":  opt.TradeInst.InstID,
+		"tdMode":  tdMode,
+		"clOrdId": opt.OrdId,
+		"side":    opt.Side,
+		"posSide": "net",
+		"ordType": ordType,
+		"sz":      opt.Sz,
+	}
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/trade/order",
 		Method: "POST",
@@ -86,16 +96,16 @@ func Order(opt OrderParam) (resErr error) {
 			SecretKey:  opt.OKXKey.SecretKey,
 			Passphrase: opt.OKXKey.Passphrase,
 		},
-		Data: map[string]any{
-			"instId":  opt.TradeInst.InstID,
-			"tdMode":  tdMode,
-			"clOrdId": opt.OrdId,
-			"side":    opt.Side,
-			"posSide": "net",
-			"ordType": ordType,
-			"sz":      opt.Sz,
-		},
+		Data: Data,
 	})
+	// 打印接口日志
+	global.OKXLogo.Println("account.Order",
+		err,
+		mStr.ToStr(res),
+		opt.OKXKey.Name,
+		mJson.ToStr(Data),
+	)
+
 	if err != nil {
 		resErr = fmt.Errorf("account.Order1 %+v Name:%+v", mStr.ToStr(err), opt.OKXKey.Name)
 		global.LogErr(resErr)

@@ -53,6 +53,13 @@ func GetOKXPositions(OKXKey dbType.OkxKeyType) (resData []PositionsData, resErr 
 			Passphrase: OKXKey.Passphrase,
 		},
 	})
+	// 打印接口日志
+	global.OKXLogo.Println("account.GetOKXPositions",
+		err,
+		mStr.ToStr(res),
+		OKXKey.Name,
+	)
+
 	if err != nil {
 		resErr = fmt.Errorf("account.GetOKXPositions1 %+v Name:%+v", mStr.ToStr(err), OKXKey.Name)
 		global.LogErr(resErr)

@@ -17,7 +17,8 @@ var (
 	Run      *log.Logger // 运行日志
 	WssLog   *log.Logger // Wss 数据
 	KdataLog *log.Logger // Kdata 日志
-	TradeLog *log.Logger // 交易API
+	TradeLog *log.Logger // 交易模块
+	OKXLogo  *log.Logger // 交易模块
 )
 
 func LogInit() {
@@ -44,6 +45,11 @@ func LogInit() {
 	TradeLog = mLog.NewLog(mLog.NewLogParam{
 		Path: config.Dir.Log,
 		Name: "Trade",
+	})
+
+	OKXLogo = mLog.NewLog(mLog.NewLogParam{
+		Path: config.Dir.Log,
+		Name: "OKX",
 	})
 
 	// 设定清除log

@@ -6,6 +6,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbType"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
@@ -42,6 +43,11 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 		return
 	}
 
+	Data := map[string]any{
+		"instId":  opt.InstID,
+		"lever":   mStr.ToStr(opt.OKXKey.TradeLever),
+		"mgnMode": "cross",
+	}
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/account/set-leverage",
 		Method: "POST",
@@ -50,12 +56,16 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 			SecretKey:  opt.OKXKey.SecretKey,
 			Passphrase: opt.OKXKey.Passphrase,
 		},
-		Data: map[string]any{
-			"instId":  opt.InstID,
-			"lever":   mStr.ToStr(opt.OKXKey.TradeLever),
-			"mgnMode": "cross",
-		},
+		Data: Data,
 	})
+	// 打印接口日志
+	global.OKXLogo.Println("account.SetLeverage",
+		err,
+		mStr.ToStr(res),
+		opt.OKXKey.Name,
+		mJson.ToStr(Data),
+	)
+
 	if err != nil {
 		resErr = fmt.Errorf("account.SetLeverage1 %s Name:%+v", mStr.ToStr(res), opt.OKXKey.Name)
 		global.LogErr(resErr)

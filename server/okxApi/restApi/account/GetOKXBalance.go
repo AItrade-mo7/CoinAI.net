@@ -52,6 +52,13 @@ func GetOKXBalance(OKXKey dbType.OkxKeyType) (resData []AccountBalance, resErr e
 			Passphrase: OKXKey.Passphrase,
 		},
 	})
+	// 打印接口日志
+	global.OKXLogo.Println("account.GetOKXBalance",
+		err,
+		mStr.ToStr(res),
+		OKXKey.Name,
+	)
+
 	if err != nil {
 		resErr = fmt.Errorf("account.GetOKXBalance1 %s Name:%+v", mStr.ToStr(err), OKXKey.Name)
 		global.LogErr(resErr)

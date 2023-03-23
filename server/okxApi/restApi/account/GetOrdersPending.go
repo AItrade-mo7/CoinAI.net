@@ -76,6 +76,12 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resData []PendingOrderType, re
 			Passphrase: opt.OKXKey.Passphrase,
 		},
 	})
+	// 打印接口日志
+	global.OKXLogo.Println("account.GetOrdersPending",
+		err,
+		mStr.ToStr(res),
+		opt.OKXKey.Name,
+	)
 
 	mFile.Write(config.Dir.JsonData+"/OrdersPending.json", string(res))
 	if err != nil {

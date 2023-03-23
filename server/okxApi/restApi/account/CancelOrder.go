@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbType"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
@@ -30,6 +31,10 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 		return
 	}
 
+	Data := map[string]any{
+		"instId": opt.Order.InstID,
+		"ordId":  opt.Order.OrdID,
+	}
 	res, err := mOKX.FetchOKX(mOKX.OptFetchOKX{
 		Path:   "/api/v5/trade/cancel-order",
 		Method: "POST",
@@ -38,11 +43,16 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 			SecretKey:  opt.OKXKey.SecretKey,
 			Passphrase: opt.OKXKey.Passphrase,
 		},
-		Data: map[string]any{
-			"instId": opt.Order.InstID,
-			"ordId":  opt.Order.OrdID,
-		},
+		Data: Data,
 	})
+	// 打印接口日志
+	global.OKXLogo.Println("account.CancelOrder",
+		err,
+		mStr.ToStr(res),
+		opt.OKXKey.Name,
+		mJson.ToStr(Data),
+	)
+
 	if err != nil {
 		resErr = fmt.Errorf("account.CancelOrder1 %+v %+v Name:%+v", mStr.ToStr(err), opt.OKXKey, opt.OKXKey.Name)
 		global.LogErr(resErr)
