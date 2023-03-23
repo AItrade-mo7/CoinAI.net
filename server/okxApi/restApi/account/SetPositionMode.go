@@ -6,6 +6,7 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mOKX"
+	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -24,7 +25,7 @@ func SetPositionMode(OKXKey dbType.OkxKeyType) (resErr error) {
 		},
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.SetPositionMode1 %+v Name:%+v", err, OKXKey.Name)
+		resErr = fmt.Errorf("account.SetPositionMode1 %+v Name:%+v", mStr.ToStr(err), OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -32,7 +33,7 @@ func SetPositionMode(OKXKey dbType.OkxKeyType) (resErr error) {
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.SetPositionMode2 %s Name:%+v", res, OKXKey.Name)
+		resErr = fmt.Errorf("account.SetPositionMode2 %s Name:%+v", mStr.ToStr(res), OKXKey.Name)
 		global.LogErr(resErr)
 
 		return

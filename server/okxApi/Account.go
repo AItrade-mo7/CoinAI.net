@@ -27,7 +27,7 @@ type AccountObj struct {
 
 // 创建一个新账户
 func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
-	obj := AccountObj{}
+	resObj = &AccountObj{}
 	resErr = nil
 
 	if opt.OkxKey.Status == "disable" {
@@ -47,9 +47,10 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 		opt.OkxKey.TradeLever = config.LeverOpt[len(config.LeverOpt)-1]
 	}
 
-	obj.OkxKey = opt.OkxKey
+	resObj.OkxKey = opt.OkxKey
 
-	resObj = &obj
+	// 同步当前账户的交易 币种
+	resObj.TradeInst = okxInfo.TradeInst
 
 	resObj.GetPositions()    // 获取当前持仓
 	resObj.SetPositionMode() // 设置持仓模式

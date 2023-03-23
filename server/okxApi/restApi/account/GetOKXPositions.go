@@ -54,7 +54,7 @@ func GetOKXPositions(OKXKey dbType.OkxKeyType) (resData []PositionsData, resErr 
 		},
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.GetOKXPositions1 %+v Name:%+v", err, OKXKey.Name)
+		resErr = fmt.Errorf("account.GetOKXPositions1 %+v Name:%+v", mStr.ToStr(err), OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}

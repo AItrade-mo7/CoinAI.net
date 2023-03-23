@@ -6,6 +6,7 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mOKX"
+	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -43,7 +44,7 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 		},
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.CancelOrder1 %+v %+v Name:%+v", err, opt.OKXKey, opt.OKXKey.Name)
+		resErr = fmt.Errorf("account.CancelOrder1 %+v %+v Name:%+v", mStr.ToStr(err), opt.OKXKey, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -51,7 +52,7 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.CancelOrder2 %s %+v Name:%+v", res, opt.OKXKey, opt.OKXKey.Name)
+		resErr = fmt.Errorf("account.CancelOrder2 %s %+v Name:%+v", mStr.ToStr(res), opt.OKXKey, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}

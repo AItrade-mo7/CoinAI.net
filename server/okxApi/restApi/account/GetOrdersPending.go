@@ -9,6 +9,7 @@ import (
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
+	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -78,7 +79,7 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resData []PendingOrderType, re
 
 	mFile.Write(config.Dir.JsonData+"/OrdersPending.json", string(res))
 	if err != nil {
-		resErr = fmt.Errorf("account.GetOrdersPending1 %+v Name:%+v", err, opt.OKXKey.Name)
+		resErr = fmt.Errorf("account.GetOrdersPending1 %+v Name:%+v", mStr.ToStr(err), opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -86,7 +87,7 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resData []PendingOrderType, re
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.GetOrdersPending2 %s Name:%+v", res, opt.OKXKey.Name)
+		resErr = fmt.Errorf("account.GetOrdersPending2 %s Name:%+v", mStr.ToStr(res), opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
