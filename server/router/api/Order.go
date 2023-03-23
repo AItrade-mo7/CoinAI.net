@@ -9,7 +9,6 @@ import (
 	"CoinAI.net/server/okxApi"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
-	"CoinAI.net/server/utils/taskPush"
 	"github.com/EasyGolang/goTools/mFiber"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
@@ -19,7 +18,6 @@ type OrderParam struct {
 	Name     string
 	Password string
 	Type     string // Buy   Sell   Close
-	Code     string
 }
 
 func Order(c *fiber.Ctx) error {
@@ -55,15 +53,6 @@ func Order(c *fiber.Ctx) error {
 	if err != nil {
 		return c.JSON(result.ErrDB.WithMsg(mStr.ToStr(err)))
 	}
-	// 验证邮箱验证码
-	err = taskPush.CheckEmailCode(taskPush.CheckEmailCodeParam{
-		Email: UserDB.Data.Email,
-		Code:  json.Code,
-	})
-	if err != nil {
-		return c.JSON(result.Fail.WithMsg(err))
-	}
-	UserDB.DB.Close()
 
 	// 寻找 Key
 	ApiKeyList := config.AppEnv.ApiKeyList
