@@ -61,7 +61,7 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resData []PendingOrderType, re
 	resErr = nil
 
 	if len(opt.OKXKey.ApiKey) < 10 {
-		resErr = fmt.Errorf("account.GetOrdersPending opt.OKXKey.ApiKey 不能为空 %+v", opt.OKXKey.ApiKey)
+		resErr = fmt.Errorf("account.GetOrdersPending opt.OKXKey.ApiKey 不能为空 Name:%+v", opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -78,7 +78,7 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resData []PendingOrderType, re
 
 	mFile.Write(config.Dir.JsonData+"/OrdersPending.json", string(res))
 	if err != nil {
-		resErr = fmt.Errorf("account.GetOrdersPending1 %+v %+v", err, opt.OKXKey)
+		resErr = fmt.Errorf("account.GetOrdersPending1 %+v Name:%+v", err, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -86,7 +86,7 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resData []PendingOrderType, re
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.GetOrdersPending2 %s %+v", res, opt.OKXKey)
+		resErr = fmt.Errorf("account.GetOrdersPending2 %s Name:%+v", res, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}

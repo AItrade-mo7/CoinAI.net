@@ -38,7 +38,7 @@ func GetOKXBalance(OKXKey dbType.OkxKeyType) (resData []AccountBalance, resErr e
 	resErr = nil
 
 	if len(OKXKey.ApiKey) < 10 {
-		resErr = fmt.Errorf("account.GetOKXBalance OKXKey.ApiKey 不能为空 %+v", OKXKey.ApiKey)
+		resErr = fmt.Errorf("account.GetOKXBalance OKXKey.ApiKey 不能为空 %+v Name:%+v", OKXKey.ApiKey, OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -53,7 +53,7 @@ func GetOKXBalance(OKXKey dbType.OkxKeyType) (resData []AccountBalance, resErr e
 		},
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.GetOKXBalance1 %s %+v", err, OKXKey)
+		resErr = fmt.Errorf("account.GetOKXBalance1 %s Name:%+v", err, OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -62,7 +62,7 @@ func GetOKXBalance(OKXKey dbType.OkxKeyType) (resData []AccountBalance, resErr e
 	jsoniter.Unmarshal(res, &resObj)
 
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.GetOKXBalance2 %s %+v", res, OKXKey)
+		resErr = fmt.Errorf("account.GetOKXBalance2 %s Name:%+v", res, OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}

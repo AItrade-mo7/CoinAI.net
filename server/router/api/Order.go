@@ -23,7 +23,7 @@ type OrderParam struct {
 }
 
 type ErrObj struct {
-	Err  error //
+	Err  string //
 	Name string
 }
 
@@ -85,7 +85,7 @@ func Order(c *fiber.Ctx) error {
 			})
 			if err != nil {
 				ErrList = append(ErrList, ErrObj{
-					Err:  err,
+					Err:  mStr.ToStr(err),
 					Name: OkxKey.Name,
 				})
 				continue
@@ -103,7 +103,7 @@ func Order(c *fiber.Ctx) error {
 
 			if err != nil {
 				ErrList = append(ErrList, ErrObj{
-					Err:  err,
+					Err:  mStr.ToStr(err),
 					Name: OkxKey.Name,
 				})
 				continue
@@ -157,10 +157,10 @@ func Order(c *fiber.Ctx) error {
 
 	if err != nil {
 		ErrList = append(ErrList, ErrObj{
-			Err:  err,
+			Err:  mStr.ToStr(err),
 			Name: OkxKey.Name,
 		})
-		return c.JSON(result.Fail.With("账户交易失败!", ErrList))
+		return c.JSON(result.Fail.With(err, ErrList))
 	}
 
 	return c.JSON(result.Succeed.WithData(json.Type))

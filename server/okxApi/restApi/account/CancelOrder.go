@@ -19,12 +19,12 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 	resErr = nil
 
 	if len(opt.OKXKey.ApiKey) < 10 {
-		resErr = fmt.Errorf("account.CancelOrder opt.OKXKey.ApiKey 不能为空 %+v", opt.OKXKey.ApiKey)
+		resErr = fmt.Errorf("account.CancelOrder opt.OKXKey.ApiKey 不能为空 Name:%+v", opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
 	if len(opt.Order.InstID) < 3 {
-		resErr = fmt.Errorf("account.CancelOrder opt.Orders.InstID 不能为空 %+v", opt.Order.InstID)
+		resErr = fmt.Errorf("account.CancelOrder opt.Orders.InstID 不能为空:%+v Name:%+v", opt.Order.InstID, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -43,7 +43,7 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 		},
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.CancelOrder1 %+v %+v", err, opt.OKXKey)
+		resErr = fmt.Errorf("account.CancelOrder1 %+v %+v Name:%+v", err, opt.OKXKey, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -51,7 +51,7 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.CancelOrder2 %s %+v", res, opt.OKXKey)
+		resErr = fmt.Errorf("account.CancelOrder2 %s %+v Name:%+v", res, opt.OKXKey, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}

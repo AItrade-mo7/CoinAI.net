@@ -29,12 +29,12 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	resData = MaxSizeType{}
 
 	if len(opt.InstID) < 3 {
-		resErr = fmt.Errorf("account.GetMaxSize opt.InstID 不能为空 %+v", opt.InstID)
+		resErr = fmt.Errorf("account.GetMaxSize opt.InstID 不能为空 %+v Name:%+v", opt.InstID, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
 	if len(opt.OKXKey.ApiKey) < 10 {
-		resErr = fmt.Errorf("account.GetMaxSize opt.OKXKey.ApiKey 不能为空 %+v", opt.OKXKey.ApiKey)
+		resErr = fmt.Errorf("account.GetMaxSize opt.OKXKey.ApiKey 不能为空 %+v Name:%+v", opt.OKXKey.ApiKey, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -59,7 +59,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 		},
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.GetMaxSize1 %+v %+v", err, opt.OKXKey)
+		resErr = fmt.Errorf("account.GetMaxSize1 %+v %+v Name:%+v", err, opt.OKXKey, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -67,7 +67,7 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.GetMaxSize1 %s %+v", res, opt.OKXKey)
+		resErr = fmt.Errorf("account.GetMaxSize1 %s %+v Name:%+v", res, opt.OKXKey, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}

@@ -31,11 +31,11 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 	resErr = nil
 
 	if opt.OkxKey.Status == "disable" {
-		resErr = fmt.Errorf("okxApi.NewAccount 当前 Key 已被禁用")
+		resErr = fmt.Errorf("okxApi.NewAccount 当前 Key 已被禁用 Name:" + opt.OkxKey.Name)
 		return
 	}
 	if len(opt.OkxKey.ApiKey) < 10 {
-		resErr = fmt.Errorf("okxApi.NewAccount ApiKey 不能为空 ")
+		resErr = fmt.Errorf("okxApi.NewAccount ApiKey 不能为空 Name:" + opt.OkxKey.Name)
 		return
 	}
 

@@ -39,7 +39,7 @@ func GetOKXPositions(OKXKey dbType.OkxKeyType) (resData []PositionsData, resErr 
 	resErr = nil
 
 	if len(OKXKey.ApiKey) < 10 {
-		resErr = fmt.Errorf("account.GetOKXPositions OKXKey.ApiKey 不能为空 %+v", OKXKey.ApiKey)
+		resErr = fmt.Errorf("account.GetOKXPositions OKXKey.ApiKey 不能为空 Name:%+v", OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -54,14 +54,14 @@ func GetOKXPositions(OKXKey dbType.OkxKeyType) (resData []PositionsData, resErr 
 		},
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.GetOKXPositions1 %+v %+v", err, OKXKey)
+		resErr = fmt.Errorf("account.GetOKXPositions1 %+v Name:%+v", err, OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.GetOKXPositions2 %+v", OKXKey)
+		resErr = fmt.Errorf("account.GetOKXPositions2 Name:%+v", OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}

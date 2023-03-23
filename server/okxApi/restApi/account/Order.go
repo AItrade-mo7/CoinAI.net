@@ -25,18 +25,18 @@ func Order(opt OrderParam) (resErr error) {
 	resErr = nil
 
 	if len(opt.TradeInst.InstID) < 3 {
-		resErr = fmt.Errorf("account.Order opt.InstID 不能为空 %+v", opt.TradeInst.InstID)
+		resErr = fmt.Errorf("account.Order opt.InstID 不能为空 %+v Name:%+v", opt.TradeInst.InstID, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
 	if mCount.Le(opt.TradeInst.MinSz, "0") < 1 {
-		resErr = fmt.Errorf("account.Order opt.TradeInst.MinSz 不能为空 %+v", opt.TradeInst.MinSz)
+		resErr = fmt.Errorf("account.Order opt.TradeInst.MinSz 不能为空 %+v Name:%+v", opt.TradeInst.MinSz, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
 
 	if len(opt.OKXKey.ApiKey) < 10 {
-		resErr = fmt.Errorf("account.Order opt.OKXKey.ApiKey 不能为空 %+v", opt.OKXKey.ApiKey)
+		resErr = fmt.Errorf("account.Order opt.OKXKey.ApiKey 不能为空 %+v Name:%+v", opt.OKXKey.ApiKey, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -47,7 +47,7 @@ func Order(opt OrderParam) (resErr error) {
 
 	if opt.Side == "buy" || opt.Side == "sell" {
 	} else {
-		resErr = fmt.Errorf("account.Order opt.Side 不正确 %+v", opt.Side)
+		resErr = fmt.Errorf("account.Order opt.Side 不正确 %+v Name:%+v", opt.Side, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -62,7 +62,7 @@ func Order(opt OrderParam) (resErr error) {
 
 	// 小于最小数量
 	if mCount.Le(opt.Sz, opt.TradeInst.MinSz) < 0 {
-		resErr = fmt.Errorf("交易数量太小 %+v", opt.Sz)
+		resErr = fmt.Errorf("交易数量太小 %+v Name:%+v", opt.Sz, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -71,7 +71,7 @@ func Order(opt OrderParam) (resErr error) {
 	if mCount.Le(opt.Sz, opt.TradeInst.MaxMktSz) > 0 {
 		opt.Sz = mCount.Mul(opt.TradeInst.MaxMktSz, "0.7")
 
-		resErr = fmt.Errorf("交易数量超出限制 %+v %+v", opt.Sz, opt.OKXKey)
+		resErr = fmt.Errorf("交易数量超出限制 %+v Name:%+v", opt.Sz, opt.OKXKey.Name)
 		global.LogErr(resErr)
 	}
 
@@ -96,7 +96,7 @@ func Order(opt OrderParam) (resErr error) {
 		},
 	})
 	if err != nil {
-		resErr = fmt.Errorf("account.Order1 %+v %+v", err, opt.OKXKey)
+		resErr = fmt.Errorf("account.Order1 %+v Name:%+v", err, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
@@ -104,7 +104,7 @@ func Order(opt OrderParam) (resErr error) {
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
-		resErr = fmt.Errorf("account.Order2 %+v %+v", res, opt.OKXKey)
+		resErr = fmt.Errorf("account.Order2 %+v Name:%+v", res, opt.OKXKey.Name)
 		global.LogErr(resErr)
 		return
 	}
