@@ -62,6 +62,7 @@ func Start() {
 	s_api := app.Group("/CoinAI/sys")
 	s_api.Post("/remove", sys.Remove)
 	s_api.Post("/restart", sys.ReStart)
+	s_api.Post("/TheOpen", sys.TheOpen)
 
 	// Ping
 	app.Use(api.Ping)
