@@ -2,8 +2,11 @@ package ready
 
 import (
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mClock"
+	"github.com/EasyGolang/goTools/mFile"
+	"github.com/EasyGolang/goTools/mJson"
 )
 
 func Start() {
@@ -21,7 +24,11 @@ func GetAnalyData() {
 
 	okxInfo.Inst = GetInstAll()
 
+	mFile.Write(config.Dir.JsonData+"/InstAll.json", mJson.ToStr(okxInfo.Inst))
+
 	okxInfo.NowTicker = GetNowTickerAnaly()
+
+	mFile.Write(config.Dir.JsonData+"/NowTicker.json", mJson.ToStr(okxInfo.NowTicker))
 
 	// 挑选交易币种
 	// 在这里先写死

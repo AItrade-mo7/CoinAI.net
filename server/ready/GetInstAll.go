@@ -2,10 +2,7 @@ package ready
 
 import (
 	"CoinAI.net/server/global"
-	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/utils/taskPush"
-	"github.com/EasyGolang/goTools/mFile"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
@@ -39,6 +36,5 @@ func GetInstAll() (resList map[string]mOKX.TypeInst) {
 
 	resList = result.Data
 
-	mFile.Write(config.Dir.JsonData+"/InstAll.json", string(mJson.ToJson(resList)))
 	return
 }
