@@ -32,8 +32,12 @@ func GetAnalyData() {
 
 	// 挑选交易币种
 	// 在这里先写死
-	TradeInstID := okxInfo.NowTicker.TickerVol[0].InstID
+	if len(okxInfo.NowTicker.TickerVol) < 1 {
+		global.LogErr("ready.GetAnalyData  okxInfo.NowTicker.TickerVol 长度不足", len(okxInfo.NowTicker.TickerVol))
+		return
+	}
 
+	TradeInstID := okxInfo.NowTicker.TickerVol[0].InstID
 	// 设置当前交易品信息并获取它的K线
 	okxInfo.NowKdataList = GetNowKdata(TradeInstID)
 
