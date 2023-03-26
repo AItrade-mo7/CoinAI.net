@@ -66,7 +66,7 @@ func Order(c *fiber.Ctx) error {
 	var ErrList []ErrObj
 	if json.Name == "ALL" {
 		if UserID != config.MainUser.UserID { // 如果不是主账户，则无权执行操作
-			return c.JSON(result.ErrOKXAccount.WithData("您无权执行该操作"))
+			return c.JSON(result.ErrOKXAccount.WithMsg("您无权执行该操作"))
 		}
 		// 验证邮箱验证码
 		err = taskPush.CheckEmailCode(taskPush.CheckEmailCodeParam{
