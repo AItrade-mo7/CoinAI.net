@@ -28,10 +28,17 @@ func Public(c *fiber.Ctx) error {
 			return c.JSON(result.ErrAuth.WithData(mStr.ToStr(err)))
 		}
 		// Token 验证
-		_, err = TokenAuth(c)
+		UserID, err := TokenAuth(c)
 		if err != nil {
 			return c.JSON(result.ErrToken.WithData(mStr.ToStr(err)))
 		}
+		// 在这里判断，如果不公开
+		if !config.AppEnv.IsPublic {
+			if UserID != config.AppEnv.UserID {
+				return c.JSON(result.ErrToken.WithData("当前服务不属于您"))
+			}
+		}
+
 	}
 
 	isCrawler := CrawlerIS(c)

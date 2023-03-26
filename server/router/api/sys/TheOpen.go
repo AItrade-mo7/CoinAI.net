@@ -69,8 +69,12 @@ func TheOpen(c *fiber.Ctx) error {
 	*/
 
 	if config.AppEnv.IsPublic {
+		config.AppEnv.IsPublic = false
+
 		return c.JSON(result.Succeed.WithMsg("隐藏卫星服务"))
 	} else {
+		config.AppEnv.IsPublic = true
+
 		return c.JSON(result.Succeed.WithMsg("公开卫星服务"))
 	}
 }
