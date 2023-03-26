@@ -1,6 +1,7 @@
 package sys
 
 import (
+	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/middle"
 	"CoinAI.net/server/router/result"
@@ -62,19 +63,13 @@ func TheOpen(c *fiber.Ctx) error {
 	}
 
 	UserDB.DB.Close()
-	/*
-		开始填写业务逻辑
-		1. 如果为 非 public 则 公开
-		2. 如果为 公开 的 则判断 Key 数量，再选择关闭
-	*/
+
+	config.AppEnv.IsPublic = !config.AppEnv.IsPublic
+	global.WriteAppEnv()
 
 	if config.AppEnv.IsPublic {
-		config.AppEnv.IsPublic = false
-
-		return c.JSON(result.Succeed.WithMsg("隐藏卫星服务"))
+		return c.JSON(result.Succeed.WithMsg("已经公开此服务"))
 	} else {
-		config.AppEnv.IsPublic = true
-
-		return c.JSON(result.Succeed.WithMsg("公开卫星服务"))
+		return c.JSON(result.Succeed.WithMsg("次服务已隐藏"))
 	}
 }
