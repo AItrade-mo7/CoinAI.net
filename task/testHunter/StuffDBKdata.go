@@ -5,7 +5,6 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTime"
@@ -64,7 +63,6 @@ func (_this *TestObj) StuffDBKdata() error {
 		var result mOKX.TypeKd
 		cur.Decode(&result)
 		AllList = append(AllList, result)
-		mJson.Println(result)
 	}
 
 	_this.KdataList = []mOKX.TypeKd{}
