@@ -12,31 +12,31 @@ import (
 func Start() {
 	for ok := range okxInfo.HunterTicking {
 		global.TradeLog.Println(" ===== hunter.Start 执行 ===== ", mTime.UnixFormat(mTime.GetUnixInt64()), ok)
-		// Running()
+		Running()
 	}
 }
 
 func Running() {
 	global.TradeLog.Println(" === hunter.Running === ", okxInfo.KdataInst.InstID)
 
-	err := SetTradeInst() // 在这里要先读取持仓, 每次平仓之后才会触发这个
+	err := SetTradeInst() // 如果均为空则设置一下
 	if err != nil {
 		global.LogErr(err)
 		return
 	}
 
-	if len(okxInfo.KdataInst.InstID) < 2 || len(okxInfo.TradeInst.InstID) < 2 {
-		global.LogErr("hunter.Running", "okxInfo.TradeInst.InstID 为空")
-		return
-	}
+	// if len(okxInfo.KdataInst.InstID) < 2 || len(okxInfo.TradeInst.InstID) < 2 {
+	// 	global.LogErr("hunter.Running", "okxInfo.TradeInst.InstID 为空")
+	// 	return
+	// }
 
-	FileBaseKdata()
+	// FileBaseKdata()
 
-	SetNowKdata()
+	// SetNowKdata()
 
-	FormatTradeKdata()
+	// FormatTradeKdata()
 
-	Analy()
+	// Analy()
 }
 
 func FileBaseKdata() {

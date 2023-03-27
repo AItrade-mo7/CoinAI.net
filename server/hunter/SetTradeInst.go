@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"CoinAI.net/server/okxInfo"
+	"github.com/EasyGolang/goTools/mJson"
 )
 
 func SetTradeInst() (resErr error) {
@@ -28,15 +29,25 @@ func SetTradeInst() (resErr error) {
 	// 在这里按照涨幅的绝对值排个序SetTradeInst
 
 	HLPerList := Sort_HLPer(okxInfo.NowTicker.MillionCoin)
+	HLPerInstID := "ETH-USDT"
+	// 在这里 取出 最末尾的三个 然后取第一个
 
-	CoinId := HLPerList[len(HLPerList)-1].InstID
-
-	for _, val := range HLPerList {
-		if val.InstID == "ETH-USDT" || val.InstID == "BTC-USDT" {
-			CoinId = val.InstID
+	InstIDList := []string{}
+	rangeCount := 0
+	for i := len(HLPerList) - 1; i >= 0; i-- {
+		item := HLPerList[i]
+		rangeCount++
+		if rangeCount > 3 {
 			break
 		}
+		InstIDList = append(InstIDList, item.InstID)
 	}
+
+	if len(InstIDList) > 0 {
+		HLPerInstID = InstIDList[len(InstIDList)-1]
+	}
+
+	CoinId := HLPerInstID
 
 	if len(CoinId) < 1 {
 		resErr = fmt.Errorf("数据异常 ready.SetTradeInst CoinId %+v", CoinId)
@@ -46,17 +57,22 @@ func SetTradeInst() (resErr error) {
 	KdataInst := okxInfo.Inst[CoinId]
 	TradeInst := okxInfo.Inst[CoinId+"-SWAP"]
 
-	if KdataInst.State == "live" && TradeInst.State == "live" {
+	if KdataInst.State == "live" &&
+		TradeInst.State == "live" &&
+		len(TradeInst.InstID) > 1 &&
+		len(KdataInst.InstID) > 1 &&
+		KdataInst.InstType == "SPOT" &&
+		TradeInst.InstType == "SWAP" {
 	} else {
-		resErr = fmt.Errorf("数据异常 ready.SetTradeInst State %+v", KdataInst.State)
+		resErr = fmt.Errorf(
+			"数据异常 ready.SetTradeInst KdataInst:%+v TradeInst:%+v",
+			mJson.Format(KdataInst),
+			mJson.Format(TradeInst),
+		)
 		return
 	}
 
-	if KdataInst.InstType == "SPOT" && TradeInst.InstType == "SWAP" {
-	} else {
-		resErr = fmt.Errorf("数据异常 ready.SetTradeInst InstType %+v", KdataInst.InstType)
-		return
-	}
+	fmt.Println("开始啦")
 
 	okxInfo.KdataInst = KdataInst
 	okxInfo.TradeInst = TradeInst

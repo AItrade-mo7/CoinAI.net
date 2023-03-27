@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/ready"
 	"CoinAI.net/server/router"
 	jsoniter "github.com/json-iterator/go"
@@ -22,6 +23,7 @@ func main() {
 	ready.Start()
 
 	// 启动策略进程
+	go hunter.Start()
 
 	// 启动路由
 	router.Start()
