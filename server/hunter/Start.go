@@ -10,7 +10,7 @@ import (
 )
 
 func Start() {
-	for ok := range okxInfo.Ticking {
+	for ok := range okxInfo.HunterTicking {
 		global.TradeLog.Println(" ===== hunter.Start 执行 ===== ", mTime.UnixFormat(mTime.GetUnixInt64()), ok)
 		// Running()
 	}

@@ -21,6 +21,8 @@ func main() {
 	// 数据准备
 	ready.Start()
 
+	// 启动策略进程
+
 	// 启动路由
 	router.Start()
 }

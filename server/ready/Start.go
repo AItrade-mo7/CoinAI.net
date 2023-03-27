@@ -30,24 +30,17 @@ func GetAnalyData() {
 
 	mFile.Write(config.Dir.JsonData+"/NowTicker.json", mJson.ToStr(okxInfo.NowTicker))
 
-	// 挑选交易币种
-	// 在这里先写死
-	if len(okxInfo.NowTicker.TickerVol) < 1 {
-		global.LogErr("ready.GetAnalyData  okxInfo.NowTicker.TickerVol 长度不足", len(okxInfo.NowTicker.TickerVol))
+	// 在这里检查数据
+
+	if len(okxInfo.Inst) < 10 {
+		global.LogErr("ready.GetAnalyData okxInfo.Inst 长度不足", len(okxInfo.Inst))
 		return
 	}
 
-	TradeInstID := okxInfo.NowTicker.TickerVol[0].InstID
-	// 设置当前交易品信息并获取它的K线
-	okxInfo.NowKdataList = GetNowKdata(TradeInstID)
+	if len(okxInfo.NowTicker.TickerVol) < 3 {
+		global.LogErr("ready.GetAnalyData okxInfo.NowTicker.TickerVol 长度不足", len(okxInfo.NowTicker.TickerVol))
+		return
+	}
 
-	SetTradeInst()
-
-	okxInfo.Ticking <- "Tick"
-}
-
-func SetTradeInst() {
-	// 这里 一定为 合约交易对
-	InstID := okxInfo.NowTicker.TickerVol[0].InstID
-	okxInfo.TradeInst = okxInfo.Inst[InstID+"-SWAP"]
+	okxInfo.HunterTicking <- "Tick"
 }

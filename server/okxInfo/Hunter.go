@@ -2,7 +2,7 @@ package okxInfo
 
 import "github.com/EasyGolang/goTools/mOKX"
 
-var Ticking = make(chan string, 2) // 计算频率
+var HunterTicking = make(chan string, 2) // 计算频率
 
 var KdataInst mOKX.TypeInst // 这里一定为现货
 
