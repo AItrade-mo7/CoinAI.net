@@ -25,7 +25,7 @@ func Analy() {
 		"CAP_MA":       Last.CAP_MA,
 		"CAPIdx":       Last.CAPIdx,
 		"RsiEmaRegion": Last.RsiEmaRegion,
+		"Opt":          Last.Opt,
 	}
-
 	global.TradeLog.Println("hunter.Analy 开始分析并执行交易 Last", mJson.Println(LastPrint))
 }

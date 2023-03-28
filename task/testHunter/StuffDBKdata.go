@@ -69,6 +69,9 @@ func (_this *TestObj) StuffDBKdata() error {
 	_this.KdataList = AllList
 
 	db.Close()
+
+	global.Run.Println("数据填充完毕", len(_this.KdataList))
+
 	return nil
 }
 
@@ -95,6 +98,8 @@ func (_this *TestObj) CheckKdataList() (resErr error) {
 			}
 		}
 	}
+
+	global.Run.Println("数据检查完毕", resErr)
 
 	return
 }
