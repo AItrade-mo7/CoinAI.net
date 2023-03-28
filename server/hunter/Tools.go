@@ -112,15 +112,15 @@ func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) []int {
 	for i := len(preArr) - 1; i >= 0; i-- {
 		item := preArr[i]
 		if len(cacheArr) < 1 {
-			cacheArr = append(cacheArr, item.RsiRegion)
+			cacheArr = append(cacheArr, item.RsiEmaRegion)
 		}
 
 		cacheLast := cacheArr[len(cacheArr)-1]
-		if item.RsiRegion >= cacheLast {
-			cacheArr = append(cacheArr, item.RsiRegion)
+		if item.RsiEmaRegion >= cacheLast {
+			cacheArr = append(cacheArr, item.RsiEmaRegion)
 
-			if item.RsiRegion > cacheArr[0] {
-				downArr = append(downArr, item.RsiRegion)
+			if item.RsiEmaRegion > cacheArr[0] {
+				downArr = append(downArr, item.RsiEmaRegion)
 			}
 		} else {
 			break
@@ -144,16 +144,16 @@ func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) []int {
 	for i := len(preArr) - 1; i >= 0; i-- {
 		item := preArr[i]
 		if len(cacheArr) < 1 {
-			cacheArr = append(cacheArr, item.RsiRegion)
+			cacheArr = append(cacheArr, item.RsiEmaRegion)
 		}
 
 		cacheLast := cacheArr[len(cacheArr)-1]
 
-		if item.RsiRegion <= cacheLast {
-			cacheArr = append(cacheArr, item.RsiRegion)
+		if item.RsiEmaRegion <= cacheLast {
+			cacheArr = append(cacheArr, item.RsiEmaRegion)
 
-			if item.RsiRegion < cacheArr[0] {
-				upArr = append(upArr, item.RsiRegion)
+			if item.RsiEmaRegion < cacheArr[0] {
+				upArr = append(upArr, item.RsiEmaRegion)
 			}
 		} else {
 			break
@@ -171,7 +171,7 @@ func Is_RsiRegion_Gte2(preArr []okxInfo.TradeKdType) (result bool) {
 	}
 
 	for i := len(preArr) - 1; i >= 0; i-- {
-		RsiRegion := preArr[i].RsiRegion
+		RsiRegion := preArr[i].RsiEmaRegion
 		valAbs := mCount.Abs(fmt.Sprint(RsiRegion))
 		if mCount.Le(valAbs, "2") >= 0 {
 			result = true

@@ -43,17 +43,17 @@ func FormatTradeKdata() {
 
 	Last := okxInfo.TradeKdataList[len(okxInfo.TradeKdataList)-1]
 	LastPrint := map[string]any{
-		"InstID":    Last.InstID,
-		"TimeStr":   Last.TimeStr,
-		"AllLen":    len(okxInfo.TradeKdataList),
-		"C":         Last.C,
-		"EMA":       Last.EMA,
-		"MA":        Last.MA,
-		"RSI":       Last.RSI,
-		"CAP_EMA":   Last.CAP_EMA,
-		"CAP_MA":    Last.CAP_MA,
-		"CAPIdx":    Last.CAPIdx,
-		"RsiRegion": Last.RsiRegion,
+		"InstID":       Last.InstID,
+		"TimeStr":      Last.TimeStr,
+		"AllLen":       len(okxInfo.TradeKdataList),
+		"C":            Last.C,
+		"EMA":          Last.EMA,
+		"MA":           Last.MA,
+		"RSI":          Last.RSI,
+		"CAP_EMA":      Last.CAP_EMA,
+		"CAP_MA":       Last.CAP_MA,
+		"CAPIdx":       Last.CAPIdx,
+		"RsiEmaRegion": Last.RsiEmaRegion,
 	}
 	WriteFilePath := config.Dir.JsonData + "/TradeKdataList.json"
 	global.TradeLog.Println("数据整理完毕,写入", len(okxInfo.TradeKdataList), WriteFilePath, mJson.Format(LastPrint))
@@ -116,7 +116,7 @@ func NewTradeKdata(TradeKdataList []mOKX.TypeKd, opt okxInfo.TradeKdataOpt) (Tra
 	TradeKdata.CAPIdx = GetCAPIdx(TradeKdata)
 
 	// 区域计算
-	TradeKdata.RsiRegion = GetRsiRegion(TradeKdata)
+	TradeKdata.RsiEmaRegion = GetRsiRegion(TradeKdata)
 
 	return
 }
