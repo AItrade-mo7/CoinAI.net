@@ -41,23 +41,9 @@ func FormatTradeKdata() {
 		okxInfo.TradeKdataList = append(okxInfo.TradeKdataList, TradeKdata)
 	}
 
-	Last := okxInfo.TradeKdataList[len(okxInfo.TradeKdataList)-1]
-	LastPrint := map[string]any{
-		"InstID":       Last.InstID,
-		"TimeStr":      Last.TimeStr,
-		"AllLen":       len(okxInfo.TradeKdataList),
-		"C":            Last.C,
-		"EMA":          Last.EMA,
-		"MA":           Last.MA,
-		"RSI":          Last.RSI,
-		"CAP_EMA":      Last.CAP_EMA,
-		"CAP_MA":       Last.CAP_MA,
-		"CAPIdx":       Last.CAPIdx,
-		"RsiEmaRegion": Last.RsiEmaRegion,
-	}
 	WriteFilePath := config.Dir.JsonData + "/TradeKdataList.json"
-	global.TradeLog.Println("数据整理完毕,写入", len(okxInfo.TradeKdataList), WriteFilePath, mJson.Format(LastPrint))
 	mFile.Write(WriteFilePath, string(mJson.ToJson(okxInfo.TradeKdataList)))
+	global.TradeLog.Println("数据整理完毕,已写入", len(okxInfo.TradeKdataList), WriteFilePath)
 }
 
 func NewTradeKdata(TradeKdataList []mOKX.TypeKd, opt okxInfo.TradeKdataOpt) (TradeKdata okxInfo.TradeKdType) {

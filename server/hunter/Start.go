@@ -43,7 +43,7 @@ func Running() {
 
 	FormatTradeKdata()
 
-	// Analy()
+	Analy()
 }
 
 func FileBaseKdata() error {
