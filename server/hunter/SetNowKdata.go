@@ -11,10 +11,9 @@ func SetNowKdata() {
 	NowList := mOKX.GetKdata(mOKX.GetKdataOpt{
 		InstID: okxInfo.KdataInst.InstID,
 		Page:   0,
-		After:  mTime.GetUnixInt64(),
 	})
 
-	if len(NowList) < 100 || len(okxInfo.NowKdataList) < 100 {
+	if len(NowList) < 200 || len(okxInfo.NowKdataList) < 200 {
 		global.LogErr("hunter.SetNowKdata 数据不足")
 		return
 	}
@@ -33,15 +32,13 @@ func SetNowKdata() {
 		if Fund {
 			okxInfo.NowKdataList[FundKey] = NowItem
 		} else {
-			// global.RunLog.Println("新增")
 			okxInfo.NowKdataList = append(okxInfo.NowKdataList, NowItem)
 		}
 	}
 
-	// if len(okxInfo.NowKdataList)-okxInfo.MaxLen > 0 {
-	// 	okxInfo.NowKdataList = okxInfo.NowKdataList[len(okxInfo.NowKdataList)-okxInfo.MaxLen:]
-	// 	global.RunLog.Println("长度超出，裁剪", len(okxInfo.NowKdataList))
-	// }
+	if len(okxInfo.NowKdataList)-okxInfo.MaxLen > 0 {
+		okxInfo.NowKdataList = okxInfo.NowKdataList[len(okxInfo.NowKdataList)-okxInfo.MaxLen:]
+	}
 
 	// 数据检查
 	for key, val := range okxInfo.NowKdataList {
@@ -61,7 +58,6 @@ func SetNowKdata() {
 		}
 	}
 
-	// Last := okxInfo.NowKdataList[len(okxInfo.NowKdataList)-1]
-
-	// global.RunLog.Println("更新一次最新数据", Last.TimeStr, Last.C, len(okxInfo.NowKdataList))
+	Last := okxInfo.NowKdataList[len(okxInfo.NowKdataList)-1]
+	global.TradeLog.Println("更新一次最新数据: ", Last.InstID, Last.TimeStr, len(okxInfo.NowKdataList), Last.C)
 }

@@ -39,9 +39,9 @@ func Running() {
 		return
 	}
 
-	// SetNowKdata()
+	SetNowKdata()
 
-	// FormatTradeKdata()
+	FormatTradeKdata()
 
 	// Analy()
 }

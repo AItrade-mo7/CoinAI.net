@@ -8,7 +8,7 @@ var KdataInst mOKX.TypeInst // 这里一定为现货
 
 var TradeInst mOKX.TypeInst // 这里一定为合约
 
-var MaxLen = 500
+var MaxLen = 900
 
 var NowKdataList = []mOKX.TypeKd{}
 

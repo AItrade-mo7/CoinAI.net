@@ -18,7 +18,7 @@ var (
 )
 
 func FormatTradeKdata() {
-	if len(okxInfo.NowKdataList) < 100 {
+	if len(okxInfo.NowKdataList) < 200 {
 		global.LogErr("hunter.FormatTradeKdata 数据不足")
 		return
 	}
