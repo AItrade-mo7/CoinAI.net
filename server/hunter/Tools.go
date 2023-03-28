@@ -58,10 +58,8 @@ func Sort_HLPer(data []mOKX.AnalySliceType) []mOKX.AnalySliceType {
 -2  30-40   多卖区
 -3  小于 30  超卖区
 */
-/*
 func GetRsiRegion(now okxInfo.TradeKdType) int {
-	// RSI_EMA := now.RSI_EMA_9
-	RSI_EMA := ""
+	RSI_EMA := now.RSI_EMA
 	// 1 50-60
 	if mCount.Le(RSI_EMA, "50") > 0 && mCount.Le(RSI_EMA, "60") <= 0 {
 		return 1
@@ -98,7 +96,6 @@ func GetRsiRegion(now okxInfo.TradeKdType) int {
 
 	return 0
 }
-*/
 
 // RsiRegion EMA 是否为降序
 func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) []int {
@@ -251,4 +248,19 @@ func Is_CAP_EMA_GoDown(preArr []okxInfo.TradeKdType) []string {
 	}
 
 	return downArr
+}
+
+func GetCAPIdx(now okxInfo.TradeKdType) int {
+	now_EMA_diff := mCount.Le(now.CAP_EMA, "0") // 1 0 -1  EMA
+	now_MA_diff := mCount.Le(now.CAP_MA, "0")   // -1 0 1  MA
+	nowDiff := now_EMA_diff
+
+	if now_MA_diff == now_EMA_diff {
+		nowDiff = now_MA_diff + now_EMA_diff
+	}
+
+	// diffAdd := mCount.Add(now.CAP_EMA, now.CAP_MA)
+	// nowDiff := mCount.Le(diffAdd, "0")
+
+	return nowDiff
 }

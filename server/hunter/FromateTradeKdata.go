@@ -7,6 +7,7 @@ import (
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
+	"github.com/EasyGolang/goTools/mTalib"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -21,18 +22,17 @@ func FormatTradeKdata() {
 		global.LogErr("hunter.FormatTradeKdata 数据不足")
 		return
 	}
-	// 执行一次清理
+	// 清理 TradeKdataList
 	okxInfo.TradeKdataList = []okxInfo.TradeKdType{}
+
 	EMA_Arr = []string{}
 	MA_Arr = []string{}
 	RSI_Arr = []string{}
 
 	FormatEnd := []mOKX.TypeKd{}
-
 	for _, Kdata := range okxInfo.NowKdataList {
 		FormatEnd = append(FormatEnd, Kdata)
-		TradeKdata := NewTradeKdata(Kdata, FormatEnd)
-
+		TradeKdata := NewTradeKdata(FormatEnd, NewTradeKdataOpt{})
 		okxInfo.TradeKdataList = append(okxInfo.TradeKdataList, TradeKdata)
 	}
 
@@ -53,39 +53,60 @@ func FormatTradeKdata() {
 	mFile.Write(WriteFilePath, string(mJson.ToJson(okxInfo.TradeKdataList)))
 }
 
-func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata okxInfo.TradeKdType) {
-	jsonByte := mJson.ToJson(Kdata)
+type NewTradeKdataOpt struct{}
+
+func NewTradeKdata(TradeKdataList []mOKX.TypeKd, opt NewTradeKdataOpt) (TradeKdata okxInfo.TradeKdType) {
+	TradeKdata = okxInfo.TradeKdType{}
+	jsonByte := mJson.ToJson(TradeKdataList[len(TradeKdataList)-1])
 	jsoniter.Unmarshal(jsonByte, &TradeKdata)
 
-	// EMA
-	// TradeKdata.EMA = mTalib.ClistNew(mTalib.ClistOpt{
-	// 	KDList: TradeKdataList,
-	// 	Period: 18,
-	// }).EMA().ToStr()
-	// EMA_Arr = append(EMA_Arr, TradeKdata.EMA_18)
+	MA_Period := 18
 
-	// CAP
-	// TradeKdata.CAP_EMA = mTalib.ClistNew(mTalib.ClistOpt{
-	// 	CList:  EMA_Arr,
-	// 	Period: 2,
-	// }).CAP().ToStr()
+	// EMA
+	TradeKdata.EMA = mTalib.ClistNew(mTalib.ClistOpt{
+		KDList: TradeKdataList,
+		Period: MA_Period,
+	}).EMA().ToStr()
+	EMA_Arr = append(EMA_Arr, TradeKdata.EMA)
+
+	// MA
+	TradeKdata.MA = mTalib.ClistNew(mTalib.ClistOpt{
+		KDList: TradeKdataList,
+		Period: MA_Period,
+	}).MA().ToStr()
+	MA_Arr = append(MA_Arr, TradeKdata.MA)
+
+	// RSI
+	TradeKdata.RSI = mTalib.ClistNew(mTalib.ClistOpt{
+		KDList: TradeKdataList,
+		Period: 18,
+	}).RSI().ToStr()
+	RSI_Arr = append(RSI_Arr, TradeKdata.RSI)
+
+	// RSI_EMA
+	TradeKdata.RSI_EMA = mTalib.ClistNew(mTalib.ClistOpt{
+		CList:  RSI_Arr,
+		Period: 9,
+	}).EMA().ToStr()
+
+	// CAP_EMA
+	TradeKdata.CAP_EMA = mTalib.ClistNew(mTalib.ClistOpt{
+		CList:  EMA_Arr,
+		Period: 3,
+	}).CAP().ToStr()
+	// CAP_MA
+	TradeKdata.CAP_MA = mTalib.ClistNew(mTalib.ClistOpt{
+		CList:  MA_Arr,
+		Period: 3,
+	}).CAP().ToStr()
 
 	// CAPIdx 计算
-	// TradeKdata.CAPIdx = GetCAPIdx(TradeKdata)
+	TradeKdata.CAPIdx = GetCAPIdx(TradeKdata)
 
 	// 区域计算
-	// TradeKdata.RsiRegion = GetRsiRegion(TradeKdata)
+	TradeKdata.RsiRegion = GetRsiRegion(TradeKdata)
 
-	// global.Log.Println("数据整理", mJson.JsonFormat((mJson.ToJson(TradeKdata))))
+	global.Log.Println("数据整理", mJson.JsonFormat((mJson.ToJson(TradeKdata))))
 
 	return
 }
-
-/*
-MACD： 快线 13
-
-慢线： 34
-
-信号长度 9
-
-*/
