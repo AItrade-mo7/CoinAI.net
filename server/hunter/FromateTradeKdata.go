@@ -7,7 +7,6 @@ import (
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
-	"github.com/EasyGolang/goTools/mTalib"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -59,46 +58,23 @@ func NewTradeKdata(Kdata mOKX.TypeKd, TradeKdataList []mOKX.TypeKd) (TradeKdata 
 	jsoniter.Unmarshal(jsonByte, &TradeKdata)
 
 	// EMA
-	TradeKdata.EMA_18 = mTalib.ClistNew(mTalib.ClistOpt{
-		KDList: TradeKdataList,
-		Period: 18,
-	}).EMA().ToStr()
-	EMA_Arr = append(EMA_Arr, TradeKdata.EMA_18)
-
-	// MA
-	TradeKdata.MA_18 = mTalib.ClistNew(mTalib.ClistOpt{
-		KDList: TradeKdataList,
-		Period: 18,
-	}).MA().ToStr()
-	MA_Arr = append(MA_Arr, TradeKdata.MA_18)
-
-	// RSI_18
-	TradeKdata.RSI_18 = mTalib.ClistNew(mTalib.ClistOpt{
-		KDList: TradeKdataList,
-		Period: 18,
-	}).RSI().ToStr()
-	RSI_Arr = append(RSI_Arr, TradeKdata.RSI_18)
-
-	TradeKdata.RSI_EMA_9 = mTalib.ClistNew(mTalib.ClistOpt{
-		CList:  RSI_Arr,
-		Period: 9,
-	}).EMA().ToStr()
+	// TradeKdata.EMA = mTalib.ClistNew(mTalib.ClistOpt{
+	// 	KDList: TradeKdataList,
+	// 	Period: 18,
+	// }).EMA().ToStr()
+	// EMA_Arr = append(EMA_Arr, TradeKdata.EMA_18)
 
 	// CAP
-	TradeKdata.CAP_EMA = mTalib.ClistNew(mTalib.ClistOpt{
-		CList:  EMA_Arr,
-		Period: 2,
-	}).CAP().ToStr()
-	TradeKdata.CAP_MA = mTalib.ClistNew(mTalib.ClistOpt{
-		CList:  MA_Arr,
-		Period: 2,
-	}).CAP().ToStr()
+	// TradeKdata.CAP_EMA = mTalib.ClistNew(mTalib.ClistOpt{
+	// 	CList:  EMA_Arr,
+	// 	Period: 2,
+	// }).CAP().ToStr()
 
 	// CAPIdx 计算
-	TradeKdata.CAPIdx = GetCAPIdx(TradeKdata)
+	// TradeKdata.CAPIdx = GetCAPIdx(TradeKdata)
 
 	// 区域计算
-	TradeKdata.RsiRegion = GetRsiRegion(TradeKdata)
+	// TradeKdata.RsiRegion = GetRsiRegion(TradeKdata)
 
 	// global.Log.Println("数据整理", mJson.JsonFormat((mJson.ToJson(TradeKdata))))
 

@@ -14,13 +14,9 @@ var NowKdataList = []mOKX.TypeKd{}
 
 type TradeKdType struct {
 	mOKX.TypeKd
-	EMA_18    string // 与原价格接近 string 类型
-	MA_18     string // 与原价格接近 string 类型
-	RSI_18    string // 0-100 的浮点类型
-	RSI_EMA_9 string // 0-100 的浮点类型
-	CAP_EMA   string // 0-100 的浮点类型
-	CAP_MA    string // 浮点类型
-	CAPIdx    int    // 整型  CAP_EMA 的比值 2 1 0 -1  -2
+	EMA       string // EMA 值
+	RSI       string // RSI 的值
+	CAP_EMA   string // 基于 EMA 的 平滑点数 0-100 的浮点类型
 	RsiRegion int    // 整型 Rsi 的震荡区域  -3 -2 -1 0 1 2 3
 }
 

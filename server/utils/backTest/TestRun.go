@@ -313,12 +313,12 @@ func Analy() {
 	}
 
 	PrintLnResult := func() {
-		global.TradeLog.Printf(
-			"%v %8v RSI:%2v %8v %8v Upl:%10v  \n",
-			Now.TimeStr, fmt.Sprint(Open)+hunter.CAPIdxToText(Open),
-			Now.RsiRegion, Now.RSI_18, Now.RSI_EMA_9,
-			NowOpen.UplRatio+","+fmt.Sprint(NowOpen.Dir),
-		)
+		// global.TradeLog.Printf(
+		// 	"%v %8v RSI:%2v %8v %8v Upl:%10v  \n",
+		// 	Now.TimeStr, fmt.Sprint(Open)+hunter.CAPIdxToText(Open),
+		// 	Now.RsiRegion, Now.RSI_18, Now.RSI_EMA_9,
+		// 	NowOpen.UplRatio+","+fmt.Sprint(NowOpen.Dir),
+		// )
 
 		if Open != NowOpen.Dir {
 			OpenArr = append(OpenArr, NowOpen) // 记录平仓收益
@@ -349,10 +349,10 @@ func Analy() {
 		return
 	}
 
-	global.TradeLog.Printf(
-		"%v %8v RSI:%2v %8v %8v Upl:%10v  \n",
-		Now.TimeStr, fmt.Sprint(Open),
-		Now.RsiRegion, Now.RSI_18, Now.RSI_EMA_9,
-		NowOpen.UplRatio+","+fmt.Sprint(NowOpen.Dir),
-	)
+	// global.TradeLog.Printf(
+	// 	"%v %8v RSI:%2v %8v %8v Upl:%10v  \n",
+	// 	Now.TimeStr, fmt.Sprint(Open),
+	// 	Now.RsiRegion, Now.RSI_18, Now.RSI_EMA_9,
+	// 	NowOpen.UplRatio+","+fmt.Sprint(NowOpen.Dir),
+	// )
 }
