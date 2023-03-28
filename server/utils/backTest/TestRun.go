@@ -5,7 +5,6 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
@@ -166,8 +165,8 @@ func (_this *TestObj) MockData() {
 	for _, Kdata := range _this.KdataList {
 		// 开始执行整理
 		FormatEnd = append(FormatEnd, Kdata)
-		TradeKdata := hunter.NewTradeKdata(Kdata, FormatEnd)
-		TradeKdataList = append(TradeKdataList, TradeKdata)
+		// TradeKdata := hunter.NewTradeKdata(Kdata, FormatEnd)
+		// TradeKdataList = append(TradeKdataList, TradeKdata)
 
 		if len(TradeKdataList) >= 100 {
 			// 开始执行分析

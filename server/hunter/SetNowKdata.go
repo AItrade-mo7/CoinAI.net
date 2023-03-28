@@ -13,7 +13,7 @@ func SetNowKdata() {
 		Page:   0,
 	})
 
-	if len(NowList) < 200 || len(okxInfo.NowKdataList) < 200 {
+	if len(NowList) < 100 || len(okxInfo.NowKdataList) < 200 {
 		global.LogErr("hunter.SetNowKdata 数据不足")
 		return
 	}

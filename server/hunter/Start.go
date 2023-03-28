@@ -59,7 +59,8 @@ func FileBaseKdata() error {
 			})
 			okxInfo.NowKdataList = append(okxInfo.NowKdataList, List...)
 		}
-		global.TradeLog.Println("基础数据回填完毕", len(okxInfo.NowKdataList))
+		Last := okxInfo.NowKdataList[len(okxInfo.NowKdataList)-1]
+		global.TradeLog.Println("基础数据回填完毕", len(okxInfo.NowKdataList), Last.TimeStr, Last.InstID)
 		return nil
 	} else { // 如果不为空 则检查当前的数组和持仓币种的关系
 		// 在这里执行重启

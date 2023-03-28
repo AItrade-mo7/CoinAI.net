@@ -12,6 +12,8 @@ var MaxLen = 900
 
 var NowKdataList = []mOKX.TypeKd{}
 
+var HLPerLeVel = 3 // 涨跌幅等级  按照涨跌幅度排名，  数字越大越不稳定
+
 type TradeKdType struct {
 	mOKX.TypeKd
 	EMA       string // EMA 值
@@ -22,6 +24,14 @@ type TradeKdType struct {
 	CAP_MA    string // 基于 EMA 的 平滑点数 0-100 的浮点类型
 	CAPIdx    int
 	RsiRegion int // 整型 Rsi 的震荡区域  -3 -2 -1 0 1 2 3
+	Opt       TradeKdataOpt
+}
+
+type TradeKdataOpt struct {
+	MA_Period      int // 108
+	RSI_Period     int // 18
+	RSI_EMA_Period int // 14
+	CAP_Period     int // 3
 }
 
 var TradeKdataList []TradeKdType

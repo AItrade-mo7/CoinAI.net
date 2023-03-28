@@ -3,6 +3,7 @@ package hunter
 import (
 	"fmt"
 
+	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mJson"
 )
@@ -37,7 +38,7 @@ func SetTradeInst() (resErr error) {
 	for i := len(HLPerList) - 1; i >= 0; i-- {
 		item := HLPerList[i]
 		rangeCount++
-		if rangeCount > 3 {
+		if rangeCount > okxInfo.HLPerLeVel {
 			break
 		}
 		InstIDList = append(InstIDList, item.InstID)
@@ -74,6 +75,8 @@ func SetTradeInst() (resErr error) {
 
 	okxInfo.KdataInst = KdataInst
 	okxInfo.TradeInst = TradeInst
+
+	global.TradeLog.Println("hunter.SetTradeInst", InstIDList, CoinId)
 
 	return
 }
