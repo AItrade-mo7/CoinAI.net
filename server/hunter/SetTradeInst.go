@@ -10,20 +10,20 @@ import (
 func SetTradeInst() (resErr error) {
 	resErr = nil
 	if len(okxInfo.NowTicker.TickerVol) < 4 {
-		resErr = fmt.Errorf("榜单数量不足 ready.SetTradeInst TickerVol %+v", len(okxInfo.NowTicker.TickerVol))
+		resErr = fmt.Errorf("hunter.SetTradeInst TickerVol %+v", len(okxInfo.NowTicker.TickerVol))
 		return
 	}
 	if len(okxInfo.NowTicker.AnalyWhole) < 3 {
-		resErr = fmt.Errorf("切片数量不足 ready.SetTradeInst AnalyWhole %+v", len(okxInfo.NowTicker.AnalyWhole))
+		resErr = fmt.Errorf("hunter.SetTradeInst AnalyWhole %+v", len(okxInfo.NowTicker.AnalyWhole))
 		return
 	}
 	if len(okxInfo.NowTicker.AnalySingle) < 4 {
-		resErr = fmt.Errorf("币种分析样本不足 ready.SetTradeInst AnalySingle %+v", len(okxInfo.NowTicker.AnalySingle))
+		resErr = fmt.Errorf("hunter.SetTradeInst AnalySingle %+v", len(okxInfo.NowTicker.AnalySingle))
 		return
 	}
 
 	if len(okxInfo.NowTicker.MillionCoin) < 2 {
-		resErr = fmt.Errorf("数据异常 ready.SetTradeInst MillionCoin %+v", len(okxInfo.NowTicker.MillionCoin))
+		resErr = fmt.Errorf("hunter.SetTradeInst MillionCoin %+v", len(okxInfo.NowTicker.MillionCoin))
 		return
 	}
 	// 在这里按照涨幅的绝对值排个序SetTradeInst
@@ -50,7 +50,7 @@ func SetTradeInst() (resErr error) {
 	CoinId := HLPerInstID
 
 	if len(CoinId) < 1 {
-		resErr = fmt.Errorf("数据异常 ready.SetTradeInst CoinId %+v", CoinId)
+		resErr = fmt.Errorf("hunter.SetTradeInst CoinId %+v", CoinId)
 		return
 	}
 
@@ -65,14 +65,12 @@ func SetTradeInst() (resErr error) {
 		TradeInst.InstType == "SWAP" {
 	} else {
 		resErr = fmt.Errorf(
-			"数据异常 ready.SetTradeInst KdataInst:%+v TradeInst:%+v",
+			"hunter.SetTradeInst KdataInst:%+v TradeInst:%+v",
 			mJson.Format(KdataInst),
 			mJson.Format(TradeInst),
 		)
 		return
 	}
-
-	fmt.Println("开始啦")
 
 	okxInfo.KdataInst = KdataInst
 	okxInfo.TradeInst = TradeInst
