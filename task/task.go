@@ -38,6 +38,7 @@ func main() {
 		testHunter.BillingOpt{
 			MockName:  "EMA_108",
 			InitMoney: "1000",
+			Level:     "1",
 		},
 		okxInfo.TradeKdataOpt{
 			MA_Period:      108,
@@ -51,6 +52,7 @@ func main() {
 		testHunter.BillingOpt{
 			MockName:  "EMA_107",
 			InitMoney: "1000",
+			Level:     "1",
 		},
 		okxInfo.TradeKdataOpt{
 			MA_Period:      107,

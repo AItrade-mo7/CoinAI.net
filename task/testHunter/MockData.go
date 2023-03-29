@@ -65,6 +65,7 @@ func (_this *TestObj) MockData(MockOpt BillingOpt, opt okxInfo.TradeKdataOpt) {
 	PositionArr = []PositionType{} // 清空持仓数组
 	OrderArr = []OrderType{}       // 下单数组清空
 	NowMoney = MockOpt.InitMoney   // 设定当前账户资金
+	Level = MockOpt.Level
 
 	// 清理 TradeKdataList
 	TradeKdataList = []okxInfo.TradeKdType{}
@@ -72,18 +73,25 @@ func (_this *TestObj) MockData(MockOpt BillingOpt, opt okxInfo.TradeKdataOpt) {
 	hunter.MA_Arr = []string{}
 	hunter.RSI_Arr = []string{}
 
-	global.Run.Println("新建Mock数据", MockName, mJson.Format(TradeKdataOpt))
+	global.Run.Println("新建Mock数据",
+		mJson.Format(map[string]any{
+			"MockName": MockName,
+			"NowMoney": NowMoney,
+			"Level":    Level,
+		}),
+		mJson.Format(TradeKdataOpt),
+	)
 
 	global.TradeLog.Println(" ============== 开始分析和交易 ============== ", MockName)
 	FormatEnd := []mOKX.TypeKd{}
 	for _, Kdata := range _this.KdataList {
 		FormatEnd = append(FormatEnd, Kdata)
 		TradeKdata := hunter.NewTradeKdata(FormatEnd, TradeKdataOpt)
+
 		TradeKdataList = append(TradeKdataList, TradeKdata)
 
 		fmt.Println(len(hunter.EMA_Arr))
-
-		if len(TradeKdataList) > 100 {
+		if len(TradeKdataList) > opt.MA_Period {
 			// 开始执行分析
 			Analy()
 		}
