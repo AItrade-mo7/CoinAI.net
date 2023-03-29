@@ -1,6 +1,8 @@
 package testHunter
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/hunter"
@@ -17,10 +19,6 @@ import (
 */
 var (
 	MockName = ""
-
-	EMA_Arr = []string{}
-	MA_Arr  = []string{}
-	RSI_Arr = []string{}
 
 	TradeKdataOpt = okxInfo.TradeKdataOpt{}
 
@@ -47,36 +45,30 @@ var (
 	NowPosition PositionType   // 当前持仓
 	PositionArr []PositionType // 当前持仓
 	OrderArr    []OrderType    // 下单列表
+	NowMoney    string         // 账户余额
 )
 
-/*
-okxInfo.TradeKdataOpt{
-			MA_Period:      108,
-			RSI_Period:     18,
-			RSI_EMA_Period: 14,
-			CAP_Period:     3,
-		}
-*/
+type BillingOpt struct {
+	MockName  string // 名字
+	InitMoney string // 初始金钱
+}
 
 // 模拟数据流动并执行分析交易
-func (_this *TestObj) MockData(Name string, opt okxInfo.TradeKdataOpt) {
-	TradeKdataOpt = okxInfo.TradeKdataOpt{}
-	MockName = ""
+func (_this *TestObj) MockData(MockOpt BillingOpt, opt okxInfo.TradeKdataOpt) {
+	TradeKdataOpt = opt         // 交易参数
+	MockName = MockOpt.MockName // MockName
 
 	// 交易信息清空
-	NowPosition = PositionType{}
-	PositionArr = []PositionType{}
-	OrderArr = []OrderType{}
-
-	// 设定交易参数
-	MockName = Name
-	TradeKdataOpt = opt
+	NowPosition = PositionType{}   // 清空持仓
+	PositionArr = []PositionType{} // 清空持仓数组
+	OrderArr = []OrderType{}       // 下单数组清空
+	NowMoney = MockOpt.InitMoney   // 设定当前账户资金
 
 	// 清理 TradeKdataList
 	TradeKdataList = []okxInfo.TradeKdType{}
-	EMA_Arr = []string{}
-	MA_Arr = []string{}
-	RSI_Arr = []string{}
+	hunter.EMA_Arr = []string{}
+	hunter.MA_Arr = []string{}
+	hunter.RSI_Arr = []string{}
 
 	global.Run.Println("新建Mock数据", MockName, mJson.Format(TradeKdataOpt))
 
@@ -86,6 +78,9 @@ func (_this *TestObj) MockData(Name string, opt okxInfo.TradeKdataOpt) {
 		FormatEnd = append(FormatEnd, Kdata)
 		TradeKdata := hunter.NewTradeKdata(FormatEnd, TradeKdataOpt)
 		TradeKdataList = append(TradeKdataList, TradeKdata)
+
+		fmt.Println(len(hunter.EMA_Arr))
+
 		if len(TradeKdataList) > 100 {
 			// 开始执行分析
 			Analy()
@@ -126,21 +121,20 @@ func Analy() {
 	}
 
 	// 更新持仓状态
-	if NowPosition.Dir != 0 { // 当前为持 仓状态
-		NowPosition.UplRatio = mCount.RoseCent(NowKdata.C, NowPosition.OpenAvgPx) // 持仓收益率为 当前价格
-		if NowPosition.Dir < 0 {                                                  // 当前为持 空 仓状态
-			NowPosition.UplRatio = mCount.Sub("0", NowPosition.UplRatio)
+	if NowPosition.Dir != 0 { // 当前为持持仓状态，则计算收益率
+		UplRatio := mCount.RoseCent(NowKdata.C, NowPosition.OpenAvgPx)
+		if NowPosition.Dir < 0 { // 当前为持 空 仓状态
+			UplRatio = mCount.Sub("0", NowPosition.UplRatio)
 		}
+		NowPosition.UplRatio = UplRatio // 乘以杠杆倍数
 	}
+	PositionArr = append(PositionArr, NowPosition)
 
-	global.TradeLog.Println(NowKdata.InstID, NowKdata.TimeStr, len(TradeKdataList), mJson.Format(NowPosition))
+	// 记录一下持仓
 }
 
 // 下单  参数：dir 下单方向 NowKdata : 当前市场行情
 func OnOrder(dir int, NowKdata okxInfo.TradeKdType) {
-	// 记录一下持仓
-	PositionArr = append(PositionArr, NowPosition)
-
 	if dir > 0 { // 开多
 		// 下订单
 		OrderArr = append(OrderArr, OrderType{
@@ -188,4 +182,8 @@ func OnOrder(dir int, NowKdata okxInfo.TradeKdType) {
 		// 更新持仓状态
 		NowPosition = PositionType{}
 	}
+}
+
+// 根据下单结果进行模拟持仓
+func Billing() {
 }
