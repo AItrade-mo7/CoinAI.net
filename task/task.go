@@ -3,14 +3,19 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"os"
 
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/task/testHunter"
 	"github.com/EasyGolang/goTools/mTime"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func main() {
+	AppPackage, _ := os.ReadFile("package.json")
+	jsoniter.Unmarshal(AppPackage, &config.AppInfo)
 	// 初始化系统参数
 	global.Start()
 
