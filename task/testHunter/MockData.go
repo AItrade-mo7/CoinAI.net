@@ -46,11 +46,13 @@ var (
 	PositionArr []PositionType // 当前持仓
 	OrderArr    []OrderType    // 下单列表
 	NowMoney    string         // 账户余额
+	Level       string         // 杠杆倍数
 )
 
 type BillingOpt struct {
 	MockName  string // 名字
 	InitMoney string // 初始金钱
+	Level     string // 杠杆倍数
 }
 
 // 模拟数据流动并执行分析交易
