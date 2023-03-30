@@ -22,18 +22,12 @@ func Start() {
 func Running() {
 	global.TradeLog.Println(" === hunter.Running === ", okxInfo.KdataInst.InstID)
 
-	err := SetTradeInst() // 设置一下
-	if err != nil {
-		global.LogErr(err)
-		return
-	}
-
 	if len(okxInfo.KdataInst.InstID) < 2 || len(okxInfo.TradeInst.InstID) < 2 {
 		global.LogErr("hunter.Running", "okxInfo.TradeInst.InstID 或 KdataInst 为空")
 		return
 	}
 
-	err = FileBaseKdata()
+	err := FileBaseKdata()
 	if err != nil { // 在这里切换了币种，重新执行
 		Running() // 立即重新执行一次 Running
 		return

@@ -3,6 +3,7 @@ package ready
 import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mClock"
 	"github.com/EasyGolang/goTools/mFile"
@@ -39,6 +40,12 @@ func GetAnalyData() {
 
 	if len(okxInfo.NowTicker.TickerVol) < 3 {
 		global.LogErr("ready.GetAnalyData okxInfo.NowTicker.TickerVol 长度不足", len(okxInfo.NowTicker.TickerVol))
+		return
+	}
+
+	err := hunter.SetTradeInst() // 设置一下
+	if err != nil {
+		global.LogErr(err)
 		return
 	}
 
