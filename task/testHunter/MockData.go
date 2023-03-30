@@ -101,15 +101,14 @@ func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt hunter.TradeKd
 	FormatEnd := []mOKX.TypeKd{}
 	for _, Kdata := range _this.KdataList {
 		FormatEnd = append(FormatEnd, Kdata)
-		TradeKdata := hunter.NewTradeKdata(FormatEnd, TradeKdataOpt)
-		hunter.TradeKdataList = append(hunter.TradeKdataList, TradeKdata)
 
 		if len(FormatEnd) < TradeKdataOpt.MA_Period {
 			continue
 		}
 
-		// 开始执行数据整理
-		hunter.FormatTradeKdata(TradeKdataOpt)
+		TradeKdata := hunter.NewTradeKdata(FormatEnd, TradeKdataOpt)
+		hunter.TradeKdataList = append(hunter.TradeKdataList, TradeKdata)
+
 		// 开始执行分析交易
 		Analy()
 
