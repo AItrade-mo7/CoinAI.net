@@ -18,10 +18,7 @@ import (
 模拟数据流动
 */
 var (
-	MockName = ""
-
-	TradeKdataOpt = okxInfo.TradeKdataOpt{}
-
+	TradeKdataOpt  = okxInfo.TradeKdataOpt{}
 	TradeKdataList = []okxInfo.TradeKdType{}
 )
 
@@ -30,6 +27,8 @@ type PositionType struct {
 	Dir         int    // 开仓方向
 	OpenAvgPx   string // 开仓价格
 	OpenTimeStr string // 开仓时间
+	NowTimeStr  string
+	NowC        string
 	InstID      string // 下单币种
 	UplRatio    string // 未实现收益率
 }
@@ -45,27 +44,52 @@ var (
 	NowPosition PositionType   // 当前持仓
 	PositionArr []PositionType // 当前持仓
 	OrderArr    []OrderType    // 下单列表
-	NowMoney    string         // 账户余额
-	Level       string         // 杠杆倍数
+
 )
 
-type BillingOpt struct {
+// 收益结算
+type BillingType struct {
+	NilNum    int    // 空仓次数
+	SellNum   int    // 开空次数
+	BuyNum    int    // 开多次数
+	AllNum    int    // 总开仓次数
+	Win       int    // 盈利次数
+	Lose      int    // 亏损次数
+	WinRatio  string // 盈利比率
+	LoseRatio string // 亏损比率
+	MaxWin    string //  最大盈利
+	MaxLose   string //  最大亏损
+	Charge    string // 手续费率
+	ChargeAll string // 总手续费
 	MockName  string // 名字
 	InitMoney string // 初始金钱
+	NowMoney  string // 账户余额
 	Level     string // 杠杆倍数
 }
 
+var Billing BillingType
+
+var BillingArr []BillingType
+
+// 根据下单结果进行模拟持仓
+func BillingFun(NowKdata okxInfo.TradeKdType) {
+	fmt.Println("下单总结一次", NowKdata.TimeStr, "收益率", NowPosition.UplRatio)
+}
+
 // 模拟数据流动并执行分析交易
-func (_this *TestObj) MockData(MockOpt BillingOpt, opt okxInfo.TradeKdataOpt) {
-	TradeKdataOpt = opt         // 交易参数
-	MockName = MockOpt.MockName // MockName
+func (_this *TestObj) MockData(MockOpt BillingType, opt okxInfo.TradeKdataOpt) {
+	TradeKdataOpt = opt // 交易参数
+	// 收益结算
+	Billing = BillingType{}
+	Billing.MockName = MockOpt.MockName
+	Billing.NowMoney = MockOpt.InitMoney // 设定当前账户资金
+	Billing.Level = MockOpt.Level
+	BillingArr = []BillingType{}
 
 	// 交易信息清空
 	NowPosition = PositionType{}   // 清空持仓
 	PositionArr = []PositionType{} // 清空持仓数组
 	OrderArr = []OrderType{}       // 下单数组清空
-	NowMoney = MockOpt.InitMoney   // 设定当前账户资金
-	Level = MockOpt.Level
 
 	// 清理 TradeKdataList
 	TradeKdataList = []okxInfo.TradeKdType{}
@@ -75,40 +99,43 @@ func (_this *TestObj) MockData(MockOpt BillingOpt, opt okxInfo.TradeKdataOpt) {
 
 	global.Run.Println("新建Mock数据",
 		mJson.Format(map[string]any{
-			"MockName": MockName,
-			"NowMoney": NowMoney,
-			"Level":    Level,
+			"MockName": Billing.MockName,
+			"NowMoney": Billing.NowMoney,
+			"Level":    Billing.Level,
 		}),
 		mJson.Format(TradeKdataOpt),
 	)
 
-	global.TradeLog.Println(" ============== 开始分析和交易 ============== ", MockName)
+	global.TradeLog.Println(" ============== 开始分析和交易 ============== ", Billing.MockName)
 	FormatEnd := []mOKX.TypeKd{}
 	for _, Kdata := range _this.KdataList {
 		FormatEnd = append(FormatEnd, Kdata)
 		TradeKdata := hunter.NewTradeKdata(FormatEnd, TradeKdataOpt)
-
 		TradeKdataList = append(TradeKdataList, TradeKdata)
 
-		fmt.Println(len(hunter.EMA_Arr))
 		if len(TradeKdataList) > opt.MA_Period {
 			// 开始执行分析
 			Analy()
 		}
+
+		if mCount.Le(NowPosition.UplRatio, "-45") < 0 {
+			global.Log.Println("爆仓！", Billing.MockName, Kdata.TimeStr)
+			break
+		}
 	}
 
 	// 记录 整理好的数组
-	TradeKdataList_Path := mStr.Join(config.Dir.JsonData, "/", MockName, "-TradeKdataList.json")
+	TradeKdataList_Path := mStr.Join(config.Dir.JsonData, "/", Billing.MockName, "-TradeKdataList.json")
 	mFile.Write(TradeKdataList_Path, string(mJson.ToJson(TradeKdataList)))
 	global.Run.Println("TradeKdataList: ", TradeKdataList_Path)
 
 	// 记录 持仓数组
-	PositionArr_Path := mStr.Join(config.Dir.JsonData, "/", MockName, "-PositionArr.json")
+	PositionArr_Path := mStr.Join(config.Dir.JsonData, "/", Billing.MockName, "-PositionArr.json")
 	mFile.Write(PositionArr_Path, string(mJson.ToJson(PositionArr)))
 	global.Run.Println("PositionArr: ", PositionArr_Path)
 
 	// 记录 下单数组
-	OrderArr_Path := mStr.Join(config.Dir.JsonData, "/", MockName, "-OrderArr.json")
+	OrderArr_Path := mStr.Join(config.Dir.JsonData, "/", Billing.MockName, "-OrderArr.json")
 	mFile.Write(OrderArr_Path, string(mJson.ToJson(OrderArr)))
 	global.Run.Println("OrderArr: ", OrderArr_Path)
 }
@@ -136,15 +163,16 @@ func Analy() {
 		if NowPosition.Dir < 0 { // 当前为持 空 仓状态
 			UplRatio = mCount.Sub("0", NowPosition.UplRatio)
 		}
-		NowPosition.UplRatio = UplRatio // 乘以杠杆倍数
+		NowPosition.UplRatio = mCount.Mul(UplRatio, Billing.Level) // 乘以杠杆倍数
 	}
+	NowPosition.NowTimeStr = NowKdata.TimeStr
+	NowPosition.NowC = NowKdata.C
 	PositionArr = append(PositionArr, NowPosition)
-
-	// 记录一下持仓
 }
 
 // 下单  参数：dir 下单方向 NowKdata : 当前市场行情
 func OnOrder(dir int, NowKdata okxInfo.TradeKdType) {
+	BillingFun(NowKdata)
 	if dir > 0 { // 开多
 		// 下订单
 		OrderArr = append(OrderArr, OrderType{
@@ -155,9 +183,11 @@ func OnOrder(dir int, NowKdata okxInfo.TradeKdType) {
 		})
 		// 更新持仓状态
 		NowPosition = PositionType{
-			Dir:         1,                // 持仓多方向
-			OpenAvgPx:   NowKdata.C,       // 持仓价格
-			UplRatio:    "0",              // 当前收益率
+			Dir:         1,          // 持仓多方向
+			OpenAvgPx:   NowKdata.C, // 持仓价格
+			NowTimeStr:  NowKdata.TimeStr,
+			UplRatio:    "0", // 当前收益率
+			NowC:        NowKdata.C,
 			OpenTimeStr: NowKdata.TimeStr, // 开仓时间
 			InstID:      NowKdata.InstID,  // 开仓币种
 		}
@@ -173,9 +203,11 @@ func OnOrder(dir int, NowKdata okxInfo.TradeKdType) {
 		})
 		// 更新持仓状态
 		NowPosition = PositionType{
-			Dir:         -1,               // 持仓空方向
-			OpenAvgPx:   NowKdata.C,       // 持仓价格
-			UplRatio:    "0",              // 当前收益率
+			Dir:         -1,         // 持仓空方向
+			OpenAvgPx:   NowKdata.C, // 持仓价格
+			NowTimeStr:  NowKdata.TimeStr,
+			UplRatio:    "0", // 当前收益率
+			NowC:        NowKdata.C,
 			OpenTimeStr: NowKdata.TimeStr, // 开仓时间
 			InstID:      NowKdata.InstID,  // 开仓币种
 		}
@@ -189,11 +221,15 @@ func OnOrder(dir int, NowKdata okxInfo.TradeKdType) {
 			AvgPx:   NowKdata.C,       // 记录下单价格
 			TimeStr: NowKdata.TimeStr, // 记录下单时间
 		})
-		// 更新持仓状态
-		NowPosition = PositionType{}
+		// 更新为空仓状态
+		NowPosition = PositionType{
+			Dir:         0,  // 持仓空方向
+			OpenAvgPx:   "", // 持仓价格
+			NowTimeStr:  NowKdata.TimeStr,
+			UplRatio:    "0", // 当前收益率
+			NowC:        NowKdata.C,
+			OpenTimeStr: NowKdata.TimeStr, // 开仓时间
+			InstID:      NowKdata.InstID,  // 开仓币种
+		}
 	}
-}
-
-// 根据下单结果进行模拟持仓
-func Billing() {
 }
