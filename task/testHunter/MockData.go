@@ -283,6 +283,8 @@ func ResultCollect() {
 	global.Run.Println("Billing: ", Billing_Path)
 
 	Tmp := `交易结果: 
+最初持仓时间:
+回测结束时间:
 空仓次数: ${NilNum}    
 开空次数: ${SellNum}   
 开多次数: ${BuyNum}    
@@ -301,6 +303,8 @@ func ResultCollect() {
 杠杆倍数: ${Level}     
 `
 	Data := map[string]string{
+		"StartTime": PositionArr[0].NowTimeStr,                  // 开始时间
+		"EndTime":   PositionArr[len(PositionArr)-1].NowTimeStr, // 结束时间
 		"NilNum":    mStr.ToStr(Billing.NilNum),
 		"SellNum":   mStr.ToStr(Billing.SellNum),
 		"BuyNum":    mStr.ToStr(Billing.BuyNum),
