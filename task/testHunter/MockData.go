@@ -13,8 +13,6 @@ import (
 	"github.com/EasyGolang/goTools/mStr"
 )
 
-var TradeKdataList = []hunter.TradeKdType{}
-
 // 开仓信息记录
 type PositionType struct {
 	Dir         int    // 开仓方向
@@ -95,7 +93,7 @@ func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt hunter.TradeKd
 	global.TradeLog.Println(" ============== 开始分析和交易 ============== ", Billing.MockName)
 
 	// 清理 TradeKdataList
-	TradeKdataList = []hunter.TradeKdType{}
+	hunter.TradeKdataList = []hunter.TradeKdType{}
 	hunter.EMA_Arr = []string{}
 	hunter.MA_Arr = []string{}
 	hunter.RSI_Arr = []string{}
@@ -104,7 +102,7 @@ func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt hunter.TradeKd
 	for _, Kdata := range _this.KdataList {
 		FormatEnd = append(FormatEnd, Kdata)
 		TradeKdata := hunter.NewTradeKdata(FormatEnd, TradeKdataOpt)
-		TradeKdataList = append(TradeKdataList, TradeKdata)
+		hunter.TradeKdataList = append(hunter.TradeKdataList, TradeKdata)
 
 		if len(FormatEnd) < TradeKdataOpt.MA_Period {
 			continue
