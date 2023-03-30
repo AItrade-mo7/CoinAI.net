@@ -17,8 +17,8 @@ var (
 	RSI_Arr = []string{}
 )
 
-func FormatTradeKdata() {
-	if len(okxInfo.NowKdataList) < 200 {
+func FormatTradeKdata(TradeKdataOpt okxInfo.TradeKdataOpt) {
+	if len(okxInfo.NowKdataList) < TradeKdataOpt.MA_Period {
 		global.LogErr("hunter.FormatTradeKdata 数据不足")
 		return
 	}
@@ -32,12 +32,7 @@ func FormatTradeKdata() {
 	FormatEnd := []mOKX.TypeKd{}
 	for _, Kdata := range okxInfo.NowKdataList {
 		FormatEnd = append(FormatEnd, Kdata)
-		TradeKdata := NewTradeKdata(FormatEnd, okxInfo.TradeKdataOpt{
-			MA_Period:      108,
-			RSI_Period:     18,
-			RSI_EMA_Period: 14,
-			CAP_Period:     3,
-		})
+		TradeKdata := NewTradeKdata(FormatEnd, TradeKdataOpt)
 		okxInfo.TradeKdataList = append(okxInfo.TradeKdataList, TradeKdata)
 	}
 

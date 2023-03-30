@@ -35,7 +35,12 @@ func Running() {
 
 	SetNowKdata()
 
-	FormatTradeKdata()
+	FormatTradeKdata(okxInfo.TradeKdataOpt{
+		MA_Period:      108,
+		RSI_Period:     18,
+		RSI_EMA_Period: 14,
+		CAP_Period:     3,
+	})
 
 	Analy()
 }

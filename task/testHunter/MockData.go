@@ -14,14 +14,6 @@ import (
 	"github.com/EasyGolang/goTools/mStr"
 )
 
-/*
-模拟数据流动
-*/
-var (
-	TradeKdataOpt  = okxInfo.TradeKdataOpt{}
-	TradeKdataList = []okxInfo.TradeKdType{}
-)
-
 // 开仓信息记录
 type PositionType struct {
 	Dir         int    // 开仓方向
@@ -77,8 +69,7 @@ func BillingFun(NowKdata okxInfo.TradeKdType) {
 }
 
 // 模拟数据流动并执行分析交易
-func (_this *TestObj) MockData(MockOpt BillingType, opt okxInfo.TradeKdataOpt) {
-	TradeKdataOpt = opt // 交易参数
+func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt okxInfo.TradeKdataOpt) {
 	// 收益结算
 	Billing = BillingType{}
 	Billing.MockName = MockOpt.MockName
@@ -92,10 +83,6 @@ func (_this *TestObj) MockData(MockOpt BillingType, opt okxInfo.TradeKdataOpt) {
 	OrderArr = []OrderType{}       // 下单数组清空
 
 	// 清理 TradeKdataList
-	TradeKdataList = []okxInfo.TradeKdType{}
-	hunter.EMA_Arr = []string{}
-	hunter.MA_Arr = []string{}
-	hunter.RSI_Arr = []string{}
 
 	global.Run.Println("新建Mock数据",
 		mJson.Format(map[string]any{
@@ -106,17 +93,18 @@ func (_this *TestObj) MockData(MockOpt BillingType, opt okxInfo.TradeKdataOpt) {
 		mJson.Format(TradeKdataOpt),
 	)
 
-	global.TradeLog.Println(" ============== 开始分析和交易 ============== ", Billing.MockName)
-	FormatEnd := []mOKX.TypeKd{}
-	for _, Kdata := range _this.KdataList {
-		FormatEnd = append(FormatEnd, Kdata)
-		TradeKdata := hunter.NewTradeKdata(FormatEnd, TradeKdataOpt)
-		TradeKdataList = append(TradeKdataList, TradeKdata)
+	okxInfo.NowKdataList = []mOKX.TypeKd{}
 
-		if len(TradeKdataList) > opt.MA_Period {
-			// 开始执行分析
-			Analy()
+	global.TradeLog.Println(" ============== 开始分析和交易 ============== ", Billing.MockName)
+	for _, Kdata := range _this.KdataList {
+		// 开始执行策略模拟
+		okxInfo.NowKdataList = append(okxInfo.NowKdataList, Kdata)
+		if len(okxInfo.NowKdataList) < TradeKdataOpt.MA_Period {
+			continue
 		}
+		Analy()
+
+		hunter.FormatTradeKdata(TradeKdataOpt)
 
 		if mCount.Le(NowPosition.UplRatio, "-45") < 0 {
 			global.Log.Println("爆仓！", Billing.MockName, Kdata.TimeStr)
@@ -126,7 +114,7 @@ func (_this *TestObj) MockData(MockOpt BillingType, opt okxInfo.TradeKdataOpt) {
 
 	// 记录 整理好的数组
 	TradeKdataList_Path := mStr.Join(config.Dir.JsonData, "/", Billing.MockName, "-TradeKdataList.json")
-	mFile.Write(TradeKdataList_Path, string(mJson.ToJson(TradeKdataList)))
+	mFile.Write(TradeKdataList_Path, string(mJson.ToJson(okxInfo.TradeKdataList)))
 	global.Run.Println("TradeKdataList: ", TradeKdataList_Path)
 
 	// 记录 持仓数组
@@ -141,7 +129,7 @@ func (_this *TestObj) MockData(MockOpt BillingType, opt okxInfo.TradeKdataOpt) {
 }
 
 func Analy() {
-	NowKdata := TradeKdataList[len(TradeKdataList)-1]
+	NowKdata := okxInfo.TradeKdataList[len(okxInfo.TradeKdataList)-1]
 	AnalyDir := 0 // 分析的方向，默认为 0 不开仓
 
 	if mCount.Le(NowKdata.CAP_EMA, "0") > 0 { // 大于 0 则开多
