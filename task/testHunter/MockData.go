@@ -38,6 +38,8 @@ var (
 
 // 收益结算
 type BillingType struct {
+	StartTime string // 开始时间
+	EndTime   string // 结束时间
 	NilNum    int    // 空仓次数
 	SellNum   int    // 开空次数
 	BuyNum    int    // 开多次数
@@ -111,6 +113,10 @@ func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt hunter.TradeKd
 		}
 	}
 
+	if len(hunter.TradeKdataList) > 0 {
+		Billing.EndTime = hunter.TradeKdataList[len(hunter.TradeKdataList)-1].TimeStr
+	}
+
 	// 搜集和整理结果
 	ResultCollect()
 }
@@ -155,7 +161,12 @@ func BillingFun(NowKdata hunter.TradeKdType) {
 
 	if NowPosition.Dir == 0 {
 		Billing.NilNum++ // 空仓计数
+	} else {
+		if len(Billing.StartTime) == 0 {
+			Billing.StartTime = NowPosition.OpenTimeStr
+		}
 	}
+
 	if NowPosition.Dir < 0 {
 		Billing.SellNum++ // 开空 计数
 	}
@@ -283,8 +294,8 @@ func ResultCollect() {
 	global.Run.Println("Billing: ", Billing_Path)
 
 	Tmp := `交易结果: 
-最初持仓时间:
-回测结束时间:
+第一次持仓时间: ${StartTime}
+数据结束时间: ${EndTime}
 空仓次数: ${NilNum}    
 开空次数: ${SellNum}   
 开多次数: ${BuyNum}    
@@ -303,8 +314,8 @@ func ResultCollect() {
 杠杆倍数: ${Level}     
 `
 	Data := map[string]string{
-		"StartTime": PositionArr[0].NowTimeStr,                  // 开始时间
-		"EndTime":   PositionArr[len(PositionArr)-1].NowTimeStr, // 结束时间
+		"StartTime": Billing.StartTime, // 开始时间
+		"EndTime":   Billing.EndTime,   // 结束时间
 		"NilNum":    mStr.ToStr(Billing.NilNum),
 		"SellNum":   mStr.ToStr(Billing.SellNum),
 		"BuyNum":    mStr.ToStr(Billing.BuyNum),
