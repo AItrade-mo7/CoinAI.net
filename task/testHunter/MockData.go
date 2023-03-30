@@ -146,11 +146,6 @@ func Analy() {
 		AnalyDir = -1
 	}
 
-	// 当前持仓与 判断方向不符合时，执行一次下单操作
-	if NowPosition.Dir != AnalyDir {
-		OnOrder(AnalyDir, NowKdata)
-	}
-
 	// 更新持仓状态
 	if NowPosition.Dir != 0 { // 当前为持持仓状态，则计算收益率
 		UplRatio := mCount.RoseCent(NowKdata.C, NowPosition.OpenAvgPx)
@@ -162,6 +157,11 @@ func Analy() {
 	NowPosition.NowTimeStr = NowKdata.TimeStr
 	NowPosition.NowC = NowKdata.C
 	PositionArr = append(PositionArr, NowPosition)
+
+	// 当前持仓与 判断方向不符合时，执行一次下单操作
+	if NowPosition.Dir != AnalyDir {
+		OnOrder(AnalyDir, NowKdata)
+	}
 }
 
 // 下单  参数：dir 下单方向 NowKdata : 当前市场行情
