@@ -1,8 +1,6 @@
 package testHunter
 
 import (
-	"fmt"
-
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/hunter"
@@ -45,26 +43,68 @@ type BillingType struct {
 	BuyNum    int    // 开多次数
 	AllNum    int    // 总开仓次数
 	Win       int    // 盈利次数
+	WinRatio  string // 总盈利比率
 	Lose      int    // 亏损次数
-	WinRatio  string // 盈利比率
-	LoseRatio string // 亏损比率
-	MaxWin    string //  最大盈利
-	MaxLose   string //  最大亏损
+	LoseRatio string // 总亏损比率
+	MaxRatio  string //  最大盈利比率
+	MinRatio  string //  最小盈利比率
 	Charge    string // 手续费率
 	ChargeAll string // 总手续费
 	MockName  string // 名字
 	InitMoney string // 初始金钱
-	NowMoney  string // 账户余额
+	Money     string // 账户当前余额
 	Level     string // 杠杆倍数
 }
 
 var Billing BillingType
 
-var BillingArr []BillingType
-
 // 根据下单结果进行模拟持仓
 func BillingFun(NowKdata hunter.TradeKdType) {
-	fmt.Println("下单总结一次", NowKdata.TimeStr, "收益率", NowPosition.UplRatio)
+	// fmt.Println("下单总结一次",
+	// 	NowKdata.TimeStr,
+	// 	"持仓方向", NowPosition.Dir,
+	// 	"收益率", NowPosition.UplRatio,
+	// )
+
+	if NowPosition.Dir == 0 {
+		Billing.NilNum++ // 空仓计数
+	}
+	if NowPosition.Dir < 0 {
+		Billing.SellNum++ // 开空 计数
+	}
+	if NowPosition.Dir > 0 {
+		Billing.BuyNum++ // 开多 计数
+	}
+
+	if mCount.Le(NowPosition.UplRatio, "0") > 0 {
+		Billing.Win++                                                         // 盈利次数计数
+		Billing.WinRatio = mCount.Add(NowPosition.UplRatio, Billing.WinRatio) // 盈利比例相加
+	}
+
+	if mCount.Le(NowPosition.UplRatio, "0") < 0 {
+		Billing.Lose++                                                          // 亏损次数计数
+		Billing.LoseRatio = mCount.Add(NowPosition.UplRatio, Billing.LoseRatio) // 盈利比例相加
+	}
+	// 单次最大亏损和单次最大盈利
+	if mCount.Le(NowPosition.UplRatio, Billing.MaxRatio) > 0 {
+		Billing.MaxRatio = NowPosition.UplRatio
+	}
+	if mCount.Le(NowPosition.UplRatio, Billing.MinRatio) < 0 {
+		Billing.MinRatio = NowPosition.UplRatio
+	}
+
+	Upl := mCount.Div(NowPosition.UplRatio, "100") // 格式化收益率
+	ChargeUpl := mCount.Div(Billing.Charge, "100") // 格式化手续费率
+
+	makeMoney := mCount.Mul(Billing.Money, Upl)          // 当前盈利的金钱
+	Billing.Money = mCount.Add(Billing.Money, makeMoney) // 相加得出当账户总资金量
+
+	nowCharge := mCount.Mul(Billing.Money, ChargeUpl)    // 当前产生的手续费
+	Billing.Money = mCount.Sub(Billing.Money, nowCharge) // 减去手续费
+
+	Billing.ChargeAll = mCount.Add(Billing.ChargeAll, nowCharge) // 记录一下手续费
+
+	Billing.AllNum++ // 记录一下总交易次数
 }
 
 // 模拟数据流动并执行分析交易
@@ -72,9 +112,10 @@ func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt hunter.TradeKd
 	// 收益结算
 	Billing = BillingType{}
 	Billing.MockName = MockOpt.MockName
-	Billing.NowMoney = MockOpt.InitMoney // 设定当前账户资金
+	Billing.InitMoney = MockOpt.InitMoney // 设定初始资金
+	Billing.Money = MockOpt.InitMoney     // 设定当前账户资金
 	Billing.Level = MockOpt.Level
-	BillingArr = []BillingType{}
+	Billing.Charge = MockOpt.Charge
 
 	// 交易信息清空
 	NowPosition = PositionType{}   // 清空持仓
@@ -83,9 +124,10 @@ func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt hunter.TradeKd
 
 	global.Run.Println("新建Mock数据",
 		mJson.Format(map[string]any{
-			"MockName": Billing.MockName,
-			"NowMoney": Billing.NowMoney,
-			"Level":    Billing.Level,
+			"参数组名称":   Billing.MockName,
+			"初始资金":    Billing.InitMoney,
+			"杠杆倍率":    Billing.Level,
+			"手续费率(%)": Billing.Charge,
 		}),
 		mJson.Format(TradeKdataOpt),
 	)
@@ -132,6 +174,8 @@ func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt hunter.TradeKd
 	OrderArr_Path := mStr.Join(config.Dir.JsonData, "/", Billing.MockName, "-OrderArr.json")
 	mFile.Write(OrderArr_Path, string(mJson.ToJson(OrderArr)))
 	global.Run.Println("OrderArr: ", OrderArr_Path)
+
+	global.TradeLog.Println(" 交易结果  ", mJson.Format(Billing))
 }
 
 func Analy() {

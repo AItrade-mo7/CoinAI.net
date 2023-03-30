@@ -37,8 +37,9 @@ func main() {
 	back.MockData(
 		testHunter.BillingType{
 			MockName:  "EMA_108",
-			InitMoney: "1000",
-			Level:     "1",
+			InitMoney: "1000", // 初始资金
+			Level:     "1",    // 杠杆倍数
+			Charge:    "0.05", // 吃单标准手续费率 0.05%
 		},
 		hunter.TradeKdataOpt{
 			MA_Period:      108,
