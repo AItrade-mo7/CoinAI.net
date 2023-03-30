@@ -27,5 +27,5 @@ func Analy() {
 		"RsiEmaRegion": Last.RsiEmaRegion,
 		"Opt":          Last.Opt,
 	}
-	global.TradeLog.Println("hunter.Analy 开始分析并执行交易 Last", mJson.Println(LastPrint))
+	global.TradeLog.Println("hunter.Analy 开始分析并执行交易 Last", mJson.Format(LastPrint))
 }
