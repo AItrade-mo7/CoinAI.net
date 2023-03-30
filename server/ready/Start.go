@@ -43,7 +43,8 @@ func GetAnalyData() {
 		return
 	}
 
-	err := hunter.SetTradeInst() // 设置一下
+	// 这里会读取当前持仓先设置一下，然后每次平仓后还会再设置一次，目前持仓没有被设置
+	err := hunter.SetTradeInst() // 设置一下, 每次平仓还会再设置一下
 	if err != nil {
 		global.LogErr(err)
 		return
