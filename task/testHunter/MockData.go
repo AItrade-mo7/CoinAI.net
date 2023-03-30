@@ -149,8 +149,8 @@ func Analy() {
 	// 更新持仓状态
 	if NowPosition.Dir != 0 { // 当前为持持仓状态，则计算收益率
 		UplRatio := mCount.RoseCent(NowKdata.C, NowPosition.OpenAvgPx)
-		if NowPosition.Dir < 0 { // 当前为持 空 仓状态
-			UplRatio = mCount.Sub("0", NowPosition.UplRatio)
+		if NowPosition.Dir < 0 { // 当前为持 空 仓状态 则翻转该值
+			UplRatio = mCount.Sub("0", UplRatio)
 		}
 		NowPosition.UplRatio = mCount.Mul(UplRatio, Billing.Level) // 乘以杠杆倍数
 	}
