@@ -58,55 +58,6 @@ type BillingType struct {
 
 var Billing BillingType
 
-// 根据下单结果进行模拟持仓
-func BillingFun(NowKdata hunter.TradeKdType) {
-	// fmt.Println("下单总结一次",
-	// 	NowKdata.TimeStr,
-	// 	"持仓方向", NowPosition.Dir,
-	// 	"收益率", NowPosition.UplRatio,
-	// )
-
-	if NowPosition.Dir == 0 {
-		Billing.NilNum++ // 空仓计数
-	}
-	if NowPosition.Dir < 0 {
-		Billing.SellNum++ // 开空 计数
-	}
-	if NowPosition.Dir > 0 {
-		Billing.BuyNum++ // 开多 计数
-	}
-
-	if mCount.Le(NowPosition.UplRatio, "0") > 0 {
-		Billing.Win++                                                         // 盈利次数计数
-		Billing.WinRatio = mCount.Add(NowPosition.UplRatio, Billing.WinRatio) // 盈利比例相加
-	}
-
-	if mCount.Le(NowPosition.UplRatio, "0") < 0 {
-		Billing.Lose++                                                          // 亏损次数计数
-		Billing.LoseRatio = mCount.Add(NowPosition.UplRatio, Billing.LoseRatio) // 盈利比例相加
-	}
-	// 单次最大亏损和单次最大盈利
-	if mCount.Le(NowPosition.UplRatio, Billing.MaxRatio) > 0 {
-		Billing.MaxRatio = NowPosition.UplRatio
-	}
-	if mCount.Le(NowPosition.UplRatio, Billing.MinRatio) < 0 {
-		Billing.MinRatio = NowPosition.UplRatio
-	}
-
-	Upl := mCount.Div(NowPosition.UplRatio, "100") // 格式化收益率
-	ChargeUpl := mCount.Div(Billing.Charge, "100") // 格式化手续费率
-
-	makeMoney := mCount.Mul(Billing.Money, Upl)          // 当前盈利的金钱
-	Billing.Money = mCount.Add(Billing.Money, makeMoney) // 相加得出当账户总资金量
-
-	nowCharge := mCount.Mul(Billing.Money, ChargeUpl)    // 当前产生的手续费
-	Billing.Money = mCount.Sub(Billing.Money, nowCharge) // 减去手续费
-
-	Billing.ChargeAll = mCount.Add(Billing.ChargeAll, nowCharge) // 记录一下手续费
-
-	Billing.AllNum++ // 记录一下总交易次数
-}
-
 // 模拟数据流动并执行分析交易
 func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt hunter.TradeKdataOpt) {
 	// 收益结算
@@ -160,22 +111,8 @@ func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt hunter.TradeKd
 		}
 	}
 
-	// 记录 整理好的数组
-	TradeKdataList_Path := mStr.Join(config.Dir.JsonData, "/", Billing.MockName, "-TradeKdataList.json")
-	mFile.Write(TradeKdataList_Path, string(mJson.ToJson(hunter.TradeKdataList)))
-	global.Run.Println("TradeKdataList: ", TradeKdataList_Path)
-
-	// 记录 持仓数组
-	PositionArr_Path := mStr.Join(config.Dir.JsonData, "/", Billing.MockName, "-PositionArr.json")
-	mFile.Write(PositionArr_Path, string(mJson.ToJson(PositionArr)))
-	global.Run.Println("PositionArr: ", PositionArr_Path)
-
-	// 记录 下单数组
-	OrderArr_Path := mStr.Join(config.Dir.JsonData, "/", Billing.MockName, "-OrderArr.json")
-	mFile.Write(OrderArr_Path, string(mJson.ToJson(OrderArr)))
-	global.Run.Println("OrderArr: ", OrderArr_Path)
-
-	global.TradeLog.Println(" 交易结果  ", mJson.Format(Billing))
+	// 搜集和整理结果
+	ResultCollect()
 }
 
 func Analy() {
@@ -206,6 +143,57 @@ func Analy() {
 	if NowPosition.Dir != AnalyDir {
 		OnOrder(AnalyDir, NowKdata)
 	}
+}
+
+// 根据下单结果进行模拟持仓
+func BillingFun(NowKdata hunter.TradeKdType) {
+	// fmt.Println("下单总结一次",
+	// 	NowKdata.TimeStr,
+	// 	"持仓方向", NowPosition.Dir,
+	// 	"收益率", NowPosition.UplRatio,
+	// )
+
+	if NowPosition.Dir == 0 {
+		Billing.NilNum++ // 空仓计数
+	}
+	if NowPosition.Dir < 0 {
+		Billing.SellNum++ // 开空 计数
+	}
+	if NowPosition.Dir > 0 {
+		Billing.BuyNum++ // 开多 计数
+	}
+
+	if mCount.Le(NowPosition.UplRatio, "0") > 0 {
+		Billing.Win++                                                         // 盈利次数计数
+		Billing.WinRatio = mCount.Add(NowPosition.UplRatio, Billing.WinRatio) // 盈利比例相加
+	}
+
+	if mCount.Le(NowPosition.UplRatio, "0") < 0 {
+		Billing.Lose++                                                          // 亏损次数计数
+		Billing.LoseRatio = mCount.Add(NowPosition.UplRatio, Billing.LoseRatio) // 盈利比例相加
+	}
+	// 单次最大亏损和单次最大盈利
+	if mCount.Le(NowPosition.UplRatio, Billing.MaxRatio) > 0 {
+		Billing.MaxRatio = NowPosition.UplRatio
+	}
+	if mCount.Le(NowPosition.UplRatio, Billing.MinRatio) < 0 {
+		Billing.MinRatio = NowPosition.UplRatio
+	}
+
+	Upl := mCount.Div(NowPosition.UplRatio, "100") // 格式化收益率
+	ChargeUpl := mCount.Div(Billing.Charge, "100") // 格式化手续费率
+
+	makeMoney := mCount.Mul(Billing.Money, Upl)          // 当前盈利的金钱
+	Billing.Money = mCount.Add(Billing.Money, makeMoney) // 相加得出当账户总资金量
+
+	nowCharge := mCount.Mul(Billing.Money, ChargeUpl)            // 当前产生的手续费
+	Billing.Money = mCount.Sub(Billing.Money, nowCharge)         // 减去手续费
+	Billing.ChargeAll = mCount.Add(Billing.ChargeAll, nowCharge) // 记录一下手续费
+
+	Billing.Money = mCount.CentRound(Billing.Money, 3)         // 四舍五入保留两位小数
+	Billing.ChargeAll = mCount.CentRound(Billing.ChargeAll, 3) // 四舍五入保留两位小数
+
+	Billing.AllNum++ // 记录一下总交易次数
 }
 
 // 下单  参数：dir 下单方向 NowKdata : 当前市场行情
@@ -271,4 +259,65 @@ func OnOrder(dir int, NowKdata hunter.TradeKdType) {
 			InstID:      NowKdata.InstID,  // 开仓币种
 		}
 	}
+}
+
+func ResultCollect() {
+	// 记录 整理好的数组
+	TradeKdataList_Path := mStr.Join(config.Dir.JsonData, "/", Billing.MockName, "-TradeKdataList.json")
+	mFile.Write(TradeKdataList_Path, string(mJson.ToJson(hunter.TradeKdataList)))
+	global.Run.Println("TradeKdataList: ", TradeKdataList_Path)
+
+	// 记录 持仓数组
+	PositionArr_Path := mStr.Join(config.Dir.JsonData, "/", Billing.MockName, "-PositionArr.json")
+	mFile.Write(PositionArr_Path, string(mJson.ToJson(PositionArr)))
+	global.Run.Println("PositionArr: ", PositionArr_Path)
+
+	// 记录 下单数组
+	OrderArr_Path := mStr.Join(config.Dir.JsonData, "/", Billing.MockName, "-OrderArr.json")
+	mFile.Write(OrderArr_Path, string(mJson.ToJson(OrderArr)))
+	global.Run.Println("OrderArr: ", OrderArr_Path)
+
+	// 记录 交易结果
+	Billing_Path := mStr.Join(config.Dir.JsonData, "/", Billing.MockName, "-Billing.json")
+	mFile.Write(Billing_Path, string(mJson.ToJson(Billing)))
+	global.Run.Println("Billing: ", Billing_Path)
+
+	Tmp := `交易结果: 
+空仓次数: ${NilNum}    
+开空次数: ${SellNum}   
+开多次数: ${BuyNum}    
+总开仓次数: ${AllNum}    
+盈利次数: ${Win}       
+总盈利比率: ${WinRatio}  
+亏损次数: ${Lose}      
+总亏损比率: ${LoseRatio} 
+最大盈利比率: ${MaxRatio}  
+最小盈利比率: ${MinRatio}  
+手续费率: ${Charge}    
+总手续费: ${ChargeAll} 
+参数名称: ${MockName}  
+初始金钱: ${InitMoney} 
+账户当前余额: ${Money}     
+杠杆倍数: ${Level}     
+`
+	Data := map[string]string{
+		"NilNum":    mStr.ToStr(Billing.NilNum),
+		"SellNum":   mStr.ToStr(Billing.SellNum),
+		"BuyNum":    mStr.ToStr(Billing.BuyNum),
+		"AllNum":    mStr.ToStr(Billing.AllNum),
+		"Win":       mStr.ToStr(Billing.Win),
+		"WinRatio":  Billing.WinRatio,
+		"Lose":      mStr.ToStr(Billing.Lose),
+		"LoseRatio": Billing.LoseRatio,
+		"MaxRatio":  Billing.MaxRatio,
+		"MinRatio":  Billing.MinRatio,
+		"Charge":    Billing.Charge,
+		"ChargeAll": Billing.ChargeAll,
+		"MockName":  Billing.MockName,
+		"InitMoney": Billing.InitMoney,
+		"Money":     Billing.Money,
+		"Level":     Billing.Level,
+	}
+
+	global.TradeLog.Println(mStr.Temp(Tmp, Data))
 }

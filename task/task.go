@@ -48,18 +48,4 @@ func main() {
 			CAP_Period:     3,
 		},
 	)
-
-	// back.MockData(
-	// 	testHunter.BillingType{
-	// 		MockName:  "EMA_107",
-	// 		InitMoney: "1000",
-	// 		Level:     "1",
-	// 	},
-	// 	okxInfo.TradeKdataOpt{
-	// 		MA_Period:      107,
-	// 		RSI_Period:     18,
-	// 		RSI_EMA_Period: 14,
-	// 		CAP_Period:     3,
-	// 	},
-	// )
 }
