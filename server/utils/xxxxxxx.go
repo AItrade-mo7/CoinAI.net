@@ -5,7 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/okxInfo"
+	"CoinAI.net/server/hunter"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
@@ -150,14 +150,14 @@ func (_this *TestObj) CheckKdataList() (resErr error) {
 var (
 	EMA_Arr        = []string{}
 	MA_Arr         = []string{}
-	TradeKdataList = []okxInfo.TradeKdType{}
+	TradeKdataList = []hunter.TradeKdType{}
 	FormatEnd      = []mOKX.TypeKd{}
 )
 
 func (_this *TestObj) MockData() {
 	// 在这里开始执行模拟数据流的流动
 	// 执行一次清理
-	TradeKdataList = []okxInfo.TradeKdType{}
+	TradeKdataList = []hunter.TradeKdType{}
 	EMA_Arr = []string{}
 	MA_Arr = []string{}
 	FormatEnd = []mOKX.TypeKd{}
@@ -187,7 +187,7 @@ type TypeOpen struct {
 }
 
 var (
-	RSIMax  = okxInfo.TradeKdType{}
+	RSIMax  = hunter.TradeKdType{}
 	NowOpen TypeOpen
 	OpenArr []TypeOpen
 )

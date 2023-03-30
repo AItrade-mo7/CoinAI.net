@@ -2,21 +2,20 @@ package hunter
 
 import (
 	"CoinAI.net/server/global"
-	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mJson"
 )
 
 func Analy() {
-	if len(okxInfo.TradeKdataList) < 100 {
-		global.LogErr("hunter.Analy 数据长度错误", len(okxInfo.TradeKdataList))
+	if len(TradeKdataList) < 100 {
+		global.LogErr("hunter.Analy 数据长度错误", len(TradeKdataList))
 		return
 	}
 
-	Last := okxInfo.TradeKdataList[len(okxInfo.TradeKdataList)-1]
+	Last := TradeKdataList[len(TradeKdataList)-1]
 	LastPrint := map[string]any{
 		"InstID":       Last.InstID,
 		"TimeStr":      Last.TimeStr,
-		"AllLen":       len(okxInfo.TradeKdataList),
+		"AllLen":       len(TradeKdataList),
 		"C":            Last.C,
 		"EMA":          Last.EMA,
 		"MA":           Last.MA,

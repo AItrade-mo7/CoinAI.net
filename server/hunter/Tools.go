@@ -3,7 +3,6 @@ package hunter
 import (
 	"fmt"
 
-	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mOKX"
 )
@@ -58,7 +57,7 @@ func Sort_HLPer(data []mOKX.AnalySliceType) []mOKX.AnalySliceType {
 -2  30-40   多卖区
 -3  小于 30  超卖区
 */
-func GetRsiRegion(now okxInfo.TradeKdType) int {
+func GetRsiRegion(now TradeKdType) int {
 	RSI_EMA := now.RSI_EMA
 	// 1 50-60
 	if mCount.Le(RSI_EMA, "50") > 0 && mCount.Le(RSI_EMA, "60") <= 0 {
@@ -98,7 +97,7 @@ func GetRsiRegion(now okxInfo.TradeKdType) int {
 }
 
 // RsiRegion EMA 是否为降序
-func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) []int {
+func Is_RsiRegion_GoDown(preArr []TradeKdType) []int {
 	cacheArr := []int{}
 	downArr := []int{}
 
@@ -131,7 +130,7 @@ func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) []int {
 }
 
 // RsiRegion EMA 是否为升序
-func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) []int {
+func Is_RsiRegion_GoUp(preArr []TradeKdType) []int {
 	cacheArr := []int{}
 	upArr := []int{}
 	/*
@@ -164,7 +163,7 @@ func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) []int {
 }
 
 // preArr 的 RsiRegion 是否有大于2  的存在
-func Is_RsiRegion_Gte2(preArr []okxInfo.TradeKdType) (result bool) {
+func Is_RsiRegion_Gte2(preArr []TradeKdType) (result bool) {
 	result = false
 	if len(preArr) < 3 {
 		return
@@ -183,7 +182,7 @@ func Is_RsiRegion_Gte2(preArr []okxInfo.TradeKdType) (result bool) {
 }
 
 // CAP_EMA 是否为升序
-func Is_CAP_EMA_GoUp(preArr []okxInfo.TradeKdType) []string {
+func Is_CAP_EMA_GoUp(preArr []TradeKdType) []string {
 	cacheArr := []string{}
 	upArr := []string{}
 
@@ -217,7 +216,7 @@ func Is_CAP_EMA_GoUp(preArr []okxInfo.TradeKdType) []string {
 }
 
 // CAP_EMA 是否为升序
-func Is_CAP_EMA_GoDown(preArr []okxInfo.TradeKdType) []string {
+func Is_CAP_EMA_GoDown(preArr []TradeKdType) []string {
 	cacheArr := []string{}
 	downArr := []string{}
 
@@ -250,7 +249,7 @@ func Is_CAP_EMA_GoDown(preArr []okxInfo.TradeKdType) []string {
 	return downArr
 }
 
-func GetCAPIdx(now okxInfo.TradeKdType) int {
+func GetCAPIdx(now TradeKdType) int {
 	now_EMA_diff := mCount.Le(now.CAP_EMA, "0") // 1 0 -1  EMA
 	now_MA_diff := mCount.Le(now.CAP_MA, "0")   // -1 0 1  MA
 	nowDiff := now_EMA_diff

@@ -2,14 +2,34 @@ package hunter
 
 import (
 	"CoinAI.net/server/global"
-	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
-	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTalib"
 	jsoniter "github.com/json-iterator/go"
 )
+
+type TradeKdType struct {
+	mOKX.TypeKd
+	EMA          string // EMA 值
+	MA           string // MA 值
+	RSI          string // RSI 的值
+	RSI_EMA      string // RSI 的值
+	CAP_EMA      string // 基于 EMA 的 平滑点数 0-100 的浮点类型
+	CAP_MA       string // 基于 EMA 的 平滑点数 0-100 的浮点类型
+	CAPIdx       int
+	RsiEmaRegion int // 整型 Rsi 的震荡区域  -3 -2 -1 0 1 2 3
+	Opt          TradeKdataOpt
+}
+
+var TradeKdataList []TradeKdType
+
+type TradeKdataOpt struct {
+	MA_Period      int // 108
+	RSI_Period     int // 18
+	RSI_EMA_Period int // 14
+	CAP_Period     int // 3
+}
 
 var (
 	EMA_Arr = []string{}
@@ -17,13 +37,14 @@ var (
 	RSI_Arr = []string{}
 )
 
-func FormatTradeKdata(TradeKdataOpt okxInfo.TradeKdataOpt) {
+func FormatTradeKdata(TradeKdataOpt TradeKdataOpt) {
 	if len(okxInfo.NowKdataList) < TradeKdataOpt.MA_Period {
 		global.LogErr("hunter.FormatTradeKdata 数据不足")
 		return
 	}
+
 	// 清理 TradeKdataList
-	okxInfo.TradeKdataList = []okxInfo.TradeKdType{}
+	TradeKdataList = []TradeKdType{}
 
 	EMA_Arr = []string{}
 	MA_Arr = []string{}
@@ -33,16 +54,12 @@ func FormatTradeKdata(TradeKdataOpt okxInfo.TradeKdataOpt) {
 	for _, Kdata := range okxInfo.NowKdataList {
 		FormatEnd = append(FormatEnd, Kdata)
 		TradeKdata := NewTradeKdata(FormatEnd, TradeKdataOpt)
-		okxInfo.TradeKdataList = append(okxInfo.TradeKdataList, TradeKdata)
+		TradeKdataList = append(TradeKdataList, TradeKdata)
 	}
-
-	WriteFilePath := config.Dir.JsonData + "/TradeKdataList.json"
-	mFile.Write(WriteFilePath, string(mJson.ToJson(okxInfo.TradeKdataList)))
-	global.TradeLog.Println("数据整理完毕,已写入", len(okxInfo.TradeKdataList), WriteFilePath)
 }
 
-func NewTradeKdata(TradeKdataList []mOKX.TypeKd, opt okxInfo.TradeKdataOpt) (TradeKdata okxInfo.TradeKdType) {
-	TradeKdata = okxInfo.TradeKdType{}
+func NewTradeKdata(TradeKdataList []mOKX.TypeKd, opt TradeKdataOpt) (TradeKdata TradeKdType) {
+	TradeKdata = TradeKdType{}
 	jsonByte := mJson.ToJson(TradeKdataList[len(TradeKdataList)-1])
 	jsoniter.Unmarshal(jsonByte, &TradeKdata)
 

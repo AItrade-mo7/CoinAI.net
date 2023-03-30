@@ -21,6 +21,7 @@ func SetNowKdata() {
 	for _, NowItem := range NowList {
 		Fund := false
 		FundKey := 0
+
 		for key, Item := range okxInfo.NowKdataList {
 			if NowItem.TimeUnix == Item.TimeUnix { // 相等的直接替换
 				Fund = true
@@ -34,6 +35,7 @@ func SetNowKdata() {
 		} else {
 			okxInfo.NowKdataList = append(okxInfo.NowKdataList, NowItem)
 		}
+
 	}
 
 	if len(okxInfo.NowKdataList)-okxInfo.MaxLen > 0 {
