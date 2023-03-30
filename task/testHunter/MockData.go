@@ -83,6 +83,7 @@ func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt okxInfo.TradeK
 	OrderArr = []OrderType{}       // 下单数组清空
 
 	// 清理 TradeKdataList
+	okxInfo.NowKdataList = []mOKX.TypeKd{}
 
 	global.Run.Println("新建Mock数据",
 		mJson.Format(map[string]any{
@@ -93,19 +94,16 @@ func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt okxInfo.TradeK
 		mJson.Format(TradeKdataOpt),
 	)
 
-	okxInfo.NowKdataList = []mOKX.TypeKd{}
-
 	global.TradeLog.Println(" ============== 开始分析和交易 ============== ", Billing.MockName)
 	for _, Kdata := range _this.KdataList {
 		// 开始执行策略模拟
-		okxInfo.NowKdataList = append(okxInfo.NowKdataList, Kdata)
+		okxInfo.NowKdataList = append(okxInfo.NowKdataList, Kdata) // 在这里模拟数据流动
 		if len(okxInfo.NowKdataList) < TradeKdataOpt.MA_Period {
 			continue
 		}
-		Analy()
-
 		hunter.FormatTradeKdata(TradeKdataOpt)
 
+		Analy()
 		if mCount.Le(NowPosition.UplRatio, "-45") < 0 {
 			global.Log.Println("爆仓！", Billing.MockName, Kdata.TimeStr)
 			break
