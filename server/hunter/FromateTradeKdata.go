@@ -1,8 +1,12 @@
 package hunter
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
+	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTalib"
@@ -37,10 +41,18 @@ var (
 	RSI_Arr = []string{}
 )
 
-func FormatTradeKdata(TradeKdataOpt TradeKdataOpt) {
-	if len(okxInfo.NowKdataList) < TradeKdataOpt.MA_Period {
-		global.LogErr("hunter.FormatTradeKdata 数据不足")
-		return
+func FormatTradeKdata(opt TradeKdataOpt) error {
+	if len(okxInfo.NowKdataList) < opt.MA_Period {
+		err := fmt.Errorf("hunter.FormatTradeKdata 数据不足")
+		return err
+	}
+
+	if opt.MA_Period == 0 ||
+		opt.RSI_Period == 0 ||
+		opt.RSI_EMA_Period == 0 ||
+		opt.CAP_Period == 0 {
+		err := fmt.Errorf("hunter.FormatTradeKdata2 参数不正确 %+v", opt)
+		return err
 	}
 
 	// 清理 TradeKdataList
@@ -53,9 +65,15 @@ func FormatTradeKdata(TradeKdataOpt TradeKdataOpt) {
 	FormatEnd := []mOKX.TypeKd{}
 	for _, Kdata := range okxInfo.NowKdataList {
 		FormatEnd = append(FormatEnd, Kdata)
-		TradeKdata := NewTradeKdata(FormatEnd, TradeKdataOpt)
+		TradeKdata := NewTradeKdata(FormatEnd, opt)
 		TradeKdataList = append(TradeKdataList, TradeKdata)
 	}
+
+	WriteFilePath := config.Dir.JsonData + "/TradeKdataList.json"
+	mFile.Write(WriteFilePath, string(mJson.ToJson(TradeKdataList)))
+	global.TradeLog.Println("数据整理完毕,已写入", len(TradeKdataList), WriteFilePath)
+
+	return nil
 }
 
 func NewTradeKdata(TradeKdataList []mOKX.TypeKd, opt TradeKdataOpt) (TradeKdata TradeKdType) {
@@ -63,14 +81,7 @@ func NewTradeKdata(TradeKdataList []mOKX.TypeKd, opt TradeKdataOpt) (TradeKdata 
 	jsonByte := mJson.ToJson(TradeKdataList[len(TradeKdataList)-1])
 	jsoniter.Unmarshal(jsonByte, &TradeKdata)
 
-	TradeKdata.Opt = opt
-
-	if TradeKdata.Opt.MA_Period == 0 ||
-		TradeKdata.Opt.RSI_Period == 0 ||
-		TradeKdata.Opt.RSI_EMA_Period == 0 ||
-		TradeKdata.Opt.CAP_Period == 0 {
-		return
-	}
+	TradeKdata.Opt = opt // 在这里把设置打印出来
 
 	// EMA
 	TradeKdata.EMA = mTalib.ClistNew(mTalib.ClistOpt{

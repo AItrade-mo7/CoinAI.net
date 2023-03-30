@@ -166,7 +166,8 @@ func Analy() {
 
 // 下单  参数：dir 下单方向 NowKdata : 当前市场行情
 func OnOrder(dir int, NowKdata hunter.TradeKdType) {
-	BillingFun(NowKdata)
+	BillingFun(NowKdata) // 下单之前 计算一次收益
+
 	if dir > 0 { // 开多
 		// 下订单
 		OrderArr = append(OrderArr, OrderType{

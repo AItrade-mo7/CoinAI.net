@@ -1,21 +1,23 @@
 package hunter
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTime"
 )
 
-func SetNowKdata() {
+func SetNowKdata() error {
 	NowList := mOKX.GetKdata(mOKX.GetKdataOpt{
 		InstID: okxInfo.KdataInst.InstID,
 		Page:   0,
 	})
 
 	if len(NowList) < 100 || len(okxInfo.NowKdataList) < 200 {
-		global.LogErr("hunter.SetNowKdata 数据不足")
-		return
+		err := fmt.Errorf("hunter.SetNowKdata 数据不足")
+		return err
 	}
 
 	for _, NowItem := range NowList {
@@ -43,6 +45,7 @@ func SetNowKdata() {
 	}
 
 	// 数据检查
+	var err error = nil
 	for key, val := range okxInfo.NowKdataList {
 		preIndex := key - 1
 		if preIndex < 0 {
@@ -52,9 +55,8 @@ func SetNowKdata() {
 		nowItem := okxInfo.NowKdataList[key]
 		if key > 0 {
 			if nowItem.TimeUnix-preItem.TimeUnix != mTime.UnixTimeInt64.Hour {
-				global.LogErr("数据检查出错, 系统正在自行恢复", val.InstID, val.TimeStr, key)
 				okxInfo.NowKdataList = []mOKX.TypeKd{} // 清空历史数据
-				Running()                              // 立即重新执行一次 Running
+				err = fmt.Errorf("数据检查出错, 系统正在自行恢复 %+v %+v %+v", val.InstID, val.TimeStr, key)
 				break
 			}
 		}
@@ -62,4 +64,6 @@ func SetNowKdata() {
 
 	Last := okxInfo.NowKdataList[len(okxInfo.NowKdataList)-1]
 	global.TradeLog.Println("更新一次最新数据: ", Last.InstID, Last.TimeStr, len(okxInfo.NowKdataList), Last.C)
+
+	return err
 }

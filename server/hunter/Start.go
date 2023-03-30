@@ -8,8 +8,6 @@ import (
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/utils/taskPush"
-	"github.com/EasyGolang/goTools/mFile"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTime"
 )
@@ -35,17 +33,24 @@ func Running() {
 		return
 	}
 
-	SetNowKdata()
+	err = SetNowKdata()
+	if err != nil { // 在这里检查数据出了问题
+		global.LogErr(err)
+		Running() // 立即重新执行一次 Running
+		return
+	}
 
-	FormatTradeKdata(TradeKdataOpt{
+	err = FormatTradeKdata(TradeKdataOpt{
 		MA_Period:      108,
 		RSI_Period:     18,
 		RSI_EMA_Period: 14,
 		CAP_Period:     3,
 	})
-	WriteFilePath := config.Dir.JsonData + "/TradeKdataList.json"
-	mFile.Write(WriteFilePath, string(mJson.ToJson(TradeKdataList)))
-	global.TradeLog.Println("数据整理完毕,已写入", len(TradeKdataList), WriteFilePath)
+	if err != nil { // 这里参数出了问题
+		global.LogErr(err)
+		Running() // 立即重新执行一次 Running
+		return
+	}
 
 	Analy()
 }
@@ -84,7 +89,7 @@ func SendEmail(Message string) {
 	taskPush.SysEmail(taskPush.SysEmailOpt{
 		From:        config.SysName,
 		To:          config.NoticeEmail,
-		Subject:     "监听切换通知",
+		Subject:     "币种监听切换通知",
 		Title:       config.SysName + " 币种监听切换",
 		Content:     Message,
 		Description: "监听切换通知",
