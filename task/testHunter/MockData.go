@@ -1,6 +1,8 @@
 package testHunter
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/hunter"
@@ -9,6 +11,7 @@ import (
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
+	"github.com/EasyGolang/goTools/mTime"
 )
 
 // 开仓信息记录
@@ -38,6 +41,8 @@ var (
 
 // 收益结算
 type BillingType struct {
+	InstID    string // 交易币种
+	Days      int64
 	StartTime string // 开始时间
 	EndTime   string // 结束时间
 	NilNum    int    // 空仓次数
@@ -69,6 +74,8 @@ func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt hunter.TradeKd
 	Billing.Money = MockOpt.InitMoney     // 设定当前账户资金
 	Billing.Level = MockOpt.Level
 	Billing.Charge = MockOpt.Charge
+	Billing.InstID = _this.KdataList[0].InstID
+	Billing.Days = (_this.EndTime - _this.StartTime) / mTime.UnixTimeInt64.Day
 
 	// 交易信息清空
 	NowPosition = PositionType{}   // 清空持仓
@@ -149,15 +156,17 @@ func Analy() {
 	if NowPosition.Dir != AnalyDir {
 		OnOrder(AnalyDir, NowKdata)
 	}
+
+	global.KdataLog.Println(Billing.MockName, NowKdata.TimeStr, AnalyDir)
 }
 
 // 根据下单结果进行模拟持仓
 func BillingFun(NowKdata hunter.TradeKdType) {
-	// fmt.Println("下单总结一次",
-	// 	NowKdata.TimeStr,
-	// 	"持仓方向", NowPosition.Dir,
-	// 	"收益率", NowPosition.UplRatio,
-	// )
+	fmt.Println(Billing.MockName, "下单总结一次",
+		NowKdata.TimeStr,
+		"持仓方向", NowPosition.Dir,
+		"收益率", NowPosition.UplRatio,
+	)
 
 	if NowPosition.Dir == 0 {
 		Billing.NilNum++ // 空仓计数
@@ -294,8 +303,10 @@ func ResultCollect() {
 	global.Run.Println("Billing: ", Billing_Path)
 
 	Tmp := `交易结果: 
+InstID: ${InstID}
 第一次持仓时间: ${StartTime}
 数据结束时间: ${EndTime}
+总天数: ${Days}
 空仓次数: ${NilNum}    
 开空次数: ${SellNum}   
 开多次数: ${BuyNum}    
@@ -314,8 +325,10 @@ func ResultCollect() {
 杠杆倍数: ${Level}     
 `
 	Data := map[string]string{
+		"InstID":    Billing.InstID,
 		"StartTime": Billing.StartTime, // 开始时间
 		"EndTime":   Billing.EndTime,   // 结束时间
+		"Days":      mStr.ToStr(Billing.Days),
 		"NilNum":    mStr.ToStr(Billing.NilNum),
 		"SellNum":   mStr.ToStr(Billing.SellNum),
 		"BuyNum":    mStr.ToStr(Billing.BuyNum),

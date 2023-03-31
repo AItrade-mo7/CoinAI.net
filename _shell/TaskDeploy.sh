@@ -19,7 +19,10 @@ mkdir "${OutPutPath}"
 
 echo "移动 go build 文件"
 mv "${BuildName}" "${OutPutPath}/" &&
-  echo "启动 pm2 服务"
+  cp "${NowPath}/app_env.json" "${OutPutPath}"
+cp "${NowPath}/Reboot.sh" "${OutPutPath}"
+cp "${NowPath}/Shutdown.sh" "${OutPutPath}"
+echo "启动 pm2 服务"
 
 cd "${OutPutPath}" || exit
 
