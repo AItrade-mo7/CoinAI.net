@@ -9,9 +9,42 @@ import (
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/hunter"
 	"CoinAI.net/task/testHunter"
+	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
 	jsoniter "github.com/json-iterator/go"
 )
+
+type MockOptType struct {
+	MockOpt       testHunter.BillingType
+	TradeKdataOpt hunter.TradeKdataOpt
+}
+
+func MockConfig() []MockOptType {
+	MockConfigArr := []MockOptType{}
+
+	EmaPArr := []int{18, 36, 54, 72, 90, 108}
+
+	for _, emaP := range EmaPArr {
+		MockConfigArr = append(MockConfigArr,
+			MockOptType{
+				testHunter.BillingType{
+					MockName:  "EMA_" + mStr.ToStr(emaP),
+					InitMoney: "1000", // 初始资金
+					Level:     "1",    // 杠杆倍数
+					Charge:    "0.05", // 吃单标准手续费率 0.05%
+				},
+				hunter.TradeKdataOpt{
+					MA_Period:      emaP,
+					RSI_Period:     18,
+					RSI_EMA_Period: 14,
+					CAP_Period:     3,
+				},
+			},
+		)
+	}
+
+	return MockConfigArr
+}
 
 func main() {
 	AppPackage, _ := os.ReadFile("package.json")
@@ -21,8 +54,8 @@ func main() {
 
 	// 新建回测
 	back := testHunter.New(testHunter.TestOpt{
-		StartTime: mTime.TimeParse(mTime.Lay_DD, "2023-01-01"),
-		EndTime:   mTime.TimeParse(mTime.Lay_DD, "2023-02-01"),
+		StartTime: mTime.TimeParse(mTime.Lay_DD, "2020-01-01"),
+		EndTime:   mTime.TimeParse(mTime.Lay_DD, "2023-03-31"),
 		InstID:    "BTC-USDT",
 	})
 	err := back.StuffDBKdata()
@@ -34,18 +67,12 @@ func main() {
 		fmt.Println("出错", err)
 	}
 
-	back.MockData(
-		testHunter.BillingType{
-			MockName:  "EMA_108",
-			InitMoney: "1000", // 初始资金
-			Level:     "1",    // 杠杆倍数
-			Charge:    "0.05", // 吃单标准手续费率 0.05%
-		},
-		hunter.TradeKdataOpt{
-			MA_Period:      108,
-			RSI_Period:     18,
-			RSI_EMA_Period: 14,
-			CAP_Period:     3,
-		},
-	)
+	configArr := MockConfig()
+
+	for _, config := range configArr {
+		back.MockData(
+			config.MockOpt,
+			config.TradeKdataOpt,
+		)
+	}
 }
