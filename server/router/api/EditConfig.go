@@ -7,6 +7,7 @@ import (
 	"CoinAI.net/server/global/middle"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
+	"CoinAI.net/server/utils/taskPush"
 	"github.com/EasyGolang/goTools/mFiber"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mStr"
@@ -18,6 +19,7 @@ import (
 
 type EditConfigParam struct {
 	Password     string
+	EmailCode    string
 	SysName      string
 	Describe     string
 	MaxApiKeyNum int
@@ -74,6 +76,15 @@ func EditConfig(c *fiber.Ctx) error {
 		return c.JSON(result.ErrDB.WithMsg(mStr.ToStr(err)))
 	}
 	UserDB.DB.Close()
+
+	// 验证邮箱验证码
+	err = taskPush.CheckEmailCode(taskPush.CheckEmailCodeParam{
+		Email: UserDB.Data.Email,
+		Code:  json.EmailCode,
+	})
+	if err != nil {
+		return c.JSON(result.Fail.WithMsg(err))
+	}
 
 	// 检查是否修改了服务器名字
 	if config.AppEnv.SysName != json.SysName {
