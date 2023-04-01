@@ -67,6 +67,8 @@ func TheOpen(c *fiber.Ctx) error {
 	config.AppEnv.IsPublic = !config.AppEnv.IsPublic
 	global.WriteAppEnv()
 
+	taskPush.DelEmailCode(UserDB.Data.Email)
+
 	if config.AppEnv.IsPublic {
 		return c.JSON(result.Succeed.WithMsg("已经公开此服务"))
 	} else {

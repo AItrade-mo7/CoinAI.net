@@ -118,5 +118,7 @@ func EditConfig(c *fiber.Ctx) error {
 
 	global.WriteAppEnv()
 
+	taskPush.DelEmailCode(UserDB.Data.Email)
+
 	return c.JSON(result.Succeed.WithData("操作完成"))
 }
