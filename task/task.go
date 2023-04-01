@@ -22,15 +22,7 @@ type MockOptType struct {
 func MockConfig() []MockOptType {
 	MockConfigArr := []MockOptType{}
 
-	EmaPArr := []int{}
-
-	EmaC := 18
-	for i := 1; i < 41; i++ {
-		EmaP := EmaC * i
-		EmaPArr = append(EmaPArr, EmaP)
-	}
-
-	fmt.Println("参数集合:", EmaPArr)
+	EmaPArr := []int{54, 59, 64, 69, 74, 79, 84, 89, 165, 170, 175, 180, 185, 190, 195, 200, 522, 532, 537, 542, 547, 552, 557}
 
 	for _, emaP := range EmaPArr {
 		MockConfigArr = append(MockConfigArr,
