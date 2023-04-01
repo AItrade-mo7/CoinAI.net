@@ -19,6 +19,7 @@ import (
 type EditConfigParam struct {
 	Password     string
 	SysName      string
+	Describe     string
 	MaxApiKeyNum int
 }
 
@@ -42,6 +43,10 @@ func EditConfig(c *fiber.Ctx) error {
 
 	if json.MaxApiKeyNum < len(config.AppEnv.ApiKeyList) {
 		return c.JSON(result.Fail.WithMsg("ApiKey数量错误"))
+	}
+
+	if len(json.Describe) < 1 {
+		return c.JSON(result.Fail.WithMsg("需要填写描述"))
 	}
 
 	if json.MaxApiKeyNum > 30 {
@@ -97,6 +102,8 @@ func EditConfig(c *fiber.Ctx) error {
 	}
 
 	config.AppEnv.MaxApiKeyNum = json.MaxApiKeyNum
+
+	config.AppEnv.Describe = json.Describe
 
 	global.WriteAppEnv()
 
