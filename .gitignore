@@ -17,6 +17,7 @@ sys_env.yaml
 app_env.json
 
 TaskRunner
+TaskRunner-*
 
 node_modules
 

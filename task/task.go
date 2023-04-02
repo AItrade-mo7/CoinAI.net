@@ -80,46 +80,46 @@ func main() {
 			To:          config.NoticeEmail,
 			Subject:     "参数跑完了",
 			Title:       "第一批参数组合跑完了",
-			Content:     "参数值:" + mJson.ToStr(configArr),
+			Content:     "参数值:" + mJson.Format(configArr),
 			Description: "回测结束通知",
 		})
 	}()
 
-	go func() {
-		configArr := MockConfig([]int{168, 171, 174})
-		for _, config := range configArr {
-			back.MockData(
-				config.MockOpt,
-				config.TradeKdataOpt,
-			)
-		}
-		taskPush.SysEmail(taskPush.SysEmailOpt{
-			From:        config.SysName,
-			To:          config.NoticeEmail,
-			Subject:     "参数跑完了",
-			Title:       "第二批参数组合跑完了",
-			Content:     "参数值:" + mJson.ToStr(configArr),
-			Description: "回测结束通知",
-		})
-	}()
+	// go func() {
+	// 	configArr := MockConfig([]int{168, 171, 174})
+	// 	for _, config := range configArr {
+	// 		back.MockData(
+	// 			config.MockOpt,
+	// 			config.TradeKdataOpt,
+	// 		)
+	// 	}
+	// 	taskPush.SysEmail(taskPush.SysEmailOpt{
+	// 		From:        config.SysName,
+	// 		To:          config.NoticeEmail,
+	// 		Subject:     "参数跑完了",
+	// 		Title:       "第二批参数组合跑完了",
+	// 		Content:     "参数值:" + mJson.Format(configArr),
+	// 		Description: "回测结束通知",
+	// 	})
+	// }()
 
-	go func() {
-		configArr := MockConfig([]int{545, 548, 551})
-		for _, config := range configArr {
-			back.MockData(
-				config.MockOpt,
-				config.TradeKdataOpt,
-			)
-		}
-		taskPush.SysEmail(taskPush.SysEmailOpt{
-			From:        config.SysName,
-			To:          config.NoticeEmail,
-			Subject:     "参数跑完了",
-			Title:       "第三批参数组合跑完了",
-			Content:     "参数值:" + mJson.ToStr(configArr),
-			Description: "回测结束通知",
-		})
-	}()
+	// go func() {
+	// 	configArr := MockConfig([]int{545, 548, 551})
+	// 	for _, config := range configArr {
+	// 		back.MockData(
+	// 			config.MockOpt,
+	// 			config.TradeKdataOpt,
+	// 		)
+	// 	}
+	// 	taskPush.SysEmail(taskPush.SysEmailOpt{
+	// 		From:        config.SysName,
+	// 		To:          config.NoticeEmail,
+	// 		Subject:     "参数跑完了",
+	// 		Title:       "第三批参数组合跑完了",
+	// 		Content:     "参数值:" + mJson.Format(configArr),
+	// 		Description: "回测结束通知",
+	// 	})
+	// }()
 
 	select {}
 }
