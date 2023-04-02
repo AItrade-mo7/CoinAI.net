@@ -41,26 +41,30 @@ var (
 
 // 收益结算
 type BillingType struct {
-	InstID    string // 交易币种
-	Days      int64
-	StartTime string // 开始时间
-	EndTime   string // 结束时间
-	NilNum    int    // 空仓次数
-	SellNum   int    // 开空次数
-	BuyNum    int    // 开多次数
-	AllNum    int    // 总开仓次数
-	Win       int    // 盈利次数
-	WinRatio  string // 总盈利比率
-	Lose      int    // 亏损次数
-	LoseRatio string // 总亏损比率
-	MaxRatio  string //  最大盈利比率
-	MinRatio  string //  最小盈利比率
-	Charge    string // 手续费率
-	ChargeAll string // 总手续费
-	MockName  string // 名字
-	InitMoney string // 初始金钱
-	Money     string // 账户当前余额
-	Level     string // 杠杆倍数
+	InstID           string // 交易币种
+	Days             int64
+	StartTime        string // 开始时间
+	EndTime          string // 结束时间
+	NilNum           int    // 空仓次数
+	SellNum          int    // 开空次数
+	BuyNum           int    // 开多次数
+	AllNum           int    // 总开仓次数
+	Win              int    // 盈利次数
+	WinRatio         string // 总盈利比率
+	Lose             int    // 亏损次数
+	LoseRatio        string // 总亏损比率
+	MaxRatio         string //  最大盈利比率
+	MinRatio         string //  最小盈利比率
+	Charge           string // 手续费率
+	ChargeAll        string // 总手续费
+	MockName         string // 名字
+	InitMoney        string // 初始金钱
+	Money            string // 账户当前余额
+	MinMoney         string // 历史最低余额
+	MaxMoney         string // 历史最高余额
+	PositionMinRatio string // 持仓过程中最低盈利比率
+	PositionMaxRatio string // 持仓过程中最高盈利比率
+	Level            string // 杠杆倍数
 }
 
 var Billing BillingType
@@ -77,6 +81,8 @@ func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt hunter.TradeKd
 	Billing.InstID = _this.KdataList[0].InstID
 	Billing.Days = (_this.EndTime - _this.StartTime) / mTime.UnixTimeInt64.Day
 
+	Billing.MinMoney = MockOpt.InitMoney
+	Billing.MaxMoney = MockOpt.InitMoney
 	// 交易信息清空
 	NowPosition = PositionType{}   // 清空持仓
 	PositionArr = []PositionType{} // 清空持仓数组
@@ -152,6 +158,13 @@ func Analy() {
 	NowPosition.NowC = NowKdata.C
 	PositionArr = append(PositionArr, NowPosition)
 
+	if mCount.Le(NowPosition.UplRatio, Billing.PositionMinRatio) < 0 {
+		Billing.PositionMinRatio = NowPosition.UplRatio
+	}
+	if mCount.Le(NowPosition.UplRatio, Billing.PositionMaxRatio) > 0 {
+		Billing.PositionMaxRatio = NowPosition.UplRatio
+	}
+
 	// 当前持仓与 判断方向不符合时，执行一次下单操作
 	if NowPosition.Dir != AnalyDir {
 		OnOrder(AnalyDir, NowKdata)
@@ -212,6 +225,14 @@ func BillingFun(NowKdata hunter.TradeKdType) {
 
 	Billing.Money = mCount.CentRound(Billing.Money, 3)         // 四舍五入保留两位小数
 	Billing.ChargeAll = mCount.CentRound(Billing.ChargeAll, 3) // 四舍五入保留两位小数
+
+	if mCount.Le(Billing.Money, Billing.MinMoney) < 0 {
+		Billing.MinMoney = Billing.Money
+	}
+
+	if mCount.Le(Billing.Money, Billing.MaxMoney) > 0 {
+		Billing.MaxMoney = Billing.Money
+	}
 
 	Billing.AllNum++ // 记录一下总交易次数
 }
@@ -321,30 +342,38 @@ InstID: ${InstID}
 总手续费: ${ChargeAll} 
 参数名称: ${MockName}  
 初始金钱: ${InitMoney} 
-账户当前余额: ${Money}     
+账户当前余额: ${Money}    
+历史最低余额: ${MinMoney}     
+历史最高余额: ${MaxMoney}      
+持仓过程中最低盈利比率: ${PositionMinRatio}      
+持仓过程中最高盈利比率: ${PositionMaxRatio}      
 杠杆倍数: ${Level}     
 `
 	Data := map[string]string{
-		"InstID":    Billing.InstID,
-		"StartTime": Billing.StartTime, // 开始时间
-		"EndTime":   Billing.EndTime,   // 结束时间
-		"Days":      mStr.ToStr(Billing.Days),
-		"NilNum":    mStr.ToStr(Billing.NilNum),
-		"SellNum":   mStr.ToStr(Billing.SellNum),
-		"BuyNum":    mStr.ToStr(Billing.BuyNum),
-		"AllNum":    mStr.ToStr(Billing.AllNum),
-		"Win":       mStr.ToStr(Billing.Win),
-		"WinRatio":  Billing.WinRatio,
-		"Lose":      mStr.ToStr(Billing.Lose),
-		"LoseRatio": Billing.LoseRatio,
-		"MaxRatio":  Billing.MaxRatio,
-		"MinRatio":  Billing.MinRatio,
-		"Charge":    Billing.Charge,
-		"ChargeAll": Billing.ChargeAll,
-		"MockName":  Billing.MockName,
-		"InitMoney": Billing.InitMoney,
-		"Money":     Billing.Money,
-		"Level":     Billing.Level,
+		"InstID":           Billing.InstID,
+		"StartTime":        Billing.StartTime, // 开始时间
+		"EndTime":          Billing.EndTime,   // 结束时间
+		"Days":             mStr.ToStr(Billing.Days),
+		"NilNum":           mStr.ToStr(Billing.NilNum),
+		"SellNum":          mStr.ToStr(Billing.SellNum),
+		"BuyNum":           mStr.ToStr(Billing.BuyNum),
+		"AllNum":           mStr.ToStr(Billing.AllNum),
+		"Win":              mStr.ToStr(Billing.Win),
+		"WinRatio":         Billing.WinRatio,
+		"Lose":             mStr.ToStr(Billing.Lose),
+		"LoseRatio":        Billing.LoseRatio,
+		"MaxRatio":         Billing.MaxRatio,
+		"MinRatio":         Billing.MinRatio,
+		"Charge":           Billing.Charge,
+		"ChargeAll":        Billing.ChargeAll,
+		"MockName":         Billing.MockName,
+		"InitMoney":        Billing.InitMoney,
+		"Money":            Billing.Money,
+		"MinMoney":         Billing.MinMoney,
+		"MaxMoney":         Billing.MaxMoney,
+		"PositionMinRatio": Billing.PositionMinRatio,
+		"PositionMaxRatio": Billing.PositionMaxRatio,
+		"Level":            Billing.Level,
 	}
 
 	global.TradeLog.Println(mStr.Temp(Tmp, Data))
