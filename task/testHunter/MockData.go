@@ -39,32 +39,37 @@ var (
 
 )
 
+type RecordType struct {
+	Value   string
+	TimeStr string
+}
+
 // 收益结算
 type BillingType struct {
-	InstID           string // 交易币种
-	MockName         string // 策略名称
-	Days             int64  // 总天数
-	StartTime        string // 第一次持仓时间
-	EndTime          string // 结束时间
-	NilNum           int    // 空仓次数
-	SellNum          int    // 开空次数
-	BuyNum           int    // 开多次数
-	AllNum           int    // 总开仓次数
-	Win              int    // 盈利次数
-	WinRatio         string // 总盈利比率
-	Lose             int    // 亏损次数
-	LoseRatio        string // 总亏损比率
-	MaxRatio         string // 平仓后单笔最大盈利比率
-	MinRatio         string // 平仓后单笔最小盈利比率
-	Charge           string // 手续费率
-	ChargeAll        string // 总手续费
-	InitMoney        string // 初始金钱
-	Money            string // 账户当前余额
-	MinMoney         string // 平仓后历史最低余额
-	MaxMoney         string // 平仓后历史最高余额
-	PositionMinRatio string // 持仓过程中最低盈利比率
-	PositionMaxRatio string // 持仓过程中最高盈利比率
-	Level            string // 杠杆倍数
+	InstID           string     // 交易币种
+	MockName         string     // 策略名称
+	Days             int64      // 总天数
+	StartTime        string     // 第一次持仓时间
+	EndTime          string     // 结束时间
+	NilNum           int        // 空仓次数
+	SellNum          int        // 开空次数
+	BuyNum           int        // 开多次数
+	AllNum           int        // 总开仓次数
+	Win              int        // 盈利次数
+	WinRatio         string     // 总盈利比率
+	Lose             int        // 亏损次数
+	LoseRatio        string     // 总亏损比率
+	MaxRatio         RecordType // 平仓后单笔最大盈利比率
+	MinRatio         RecordType // 平仓后单笔最小盈利比率
+	Charge           string     // 手续费率
+	ChargeAll        string     // 总手续费
+	InitMoney        string     // 初始金钱
+	Money            string     // 账户当前余额
+	MinMoney         RecordType // 平仓后历史最低余额
+	MaxMoney         RecordType // 平仓后历史最高余额
+	PositionMinRatio RecordType // 持仓过程中最低盈利比率
+	PositionMaxRatio RecordType // 持仓过程中最高盈利比率
+	Level            string     // 杠杆倍数
 }
 
 var Billing BillingType
@@ -81,8 +86,8 @@ func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt hunter.TradeKd
 	Billing.InstID = _this.KdataList[0].InstID
 	Billing.Days = (_this.EndTime - _this.StartTime) / mTime.UnixTimeInt64.Day
 
-	Billing.MinMoney = MockOpt.InitMoney
-	Billing.MaxMoney = MockOpt.InitMoney
+	Billing.MinMoney.Value = MockOpt.InitMoney
+	Billing.MaxMoney.Value = MockOpt.InitMoney
 	// 交易信息清空
 	NowPosition = PositionType{}   // 清空持仓
 	PositionArr = []PositionType{} // 清空持仓数组
@@ -158,11 +163,13 @@ func Analy() {
 	NowPosition.NowC = NowKdata.C
 	PositionArr = append(PositionArr, NowPosition)
 
-	if mCount.Le(NowPosition.UplRatio, Billing.PositionMinRatio) < 0 {
-		Billing.PositionMinRatio = NowPosition.UplRatio
+	if mCount.Le(NowPosition.UplRatio, Billing.PositionMinRatio.Value) < 0 {
+		Billing.PositionMinRatio.Value = NowPosition.UplRatio
+		Billing.PositionMinRatio.TimeStr = NowPosition.NowTimeStr
 	}
-	if mCount.Le(NowPosition.UplRatio, Billing.PositionMaxRatio) > 0 {
-		Billing.PositionMaxRatio = NowPosition.UplRatio
+	if mCount.Le(NowPosition.UplRatio, Billing.PositionMaxRatio.Value) > 0 {
+		Billing.PositionMaxRatio.Value = NowPosition.UplRatio
+		Billing.PositionMaxRatio.TimeStr = NowPosition.NowTimeStr
 	}
 
 	// 当前持仓与 判断方向不符合时，执行一次下单操作
@@ -206,11 +213,13 @@ func BillingFun(NowKdata hunter.TradeKdType) {
 		Billing.LoseRatio = mCount.Add(NowPosition.UplRatio, Billing.LoseRatio) // 盈利比例相加
 	}
 	// 单次最大亏损和单次最大盈利
-	if mCount.Le(NowPosition.UplRatio, Billing.MaxRatio) > 0 {
-		Billing.MaxRatio = NowPosition.UplRatio
+	if mCount.Le(NowPosition.UplRatio, Billing.MaxRatio.Value) > 0 {
+		Billing.MaxRatio.Value = NowPosition.UplRatio
+		Billing.MaxRatio.TimeStr = NowPosition.NowTimeStr
 	}
-	if mCount.Le(NowPosition.UplRatio, Billing.MinRatio) < 0 {
-		Billing.MinRatio = NowPosition.UplRatio
+	if mCount.Le(NowPosition.UplRatio, Billing.MinRatio.Value) < 0 {
+		Billing.MinRatio.Value = NowPosition.UplRatio
+		Billing.MinRatio.Value = NowPosition.NowTimeStr
 	}
 
 	Upl := mCount.Div(NowPosition.UplRatio, "100") // 格式化收益率
@@ -226,12 +235,14 @@ func BillingFun(NowKdata hunter.TradeKdType) {
 	Billing.Money = mCount.CentRound(Billing.Money, 3)         // 四舍五入保留两位小数
 	Billing.ChargeAll = mCount.CentRound(Billing.ChargeAll, 3) // 四舍五入保留两位小数
 
-	if mCount.Le(Billing.Money, Billing.MinMoney) < 0 {
-		Billing.MinMoney = Billing.Money
+	if mCount.Le(Billing.Money, Billing.MinMoney.Value) < 0 {
+		Billing.MinMoney.Value = Billing.Money
+		Billing.MinMoney.TimeStr = NowPosition.NowTimeStr
 	}
 
-	if mCount.Le(Billing.Money, Billing.MaxMoney) > 0 {
-		Billing.MaxMoney = Billing.Money
+	if mCount.Le(Billing.Money, Billing.MaxMoney.Value) > 0 {
+		Billing.MaxMoney.Value = Billing.Money
+		Billing.MaxMoney.TimeStr = NowPosition.NowTimeStr
 	}
 
 	Billing.AllNum++ // 记录一下总交易次数
@@ -362,17 +373,17 @@ InstID: ${InstID}
 		"WinRatio":         Billing.WinRatio,
 		"Lose":             mStr.ToStr(Billing.Lose),
 		"LoseRatio":        Billing.LoseRatio,
-		"MaxRatio":         Billing.MaxRatio,
-		"MinRatio":         Billing.MinRatio,
+		"MaxRatio":         mJson.ToStr(Billing.MaxRatio),
+		"MinRatio":         mJson.ToStr(Billing.MinRatio),
 		"Charge":           Billing.Charge,
 		"ChargeAll":        Billing.ChargeAll,
 		"MockName":         Billing.MockName,
 		"InitMoney":        Billing.InitMoney,
 		"Money":            Billing.Money,
-		"MinMoney":         Billing.MinMoney,
-		"MaxMoney":         Billing.MaxMoney,
-		"PositionMinRatio": Billing.PositionMinRatio,
-		"PositionMaxRatio": Billing.PositionMaxRatio,
+		"MinMoney":         mJson.ToStr(Billing.MinMoney),
+		"MaxMoney":         mJson.ToStr(Billing.MaxMoney),
+		"PositionMinRatio": mJson.ToStr(Billing.PositionMinRatio),
+		"PositionMaxRatio": mJson.ToStr(Billing.PositionMaxRatio),
 		"Level":            Billing.Level,
 	}
 
