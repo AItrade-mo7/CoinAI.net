@@ -219,7 +219,7 @@ func BillingFun(NowKdata hunter.TradeKdType) {
 	}
 	if mCount.Le(NowPosition.UplRatio, Billing.MinRatio.Value) < 0 {
 		Billing.MinRatio.Value = NowPosition.UplRatio
-		Billing.MinRatio.Value = NowPosition.NowTimeStr
+		Billing.MinRatio.TimeStr = NowPosition.NowTimeStr
 	}
 
 	Upl := mCount.Div(NowPosition.UplRatio, "100") // 格式化收益率
