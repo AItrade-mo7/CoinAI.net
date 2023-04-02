@@ -42,8 +42,9 @@ var (
 // 收益结算
 type BillingType struct {
 	InstID           string // 交易币种
-	Days             int64
-	StartTime        string // 开始时间
+	MockName         string // 策略名称
+	Days             int64  // 总天数
+	StartTime        string // 第一次持仓时间
 	EndTime          string // 结束时间
 	NilNum           int    // 空仓次数
 	SellNum          int    // 开空次数
@@ -53,15 +54,14 @@ type BillingType struct {
 	WinRatio         string // 总盈利比率
 	Lose             int    // 亏损次数
 	LoseRatio        string // 总亏损比率
-	MaxRatio         string //  最大盈利比率
-	MinRatio         string //  最小盈利比率
+	MaxRatio         string // 平仓后单笔最大盈利比率
+	MinRatio         string // 平仓后单笔最小盈利比率
 	Charge           string // 手续费率
 	ChargeAll        string // 总手续费
-	MockName         string // 名字
 	InitMoney        string // 初始金钱
 	Money            string // 账户当前余额
-	MinMoney         string // 历史最低余额
-	MaxMoney         string // 历史最高余额
+	MinMoney         string // 平仓后历史最低余额
+	MaxMoney         string // 平仓后历史最高余额
 	PositionMinRatio string // 持仓过程中最低盈利比率
 	PositionMaxRatio string // 持仓过程中最高盈利比率
 	Level            string // 杠杆倍数
@@ -336,15 +336,15 @@ InstID: ${InstID}
 总盈利比率: ${WinRatio}  
 亏损次数: ${Lose}      
 总亏损比率: ${LoseRatio} 
-最大盈利比率: ${MaxRatio}  
-最小盈利比率: ${MinRatio}  
+平仓后单笔最大盈利比率: ${MaxRatio}  
+平仓后单笔最小盈利比率: ${MinRatio}  
 手续费率: ${Charge}    
 总手续费: ${ChargeAll} 
 参数名称: ${MockName}  
 初始金钱: ${InitMoney} 
 账户当前余额: ${Money}    
-历史最低余额: ${MinMoney}     
-历史最高余额: ${MaxMoney}      
+平仓后历史最低余额: ${MinMoney}     
+平仓后历史最高余额: ${MaxMoney}      
 持仓过程中最低盈利比率: ${PositionMinRatio}      
 持仓过程中最高盈利比率: ${PositionMaxRatio}      
 杠杆倍数: ${Level}     
