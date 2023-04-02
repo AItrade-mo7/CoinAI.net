@@ -8,9 +8,7 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/hunter"
-	"CoinAI.net/server/utils/taskPush"
 	"CoinAI.net/task/testHunter"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
 	jsoniter "github.com/json-iterator/go"
@@ -67,57 +65,53 @@ func main() {
 		fmt.Println("出错", err)
 	}
 
-	/*
-		configArr := MockConfig([]int{75, 77, 79})
-			for _, config := range configArr {
-				back.MockData(
-					config.MockOpt,
-					config.TradeKdataOpt,
-				)
-			}
-			taskPush.SysEmail(taskPush.SysEmailOpt{
-				From:        config.SysName,
-				To:          config.NoticeEmail,
-				Subject:     "参数跑完了",
-				Title:       "第一批参数组合跑完了",
-				Content:     "参数值:" + mJson.Format(configArr),
-				Description: "回测结束通知",
-			})
-	*/
+	// configArr := MockConfig([]int{76, 78})
+	//  	for _, config := range configArr {
+	//  		back.MockData(
+	//  			config.MockOpt,
+	//  			config.TradeKdataOpt,
+	//  		)
+	//  	}
+	//  	taskPush.SysEmail(taskPush.SysEmailOpt{
+	//  		From:        config.SysName,
+	//  		To:          config.NoticeEmail,
+	//  		Subject:     "参数跑完了",
+	//  		Title:       "第一批参数组合跑完了",
+	//  		Content:     "参数值:" + mJson.Format(configArr),
+	//  		Description: "回测结束通知",
+	//  	})
 
-	/*
-	 	configArr := MockConfig([]int{169, 171, 173})
-	   	for _, config := range configArr {
-	   		back.MockData(
-	   			config.MockOpt,
-	   			config.TradeKdataOpt,
-	   		)
-	   	}
-	   	taskPush.SysEmail(taskPush.SysEmailOpt{
-	   		From:        config.SysName,
-	   		To:          config.NoticeEmail,
-	   		Subject:     "参数跑完了",
-	   		Title:       "第二批参数组合跑完了",
-	   		Content:     "参数值:" + mJson.Format(configArr),
-	   		Description: "回测结束通知",
-	   	})
-	*/
+	// configArr := MockConfig([]int{170, 172})
+	// for _, config := range configArr {
+	// 	back.MockData(
+	// 		config.MockOpt,
+	// 		config.TradeKdataOpt,
+	// 	)
+	// }
+	// taskPush.SysEmail(taskPush.SysEmailOpt{
+	// 	From:        config.SysName,
+	// 	To:          config.NoticeEmail,
+	// 	Subject:     "参数跑完了",
+	// 	Title:       "第二批参数组合跑完了",
+	// 	Content:     "参数值:" + mJson.Format(configArr),
+	// 	Description: "回测结束通知",
+	// })
 
-	configArr := MockConfig([]int{543, 545, 547})
-	for _, config := range configArr {
-		back.MockData(
-			config.MockOpt,
-			config.TradeKdataOpt,
-		)
-	}
-	taskPush.SysEmail(taskPush.SysEmailOpt{
-		From:        config.SysName,
-		To:          config.NoticeEmail,
-		Subject:     "参数跑完了",
-		Title:       "第三批参数组合跑完了",
-		Content:     "参数值:" + mJson.Format(configArr),
-		Description: "回测结束通知",
-	})
+	// configArr := MockConfig([]int{544, 546})
+	// for _, config := range configArr {
+	// 	back.MockData(
+	// 		config.MockOpt,
+	// 		config.TradeKdataOpt,
+	// 	)
+	// }
+	// taskPush.SysEmail(taskPush.SysEmailOpt{
+	// 	From:        config.SysName,
+	// 	To:          config.NoticeEmail,
+	// 	Subject:     "参数跑完了",
+	// 	Title:       "第三批参数组合跑完了",
+	// 	Content:     "参数值:" + mJson.Format(configArr),
+	// 	Description: "回测结束通知",
+	// })
 
 	select {}
 }
@@ -140,6 +134,24 @@ func main() {
 171 - 169,171,173
 
 545 - 543,545,547
+
+
+*/
+
+/*
+第五轮
+
+77  76  78
+
+171  170   172
+
+545  544   546
+*/
+
+/*
+最终轮
+
+77
 
 
 */
