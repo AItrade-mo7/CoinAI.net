@@ -67,7 +67,43 @@ func main() {
 		fmt.Println("出错", err)
 	}
 
-	configArr := MockConfig([]int{75, 77, 79})
+	/*
+		configArr := MockConfig([]int{75, 77, 79})
+			for _, config := range configArr {
+				back.MockData(
+					config.MockOpt,
+					config.TradeKdataOpt,
+				)
+			}
+			taskPush.SysEmail(taskPush.SysEmailOpt{
+				From:        config.SysName,
+				To:          config.NoticeEmail,
+				Subject:     "参数跑完了",
+				Title:       "第一批参数组合跑完了",
+				Content:     "参数值:" + mJson.Format(configArr),
+				Description: "回测结束通知",
+			})
+	*/
+
+	/*
+	 	configArr := MockConfig([]int{169, 171, 173})
+	   	for _, config := range configArr {
+	   		back.MockData(
+	   			config.MockOpt,
+	   			config.TradeKdataOpt,
+	   		)
+	   	}
+	   	taskPush.SysEmail(taskPush.SysEmailOpt{
+	   		From:        config.SysName,
+	   		To:          config.NoticeEmail,
+	   		Subject:     "参数跑完了",
+	   		Title:       "第二批参数组合跑完了",
+	   		Content:     "参数值:" + mJson.Format(configArr),
+	   		Description: "回测结束通知",
+	   	})
+	*/
+
+	configArr := MockConfig([]int{543, 545, 547})
 	for _, config := range configArr {
 		back.MockData(
 			config.MockOpt,
@@ -78,42 +114,10 @@ func main() {
 		From:        config.SysName,
 		To:          config.NoticeEmail,
 		Subject:     "参数跑完了",
-		Title:       "第一批参数组合跑完了",
+		Title:       "第三批参数组合跑完了",
 		Content:     "参数值:" + mJson.Format(configArr),
 		Description: "回测结束通知",
 	})
-
-	// configArr := MockConfig([]int{169, 171, 173})
-	// for _, config := range configArr {
-	// 	back.MockData(
-	// 		config.MockOpt,
-	// 		config.TradeKdataOpt,
-	// 	)
-	// }
-	// taskPush.SysEmail(taskPush.SysEmailOpt{
-	// 	From:        config.SysName,
-	// 	To:          config.NoticeEmail,
-	// 	Subject:     "参数跑完了",
-	// 	Title:       "第二批参数组合跑完了",
-	// 	Content:     "参数值:" + mJson.Format(configArr),
-	// 	Description: "回测结束通知",
-	// })
-
-	// configArr := MockConfig([]int{543, 545, 547})
-	// for _, config := range configArr {
-	// 	back.MockData(
-	// 		config.MockOpt,
-	// 		config.TradeKdataOpt,
-	// 	)
-	// }
-	// taskPush.SysEmail(taskPush.SysEmailOpt{
-	// 	From:        config.SysName,
-	// 	To:          config.NoticeEmail,
-	// 	Subject:     "参数跑完了",
-	// 	Title:       "第三批参数组合跑完了",
-	// 	Content:     "参数值:" + mJson.Format(configArr),
-	// 	Description: "回测结束通知",
-	// })
 
 	select {}
 }
