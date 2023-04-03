@@ -24,7 +24,7 @@ type MockOptType struct {
 func MockConfig(EmaPArr []int) []MockOptType {
 	MockConfigArr := []MockOptType{}
 
-	CAP := 3 //  3 或者 4
+	CAP := 4 //  3 或者 4
 
 	for _, emaP := range EmaPArr {
 		MockConfigArr = append(MockConfigArr,
