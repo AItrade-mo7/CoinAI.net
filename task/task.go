@@ -24,27 +24,25 @@ type MockOptType struct {
 func MockConfig(EmaPArr []int) []MockOptType {
 	MockConfigArr := []MockOptType{}
 
-	CAPArr := []int{2, 3, 4, 5, 6}
+	CAP := 3 //  3 或者 4
 
 	for _, emaP := range EmaPArr {
-		for _, cap := range CAPArr {
-			MockConfigArr = append(MockConfigArr,
-				MockOptType{
-					testHunter.BillingType{
-						MockName:  "EMA_" + mStr.ToStr(emaP) + "_CAP_" + mStr.ToStr(cap),
-						InitMoney: "1000", // 初始资金
-						Level:     "1",    // 杠杆倍数
-						Charge:    "0.05", // 吃单标准手续费率 0.05%
-					},
-					hunter.TradeKdataOpt{
-						MA_Period:      emaP,
-						RSI_Period:     18,
-						RSI_EMA_Period: 14,
-						CAP_Period:     cap,
-					},
+		MockConfigArr = append(MockConfigArr,
+			MockOptType{
+				testHunter.BillingType{
+					MockName:  "MA_" + mStr.ToStr(emaP) + "_CAP_" + mStr.ToStr(CAP),
+					InitMoney: "1000", // 初始资金
+					Level:     "1",    // 杠杆倍数
+					Charge:    "0.05", // 吃单标准手续费率 0.05%
 				},
-			)
-		}
+				hunter.TradeKdataOpt{
+					MA_Period:      emaP,
+					RSI_Period:     18,
+					RSI_EMA_Period: 14,
+					CAP_Period:     CAP,
+				},
+			},
+		)
 	}
 
 	return MockConfigArr
@@ -71,7 +69,7 @@ func main() {
 		fmt.Println("出错", err)
 	}
 
-	configArr := MockConfig([]int{77, 171, 545})
+	configArr := MockConfig([]int{75, 77, 79, 169, 171, 173, 543, 545, 547})
 
 	for _, config := range configArr {
 		back.MockData(
