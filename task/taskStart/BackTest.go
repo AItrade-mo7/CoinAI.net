@@ -33,8 +33,8 @@ func BackTest() {
 
 	// 新建回测参数 ( 按照核心数进行任务拆分 )
 	configObj := testHunter.GetConfig(testHunter.GetConfigOpt{
-		EmaPArr: []int{75, 77, 79, 169, 171, 173, 543, 545, 547},
-		CAPArr:  []int{3, 4},
+		EmaPArr: []int{171},
+		CAPArr:  []int{4},
 	})
 
 	TaskChan := make(chan string, len(configObj.GorMap)) // 记录任务完成数
