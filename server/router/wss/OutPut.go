@@ -62,9 +62,9 @@ func GetOutPut() (resData OutPut) {
 	resData.MaxApiKeyNum = config.AppEnv.MaxApiKeyNum
 
 	// 最后一条数据
-	if len(okxInfo.NowKdataList) > 1 {
-		resData.TradeKdataLast = okxInfo.NowKdataList[len(okxInfo.NowKdataList)-1]
-	}
+	// if len(okxInfo.NowKdataList) > 1 {
+	// 	resData.TradeKdataLast = okxInfo.NowKdataList[len(okxInfo.NowKdataList)-1]
+	// }
 
 	resData.NowTicker = GetNowTicker()
 
@@ -81,6 +81,6 @@ func GetNowTicker() NowTicker {
 
 func GetTradeInst() TradeInstType {
 	var resData TradeInstType
-	jsoniter.Unmarshal(mJson.ToJson(okxInfo.TradeInst), &resData)
+	// jsoniter.Unmarshal(mJson.ToJson(okxInfo.TradeInst), &resData)
 	return resData
 }

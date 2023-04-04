@@ -3,7 +3,6 @@ package ready
 import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mClock"
 	"github.com/EasyGolang/goTools/mFile"
@@ -43,12 +42,5 @@ func GetAnalyData() {
 		return
 	}
 
-	// 这里会读取当前持仓先设置一下，然后每次平仓后还会再设置一次，目前持仓没有被设置
-	err := hunter.SetTradeInst() // 设置一下, 每次平仓还会再设置一下
-	if err != nil {
-		global.LogErr(err)
-		return
-	}
-
-	okxInfo.HunterTicking <- "Tick"
+	okxInfo.ReadyTicking <- "Tick"
 }

@@ -21,3 +21,5 @@ type AnalyTickerType struct {
 var NowTicker AnalyTickerType
 
 var Inst map[string]mOKX.TypeInst
+
+var ReadyTicking = make(chan string, 10) // 计算频率

@@ -1,12 +1,6 @@
 package hunter
 
 import (
-	"fmt"
-
-	"CoinAI.net/server/global"
-	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/okxInfo"
-	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTalib"
@@ -42,36 +36,36 @@ var (
 )
 
 func FormatTradeKdata(opt TradeKdataOpt) error {
-	if len(okxInfo.NowKdataList) < opt.MA_Period {
-		err := fmt.Errorf("hunter.FormatTradeKdata 数据不足")
-		return err
-	}
+	// if len(okxInfo.NowKdataList) < opt.MA_Period {
+	// 	err := fmt.Errorf("hunter.FormatTradeKdata 数据不足")
+	// 	return err
+	// }
 
-	if opt.MA_Period == 0 ||
-		opt.RSI_Period == 0 ||
-		opt.RSI_EMA_Period == 0 ||
-		opt.CAP_Period == 0 {
-		err := fmt.Errorf("hunter.FormatTradeKdata2 参数不正确 %+v", opt)
-		return err
-	}
+	// if opt.MA_Period == 0 ||
+	// 	opt.RSI_Period == 0 ||
+	// 	opt.RSI_EMA_Period == 0 ||
+	// 	opt.CAP_Period == 0 {
+	// 	err := fmt.Errorf("hunter.FormatTradeKdata2 参数不正确 %+v", opt)
+	// 	return err
+	// }
 
-	// 清理 TradeKdataList
-	TradeKdataList = []TradeKdType{}
+	// // 清理 TradeKdataList
+	// TradeKdataList = []TradeKdType{}
 
-	EMA_Arr = []string{}
-	MA_Arr = []string{}
-	RSI_Arr = []string{}
+	// EMA_Arr = []string{}
+	// MA_Arr = []string{}
+	// RSI_Arr = []string{}
 
-	FormatEnd := []mOKX.TypeKd{}
-	for _, Kdata := range okxInfo.NowKdataList {
-		FormatEnd = append(FormatEnd, Kdata)
-		TradeKdata := NewTradeKdata(FormatEnd, opt)
-		TradeKdataList = append(TradeKdataList, TradeKdata)
-	}
+	// FormatEnd := []mOKX.TypeKd{}
+	// for _, Kdata := range okxInfo.NowKdataList {
+	// 	FormatEnd = append(FormatEnd, Kdata)
+	// 	TradeKdata := NewTradeKdata(FormatEnd, opt)
+	// 	TradeKdataList = append(TradeKdataList, TradeKdata)
+	// }
 
-	WriteFilePath := config.Dir.JsonData + "/TradeKdataList.json"
-	mFile.Write(WriteFilePath, string(mJson.ToJson(TradeKdataList)))
-	global.TradeLog.Println("数据整理完毕,已写入", len(TradeKdataList), WriteFilePath)
+	// WriteFilePath := config.Dir.JsonData + "/TradeKdataList.json"
+	// mFile.Write(WriteFilePath, string(mJson.ToJson(TradeKdataList)))
+	// global.TradeLog.Println("数据整理完毕,已写入", len(TradeKdataList), WriteFilePath)
 
 	return nil
 }
