@@ -7,46 +7,12 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/utils/taskPush"
 	"CoinAI.net/task/testHunter"
 	"github.com/EasyGolang/goTools/mJson"
-	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
 	jsoniter "github.com/json-iterator/go"
 )
-
-type MockOptType struct {
-	MockOpt       testHunter.BillingType
-	TradeKdataOpt hunter.TradeKdataOpt
-}
-
-func MockConfig(EmaPArr []int) []MockOptType {
-	MockConfigArr := []MockOptType{}
-
-	CAP := 4 //  3 或者 4
-
-	for _, emaP := range EmaPArr {
-		MockConfigArr = append(MockConfigArr,
-			MockOptType{
-				testHunter.BillingType{
-					MockName:  "MA_" + mStr.ToStr(emaP) + "_CAP_" + mStr.ToStr(CAP),
-					InitMoney: "1000", // 初始资金
-					Level:     "1",    // 杠杆倍数
-					Charge:    "0.05", // 吃单标准手续费率 0.05%
-				},
-				hunter.TradeKdataOpt{
-					MA_Period:      emaP,
-					RSI_Period:     18,
-					RSI_EMA_Period: 14,
-					CAP_Period:     CAP,
-				},
-			},
-		)
-	}
-
-	return MockConfigArr
-}
 
 func main() {
 	AppPackage, _ := os.ReadFile("package.json")
@@ -69,7 +35,7 @@ func main() {
 		fmt.Println("出错", err)
 	}
 
-	configArr := MockConfig([]int{75, 77, 79, 169, 171, 173, 543, 545, 547})
+	configArr := testHunter.MockConfig([]int{75, 77, 79, 169, 171, 173, 543, 545, 547})
 
 	for _, config := range configArr {
 		back.MockData(
@@ -86,14 +52,3 @@ func main() {
 		Description: "回测结束通知",
 	})
 }
-
-/*
-最终轮
-
-77
-
-171
-
-545
-
-*/
