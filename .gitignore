@@ -22,6 +22,7 @@ TaskRunner-*
 node_modules
 
 logs
+*_logs
 
 *.log
 dist
