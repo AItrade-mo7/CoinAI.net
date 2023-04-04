@@ -1,6 +1,7 @@
 package testHunter
 
 import (
+	"fmt"
 	"runtime"
 
 	"CoinAI.net/server/global"
@@ -116,8 +117,9 @@ type GetConfigOpt struct {
 	EmaPArr []int
 	CAPArr  []int
 }
+type goroutineMapType map[string][]NewMockOpt
 
-func GetConfig(opt GetConfigOpt) [][]NewMockOpt {
+func GetConfig(opt GetConfigOpt) goroutineMapType {
 	MockConfigArr := []NewMockOpt{}
 	for _, emaP := range opt.EmaPArr {
 		for _, cap := range opt.CAPArr {
@@ -148,30 +150,34 @@ func GetConfig(opt GetConfigOpt) [][]NewMockOpt {
 		MaxNumInt = MaxNumInt + 1
 	}
 
-	goroutineArr := [][]NewMockOpt{}
-	configCache := []NewMockOpt{}
-
-	goroutineArrCount := [][]string{}
-	configCacheName := []string{}
-
-	for _, config := range MockConfigArr {
-		configCache = append(configCache, config)
-		configCacheName = append(configCacheName, config.MockName)
-		if len(configCache) >= MaxNumInt {
-			goroutineArr = append(goroutineArr, configCache)
-			goroutineArrCount = append(goroutineArrCount, configCacheName)
-			configCache = []NewMockOpt{}
-			configCacheName = []string{}
-		}
+	goroutineMap := goroutineMapType{}
+	for _, item := range [6]int{} {
+		fmt.Println(item)
 	}
-	goroutineArr = append(goroutineArr, configCache)
-	goroutineArrCount = append(goroutineArrCount, configCacheName)
 
-	global.Run.Println("新建参数集合:",
-		"当前任务总数量:", len(MockConfigArr),
-		"当前CPU核心数量", CpuNumStr,
-		"\n任务视图:\n", mJson.Format(goroutineArrCount),
-	)
+	// configCache := []NewMockOpt{}
 
-	return goroutineArr
+	// goroutineArrCount := [][]string{}
+	// configCacheName := []string{}
+
+	// for _, config := range MockConfigArr {
+	// 	configCache = append(configCache, config)
+	// 	configCacheName = append(configCacheName, config.MockName)
+	// 	if len(configCache) >= MaxNumInt {
+	// 		goroutineArr = append(goroutineArr, configCache)
+	// 		goroutineArrCount = append(goroutineArrCount, configCacheName)
+	// 		configCache = []NewMockOpt{}
+	// 		configCacheName = []string{}
+	// 	}
+	// }
+	// goroutineArr = append(goroutineArr, configCache)
+	// goroutineArrCount = append(goroutineArrCount, configCacheName)
+
+	// global.Run.Println("新建参数集合:",
+	// 	"当前任务总数量:", len(MockConfigArr),
+	// 	"当前CPU核心数量", CpuNumStr,
+	// 	"\n任务视图:\n", mJson.Format(goroutineArrCount),
+	// )
+
+	return goroutineMap
 }
