@@ -117,7 +117,14 @@ type GetConfigOpt struct {
 	CAPArr  []int
 }
 
-func GetConfig(opt GetConfigOpt) map[string][]NewMockOpt {
+type GetConfigReturn struct {
+	GorMap     map[string][]NewMockOpt
+	GorMapView map[string][]string
+	TaskNum    int
+	CpuNum     int
+}
+
+func GetConfig(opt GetConfigOpt) GetConfigReturn {
 	MockConfigArr := []NewMockOpt{}
 	for _, emaP := range opt.EmaPArr {
 		for _, cap := range opt.CAPArr {
@@ -139,7 +146,8 @@ func GetConfig(opt GetConfigOpt) map[string][]NewMockOpt {
 	}
 
 	// 根据 cpu 核心数计算每个 Goroutine 的最大任务数
-	CpuNumStr := mStr.ToStr(runtime.NumCPU())
+	CpuNum := runtime.NumCPU()
+	CpuNumStr := mStr.ToStr(CpuNum)
 	taskNumStr := mStr.ToStr(len(MockConfigArr))
 	MaxNumStr := mCount.Div(taskNumStr, CpuNumStr)
 	MaxNumInt := mCount.ToInt(MaxNumStr)
@@ -172,5 +180,11 @@ func GetConfig(opt GetConfigOpt) map[string][]NewMockOpt {
 		"当前CPU核心数量", CpuNumStr,
 		"\n任务视图:\n", mJson.Format(GorMapView),
 	)
-	return GorMap
+
+	return GetConfigReturn{
+		GorMap:     GorMap,
+		GorMapView: GorMapView,
+		TaskNum:    len(MockConfigArr),
+		CpuNum:     CpuNum,
+	}
 }
