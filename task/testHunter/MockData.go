@@ -23,7 +23,7 @@ func (_this *MockObj) MockRun() {
 
 	FormatEnd := []mOKX.TypeKd{}
 
-	lossVal := mCount.Mul(_this.Billing.InitMoney, "0.3") // 当余额 低于 30% 时 判定为 亏完
+	// lossVal := mCount.Mul(_this.Billing.InitMoney, "0.3") // 当余额 低于 30% 时 判定为 亏完
 
 	for _, Kdata := range _this.RunKdataList {
 		FormatEnd = append(FormatEnd, Kdata)
@@ -43,10 +43,10 @@ func (_this *MockObj) MockRun() {
 			break
 		}
 
-		if mCount.Le(_this.Billing.Money, lossVal) < 0 {
-			global.Log.Println("亏完！", _this.Billing.MockName, Kdata.TimeStr)
-			break
-		}
+		// if mCount.Le(_this.Billing.Money, lossVal) < 0 {
+		// 	global.Log.Println("亏完！", _this.Billing.MockName, Kdata.TimeStr)
+		// 	break
+		// }
 	}
 
 	if len(hunter.TradeKdataList) > 0 {
@@ -95,6 +95,8 @@ func (_this *MockObj) Analy() {
 	if _this.NowPosition.Dir != AnalyDir {
 		_this.OnOrder(AnalyDir, NowKdata)
 	}
+
+	global.KdataLog.Println(_this.Billing.MockName, NowKdata.TimeStr, AnalyDir)
 }
 
 // 根据下单结果进行模拟持仓
