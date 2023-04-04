@@ -2,7 +2,6 @@ package taskStart
 
 import (
 	"fmt"
-	"time"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
@@ -19,7 +18,7 @@ func BackTest() {
 
 	// 新建回测
 	backObj := testHunter.New(testHunter.TestOpt{
-		StartTime: mTime.TimeParse(mTime.Lay_DD, "2023-04-01"),
+		StartTime: mTime.TimeParse(mTime.Lay_DD, "2023-01-01"),
 		EndTime:   mTime.TimeParse(mTime.Lay_DD, "2023-04-05"),
 		InstID:    "BTC-USDT",
 	})
@@ -46,10 +45,8 @@ func BackTest() {
 		global.Run.Println("开始执行Goroutine:", GorName)
 		StartTime := mTime.GetUnix()
 		for _, config := range confArr {
-			// MockObj := backObj.NewMock(config)
-			// MockObj.MockRun()
-			time.Sleep(time.Second * 2)
-			fmt.Println(config)
+			MockObj := backObj.NewMock(config)
+			MockObj.MockRun()
 		}
 		EndTime := mTime.GetUnix()
 		DiffTime := mCount.Sub(EndTime, StartTime)
@@ -81,7 +78,7 @@ func BackTest() {
 
 	EndTime := mTime.GetUnix()
 	DiffTime := mCount.Sub(EndTime, StartTime)
-	DiffMin := mCount.Div(DiffTime, mTime.UnixTime.Seconds)
+	DiffMin := mCount.Div(DiffTime, mTime.UnixTime.Minute)
 
 	taskPush.SysEmail(taskPush.SysEmailOpt{
 		From:        config.SysName,
