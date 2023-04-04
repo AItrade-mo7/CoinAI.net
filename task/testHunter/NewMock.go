@@ -72,7 +72,7 @@ type MockObj struct {
 	PositionArr   []PositionType // 当前持仓
 	OrderArr      []OrderType    // 下单列表
 	Billing       BillingType
-	TestKdataList []mOKX.TypeKd
+	RunKdataList  []mOKX.TypeKd
 	TradeKdataOpt hunter.TradeKdataOpt
 }
 
@@ -82,7 +82,7 @@ func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 	obj.NowPosition = PositionType{}
 	obj.PositionArr = []PositionType{}
 	obj.OrderArr = []OrderType{}
-	obj.TestKdataList = _this.KdataList
+	obj.RunKdataList = _this.KdataList
 	// 开始处理参数
 	obj.Billing = BillingType{}
 	obj.Billing.MockName = opt.MockName

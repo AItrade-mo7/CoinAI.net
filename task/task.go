@@ -35,11 +35,10 @@ func main() {
 	}
 
 	// 新建回测参数序列
-
 	// configArr := testHunter.MockConfig([]int{75, 77, 79, 169, 171, 173, 543, 545, 547})
 
 	// 新建参数测试
-	backObj.NewMock(testHunter.NewMockOpt{
+	MockObj := backObj.NewMock(testHunter.NewMockOpt{
 		MockName:  "123123",
 		InitMoney: "1000",
 		Level:     "1",
@@ -51,19 +50,5 @@ func main() {
 			CAP_Period:     4,
 		},
 	})
-
-	// for _, config := range configArr {
-	// 	back.MockData(
-	// 		config.MockOpt,
-	// 		config.TradeKdataOpt,
-	// 	)
-	// }
-	// taskPush.SysEmail(taskPush.SysEmailOpt{
-	// 	From:        config.SysName,
-	// 	To:          config.NoticeEmail,
-	// 	Subject:     "参数跑完了",
-	// 	Title:       "第一批参数组合跑完了",
-	// 	Content:     "参数值:" + mJson.Format(configArr),
-	// 	Description: "回测结束通知",
-	// })
+	MockObj.MockRun()
 }
