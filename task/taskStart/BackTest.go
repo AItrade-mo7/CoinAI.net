@@ -15,9 +15,11 @@ import (
 )
 
 func BackTest() {
+	StartTime := mTime.GetUnix()
+
 	// 新建回测
 	backObj := testHunter.New(testHunter.TestOpt{
-		StartTime: mTime.TimeParse(mTime.Lay_DD, "2023-01-01"),
+		StartTime: mTime.TimeParse(mTime.Lay_DD, "2023-04-01"),
 		EndTime:   mTime.TimeParse(mTime.Lay_DD, "2023-04-05"),
 		InstID:    "BTC-USDT",
 	})
@@ -77,11 +79,15 @@ func BackTest() {
 		}
 	}
 
+	EndTime := mTime.GetUnix()
+	DiffTime := mCount.Sub(EndTime, StartTime)
+	DiffMin := mCount.Div(DiffTime, mTime.UnixTime.Seconds)
+
 	taskPush.SysEmail(taskPush.SysEmailOpt{
 		From:        config.SysName,
 		To:          config.NoticeEmail,
 		Subject:     "任务结束",
-		Title:       mStr.Join("Cpu核心数:", configObj.CpuNum, "任务总数:", configObj.TaskNum),
+		Title:       mStr.Join("共计耗时", DiffMin, "分钟"),
 		Content:     "任务视图:<br />" + mJson.Format(configObj.GorMapView),
 		Description: "回测结束通知",
 	})
