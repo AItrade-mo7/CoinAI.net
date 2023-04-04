@@ -44,6 +44,8 @@ func SetTradeInst() (resErr error) {
 		InstIDList = append(InstIDList, item.InstID)
 	}
 
+	fmt.Println(InstIDList)
+
 	if len(InstIDList) > 0 {
 		HLPerInstID = InstIDList[len(InstIDList)-1]
 	}
