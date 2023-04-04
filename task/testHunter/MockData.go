@@ -23,6 +23,9 @@ func (_this *MockObj) MockRun() {
 	hunter.RSI_Arr = []string{}
 
 	FormatEnd := []mOKX.TypeKd{}
+
+	lossVal := mCount.Mul(_this.Billing.InitMoney, "0.3") // 当余额 低于 30% 时 判定为 亏完
+
 	for _, Kdata := range _this.RunKdataList {
 		FormatEnd = append(FormatEnd, Kdata)
 
@@ -38,6 +41,11 @@ func (_this *MockObj) MockRun() {
 
 		if mCount.Le(_this.NowPosition.UplRatio, "-45") < 0 {
 			global.Log.Println("爆仓！", _this.Billing.MockName, Kdata.TimeStr)
+			break
+		}
+
+		if mCount.Le(_this.Billing.Money, lossVal) < 0 {
+			global.Log.Println("亏完！", _this.Billing.MockName, Kdata.TimeStr)
 			break
 		}
 	}
