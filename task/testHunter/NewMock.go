@@ -1,8 +1,11 @@
 package testHunter
 
 import (
+	"runtime"
+
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/hunter"
+	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
@@ -109,13 +112,15 @@ func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 	return &obj
 }
 
-func GetConfig(EmaPArr []int) []NewMockOpt {
+type GetConfigOpt struct {
+	EmaPArr []int
+	CAPArr  []int
+}
+
+func GetConfig(opt GetConfigOpt) [][]NewMockOpt {
 	MockConfigArr := []NewMockOpt{}
-
-	CAPArr := []int{3, 4} //  3 或者 4
-
-	for _, emaP := range EmaPArr {
-		for _, cap := range CAPArr {
+	for _, emaP := range opt.EmaPArr {
+		for _, cap := range opt.CAPArr {
 			MockConfigArr = append(MockConfigArr,
 				NewMockOpt{
 					MockName:  "MA_" + mStr.ToStr(emaP) + "_CAP_" + mStr.ToStr(cap),
@@ -133,5 +138,40 @@ func GetConfig(EmaPArr []int) []NewMockOpt {
 		}
 	}
 
-	return MockConfigArr
+	// 根据 cpu 核心数计算每个 Goroutine 的最大任务数
+	CpuNumStr := mStr.ToStr(runtime.NumCPU())
+	taskNumStr := mStr.ToStr(len(MockConfigArr))
+	MaxNumStr := mCount.Div(taskNumStr, CpuNumStr)
+	MaxNumInt := mCount.ToInt(MaxNumStr)
+	decNum := mCount.GetDecimal(MaxNumStr)
+	if decNum > 0 {
+		MaxNumInt = MaxNumInt + 1
+	}
+
+	goroutineArr := [][]NewMockOpt{}
+	configCache := []NewMockOpt{}
+
+	goroutineArrCount := [][]string{}
+	configCacheName := []string{}
+
+	for _, config := range MockConfigArr {
+		configCache = append(configCache, config)
+		configCacheName = append(configCacheName, config.MockName)
+		if len(configCache) >= MaxNumInt {
+			goroutineArr = append(goroutineArr, configCache)
+			goroutineArrCount = append(goroutineArrCount, configCacheName)
+			configCache = []NewMockOpt{}
+			configCacheName = []string{}
+		}
+	}
+	goroutineArr = append(goroutineArr, configCache)
+	goroutineArrCount = append(goroutineArrCount, configCacheName)
+
+	global.Run.Println("新建参数集合:",
+		"当前任务总数量:", len(MockConfigArr),
+		"当前CPU核心数量", CpuNumStr,
+		"\n任务视图:\n", mJson.Format(goroutineArrCount),
+	)
+
+	return goroutineArr
 }
