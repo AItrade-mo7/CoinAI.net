@@ -1,78 +1,6 @@
 package testHunter
 
-import (
-	"fmt"
-
-	"CoinAI.net/server/global"
-	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/hunter"
-	"github.com/EasyGolang/goTools/mCount"
-	"github.com/EasyGolang/goTools/mFile"
-	"github.com/EasyGolang/goTools/mJson"
-	"github.com/EasyGolang/goTools/mOKX"
-	"github.com/EasyGolang/goTools/mStr"
-	"github.com/EasyGolang/goTools/mTime"
-)
-
-// 开仓信息记录
-type PositionType struct {
-	Dir         int    // 开仓方向
-	OpenAvgPx   string // 开仓价格
-	OpenTimeStr string // 开仓时间
-	NowTimeStr  string
-	NowC        string
-	InstID      string // 下单币种
-	UplRatio    string // 未实现收益率
-}
-
-type OrderType struct {
-	Type    string // 平仓,Close  开空,Sell  开多,Buy
-	AvgPx   string // 开仓价格
-	InstID  string // 下单币种
-	TimeStr string // 开仓时间
-}
-
-var (
-	NowPosition PositionType   // 当前持仓
-	PositionArr []PositionType // 当前持仓
-	OrderArr    []OrderType    // 下单列表
-
-)
-
-type RecordType struct {
-	Value   string
-	TimeStr string
-}
-
-// 收益结算
-type BillingType struct {
-	InstID           string     // 交易币种
-	MockName         string     // 策略名称
-	Days             int64      // 总天数
-	StartTime        string     // 第一次持仓时间
-	EndTime          string     // 结束时间
-	NilNum           int        // 空仓次数
-	SellNum          int        // 开空次数
-	BuyNum           int        // 开多次数
-	AllNum           int        // 总开仓次数
-	Win              int        // 盈利次数
-	WinRatio         string     // 总盈利比率
-	Lose             int        // 亏损次数
-	LoseRatio        string     // 总亏损比率
-	MaxRatio         RecordType // 平仓后单笔最大盈利比率
-	MinRatio         RecordType // 平仓后单笔最小盈利比率
-	Charge           string     // 手续费率
-	ChargeAll        string     // 总手续费
-	InitMoney        string     // 初始金钱
-	Money            string     // 账户当前余额
-	MinMoney         RecordType // 平仓后历史最低余额
-	MaxMoney         RecordType // 平仓后历史最高余额
-	PositionMinRatio RecordType // 持仓过程中最低盈利比率
-	PositionMaxRatio RecordType // 持仓过程中最高盈利比率
-	Level            string     // 杠杆倍数
-}
-
-var Billing BillingType
+/*
 
 // 模拟数据流动并执行分析交易
 func (_this *TestObj) MockData(MockOpt BillingType, TradeKdataOpt hunter.TradeKdataOpt) {
@@ -334,31 +262,31 @@ func ResultCollect() {
 	mFile.Write(Billing_Path, string(mJson.ToJson(Billing)))
 	global.Run.Println("Billing: ", Billing_Path)
 
-	Tmp := `交易结果: 
+	Tmp := `交易结果:
 InstID: ${InstID}
 第一次持仓时间: ${StartTime}
 数据结束时间: ${EndTime}
 总天数: ${Days}
-空仓次数: ${NilNum}    
-开空次数: ${SellNum}   
-开多次数: ${BuyNum}    
-总开仓次数: ${AllNum}    
-盈利次数: ${Win}       
-总盈利比率: ${WinRatio}  
-亏损次数: ${Lose}      
-总亏损比率: ${LoseRatio} 
-平仓后单笔最大盈利比率: ${MaxRatio}  
-平仓后单笔最小盈利比率: ${MinRatio}  
-手续费率: ${Charge}    
-总手续费: ${ChargeAll} 
-参数名称: ${MockName}  
-初始金钱: ${InitMoney} 
-账户当前余额: ${Money}    
-平仓后历史最低余额: ${MinMoney}     
-平仓后历史最高余额: ${MaxMoney}      
-持仓过程中最低盈利比率: ${PositionMinRatio}      
-持仓过程中最高盈利比率: ${PositionMaxRatio}      
-杠杆倍数: ${Level}     
+空仓次数: ${NilNum}
+开空次数: ${SellNum}
+开多次数: ${BuyNum}
+总开仓次数: ${AllNum}
+盈利次数: ${Win}
+总盈利比率: ${WinRatio}
+亏损次数: ${Lose}
+总亏损比率: ${LoseRatio}
+平仓后单笔最大盈利比率: ${MaxRatio}
+平仓后单笔最小盈利比率: ${MinRatio}
+手续费率: ${Charge}
+总手续费: ${ChargeAll}
+参数名称: ${MockName}
+初始金钱: ${InitMoney}
+账户当前余额: ${Money}
+平仓后历史最低余额: ${MinMoney}
+平仓后历史最高余额: ${MaxMoney}
+持仓过程中最低盈利比率: ${PositionMinRatio}
+持仓过程中最高盈利比率: ${PositionMaxRatio}
+杠杆倍数: ${Level}
 `
 	Data := map[string]string{
 		"InstID":           Billing.InstID,
@@ -389,3 +317,5 @@ InstID: ${InstID}
 
 	global.TradeLog.Println(mStr.Temp(Tmp, Data))
 }
+
+*/
