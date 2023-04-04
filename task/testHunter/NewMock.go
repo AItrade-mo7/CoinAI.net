@@ -120,6 +120,7 @@ type GetConfigOpt struct {
 type GetConfigReturn struct {
 	GorMap     map[string][]NewMockOpt
 	GorMapView map[string][]string
+	ConfigArr  []NewMockOpt
 	TaskNum    int
 	CpuNum     int
 }
@@ -130,7 +131,7 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 		for _, cap := range opt.CAPArr {
 			MockConfigArr = append(MockConfigArr,
 				NewMockOpt{
-					MockName:  "MA_" + mStr.ToStr(emaP) + "_CAP_" + mStr.ToStr(cap),
+					MockName:  mStr.Join("MA_", mStr.ToStr(emaP), "_CAP_", mStr.ToStr(cap)),
 					InitMoney: "1000", // 初始资金
 					Level:     "1",    // 杠杆倍数
 					Charge:    "0.05", // 吃单标准手续费率 0.05%
@@ -184,6 +185,7 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 	return GetConfigReturn{
 		GorMap:     GorMap,
 		GorMapView: GorMapView,
+		ConfigArr:  MockConfigArr,
 		TaskNum:    len(MockConfigArr),
 		CpuNum:     CpuNum,
 	}

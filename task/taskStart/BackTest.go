@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/utils/taskPush"
 	"CoinAI.net/task/testHunter"
 	"github.com/EasyGolang/goTools/mCount"
@@ -31,31 +32,52 @@ func BackTest() {
 		panic(fmt.Errorf("出错: %+v", err))
 	}
 
+	// 构建参数
 	// 新建回测参数 ( 按照核心数进行任务拆分 )
-	configObj := testHunter.GetConfig(testHunter.GetConfigOpt{
-		EmaPArr: []int{171},
-		CAPArr:  []int{4},
+	// configObj := testHunter.GetConfig(testHunter.GetConfigOpt{
+	// 	EmaPArr: []int{171},
+	// 	CAPArr:  []int{4},
+	// })
+	ConfigArr := GetConfigArr([]ConfOpt{
+		{
+			MA_Period:  77,
+			CAP_Period: 3,
+		},
+		{
+			MA_Period:  171,
+			CAP_Period: 4,
+		},
+		{
+			MA_Period:  545,
+			CAP_Period: 3,
+		},
 	})
+	configObj := testHunter.GetConfigReturn{
+		ConfigArr: ConfigArr,
+		TaskNum:   len(ConfigArr),
+	}
+
+	// 构建参数完毕
 
 	TaskChan := make(chan string, len(configObj.GorMap)) // 记录任务完成数
 
 	// 建立一个线程要运行的任务
 
-	NewGorTask := func(GorName string, confArr []testHunter.NewMockOpt) {
+	NewGorTask := func(GorName string, confArr testHunter.NewMockOpt) {
 		global.Run.Println("开始执行Goroutine:", GorName)
 		StartTime := mTime.GetUnix()
-		for _, config := range confArr {
-			MockObj := backObj.NewMock(config)
-			MockObj.MockRun()
-		}
+
+		MockObj := backObj.NewMock(confArr)
+		MockObj.MockRun()
+
 		EndTime := mTime.GetUnix()
 		DiffTime := mCount.Sub(EndTime, StartTime)
 		DiffMin := mCount.Div(DiffTime, mTime.UnixTime.Minute)
 		global.Run.Println("Goroutine:", GorName, "执行结束,共计耗时:", DiffMin, "分钟")
 		TaskChan <- GorName
 	}
-	for key, confArr := range configObj.GorMap {
-		go NewGorTask(key, confArr)
+	for _, confArr := range configObj.ConfigArr {
+		go NewGorTask(confArr.MockName, confArr)
 	}
 
 	taskPush.SysEmail(taskPush.SysEmailOpt{
@@ -88,4 +110,31 @@ func BackTest() {
 		Content:     "任务视图:<br />" + mJson.Format(configObj.GorMapView),
 		Description: "回测结束通知",
 	})
+}
+
+type ConfOpt struct {
+	MA_Period  int
+	CAP_Period int
+}
+
+func GetConfigArr(confArr []ConfOpt) []testHunter.NewMockOpt {
+	ConfigArr := []testHunter.NewMockOpt{}
+	for _, conf := range confArr {
+		emaP := conf.MA_Period
+		cap := conf.CAP_Period
+		ConfigArr = append(ConfigArr, testHunter.NewMockOpt{
+			MockName:  mStr.Join("MA_", mStr.ToStr(emaP), "_CAP_", mStr.ToStr(cap)),
+			InitMoney: "1000", // 初始资金
+			Level:     "1",    // 杠杆倍数
+			Charge:    "0.05", // 吃单标准手续费率 0.05%
+			TradeKdataOpt: hunter.TradeKdataOpt{
+				MA_Period:      emaP,
+				RSI_Period:     18,
+				RSI_EMA_Period: 14,
+				CAP_Period:     cap,
+			},
+		})
+	}
+
+	return ConfigArr
 }

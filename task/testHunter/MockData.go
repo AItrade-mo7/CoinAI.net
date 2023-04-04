@@ -95,8 +95,6 @@ func (_this *MockObj) Analy() {
 	if _this.NowPosition.Dir != AnalyDir {
 		_this.OnOrder(AnalyDir, NowKdata)
 	}
-
-	global.KdataLog.Println(_this.Billing.MockName, NowKdata.TimeStr, AnalyDir)
 }
 
 // 根据下单结果进行模拟持仓
@@ -105,6 +103,7 @@ func (_this *MockObj) BillingFun(NowKdata hunter.TradeKdType) {
 		NowKdata.TimeStr,
 		"持仓方向", _this.NowPosition.Dir,
 		"收益率", _this.NowPosition.UplRatio,
+		"结算", _this.Billing.Money,
 	)
 
 	if _this.NowPosition.Dir == 0 {
