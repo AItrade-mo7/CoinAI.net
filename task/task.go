@@ -34,8 +34,11 @@ func main() {
 		fmt.Println("出错", err)
 	}
 
+	// 新建回测参数序列
+
 	// configArr := testHunter.MockConfig([]int{75, 77, 79, 169, 171, 173, 543, 545, 547})
 
+	// 新建参数测试
 	backObj.NewMock(testHunter.NewMockOpt{
 		MockName:  "123123",
 		InitMoney: "1000",
