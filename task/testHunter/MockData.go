@@ -15,7 +15,6 @@ import (
 
 // 模拟数据流动并执行分析交易
 func (_this *MockObj) MockRun() {
-	global.TradeLog.Println(" ===== 开始分析和交易 ===== ", _this.Billing.MockName)
 	// 清理 TradeKdataList
 	hunter.TradeKdataList = []hunter.TradeKdType{}
 	hunter.EMA_Arr = []string{}
@@ -55,6 +54,7 @@ func (_this *MockObj) MockRun() {
 	}
 
 	// 搜集和整理结果
+	global.TradeLog.Println(" ===== 分析交易结束 ===== ", _this.Billing.MockName)
 	_this.ResultCollect()
 }
 

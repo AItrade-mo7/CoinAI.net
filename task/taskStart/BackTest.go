@@ -18,7 +18,7 @@ func BackTest() {
 
 	// 新建回测
 	backObj := testHunter.New(testHunter.TestOpt{
-		StartTime: mTime.TimeParse(mTime.Lay_DD, "2023-01-01"),
+		StartTime: mTime.TimeParse(mTime.Lay_DD, "2020-01-01"),
 		EndTime:   mTime.TimeParse(mTime.Lay_DD, "2023-04-05"),
 		InstID:    "BTC-USDT",
 	})
