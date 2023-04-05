@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
@@ -16,24 +17,22 @@ import (
 // 模拟数据流动并执行分析交易
 func (_this *MockObj) MockRun() {
 	// 清理 TradeKdataList
-	// hunter.TradeKdataList = []hunter.TradeKdType{}
-	// hunter.EMA_Arr = []string{}
-	// hunter.MA_Arr = []string{}
-	// hunter.RSI_Arr = []string{}
+	lossVal := mCount.Mul(_this.Billing.InitMoney, "0") // 当余额 低于 30% 时 判定为 亏完
+
+	// 清理 TradeKdataList
+	_this.TradeKdataList = []okxInfo.TradeKdType{}
+	TradeKlineObj := hunter.NewTradeKdataObj(_this.TradeKdataOpt)
 
 	FormatEnd := []mOKX.TypeKd{}
-
-	// lossVal := mCount.Mul(_this.Billing.InitMoney, "0.3") // 当余额 低于 30% 时 判定为 亏完
-
 	for _, Kdata := range _this.RunKdataList {
 		FormatEnd = append(FormatEnd, Kdata)
 
-		if len(FormatEnd) < _this.TradeKdataOpt.MA_Period*2 {
+		if len(FormatEnd) < _this.TradeKdataOpt.MA_Period+1 {
 			continue
 		}
 
-		// TradeKdata := hunter.NewTradeKdata(FormatEnd, _this.TradeKdataOpt)
-		// hunter.TradeKdataList = append(hunter.TradeKdataList, TradeKdata)
+		TradeKdata := TradeKlineObj.NewTradeKdata(FormatEnd)
+		_this.TradeKdataList = append(_this.TradeKdataList, TradeKdata)
 
 		// 开始执行分析交易
 		_this.Analy()
@@ -43,15 +42,15 @@ func (_this *MockObj) MockRun() {
 			break
 		}
 
-		// if mCount.Le(_this.Billing.Money, lossVal) < 0 {
-		// 	global.Log.Println("亏完！", _this.Billing.MockName, Kdata.TimeStr)
-		// 	break
-		// }
+		if mCount.Le(_this.Billing.Money, lossVal) < 0 {
+			global.Log.Println("亏完！", _this.Billing.MockName, Kdata.TimeStr)
+			break
+		}
 	}
 
-	// if len(hunter.TradeKdataList) > 0 {
-	// 	_this.Billing.EndTime = hunter.TradeKdataList[len(hunter.TradeKdataList)-1].TimeStr
-	// }
+	if len(_this.TradeKdataList) > 0 {
+		_this.Billing.EndTime = _this.TradeKdataList[len(_this.TradeKdataList)-1].TimeStr
+	}
 
 	// 搜集和整理结果
 	global.TradeLog.Println(" ===== 分析交易结束 ===== ", _this.Billing.MockName)
@@ -59,27 +58,27 @@ func (_this *MockObj) MockRun() {
 }
 
 func (_this *MockObj) Analy() {
-	// NowKdata := hunter.TradeKdataList[len(hunter.TradeKdataList)-1]
-	// AnalyDir := 0 // 分析的方向，默认为 0 不开仓
+	NowKdata := _this.TradeKdataList[len(_this.TradeKdataList)-1]
+	AnalyDir := 0 // 分析的方向，默认为 0 不开仓
 
-	// if mCount.Le(NowKdata.CAP_EMA, "0") > 0 { // 大于 0 则开多
-	// 	AnalyDir = 1
-	// }
+	if mCount.Le(NowKdata.CAP_EMA, "0") > 0 { // 大于 0 则开多
+		AnalyDir = 1
+	}
 
-	// if mCount.Le(NowKdata.CAP_EMA, "0") < 0 { // 小于 0 则开空
-	// 	AnalyDir = -1
-	// }
+	if mCount.Le(NowKdata.CAP_EMA, "0") < 0 { // 小于 0 则开空
+		AnalyDir = -1
+	}
 
 	// 更新持仓状态
-	// if _this.NowPosition.Dir != 0 { // 当前为持持仓状态，则计算收益率
-	// 	// UplRatio := mCount.RoseCent(NowKdata.C, _this.NowPosition.OpenAvgPx)
-	// 	if _this.NowPosition.Dir < 0 { // 当前为持 空 仓状态 则翻转该值
-	// 		// UplRatio = mCount.Sub("0", UplRatio)
-	// 	}
-	// 	// _this.NowPosition.UplRatio = mCount.Mul(UplRatio, _this.Billing.Level) // 乘以杠杆倍数
-	// }
-	// _this.NowPosition.NowTimeStr = NowKdata.TimeStr
-	// _this.NowPosition.NowC = NowKdata.C
+	if _this.NowPosition.Dir != 0 { // 当前为持持仓状态，则计算收益率
+		UplRatio := mCount.RoseCent(NowKdata.C, _this.NowPosition.OpenAvgPx)
+		if _this.NowPosition.Dir < 0 { // 当前为持 空 仓状态 则翻转该值
+			UplRatio = mCount.Sub("0", UplRatio)
+		}
+		_this.NowPosition.UplRatio = mCount.Mul(UplRatio, _this.Billing.Level) // 乘以杠杆倍数
+	}
+	_this.NowPosition.NowTimeStr = NowKdata.TimeStr
+	_this.NowPosition.NowC = NowKdata.C
 	_this.PositionArr = append(_this.PositionArr, _this.NowPosition)
 
 	if mCount.Le(_this.NowPosition.UplRatio, _this.Billing.PositionMinRatio.Value) < 0 {
@@ -92,11 +91,11 @@ func (_this *MockObj) Analy() {
 	}
 
 	// 当前持仓与 判断方向不符合时，执行一次下单操作
-	// if _this.NowPosition.Dir != AnalyDir {
-	// 	// _this.OnOrder(AnalyDir, NowKdata)
-	// }
+	if _this.NowPosition.Dir != AnalyDir {
+		_this.OnOrder(AnalyDir, NowKdata)
+	}
 
-	// global.KdataLog.Println(_this.Billing.MockName, NowKdata.TimeStr, AnalyDir)
+	global.KdataLog.Println(_this.Billing.MockName, NowKdata.TimeStr, AnalyDir)
 }
 
 // 根据下单结果进行模拟持仓
@@ -236,7 +235,7 @@ func (_this *MockObj) OnOrder(dir int, NowKdata okxInfo.TradeKdType) {
 func (_this *MockObj) ResultCollect() {
 	// 记录 整理好的数组
 	TradeKdataList_Path := mStr.Join(config.Dir.JsonData, "/", _this.Billing.MockName, "-TradeKdataList.json")
-	// mFile.Write(TradeKdataList_Path, string(mJson.ToJson(hunter.TradeKdataList)))
+	mFile.Write(TradeKdataList_Path, string(mJson.ToJson(_this.TradeKdataList)))
 	global.Run.Println("TradeKdataList: ", TradeKdataList_Path)
 
 	// 记录 持仓数组

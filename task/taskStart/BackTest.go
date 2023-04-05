@@ -76,7 +76,10 @@ func BackTest() {
 		global.Run.Println("Goroutine:", GorName, "执行结束,共计耗时:", DiffMin, "分钟")
 		TaskChan <- GorName
 	}
+
+	goRNum := 0
 	for _, confArr := range configObj.ConfigArr {
+		goRNum++
 		go NewGorTask(confArr.MockName, confArr)
 	}
 
@@ -93,7 +96,7 @@ func BackTest() {
 	taskEnd := []string{}
 	for ok := range TaskChan {
 		taskEnd = append(taskEnd, ok)
-		if len(taskEnd) == len(configObj.GorMap) {
+		if len(taskEnd) == goRNum {
 			break
 		}
 	}

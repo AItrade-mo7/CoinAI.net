@@ -71,12 +71,13 @@ type NewMockOpt struct {
 }
 
 type MockObj struct {
-	NowPosition   PositionType   // 当前持仓
-	PositionArr   []PositionType // 当前持仓
-	OrderArr      []OrderType    // 下单列表
-	Billing       BillingType
-	RunKdataList  []mOKX.TypeKd
-	TradeKdataOpt okxInfo.TradeKdataOpt
+	NowPosition    PositionType   // 当前持仓
+	PositionArr    []PositionType // 当前持仓
+	OrderArr       []OrderType    // 下单列表
+	Billing        BillingType
+	RunKdataList   []mOKX.TypeKd
+	TradeKdataList []okxInfo.TradeKdType // 计算好各种指标之后的K线
+	TradeKdataOpt  okxInfo.TradeKdataOpt
 }
 
 func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
