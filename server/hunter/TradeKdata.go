@@ -64,30 +64,30 @@ func NewTradeKdataObj(opt okxInfo.TradeKdataOpt) *TradeKdataObj {
 	return &obj
 }
 
-func (_this *TradeKdataObj) NewTradeKdata(TradeKdataList []mOKX.TypeKd) (TradeKdata okxInfo.TradeKdType) {
+func (_this *TradeKdataObj) NewTradeKdata(KdataList []mOKX.TypeKd) (TradeKdata okxInfo.TradeKdType) {
 	TradeKdata = okxInfo.TradeKdType{}
-	jsonByte := mJson.ToJson(TradeKdataList[len(TradeKdataList)-1])
+	jsonByte := mJson.ToJson(KdataList[len(KdataList)-1])
 	jsoniter.Unmarshal(jsonByte, &TradeKdata)
 
 	TradeKdata.Opt = _this.Opt // 在这里把设置打印出来
 
 	// EMA
 	TradeKdata.EMA = mTalib.ClistNew(mTalib.ClistOpt{
-		KDList: TradeKdataList,
+		KDList: KdataList,
 		Period: _this.Opt.MA_Period,
 	}).EMA().ToStr()
 	_this.EMA_Arr = append(_this.EMA_Arr, TradeKdata.EMA)
 
 	// MA
 	TradeKdata.MA = mTalib.ClistNew(mTalib.ClistOpt{
-		KDList: TradeKdataList,
+		KDList: KdataList,
 		Period: _this.Opt.MA_Period,
 	}).MA().ToStr()
 	_this.MA_Arr = append(_this.MA_Arr, TradeKdata.MA)
 
 	// RSI
 	TradeKdata.RSI = mTalib.ClistNew(mTalib.ClistOpt{
-		KDList: TradeKdataList,
+		KDList: KdataList,
 		Period: _this.Opt.RSI_Period,
 	}).RSI().ToStr()
 	_this.RSI_Arr = append(_this.RSI_Arr, TradeKdata.RSI)
