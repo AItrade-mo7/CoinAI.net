@@ -57,6 +57,16 @@ func NewTradeKdataObj(opt okxInfo.TradeKdataOpt) *TradeKdataObj {
 	obj.MA_Arr = []string{}
 	obj.Opt = opt
 
+	if obj.Opt.MA_Period < 0 {
+		obj.Opt.MA_Period = 171
+		global.LogErr("obj.Opt.MA_Period 参数为空，已设置为默认")
+	}
+
+	if obj.Opt.CAP_Period < 0 {
+		obj.Opt.CAP_Period = 4
+		global.LogErr("obj.Opt.CAP_Period 参数为空，已设置为默认")
+	}
+
 	return &obj
 }
 
