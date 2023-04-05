@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/ready"
 	"CoinAI.net/server/router"
 	jsoniter "github.com/json-iterator/go"
@@ -21,9 +22,23 @@ func main() {
 	// 数据准备
 	ready.Start()
 
-	// 新建策略
-	// Hunter1 := hunter.New(hunter.HunterOpt{})
+	SetHunter()
 
 	// 启动路由
 	router.Start()
+}
+
+func SetHunter() {
+	// 新建策略
+	MyHunter := hunter.New(hunter.HunterOpt{
+		HunterName: "MyHunter",
+		HLPerLevel: 2,
+	})
+	err := MyHunter.SetTradeInst()
+	if err != nil {
+		global.LogErr(err)
+		return
+	}
+
+	MyHunter.Start()
 }
