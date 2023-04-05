@@ -42,5 +42,5 @@ func GetAnalyData() {
 		return
 	}
 
-	okxInfo.ReadyTicking <- "Tick"
+	okxInfo.ReadyChan <- "Tick"
 }

@@ -15,7 +15,7 @@ import (
 
 func (_this *HunterObj) Start() {
 	go func() {
-		for ok := range okxInfo.ReadyTicking {
+		for ok := range okxInfo.ReadyChan {
 			global.TradeLog.Println(_this.HunterName, " ===== hunter.Start 执行 ===== ", mTime.UnixFormat(mTime.GetUnixInt64()), ok)
 			_this.Running()
 		}

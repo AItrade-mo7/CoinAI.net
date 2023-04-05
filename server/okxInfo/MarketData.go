@@ -22,4 +22,4 @@ var NowTicker AnalyTickerType // 当前的市场排行榜单
 
 var Inst map[string]mOKX.TypeInst // 产品列表
 
-var ReadyTicking = make(chan string, 10) // 读取数据后计算一次
+var ReadyChan = make(chan string, 10) // 读取数据后计算一次
