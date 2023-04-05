@@ -26,14 +26,7 @@ type HunterData struct {
 	NowKdataList   []mOKX.TypeKd // 现货的原始K线
 	TradeKdataList []TradeKdType // 计算好各种指标之后的K线
 	TradeKdataOpt  TradeKdataOpt
+	MaxTradeLever  int
 }
 
 var NowHunterData = make(map[string]HunterData)
-
-func GetHunterNameList() []string {
-	nameList := []string{}
-	for key := range NowHunterData {
-		nameList = append(nameList, key)
-	}
-	return nameList
-}

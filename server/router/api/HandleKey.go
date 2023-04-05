@@ -17,7 +17,7 @@ import (
 type HandleKeyParam struct {
 	Name     string
 	Password string
-	Type     string // disable  enable  delete
+	Type     string // delete
 }
 
 func HandleKey(c *fiber.Ctx) error {
@@ -71,7 +71,6 @@ func HandleKey(c *fiber.Ctx) error {
 				ListErr = fmt.Errorf("无权操作")
 				break
 			}
-			NewKey.Status = json.Type
 			if json.Type == "delete" {
 				continue
 			}

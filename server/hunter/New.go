@@ -9,6 +9,7 @@ type HunterOpt struct {
 	HunterName    string // 默认 MyHunter
 	HLPerLevel    int    // 币种的震荡等级 2
 	MaxLen        int    // 900
+	MaxTradeLever int    // 最大的交易杠杆数
 	TradeKdataOpt okxInfo.TradeKdataOpt
 }
 
@@ -21,6 +22,7 @@ type HunterObj struct {
 	NowKdataList   []mOKX.TypeKd         // 现货的原始K线
 	TradeKdataList []okxInfo.TradeKdType // 计算好各种指标之后的K线
 	TradeKdataOpt  okxInfo.TradeKdataOpt
+	MaxTradeLever  int // 最优秀的交易杠杆数
 }
 
 func New(opt HunterOpt) *HunterObj {
@@ -44,12 +46,16 @@ func New(opt HunterOpt) *HunterObj {
 	}
 
 	obj.TradeKdataOpt = opt.TradeKdataOpt
-
 	if obj.TradeKdataOpt.MA_Period < 0 {
 		obj.TradeKdataOpt.MA_Period = 171
 	}
 	if obj.TradeKdataOpt.CAP_Period < 0 {
 		obj.TradeKdataOpt.CAP_Period = 4
+	}
+
+	obj.MaxTradeLever = opt.MaxTradeLever
+	if obj.MaxTradeLever < 0 {
+		obj.MaxTradeLever = 1
 	}
 
 	return &obj

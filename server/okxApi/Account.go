@@ -29,8 +29,16 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 	resObj = &AccountObj{}
 	resErr = nil
 
-	if opt.OkxKey.Status == "disable" {
-		resErr = fmt.Errorf("okxApi.NewAccount 当前 Key 已被禁用 Name:" + opt.OkxKey.Name)
+	NowHunter := okxInfo.HunterData{}
+	for key, item := range okxInfo.NowHunterData {
+		if opt.OkxKey.Hunter == key {
+			NowHunter = item
+			break
+		}
+	}
+
+	if len(NowHunter.HunterName) < 1 {
+		resErr = fmt.Errorf("okxApi.NewAccount 当前 Key 策略不正确:" + opt.OkxKey.Hunter)
 		return
 	}
 	if len(opt.OkxKey.ApiKey) < 10 {
@@ -38,13 +46,9 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 		return
 	}
 
-	// if opt.OkxKey.TradeLever < config.LeverOpt[0] {
-	// 	opt.OkxKey.TradeLever = config.LeverOpt[0]
-	// }
-
-	// if opt.OkxKey.TradeLever > config.LeverOpt[len(config.LeverOpt)-1] {
-	// 	opt.OkxKey.TradeLever = config.LeverOpt[len(config.LeverOpt)-1]
-	// }
+	if opt.OkxKey.TradeLever < 0 {
+		opt.OkxKey.TradeLever = 1
+	}
 
 	resObj.OkxKey = opt.OkxKey
 

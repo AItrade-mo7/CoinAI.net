@@ -112,6 +112,7 @@ func (_this *HunterObj) Sync_okxInfo() {
 		NowKdataList:   _this.NowKdataList,
 		TradeKdataList: _this.TradeKdataList,
 		TradeKdataOpt:  _this.TradeKdataOpt,
+		MaxTradeLever:  _this.MaxTradeLever,
 	}
 	okxInfo.NowHunterData[Name] = HunterData
 }

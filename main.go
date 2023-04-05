@@ -32,7 +32,8 @@ func main() {
 func SetHunter() {
 	// 新建策略
 	MyHunter := hunter.New(hunter.HunterOpt{
-		HunterName: "MyHunter",
+		HunterName:    "MyHunter",
+		MaxTradeLever: 3,
 		TradeKdataOpt: okxInfo.TradeKdataOpt{
 			MA_Period:  171,
 			CAP_Period: 4,

@@ -12,7 +12,6 @@ type OkxKeyType struct {
 	SecretKey  string `bson:"SecretKey"`
 	Passphrase string `bson:"Passphrase"`
 	UserID     string `bson:"UserID"`     // 用户 ID 必填项 ，禁止野生账户的存在
-	Status     string `bson:"Status"`     // disable  enable del
 	TradeLever int    `bson:"TradeLever"` // 杠杆倍数，默认 2x
 	Hunter     string `bson:"Hunter"`     // 当前账户选择的策略
 }

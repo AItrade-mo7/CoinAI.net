@@ -7,6 +7,7 @@ import (
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/global/middle"
+	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
 	"github.com/EasyGolang/goTools/mFiber"
@@ -17,20 +18,33 @@ import (
 type SetAccountConfigParam struct {
 	Name       string
 	Password   string
-	TradeLever int // disable  enable  delete
+	Hunter     string
+	TradeLever int
 }
 
 func SetAccountConfig(c *fiber.Ctx) error {
 	var json SetAccountConfigParam
 	mFiber.Parser(c, &json)
 
-	// if json.TradeLever < config.LeverOpt[0] {
-	// 	return c.JSON(result.Fail.WithMsg(fmt.Sprintf("不可小于 %+v", config.LeverOpt[0])))
-	// }
+	if json.TradeLever < 0 {
+		return c.JSON(result.Fail.WithMsg(fmt.Sprintf("TradeLever不可小于 %+v", 0)))
+	}
 
-	// if json.TradeLever > config.LeverOpt[len(config.LeverOpt)-1] {
-	// 	return c.JSON(result.Fail.WithMsg(fmt.Sprintf("不可大于 %+v", config.LeverOpt[0])))
-	// }
+	NowHunter := okxInfo.HunterData{}
+	for key, item := range okxInfo.NowHunterData {
+		if json.Hunter == key {
+			NowHunter = item
+			break
+		}
+	}
+
+	if len(NowHunter.HunterName) < 1 {
+		return c.JSON(result.Fail.WithMsg(fmt.Sprintf("必须选择一个有效策略 %+v", json.Hunter)))
+	}
+
+	if json.TradeLever > NowHunter.MaxTradeLever {
+		return c.JSON(result.Fail.WithMsg(fmt.Sprintf("TradeLever不可大于 %+v", NowHunter.MaxTradeLever)))
+	}
 
 	// 验证用户和密码
 	UserID, err := middle.TokenAuth(c)
