@@ -38,6 +38,5 @@ func SetHunter() {
 			CAP_Period: 4,
 		},
 	})
-
 	MyHunter.Start()
 }
