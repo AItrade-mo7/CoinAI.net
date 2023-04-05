@@ -5,17 +5,17 @@ import (
 	"github.com/EasyGolang/goTools/mJson"
 )
 
-func Analy() {
-	if len(TradeKdataList) < 100 {
-		global.LogErr("hunter.Analy 数据长度错误", len(TradeKdataList))
+func (_this *HunterObj) Analy() {
+	if len(_this.TradeKdataList) < 100 {
+		global.LogErr("hunter.Analy 数据长度错误", len(_this.TradeKdataList))
 		return
 	}
 
-	Last := TradeKdataList[len(TradeKdataList)-1]
+	Last := _this.TradeKdataList[len(_this.TradeKdataList)-1]
 	LastPrint := map[string]any{
 		"InstID":       Last.InstID,
 		"TimeStr":      Last.TimeStr,
-		"AllLen":       len(TradeKdataList),
+		"AllLen":       len(_this.TradeKdataList),
 		"C":            Last.C,
 		"EMA":          Last.EMA,
 		"MA":           Last.MA,

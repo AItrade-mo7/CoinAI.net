@@ -43,23 +43,18 @@ func (_this *HunterObj) Running() {
 		return
 	}
 
-	// err = FormatTradeKdata(TradeKdataOpt{
-	// 	MA_Period:      108,
-	// 	RSI_Period:     18,
-	// 	RSI_EMA_Period: 14,
-	// 	CAP_Period:     3,
-	// })
-	// if err != nil { // 这里参数出了问题
-	// 	global.LogErr(err)
-	// 	_this.Running() // 立即重新执行一次 Running
-	// 	return
-	// }
+	err = _this.FormatTradeKdata()
+	if err != nil { // 这里参数出了问题
+		global.LogErr(err)
+		_this.Running() // 立即重新执行一次 Running
+		return
+	}
 
-	// Analy()
+	_this.Analy()
 }
 
 func (_this *HunterObj) FileBaseKdata() error {
-	Page := 4 // 如果数组为空，则填充 500 条进去
+	Page := 5 // 如果数组为空，则填充 600 条进去 因为不可能大于 600
 	if len(_this.NowKdataList) < 100 {
 		// 回填历史数据 1 组
 		for i := Page; i >= 0; i-- {

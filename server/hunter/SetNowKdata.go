@@ -19,8 +19,6 @@ func (_this *HunterObj) SetNowKdata() error {
 		return err
 	}
 
-	fmt.Println(1111, len(_this.NowKdataList))
-
 	for _, NowItem := range NowList {
 		Fund := false
 		FundKey := 0
@@ -41,13 +39,9 @@ func (_this *HunterObj) SetNowKdata() error {
 
 	}
 
-	fmt.Println(2222, len(_this.NowKdataList))
-
 	if len(_this.NowKdataList)-_this.MaxLen > 0 {
 		_this.NowKdataList = _this.NowKdataList[len(_this.NowKdataList)-_this.MaxLen:]
 	}
-
-	fmt.Println(333, len(_this.NowKdataList))
 
 	// 数据检查
 	var err error = nil

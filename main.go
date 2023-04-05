@@ -32,7 +32,12 @@ func SetHunter() {
 	// 新建策略
 	MyHunter := hunter.New(hunter.HunterOpt{
 		HunterName: "MyHunter",
-		HLPerLevel: 2,
+		TradeKdataOpt: hunter.TradeKdataOpt{
+			MA_Period:      171,
+			RSI_Period:     18,
+			RSI_EMA_Period: 14,
+			CAP_Period:     4,
+		},
 	})
 	err := MyHunter.SetTradeInst()
 	if err != nil {

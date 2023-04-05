@@ -44,6 +44,8 @@ func (_this *HunterObj) SetTradeInst() (resErr error) {
 		InstIDList = append(InstIDList, item.InstID)
 	}
 
+	fmt.Println(InstIDList, _this.HLPerLevel)
+
 	if len(InstIDList) > 0 {
 		HLPerInstID = InstIDList[len(InstIDList)-1]
 	}
