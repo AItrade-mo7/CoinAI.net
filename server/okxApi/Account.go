@@ -52,9 +52,6 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 
 	resObj.OkxKey = opt.OkxKey
 
-	// 同步当前账户的交易 币种
-	// resObj.TradeInst = okxInfo.TradeInst
-
 	resObj.GetPositions()    // 获取当前持仓
 	resObj.SetPositionMode() // 设置持仓模式
 	return

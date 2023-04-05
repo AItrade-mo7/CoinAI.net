@@ -38,12 +38,13 @@ func SetAccountConfig(c *fiber.Ctx) error {
 		}
 	}
 
-	if len(NowHunter.HunterName) < 1 {
-		return c.JSON(result.Fail.WithMsg(fmt.Sprintf("必须选择一个有效策略 %+v", json.Hunter)))
-	}
-
-	if json.TradeLever > NowHunter.MaxTradeLever {
-		return c.JSON(result.Fail.WithMsg(fmt.Sprintf("TradeLever不可大于 %+v", NowHunter.MaxTradeLever)))
+	if len(json.Hunter) != 0 {
+		if len(NowHunter.HunterName) < 1 {
+			return c.JSON(result.Fail.WithMsg(fmt.Sprintf("必须选择一个有效策略 %+v", json.Hunter)))
+		}
+		if json.TradeLever > NowHunter.MaxTradeLever {
+			return c.JSON(result.Fail.WithMsg(fmt.Sprintf("TradeLever不可大于 %+v", NowHunter.MaxTradeLever)))
+		}
 	}
 
 	// 验证用户和密码
@@ -82,6 +83,7 @@ func SetAccountConfig(c *fiber.Ctx) error {
 				break
 			}
 			NewKey.TradeLever = json.TradeLever
+			NewKey.Hunter = json.Hunter
 		}
 		NewApiKey = append(NewApiKey, NewKey)
 	}
