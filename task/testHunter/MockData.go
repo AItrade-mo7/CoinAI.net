@@ -5,7 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/hunter"
+	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
@@ -100,7 +100,7 @@ func (_this *MockObj) Analy() {
 }
 
 // 根据下单结果进行模拟持仓
-func (_this *MockObj) BillingFun(NowKdata hunter.TradeKdType) {
+func (_this *MockObj) BillingFun(NowKdata okxInfo.TradeKdType) {
 	fmt.Println(_this.Billing.MockName, "下单总结一次",
 		NowKdata.TimeStr,
 		"持仓方向", _this.NowPosition.Dir,
@@ -169,7 +169,7 @@ func (_this *MockObj) BillingFun(NowKdata hunter.TradeKdType) {
 }
 
 // 下单  参数：dir 下单方向 NowKdata : 当前市场行情
-func (_this *MockObj) OnOrder(dir int, NowKdata hunter.TradeKdType) {
+func (_this *MockObj) OnOrder(dir int, NowKdata okxInfo.TradeKdType) {
 	_this.BillingFun(NowKdata) // 下单之前 计算一次收益
 
 	if dir > 0 { // 开多

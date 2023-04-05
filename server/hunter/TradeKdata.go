@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -27,7 +28,7 @@ func (_this *HunterObj) FormatTradeKdata() error {
 	}
 
 	// 清理 TradeKdataList
-	_this.TradeKdataList = []TradeKdType{}
+	_this.TradeKdataList = []okxInfo.TradeKdType{}
 
 	TradeObj := NewTradeKdataObj(_this.TradeKdataOpt)
 
@@ -50,23 +51,10 @@ type TradeKdataObj struct {
 	EMA_Arr []string
 	MA_Arr  []string
 	RSI_Arr []string
-	Opt     TradeKdataOpt
+	Opt     okxInfo.TradeKdataOpt
 }
 
-type TradeKdType struct {
-	mOKX.TypeKd
-	EMA          string // EMA 值
-	MA           string // MA 值
-	RSI          string // RSI 的值
-	RSI_EMA      string // RSI 的值
-	CAP_EMA      string // 基于 EMA 的 平滑点数 0-100 的浮点类型
-	CAP_MA       string // 基于 EMA 的 平滑点数 0-100 的浮点类型
-	CAPIdx       int
-	RsiEmaRegion int // 整型 Rsi 的震荡区域  -3 -2 -1 0 1 2 3
-	Opt          TradeKdataOpt
-}
-
-func NewTradeKdataObj(opt TradeKdataOpt) *TradeKdataObj {
+func NewTradeKdataObj(opt okxInfo.TradeKdataOpt) *TradeKdataObj {
 	obj := TradeKdataObj{}
 	obj.EMA_Arr = []string{}
 	obj.MA_Arr = []string{}
@@ -76,8 +64,8 @@ func NewTradeKdataObj(opt TradeKdataOpt) *TradeKdataObj {
 	return &obj
 }
 
-func (_this *TradeKdataObj) NewTradeKdata(TradeKdataList []mOKX.TypeKd) (TradeKdata TradeKdType) {
-	TradeKdata = TradeKdType{}
+func (_this *TradeKdataObj) NewTradeKdata(TradeKdataList []mOKX.TypeKd) (TradeKdata okxInfo.TradeKdType) {
+	TradeKdata = okxInfo.TradeKdType{}
 	jsonByte := mJson.ToJson(TradeKdataList[len(TradeKdataList)-1])
 	jsoniter.Unmarshal(jsonByte, &TradeKdata)
 

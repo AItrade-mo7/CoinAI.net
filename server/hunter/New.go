@@ -1,30 +1,26 @@
 package hunter
 
-import "github.com/EasyGolang/goTools/mOKX"
-
-type TradeKdataOpt struct {
-	MA_Period      int // 171
-	RSI_Period     int // 18
-	RSI_EMA_Period int // 14
-	CAP_Period     int // 4
-}
+import (
+	"CoinAI.net/server/okxInfo"
+	"github.com/EasyGolang/goTools/mOKX"
+)
 
 type HunterOpt struct {
 	HunterName    string // 默认 MyHunter
 	HLPerLevel    int    // 币种的震荡等级 2
 	MaxLen        int    // 900
-	TradeKdataOpt TradeKdataOpt
+	TradeKdataOpt okxInfo.TradeKdataOpt
 }
 
 type HunterObj struct {
 	HunterName     string // 策略的名字
 	HLPerLevel     int    // 震荡等级
 	MaxLen         int
-	TradeInst      mOKX.TypeInst // 交易的 InstID SWAP
-	KdataInst      mOKX.TypeInst // K线的 InstID SPOT
-	NowKdataList   []mOKX.TypeKd // 现货的原始K线
-	TradeKdataList []TradeKdType // 计算好各种指标之后的K西安
-	TradeKdataOpt  TradeKdataOpt
+	TradeInst      mOKX.TypeInst         // 交易的 InstID SWAP
+	KdataInst      mOKX.TypeInst         // K线的 InstID SPOT
+	NowKdataList   []mOKX.TypeKd         // 现货的原始K线
+	TradeKdataList []okxInfo.TradeKdType // 计算好各种指标之后的K线
+	TradeKdataOpt  okxInfo.TradeKdataOpt
 }
 
 func New(opt HunterOpt) *HunterObj {

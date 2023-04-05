@@ -4,7 +4,7 @@ import (
 	"runtime"
 
 	"CoinAI.net/server/global"
-	"CoinAI.net/server/hunter"
+	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -67,7 +67,7 @@ type NewMockOpt struct {
 	InitMoney     string // 初始金钱  1000
 	Level         string // 杠杆倍数  1
 	Charge        string // 手续费  0.05
-	TradeKdataOpt hunter.TradeKdataOpt
+	TradeKdataOpt okxInfo.TradeKdataOpt
 }
 
 type MockObj struct {
@@ -76,7 +76,7 @@ type MockObj struct {
 	OrderArr      []OrderType    // 下单列表
 	Billing       BillingType
 	RunKdataList  []mOKX.TypeKd
-	TradeKdataOpt hunter.TradeKdataOpt
+	TradeKdataOpt okxInfo.TradeKdataOpt
 }
 
 func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
@@ -135,7 +135,7 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 					InitMoney: "1000", // 初始资金
 					Level:     "1",    // 杠杆倍数
 					Charge:    "0.05", // 吃单标准手续费率 0.05%
-					TradeKdataOpt: hunter.TradeKdataOpt{
+					TradeKdataOpt: okxInfo.TradeKdataOpt{
 						MA_Period:      emaP,
 						RSI_Period:     18,
 						RSI_EMA_Period: 14,

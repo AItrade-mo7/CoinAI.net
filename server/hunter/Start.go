@@ -51,6 +51,8 @@ func (_this *HunterObj) Running() {
 	}
 
 	_this.Analy()
+
+	_this.Sync_okxInfo()
 }
 
 func (_this *HunterObj) FileBaseKdata() error {
@@ -92,4 +94,9 @@ func (_this *HunterObj) SendEmail(Message string) {
 		Content:     Message,
 		Description: "监听切换通知",
 	})
+}
+
+func (_this *HunterObj) Sync_okxInfo() {
+	Name := _this.HunterName
+	fmt.Println(Name)
 }

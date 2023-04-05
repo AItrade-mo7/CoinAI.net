@@ -5,7 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/hunter"
+	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/utils/taskPush"
 	"CoinAI.net/task/testHunter"
 	"github.com/EasyGolang/goTools/mCount"
@@ -127,7 +127,7 @@ func GetConfigArr(confArr []ConfOpt) []testHunter.NewMockOpt {
 			InitMoney: "1000", // 初始资金
 			Level:     "1",    // 杠杆倍数
 			Charge:    "0.05", // 吃单标准手续费率 0.05%
-			TradeKdataOpt: hunter.TradeKdataOpt{
+			TradeKdataOpt: okxInfo.TradeKdataOpt{
 				MA_Period:      emaP,
 				RSI_Period:     18,
 				RSI_EMA_Period: 14,

@@ -6,6 +6,7 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/hunter"
+	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/ready"
 	"CoinAI.net/server/router"
 	jsoniter "github.com/json-iterator/go"
@@ -32,7 +33,7 @@ func SetHunter() {
 	// 新建策略
 	MyHunter := hunter.New(hunter.HunterOpt{
 		HunterName: "MyHunter",
-		TradeKdataOpt: hunter.TradeKdataOpt{
+		TradeKdataOpt: okxInfo.TradeKdataOpt{
 			MA_Period:      171,
 			RSI_Period:     18,
 			RSI_EMA_Period: 14,
