@@ -1,8 +1,6 @@
 package hunter
 
 import (
-	"fmt"
-
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -57,7 +55,7 @@ func Sort_HLPer(data []mOKX.AnalySliceType) []mOKX.AnalySliceType {
 -1  40-50   下震荡区
 -2  30-40   多卖区
 -3  小于 30  超卖区
-*/
+
 func GetRsiRegion(now okxInfo.TradeKdType) int {
 	RSI_EMA := now.RSI_EMA
 	// 1 50-60
@@ -96,19 +94,18 @@ func GetRsiRegion(now okxInfo.TradeKdType) int {
 
 	return 0
 }
-
+*/
+/*
 // RsiRegion EMA 是否为降序
 func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) []int {
 	cacheArr := []int{}
 	downArr := []int{}
 
-	/*
 		cacheArr 长度原本为 1
 		当前与 cacheArr 最后一位 比对 ，一定相等 则 长度为2
 		当前 与 cacheArr 最后一位 比对 , 不一定相等
 				若此时大于等于 则 长度为 3
 				若此时  小  于 则 长度为2 并结束
-	*/
 	for i := len(preArr) - 1; i >= 0; i-- {
 		item := preArr[i]
 		if len(cacheArr) < 1 {
@@ -129,18 +126,18 @@ func Is_RsiRegion_GoDown(preArr []okxInfo.TradeKdType) []int {
 
 	return downArr
 }
+*/
 
+/*
 // RsiRegion EMA 是否为升序
 func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) []int {
 	cacheArr := []int{}
 	upArr := []int{}
-	/*
 		cacheArr 长度原本为 1
 		当前与 cacheArr 最后一位 比对 ，一定相等 则 长度为2
 		当前 与 cacheArr 最后一位 比对 , 不一定相等
 				若此时 则 长度为 3
 				若此时 小  于 则 长度为2 并结束
-	*/
 	for i := len(preArr) - 1; i >= 0; i-- {
 		item := preArr[i]
 		if len(cacheArr) < 1 {
@@ -162,7 +159,8 @@ func Is_RsiRegion_GoUp(preArr []okxInfo.TradeKdType) []int {
 
 	return upArr
 }
-
+*/
+/*
 // preArr 的 RsiRegion 是否有大于2  的存在
 func Is_RsiRegion_Gte2(preArr []okxInfo.TradeKdType) (result bool) {
 	result = false
@@ -181,6 +179,7 @@ func Is_RsiRegion_Gte2(preArr []okxInfo.TradeKdType) (result bool) {
 
 	return
 }
+*/
 
 // CAP_EMA 是否为升序
 func Is_CAP_EMA_GoUp(preArr []okxInfo.TradeKdType) []string {

@@ -23,10 +23,15 @@ func (_this *HunterObj) Start() {
 }
 
 func (_this *HunterObj) Running() {
-	global.TradeLog.Println(" === hunter.Running === ", _this.KdataInst.InstID)
+	global.TradeLog.Println(_this.HunterName, " === hunter.Running === ", _this.KdataInst.InstID)
 
 	if len(_this.KdataInst.InstID) < 2 || len(_this.TradeInst.InstID) < 2 {
-		global.LogErr(_this.HunterName, "hunter.Running", "okxInfo.TradeInst.InstID 或 KdataInst 为空")
+		err := _this.SetTradeInst()
+		if err != nil {
+			global.LogErr(err)
+			return
+		}
+		_this.Running()
 		return
 	}
 
@@ -98,5 +103,15 @@ func (_this *HunterObj) SendEmail(Message string) {
 
 func (_this *HunterObj) Sync_okxInfo() {
 	Name := _this.HunterName
-	fmt.Println(Name)
+	HunterData := okxInfo.HunterData{
+		HunterName:     _this.HunterName,
+		HLPerLevel:     _this.HLPerLevel,
+		MaxLen:         _this.MaxLen,
+		TradeInst:      _this.TradeInst,
+		KdataInst:      _this.KdataInst,
+		NowKdataList:   _this.NowKdataList,
+		TradeKdataList: _this.TradeKdataList,
+		TradeKdataOpt:  _this.TradeKdataOpt,
+	}
+	okxInfo.NowHunterData[Name] = HunterData
 }

@@ -78,7 +78,7 @@ func SetKey(c *fiber.Ctx) error {
 	ApiKey.Passphrase = json.Passphrase
 	ApiKey.UserID = UserID
 	ApiKey.Status = "disable"
-	ApiKey.TradeLever = config.LeverOpt[0]
+	ApiKey.TradeLever = 2
 
 	// 验证 Key 可用性
 	_, err = account.GetOKXBalance(ApiKey)

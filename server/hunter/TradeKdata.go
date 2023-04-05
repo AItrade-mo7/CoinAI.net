@@ -20,8 +20,6 @@ func (_this *HunterObj) FormatTradeKdata() error {
 	}
 
 	if _this.TradeKdataOpt.MA_Period == 0 ||
-		_this.TradeKdataOpt.RSI_Period == 0 ||
-		_this.TradeKdataOpt.RSI_EMA_Period == 0 ||
 		_this.TradeKdataOpt.CAP_Period == 0 {
 		err := fmt.Errorf(_this.HunterName, "hunter.FormatTradeKdata2 参数不正确 %+v", _this.TradeKdataOpt)
 		return err
@@ -30,12 +28,12 @@ func (_this *HunterObj) FormatTradeKdata() error {
 	// 清理 TradeKdataList
 	_this.TradeKdataList = []okxInfo.TradeKdType{}
 
-	TradeObj := NewTradeKdataObj(_this.TradeKdataOpt)
+	TradeKlineObj := NewTradeKdataObj(_this.TradeKdataOpt)
 
 	FormatEnd := []mOKX.TypeKd{}
 	for _, Kdata := range _this.NowKdataList {
 		FormatEnd = append(FormatEnd, Kdata)
-		TradeKdata := TradeObj.NewTradeKdata(FormatEnd)
+		TradeKdata := TradeKlineObj.NewTradeKdata(FormatEnd)
 		_this.TradeKdataList = append(_this.TradeKdataList, TradeKdata)
 	}
 
@@ -50,7 +48,6 @@ func (_this *HunterObj) FormatTradeKdata() error {
 type TradeKdataObj struct {
 	EMA_Arr []string
 	MA_Arr  []string
-	RSI_Arr []string
 	Opt     okxInfo.TradeKdataOpt
 }
 
@@ -58,7 +55,6 @@ func NewTradeKdataObj(opt okxInfo.TradeKdataOpt) *TradeKdataObj {
 	obj := TradeKdataObj{}
 	obj.EMA_Arr = []string{}
 	obj.MA_Arr = []string{}
-	obj.RSI_Arr = []string{}
 	obj.Opt = opt
 
 	return &obj
@@ -85,19 +81,6 @@ func (_this *TradeKdataObj) NewTradeKdata(KdataList []mOKX.TypeKd) (TradeKdata o
 	}).MA().ToStr()
 	_this.MA_Arr = append(_this.MA_Arr, TradeKdata.MA)
 
-	// RSI
-	TradeKdata.RSI = mTalib.ClistNew(mTalib.ClistOpt{
-		KDList: KdataList,
-		Period: _this.Opt.RSI_Period,
-	}).RSI().ToStr()
-	_this.RSI_Arr = append(_this.RSI_Arr, TradeKdata.RSI)
-
-	// RSI_EMA
-	TradeKdata.RSI_EMA = mTalib.ClistNew(mTalib.ClistOpt{
-		CList:  _this.RSI_Arr,
-		Period: _this.Opt.RSI_EMA_Period,
-	}).EMA().ToStr()
-
 	// CAP_EMA
 	TradeKdata.CAP_EMA = mTalib.ClistNew(mTalib.ClistOpt{
 		CList:  _this.EMA_Arr,
@@ -108,12 +91,6 @@ func (_this *TradeKdataObj) NewTradeKdata(KdataList []mOKX.TypeKd) (TradeKdata o
 		CList:  _this.MA_Arr,
 		Period: _this.Opt.CAP_Period,
 	}).CAP().ToStr()
-
-	// CAPIdx 计算
-	TradeKdata.CAPIdx = GetCAPIdx(TradeKdata)
-
-	// 区域计算
-	TradeKdata.RsiEmaRegion = GetRsiRegion(TradeKdata)
 
 	return
 }

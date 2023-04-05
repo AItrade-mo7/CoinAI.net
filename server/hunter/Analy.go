@@ -13,18 +13,15 @@ func (_this *HunterObj) Analy() {
 
 	Last := _this.TradeKdataList[len(_this.TradeKdataList)-1]
 	LastPrint := map[string]any{
-		"InstID":       Last.InstID,
-		"TimeStr":      Last.TimeStr,
-		"AllLen":       len(_this.TradeKdataList),
-		"C":            Last.C,
-		"EMA":          Last.EMA,
-		"MA":           Last.MA,
-		"RSI":          Last.RSI,
-		"CAP_EMA":      Last.CAP_EMA,
-		"CAP_MA":       Last.CAP_MA,
-		"CAPIdx":       Last.CAPIdx,
-		"RsiEmaRegion": Last.RsiEmaRegion,
-		"Opt":          Last.Opt,
+		"InstID":  Last.InstID,
+		"TimeStr": Last.TimeStr,
+		"AllLen":  len(_this.TradeKdataList),
+		"C":       Last.C,
+		"EMA":     Last.EMA,
+		"MA":      Last.MA,
+		"CAP_EMA": Last.CAP_EMA,
+		"CAP_MA":  Last.CAP_MA,
+		"Opt":     Last.Opt,
 	}
 	global.TradeLog.Println("hunter.Analy 开始分析并执行交易 Last", mJson.Format(LastPrint))
 }

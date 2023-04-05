@@ -24,13 +24,13 @@ func SetAccountConfig(c *fiber.Ctx) error {
 	var json SetAccountConfigParam
 	mFiber.Parser(c, &json)
 
-	if json.TradeLever < config.LeverOpt[0] {
-		return c.JSON(result.Fail.WithMsg(fmt.Sprintf("不可小于 %+v", config.LeverOpt[0])))
-	}
+	// if json.TradeLever < config.LeverOpt[0] {
+	// 	return c.JSON(result.Fail.WithMsg(fmt.Sprintf("不可小于 %+v", config.LeverOpt[0])))
+	// }
 
-	if json.TradeLever > config.LeverOpt[len(config.LeverOpt)-1] {
-		return c.JSON(result.Fail.WithMsg(fmt.Sprintf("不可大于 %+v", config.LeverOpt[0])))
-	}
+	// if json.TradeLever > config.LeverOpt[len(config.LeverOpt)-1] {
+	// 	return c.JSON(result.Fail.WithMsg(fmt.Sprintf("不可大于 %+v", config.LeverOpt[0])))
+	// }
 
 	// 验证用户和密码
 	UserID, err := middle.TokenAuth(c)

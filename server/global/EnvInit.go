@@ -64,7 +64,6 @@ func AppEnvInit() {
 		config.AppEnv.MaxApiKeyNum = 12
 	}
 	config.AppEnv.SysVersion = config.AppInfo.Version
-	config.AppEnv.Type = config.SysName // 这里应该改为 策略类型
 
 	WriteAppEnv()
 }

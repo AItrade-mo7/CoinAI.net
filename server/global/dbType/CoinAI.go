@@ -12,8 +12,9 @@ type OkxKeyType struct {
 	SecretKey  string `bson:"SecretKey"`
 	Passphrase string `bson:"Passphrase"`
 	UserID     string `bson:"UserID"`     // 用户 ID 必填项 ，禁止野生账户的存在
-	Status     string `bson:"Status"`     //  disable  enable del
+	Status     string `bson:"Status"`     // disable  enable del
 	TradeLever int    `bson:"TradeLever"` // 杠杆倍数，默认 2x
+	Hunter     string `bson:"Hunter"`     // 当前账户选择的策略
 }
 
 type AppEnvType struct {
@@ -25,7 +26,6 @@ type AppEnvType struct {
 	IP           string       `bson:"IP"`           // 系统运行的 IP, 为自动获取回填
 	ServeID      string       `bson:"ServeID"`      // ServeID ，  ip+端口
 	MaxApiKeyNum int          `bson:"MaxApiKeyNum"` // 最大 Api 数量限制
-	Type         string       `bson:"Type"`         // 策略类型 目前是随意值
 	IsPublic     bool         `bson:"IsPublic"`     // 是否公开此服务
 	CreateTime   int64        `bson:"CreateTime"`   // 创建时间
 	UpdateTime   int64        `bson:"UpdateTime"`   // 更新时间

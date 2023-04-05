@@ -37,7 +37,6 @@ func GetConfig(c *fiber.Ctx) error {
 	AppEnv.ApiKeyList = GetFuzzyApiKey()
 	ConfigData["AppEnv"] = AppEnv
 	ConfigData["GithubInfo"] = GithubInfo
-	ConfigData["LeverOpt"] = config.LeverOpt
 	ConfigData["MainUser"] = GetMainUser()
 	// 当前管理员信息
 	return c.JSON(result.Succeed.WithData(ConfigData))

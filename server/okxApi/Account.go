@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"CoinAI.net/server/global"
-	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/okxInfo"
@@ -39,13 +38,13 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 		return
 	}
 
-	if opt.OkxKey.TradeLever < config.LeverOpt[0] {
-		opt.OkxKey.TradeLever = config.LeverOpt[0]
-	}
+	// if opt.OkxKey.TradeLever < config.LeverOpt[0] {
+	// 	opt.OkxKey.TradeLever = config.LeverOpt[0]
+	// }
 
-	if opt.OkxKey.TradeLever > config.LeverOpt[len(config.LeverOpt)-1] {
-		opt.OkxKey.TradeLever = config.LeverOpt[len(config.LeverOpt)-1]
-	}
+	// if opt.OkxKey.TradeLever > config.LeverOpt[len(config.LeverOpt)-1] {
+	// 	opt.OkxKey.TradeLever = config.LeverOpt[len(config.LeverOpt)-1]
+	// }
 
 	resObj.OkxKey = opt.OkxKey
 

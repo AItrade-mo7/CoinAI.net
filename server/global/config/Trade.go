@@ -8,8 +8,6 @@ import (
 // 系统通知的邮箱
 var SysEmail = "meichangliang@outlook.com"
 
-var LeverOpt = []int{1, 2, 3, 4, 5, 6}
-
 var AppEnv dbType.AppEnvType
 
 var MainUser dbType.UserTable

@@ -48,12 +48,6 @@ func New(opt HunterOpt) *HunterObj {
 	if obj.TradeKdataOpt.MA_Period < 0 {
 		obj.TradeKdataOpt.MA_Period = 171
 	}
-	if obj.TradeKdataOpt.RSI_Period < 0 {
-		obj.TradeKdataOpt.RSI_Period = 18
-	}
-	if obj.TradeKdataOpt.RSI_EMA_Period < 0 {
-		obj.TradeKdataOpt.RSI_EMA_Period = 14
-	}
 	if obj.TradeKdataOpt.CAP_Period < 0 {
 		obj.TradeKdataOpt.CAP_Period = 4
 	}
