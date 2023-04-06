@@ -296,8 +296,10 @@ InstID: ${InstID}
 
 	WinRatioAll := mCount.Div(mStr.ToStr(_this.Billing.Win), mStr.ToStr(_this.Billing.AllNum))
 
+	LoseMoneyAbs := mCount.Abs(mStr.ToStr(_this.Billing.LoseMoney))
+
 	AveWinRatio := mCount.Div(mStr.ToStr(_this.Billing.WinMoney), mStr.ToStr(_this.Billing.Win))
-	AveLoseRatio := mCount.Div(mStr.ToStr(_this.Billing.LoseMoney), mStr.ToStr(_this.Billing.Lose))
+	AveLoseRatio := mCount.Div(LoseMoneyAbs, mStr.ToStr(_this.Billing.Lose))
 	PLratio := mCount.Div(AveWinRatio, AveLoseRatio)
 
 	Data := map[string]string{
