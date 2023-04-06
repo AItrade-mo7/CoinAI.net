@@ -3,6 +3,7 @@ package taskStart
 import (
 	"fmt"
 
+	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/utils/taskPush"
@@ -67,26 +68,24 @@ func BackTest() {
 
 	// 建立一个线程要运行的任务
 
-	// NewGorTask := func(GorName string, confArr testHunter.NewMockOpt) {
-	// 	global.Run.Println("开始执行Goroutine:", GorName)
-	// 	StartTime := mTime.GetUnix()
+	NewGorTask := func(GorName string, confArr testHunter.NewMockOpt) {
+		global.Run.Println("开始执行Goroutine:", GorName)
+		StartTime := mTime.GetUnix()
 
-	// 	MockObj := backObj.NewMock(confArr)
-	// 	MockObj.MockRun()
+		MockObj := backObj.NewMock(confArr)
+		MockObj.MockRun()
 
-	// 	EndTime := mTime.GetUnix()
-	// 	DiffTime := mCount.Sub(EndTime, StartTime)
-	// 	DiffMin := mCount.Div(DiffTime, mTime.UnixTime.Minute)
-	// 	global.Run.Println("Goroutine:", GorName, "执行结束,共计耗时:", DiffMin, "分钟")
-	// 	TaskChan <- GorName
-	// }
+		EndTime := mTime.GetUnix()
+		DiffTime := mCount.Sub(EndTime, StartTime)
+		DiffMin := mCount.Div(DiffTime, mTime.UnixTime.Minute)
+		global.Run.Println("Goroutine:", GorName, "执行结束,共计耗时:", DiffMin, "分钟")
+		TaskChan <- GorName
+	}
 
-	goRNum := 0
+	goConfigNum := []string{}
 	for _, confArr := range configObj.ConfigArr {
-		goRNum++
-
-		fmt.Println(confArr.MockName)
-		// go NewGorTask(confArr.MockName, confArr)
+		goConfigNum = append(goConfigNum, confArr.MockName)
+		go NewGorTask(confArr.MockName, confArr)
 	}
 
 	taskPush.SysEmail(taskPush.SysEmailOpt{
@@ -94,7 +93,7 @@ func BackTest() {
 		To:          config.NoticeEmail,
 		Subject:     "新建任务",
 		Title:       mStr.Join("Cpu核心数:", configObj.CpuNum, "任务总数:", configObj.TaskNum),
-		Content:     "任务视图:<br />" + mJson.Format(configObj.GorMapView),
+		Content:     "任务视图:<br />" + mJson.Format(goConfigNum),
 		Description: "回测开始通知",
 	})
 
@@ -102,7 +101,7 @@ func BackTest() {
 	taskEnd := []string{}
 	for ok := range TaskChan {
 		taskEnd = append(taskEnd, ok)
-		if len(taskEnd) == goRNum {
+		if len(taskEnd) == len(goConfigNum) {
 			break
 		}
 	}
