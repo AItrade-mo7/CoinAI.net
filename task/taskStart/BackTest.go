@@ -42,12 +42,9 @@ func BackTest() {
 		CAPArr: []int{3, 4},
 	})
 
-	// 构建参数完毕
-
-	TaskChan := make(chan string, len(configObj.GorMap)) // 记录任务完成数
+	TaskChan := make(chan string, len(configObj.GorMap)) // 记录线程任务完成
 
 	// 建立一个线程要运行的任务
-
 	NewGorTask := func(GorName string, confArr []testHunter.NewMockOpt) {
 		global.Run.Println("开始执行Goroutine:", GorName)
 		StartTime := mTime.GetUnix()
@@ -64,9 +61,9 @@ func BackTest() {
 		TaskChan <- GorName
 	}
 
-	goConfigNum := []string{}
+	goRoName := []string{}
 	for key, confArr := range configObj.GorMap {
-		goConfigNum = append(goConfigNum, key)
+		goRoName = append(goRoName, key)
 		go NewGorTask(key, confArr)
 	}
 
@@ -75,7 +72,7 @@ func BackTest() {
 		To:          config.NoticeEmail,
 		Subject:     "新建任务",
 		Title:       mStr.Join("Cpu核心数:", configObj.CpuNum, "任务总数:", configObj.TaskNum),
-		Content:     "任务视图:<br />" + mJson.Format(goConfigNum),
+		Content:     "任务视图:<br />" + mJson.Format(configObj.GorMapView) + "线程数量" + mJson.Format(goRoName),
 		Description: "回测开始通知",
 	})
 
@@ -83,7 +80,7 @@ func BackTest() {
 	taskEnd := []string{}
 	for ok := range TaskChan {
 		taskEnd = append(taskEnd, ok)
-		if len(taskEnd) == len(goConfigNum) {
+		if len(taskEnd) >= len(goRoName) {
 			break
 		}
 	}
