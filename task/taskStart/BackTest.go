@@ -34,28 +34,28 @@ func BackTest() {
 
 	// 构建参数
 	// 新建回测参数 ( 按照核心数进行任务拆分 )
-	// configObj := testHunter.GetConfig(testHunter.GetConfigOpt{
-	// 	EmaPArr: []int{171},
-	// 	CAPArr:  []int{4},
-	// })
-	ConfigArr := GetConfigArr([]ConfOpt{
-		{
-			MA_Period:  77,
-			CAP_Period: 3,
-		},
-		{
-			MA_Period:  171,
-			CAP_Period: 4,
-		},
-		{
-			MA_Period:  545,
-			CAP_Period: 3,
-		},
+	configObj := testHunter.GetConfig(testHunter.GetConfigOpt{
+		EmaPArr: []int{171},
+		CAPArr:  []int{4},
 	})
-	configObj := testHunter.GetConfigReturn{
-		ConfigArr: ConfigArr,
-		TaskNum:   len(ConfigArr),
-	}
+	/* 	ConfigArr := GetConfigArr([]ConfOpt{
+	   		{
+	   			MA_Period:  77,
+	   			CAP_Period: 3,
+	   		},
+	   		{
+	   			MA_Period:  171,
+	   			CAP_Period: 4,
+	   		},
+	   		{
+	   			MA_Period:  545,
+	   			CAP_Period: 3,
+	   		},
+	   	})
+	   	configObj := testHunter.GetConfigReturn{
+	   		ConfigArr: ConfigArr,
+	   		TaskNum:   len(ConfigArr),
+	   	} */
 
 	// 构建参数完毕
 
