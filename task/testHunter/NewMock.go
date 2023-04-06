@@ -118,6 +118,7 @@ func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 type GetConfigOpt struct {
 	EmaPArr []int
 	CAPArr  []int
+	ConfArr []okxInfo.TradeKdataOpt
 }
 
 type GetConfigReturn struct {
@@ -130,26 +131,44 @@ type GetConfigReturn struct {
 
 func GetConfig(opt GetConfigOpt) GetConfigReturn {
 	MockConfigArr := []NewMockOpt{}
-	for _, emaP := range opt.EmaPArr {
-		for _, cap := range opt.CAPArr {
+
+	if len(opt.ConfArr) > 0 {
+		for _, conf := range opt.ConfArr {
 			MockConfigArr = append(MockConfigArr,
 				NewMockOpt{
-					MockName:  mStr.Join("MA_", mStr.ToStr(emaP), "_CAP_", mStr.ToStr(cap)),
+					MockName:  mStr.Join("EMA_", mStr.ToStr(conf.EMA_Period), "_CAP_", mStr.ToStr(conf.CAP_Period)),
 					InitMoney: "1000", // 初始资金
 					Level:     "1",    // 杠杆倍数
 					Charge:    "0.05", // 吃单标准手续费率 0.05%
 					TradeKdataOpt: okxInfo.TradeKdataOpt{
-						EMA_Period: emaP,
-						CAP_Period: cap,
+						EMA_Period: conf.EMA_Period,
+						CAP_Period: conf.CAP_Period,
 					},
 				},
 			)
+		}
+	} else {
+		for _, emaP := range opt.EmaPArr {
+			for _, cap := range opt.CAPArr {
+				MockConfigArr = append(MockConfigArr,
+					NewMockOpt{
+						MockName:  mStr.Join("EMA_", mStr.ToStr(emaP), "_CAP_", mStr.ToStr(cap)),
+						InitMoney: "1000", // 初始资金
+						Level:     "1",    // 杠杆倍数
+						Charge:    "0.05", // 吃单标准手续费率 0.05%
+						TradeKdataOpt: okxInfo.TradeKdataOpt{
+							EMA_Period: emaP,
+							CAP_Period: cap,
+						},
+					},
+				)
+			}
 		}
 	}
 
 	// 根据 cpu 核心数计算每个 Goroutine 的最大任务数
 	CpuNum := runtime.NumCPU()
-	CpuNumStr := mStr.ToStr(CpuNum)
+	CpuNumStr := mStr.ToStr(CpuNum - 1)
 	taskNumStr := mStr.ToStr(len(MockConfigArr))
 	MaxNumStr := mCount.Div(taskNumStr, CpuNumStr)
 	MaxNumInt := mCount.ToInt(MaxNumStr)
@@ -179,7 +198,7 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 
 	global.Run.Println("新建参数集合:",
 		"当前任务总数量:", len(MockConfigArr),
-		"当前CPU核心数量", CpuNumStr,
+		"当前CPU核心数量", CpuNum,
 		"\n任务视图:\n", mJson.Format(GorMapView),
 	)
 

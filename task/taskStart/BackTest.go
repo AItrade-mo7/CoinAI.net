@@ -5,7 +5,6 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/utils/taskPush"
 	"CoinAI.net/task/testHunter"
 	"github.com/EasyGolang/goTools/mCount"
@@ -42,25 +41,6 @@ func BackTest() {
 		},
 		CAPArr: []int{3, 4},
 	})
-	/* 	ConfigArr := GetConfigArr([]ConfOpt{
-	   		{
-	   			MA_Period:  77,
-	   			CAP_Period: 3,
-	   		},
-	   		{
-	   			MA_Period:  171,
-	   			CAP_Period: 4,
-	   		},
-	   		{
-	   			MA_Period:  545,
-	   			CAP_Period: 3,
-	   		},
-	   	})
-	   	configObj := testHunter.GetConfigReturn{
-	   		ConfigArr: ConfigArr,
-	   		TaskNum:   len(ConfigArr),
-	   	}
-	*/
 
 	// 构建参数完毕
 
@@ -68,12 +48,14 @@ func BackTest() {
 
 	// 建立一个线程要运行的任务
 
-	NewGorTask := func(GorName string, confArr testHunter.NewMockOpt) {
+	NewGorTask := func(GorName string, confArr []testHunter.NewMockOpt) {
 		global.Run.Println("开始执行Goroutine:", GorName)
 		StartTime := mTime.GetUnix()
 
-		MockObj := backObj.NewMock(confArr)
-		MockObj.MockRun()
+		for _, conf := range confArr {
+			MockObj := backObj.NewMock(conf)
+			MockObj.MockRun()
+		}
 
 		EndTime := mTime.GetUnix()
 		DiffTime := mCount.Sub(EndTime, StartTime)
@@ -83,9 +65,9 @@ func BackTest() {
 	}
 
 	goConfigNum := []string{}
-	for _, confArr := range configObj.ConfigArr {
-		goConfigNum = append(goConfigNum, confArr.MockName)
-		go NewGorTask(confArr.MockName, confArr)
+	for key, confArr := range configObj.GorMap {
+		goConfigNum = append(goConfigNum, key)
+		go NewGorTask(key, confArr)
 	}
 
 	taskPush.SysEmail(taskPush.SysEmailOpt{
@@ -123,24 +105,4 @@ func BackTest() {
 type ConfOpt struct {
 	MA_Period  int
 	CAP_Period int
-}
-
-func GetConfigArr(confArr []ConfOpt) []testHunter.NewMockOpt {
-	ConfigArr := []testHunter.NewMockOpt{}
-	for _, conf := range confArr {
-		emaP := conf.MA_Period
-		cap := conf.CAP_Period
-		ConfigArr = append(ConfigArr, testHunter.NewMockOpt{
-			MockName:  mStr.Join("MA_", mStr.ToStr(emaP), "_CAP_", mStr.ToStr(cap)),
-			InitMoney: "1000", // 初始资金
-			Level:     "1",    // 杠杆倍数
-			Charge:    "0.05", // 吃单标准手续费率 0.05%
-			TradeKdataOpt: okxInfo.TradeKdataOpt{
-				EMA_Period: emaP,
-				CAP_Period: cap,
-			},
-		})
-	}
-
-	return ConfigArr
 }
