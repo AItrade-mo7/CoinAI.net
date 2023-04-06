@@ -71,7 +71,7 @@ func BackTest() {
 		From:        config.SysName,
 		To:          config.NoticeEmail,
 		Subject:     "新建任务",
-		Title:       mStr.Join("Cpu核心数:", configObj.CpuNum, "任务总数:", configObj.TaskNum),
+		Title:       mStr.Join("Cpu核心数(默认-1):", configObj.CpuNum, "任务总数:", configObj.TaskNum),
 		Content:     "任务视图:<br />" + mJson.Format(configObj.GorMapView) + "线程数量" + mJson.Format(goRoName),
 		Description: "回测开始通知",
 	})
