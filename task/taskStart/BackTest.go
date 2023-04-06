@@ -3,7 +3,6 @@ package taskStart
 import (
 	"fmt"
 
-	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/utils/taskPush"
@@ -20,8 +19,8 @@ func BackTest() {
 	// 新建回测
 	backObj := testHunter.New(testHunter.TestOpt{
 		StartTime: mTime.TimeParse(mTime.Lay_DD, "2020-01-01"),
-		EndTime:   mTime.TimeParse(mTime.Lay_DD, "2023-03-31"),
-		InstID:    "BTC-USDT",
+		EndTime:   mTime.TimeParse(mTime.Lay_DD, "2023-05-01"),
+		InstID:    "ETH-USDT",
 	})
 	err := backObj.StuffDBKdata()
 	if err != nil {
@@ -35,8 +34,12 @@ func BackTest() {
 	// 构建参数
 	// 新建回测参数 ( 按照核心数进行任务拆分 )
 	configObj := testHunter.GetConfig(testHunter.GetConfigOpt{
-		EmaPArr: []int{171},
-		CAPArr:  []int{4},
+		EmaPArr: []int{
+			60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90,
+			160, 162, 164, 166, 168, 170, 172, 174, 176, 178, 180, 182, 184, 186, 188, 190,
+			530, 532, 534, 536, 538, 540, 542, 544, 546, 548, 550, 552, 554, 556, 558, 560,
+		},
+		CAPArr: []int{2, 3, 4, 5},
 	})
 	/* 	ConfigArr := GetConfigArr([]ConfOpt{
 	   		{
@@ -55,7 +58,8 @@ func BackTest() {
 	   	configObj := testHunter.GetConfigReturn{
 	   		ConfigArr: ConfigArr,
 	   		TaskNum:   len(ConfigArr),
-	   	} */
+	   	}
+	*/
 
 	// 构建参数完毕
 
@@ -63,24 +67,26 @@ func BackTest() {
 
 	// 建立一个线程要运行的任务
 
-	NewGorTask := func(GorName string, confArr testHunter.NewMockOpt) {
-		global.Run.Println("开始执行Goroutine:", GorName)
-		StartTime := mTime.GetUnix()
+	// NewGorTask := func(GorName string, confArr testHunter.NewMockOpt) {
+	// 	global.Run.Println("开始执行Goroutine:", GorName)
+	// 	StartTime := mTime.GetUnix()
 
-		MockObj := backObj.NewMock(confArr)
-		MockObj.MockRun()
+	// 	MockObj := backObj.NewMock(confArr)
+	// 	MockObj.MockRun()
 
-		EndTime := mTime.GetUnix()
-		DiffTime := mCount.Sub(EndTime, StartTime)
-		DiffMin := mCount.Div(DiffTime, mTime.UnixTime.Minute)
-		global.Run.Println("Goroutine:", GorName, "执行结束,共计耗时:", DiffMin, "分钟")
-		TaskChan <- GorName
-	}
+	// 	EndTime := mTime.GetUnix()
+	// 	DiffTime := mCount.Sub(EndTime, StartTime)
+	// 	DiffMin := mCount.Div(DiffTime, mTime.UnixTime.Minute)
+	// 	global.Run.Println("Goroutine:", GorName, "执行结束,共计耗时:", DiffMin, "分钟")
+	// 	TaskChan <- GorName
+	// }
 
 	goRNum := 0
 	for _, confArr := range configObj.ConfigArr {
 		goRNum++
-		go NewGorTask(confArr.MockName, confArr)
+
+		fmt.Println(confArr.MockName)
+		// go NewGorTask(confArr.MockName, confArr)
 	}
 
 	taskPush.SysEmail(taskPush.SysEmailOpt{
