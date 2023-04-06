@@ -20,7 +20,7 @@ func BackTest() {
 	backObj := testHunter.New(testHunter.TestOpt{
 		StartTime: mTime.TimeParse(mTime.Lay_DD, "2021-01-01"),
 		EndTime:   mTime.TimeParse(mTime.Lay_DD, "2022-01-01"),
-		InstID:    "ETH-USDT",
+		InstID:    "BTC-USDT",
 	})
 	err := backObj.StuffDBKdata()
 	if err != nil {
