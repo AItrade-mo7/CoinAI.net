@@ -47,6 +47,8 @@ type BillingType struct {
 	AllNum           int        // 总开仓次数
 	Win              int        // 盈利次数
 	WinRatio         string     // 总盈利比率
+	WinMoney         string     // 盈利总金额
+	LoseMoney        string     // 亏损总金额
 	Lose             int        // 亏损次数
 	LoseRatio        string     // 总亏损比率
 	MaxRatio         RecordType // 平仓后单笔最大盈利比率

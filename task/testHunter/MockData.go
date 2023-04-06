@@ -112,31 +112,7 @@ func (_this *MockObj) BillingFun(NowKdata okxInfo.TradeKdType) {
 		"结算", _this.Billing.Money,
 	)
 
-	if _this.NowPosition.Dir == 0 {
-		_this.Billing.NilNum++ // 空仓计数
-	} else {
-		if len(_this.Billing.StartTime) == 0 {
-			_this.Billing.StartTime = _this.NowPosition.OpenTimeStr
-		}
-	}
-
-	if _this.NowPosition.Dir < 0 {
-		_this.Billing.SellNum++ // 开空 计数
-	}
-	if _this.NowPosition.Dir > 0 {
-		_this.Billing.BuyNum++ // 开多 计数
-	}
-
-	if mCount.Le(_this.NowPosition.UplRatio, "0") > 0 {
-		_this.Billing.Win++                                                                     // 盈利次数计数
-		_this.Billing.WinRatio = mCount.Add(_this.NowPosition.UplRatio, _this.Billing.WinRatio) // 盈利比例相加
-	}
-
-	if mCount.Le(_this.NowPosition.UplRatio, "0") < 0 {
-		_this.Billing.Lose++                                                                      // 亏损次数计数
-		_this.Billing.LoseRatio = mCount.Add(_this.NowPosition.UplRatio, _this.Billing.LoseRatio) // 盈利比例相加
-	}
-	// 单次最大亏损和单次最大盈利
+	// 记录单次最大亏损和单次最大盈利
 	if mCount.Le(_this.NowPosition.UplRatio, _this.Billing.MaxRatio.Value) > 0 {
 		_this.Billing.MaxRatio.Value = _this.NowPosition.UplRatio
 		_this.Billing.MaxRatio.TimeStr = _this.NowPosition.NowTimeStr
@@ -169,7 +145,34 @@ func (_this *MockObj) BillingFun(NowKdata okxInfo.TradeKdType) {
 		_this.Billing.MaxMoney.TimeStr = _this.NowPosition.NowTimeStr
 	}
 
-	_this.Billing.AllNum++ // 记录一下总交易次数
+	// 盈利计数
+	if mCount.Le(_this.NowPosition.UplRatio, "0") > 0 {
+		_this.Billing.Win++                                                                     // 盈利次数计数
+		_this.Billing.WinRatio = mCount.Add(_this.NowPosition.UplRatio, _this.Billing.WinRatio) // 盈利比例相加
+		_this.Billing.WinMoney = mCount.Add(_this.Billing.WinMoney, makeMoney)
+	}
+	// 亏损计数
+	if mCount.Le(_this.NowPosition.UplRatio, "0") < 0 {
+		_this.Billing.Lose++                                                                      // 亏损次数计数
+		_this.Billing.LoseRatio = mCount.Add(_this.NowPosition.UplRatio, _this.Billing.LoseRatio) // 盈利比例相加
+		_this.Billing.LoseMoney = mCount.Add(_this.Billing.LoseMoney, makeMoney)
+	}
+
+	if _this.NowPosition.Dir == 0 {
+		_this.Billing.NilNum++ // 空仓计数
+	} else {
+		if len(_this.Billing.StartTime) == 0 {
+			_this.Billing.StartTime = _this.NowPosition.OpenTimeStr // 首次开仓时间
+		}
+	}
+
+	if _this.NowPosition.Dir < 0 {
+		_this.Billing.SellNum++ // 开空 计数
+	}
+	if _this.NowPosition.Dir > 0 {
+		_this.Billing.BuyNum++ // 开多 计数
+	}
+	_this.Billing.AllNum++ // 总交易计数
 }
 
 // 下单  参数：dir 下单方向 NowKdata : 当前市场行情
@@ -282,8 +285,21 @@ InstID: ${InstID}
 平仓后历史最高余额: ${MaxMoney}
 持仓过程中最低盈利比率: ${PositionMinRatio}
 持仓过程中最高盈利比率: ${PositionMaxRatio}
+盈利总金额: ${WinMoney}
+亏损总金额: ${LoseMoney}
 杠杆倍数: ${Level}
+胜率: ${WinRatioAll}
+平均盈利利率: ${AveWinRatio}
+平均亏损利率: ${AveLoseRatio}
+盈亏比: ${PLratio}
 `
+
+	WinRatioAll := mCount.Div(mStr.ToStr(_this.Billing.Win), mStr.ToStr(_this.Billing.AllNum))
+
+	AveWinRatio := mCount.Div(mStr.ToStr(_this.Billing.WinMoney), mStr.ToStr(_this.Billing.Win))
+	AveLoseRatio := mCount.Div(mStr.ToStr(_this.Billing.LoseMoney), mStr.ToStr(_this.Billing.Lose))
+	PLratio := mCount.Div(AveWinRatio, AveLoseRatio)
+
 	Data := map[string]string{
 		"InstID":           _this.Billing.InstID,
 		"StartTime":        _this.Billing.StartTime, // 开始时间
@@ -308,7 +324,13 @@ InstID: ${InstID}
 		"MaxMoney":         mJson.ToStr(_this.Billing.MaxMoney),
 		"PositionMinRatio": mJson.ToStr(_this.Billing.PositionMinRatio),
 		"PositionMaxRatio": mJson.ToStr(_this.Billing.PositionMaxRatio),
+		"WinMoney":         _this.Billing.WinMoney,
+		"LoseMoney":        _this.Billing.LoseMoney,
 		"Level":            _this.Billing.Level,
+		"WinRatioAll":      WinRatioAll,
+		"AveWinRatio":      AveWinRatio,
+		"AveLoseRatio":     AveLoseRatio,
+		"PLratio":          PLratio,
 	}
 
 	global.TradeLog.Println(mStr.Temp(Tmp, Data))
