@@ -17,13 +17,14 @@ import (
 // 模拟数据流动并执行分析交易
 func (_this *MockObj) MockRun() {
 	// 清理 TradeKdataList
-	lossVal := mCount.Mul(_this.Billing.InitMoney, "0") // 当余额 低于 30% 时 判定为 亏完
+	lossVal := mCount.Mul(_this.Billing.InitMoney, "0.3") // 当余额 低于 30% 时 判定为 亏完
 
 	// 清理 TradeKdataList
 	_this.TradeKdataList = []okxInfo.TradeKdType{}
 	TradeKlineObj := hunter.NewTradeKdataObj(_this.TradeKdataOpt)
 
 	FormatEnd := []mOKX.TypeKd{}
+	MaxLen := 900
 	for _, Kdata := range _this.RunKdataList {
 		FormatEnd = append(FormatEnd, Kdata)
 
@@ -36,6 +37,10 @@ func (_this *MockObj) MockRun() {
 
 		// 开始执行分析交易
 		_this.Analy()
+
+		if len(FormatEnd)-MaxLen > 0 {
+			FormatEnd = FormatEnd[len(FormatEnd)-MaxLen:]
+		}
 
 		if mCount.Le(_this.NowPosition.UplRatio, "-45") < 0 {
 			global.Log.Println("爆仓！", _this.Billing.MockName, Kdata.TimeStr)
