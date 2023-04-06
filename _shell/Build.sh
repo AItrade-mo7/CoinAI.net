@@ -29,6 +29,6 @@ mkdir "${OutPutPath}" &&
   echo "移动 goRun 文件"
 mv "${armName}" "${OutPutPath}" &&
   mv "${amdName}" "${OutPutPath}" &&
-  cp -r "${NowPath}""/README.md" "${OutPutPath}" &&
-  cp -r "${NowPath}""/package.json" "${OutPutPath}" &&
+  cp -r "${NowPath}/README.md" "${OutPutPath}" &&
+  cp -r "${NowPath}/package.json" "${OutPutPath}" &&
   exit 0
