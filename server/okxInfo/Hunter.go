@@ -4,17 +4,17 @@ import "github.com/EasyGolang/goTools/mOKX"
 
 // Hunter 内部 数据 同步
 type TradeKdataOpt struct {
-	MA_Period  int // 171
+	EMA_Period int // 171
 	CAP_Period int // 4
 }
 
 type TradeKdType struct {
 	mOKX.TypeKd
-	EMA     string // EMA 值
-	MA      string // MA 值
+	EMA string // EMA 值
+	// MA      string // MA 值
 	CAP_EMA string // 基于 EMA 的 平滑点数 0-100 的浮点类型
-	CAP_MA  string // 基于 EMA 的 平滑点数 0-100 的浮点类型
-	Opt     TradeKdataOpt
+	// CAP_MA  string // 基于 EMA 的 平滑点数 0-100 的浮点类型
+	Opt TradeKdataOpt
 }
 
 type HunterData struct {

@@ -131,7 +131,7 @@ func GetConfigArr(confArr []ConfOpt) []testHunter.NewMockOpt {
 			Level:     "1",    // 杠杆倍数
 			Charge:    "0.05", // 吃单标准手续费率 0.05%
 			TradeKdataOpt: okxInfo.TradeKdataOpt{
-				MA_Period:  emaP,
+				EMA_Period: emaP,
 				CAP_Period: cap,
 			},
 		})

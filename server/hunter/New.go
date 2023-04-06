@@ -46,8 +46,8 @@ func New(opt HunterOpt) *HunterObj {
 	}
 
 	obj.TradeKdataOpt = opt.TradeKdataOpt
-	if obj.TradeKdataOpt.MA_Period < 0 {
-		obj.TradeKdataOpt.MA_Period = 171
+	if obj.TradeKdataOpt.EMA_Period < 0 {
+		obj.TradeKdataOpt.EMA_Period = 171
 	}
 	if obj.TradeKdataOpt.CAP_Period < 0 {
 		obj.TradeKdataOpt.CAP_Period = 4

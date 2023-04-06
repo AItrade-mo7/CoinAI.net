@@ -35,7 +35,7 @@ func SetHunter() {
 		HunterName:    "MyHunter",
 		MaxTradeLever: 3,
 		TradeKdataOpt: okxInfo.TradeKdataOpt{
-			MA_Period:  171,
+			EMA_Period: 171,
 			CAP_Period: 4,
 		},
 	})

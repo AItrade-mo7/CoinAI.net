@@ -18,9 +18,7 @@ func (_this *HunterObj) Analy() {
 		"AllLen":  len(_this.TradeKdataList),
 		"C":       Last.C,
 		"EMA":     Last.EMA,
-		"MA":      Last.MA,
 		"CAP_EMA": Last.CAP_EMA,
-		"CAP_MA":  Last.CAP_MA,
 		"Opt":     Last.Opt,
 	}
 	global.TradeLog.Println("hunter.Analy 开始分析并执行交易 Last", mJson.Format(LastPrint))

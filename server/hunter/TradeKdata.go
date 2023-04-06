@@ -14,12 +14,12 @@ import (
 )
 
 func (_this *HunterObj) FormatTradeKdata() error {
-	if len(_this.NowKdataList) < _this.TradeKdataOpt.MA_Period {
+	if len(_this.NowKdataList) < _this.TradeKdataOpt.EMA_Period {
 		err := fmt.Errorf(_this.HunterName, "hunter.FormatTradeKdata 数据不足")
 		return err
 	}
 
-	if _this.TradeKdataOpt.MA_Period == 0 ||
+	if _this.TradeKdataOpt.EMA_Period == 0 ||
 		_this.TradeKdataOpt.CAP_Period == 0 {
 		err := fmt.Errorf(_this.HunterName, "hunter.FormatTradeKdata2 参数不正确 %+v", _this.TradeKdataOpt)
 		return err
@@ -47,18 +47,18 @@ func (_this *HunterObj) FormatTradeKdata() error {
 
 type TradeKdataObj struct {
 	EMA_Arr []string
-	MA_Arr  []string
-	Opt     okxInfo.TradeKdataOpt
+	// MA_Arr  []string
+	Opt okxInfo.TradeKdataOpt
 }
 
 func NewTradeKdataObj(opt okxInfo.TradeKdataOpt) *TradeKdataObj {
 	obj := TradeKdataObj{}
 	obj.EMA_Arr = []string{}
-	obj.MA_Arr = []string{}
+	// obj.MA_Arr = []string{}
 	obj.Opt = opt
 
-	if obj.Opt.MA_Period < 0 {
-		obj.Opt.MA_Period = 171
+	if obj.Opt.EMA_Period < 0 {
+		obj.Opt.EMA_Period = 171
 		global.LogErr("obj.Opt.MA_Period 参数为空，已设置为默认")
 	}
 
@@ -80,25 +80,13 @@ func (_this *TradeKdataObj) NewTradeKdata(KdataList []mOKX.TypeKd) (TradeKdata o
 	// EMA
 	TradeKdata.EMA = mTalib.ClistNew(mTalib.ClistOpt{
 		KDList: KdataList,
-		Period: _this.Opt.MA_Period,
+		Period: _this.Opt.EMA_Period,
 	}).EMA().ToStr()
 	_this.EMA_Arr = append(_this.EMA_Arr, TradeKdata.EMA)
-
-	// MA
-	TradeKdata.MA = mTalib.ClistNew(mTalib.ClistOpt{
-		KDList: KdataList,
-		Period: _this.Opt.MA_Period,
-	}).MA().ToStr()
-	_this.MA_Arr = append(_this.MA_Arr, TradeKdata.MA)
 
 	// CAP_EMA
 	TradeKdata.CAP_EMA = mTalib.ClistNew(mTalib.ClistOpt{
 		CList:  _this.EMA_Arr,
-		Period: _this.Opt.CAP_Period,
-	}).CAP().ToStr()
-	// CAP_MA
-	TradeKdata.CAP_MA = mTalib.ClistNew(mTalib.ClistOpt{
-		CList:  _this.MA_Arr,
 		Period: _this.Opt.CAP_Period,
 	}).CAP().ToStr()
 

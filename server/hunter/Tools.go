@@ -249,7 +249,7 @@ func Is_CAP_EMA_GoDown(preArr []okxInfo.TradeKdType) []string {
 	return downArr
 }
 
-func GetCAPIdx(now okxInfo.TradeKdType) int {
+/* func GetCAPIdx(now okxInfo.TradeKdType) int {
 	now_EMA_diff := mCount.Le(now.CAP_EMA, "0") // 1 0 -1  EMA
 	now_MA_diff := mCount.Le(now.CAP_MA, "0")   // -1 0 1  MA
 	nowDiff := now_EMA_diff
@@ -263,3 +263,4 @@ func GetCAPIdx(now okxInfo.TradeKdType) int {
 
 	return nowDiff
 }
+*/

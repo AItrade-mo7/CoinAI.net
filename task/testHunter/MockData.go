@@ -28,7 +28,7 @@ func (_this *MockObj) MockRun() {
 	for _, Kdata := range _this.RunKdataList {
 		FormatEnd = append(FormatEnd, Kdata)
 
-		if len(FormatEnd) < _this.TradeKdataOpt.MA_Period+1 {
+		if len(FormatEnd) < _this.TradeKdataOpt.EMA_Period+1 {
 			continue
 		}
 
