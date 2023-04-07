@@ -2,15 +2,17 @@ package hunter
 
 import (
 	"fmt"
-	"time"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/utils/taskPush"
+	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (_this *HunterObj) Start() {
@@ -25,8 +27,9 @@ func (_this *HunterObj) Start() {
 func (_this *HunterObj) Running() {
 	global.TradeLog.Println(_this.HunterName, " === hunter.Running === ", _this.KdataInst.InstID)
 
+	// 选取K线和合约信息
 	if len(_this.KdataInst.InstID) < 2 || len(_this.TradeInst.InstID) < 2 {
-		err := _this.SetTradeInst()
+		err := _this.SetTradeInst(_this.InstID)
 		if err != nil {
 			global.LogErr(err)
 			return
@@ -35,6 +38,7 @@ func (_this *HunterObj) Running() {
 		return
 	}
 
+	// 在这里填充基础数据 走 mongodb
 	err := _this.FileBaseKdata()
 	if err != nil { // 在这里切换了币种，重新执行
 		_this.Running() // 立即重新执行一次 Running
@@ -61,18 +65,42 @@ func (_this *HunterObj) Running() {
 }
 
 func (_this *HunterObj) FileBaseKdata() error {
-	Page := 5 // 如果数组为空，则填充 600 条进去 因为不可能大于 600
 	if len(_this.NowKdataList) < 100 {
 		// 回填历史数据 1 组
-		for i := Page; i >= 0; i-- {
-			time.Sleep(time.Second / 3)
-			List := mOKX.GetKdata(mOKX.GetKdataOpt{
-				InstID: _this.KdataInst.InstID,
-				Page:   i,
-				After:  mTime.GetUnixInt64(),
-			})
-			_this.NowKdataList = append(_this.NowKdataList, List...)
+		db := mMongo.New(mMongo.Opt{
+			UserName: config.SysEnv.MongoUserName,
+			Password: config.SysEnv.MongoPassword,
+			Address:  config.SysEnv.MongoAddress,
+			DBName:   "CoinMarket",
+			Timeout:  _this.MaxLen,
+		}).Connect().Collection(_this.KdataInst.InstID)
+		defer db.Close()
+		findOpt := options.Find()
+		findOpt.SetSort(map[string]int{
+			"TimeUnix": -1,
+		})
+		findOpt.SetAllowDiskUse(true)
+		findOpt.SetLimit(int64(_this.MaxLen))
+		cur, err := db.Table.Find(db.Ctx, bson.D{}, findOpt)
+		if err != nil {
+			db.Close()
+			return err
 		}
+		AllList := []mOKX.TypeKd{}
+		for cur.Next(db.Ctx) {
+			var result mOKX.TypeKd
+			cur.Decode(&result)
+			AllList = append(AllList, result)
+		}
+		db.Close()
+
+		KdataList := []mOKX.TypeKd{}
+		for i := len(AllList) - 1; i >= 0; i-- {
+			el := AllList[i]
+			KdataList = append(KdataList, el)
+		}
+		_this.NowKdataList = KdataList
+
 		Last := _this.NowKdataList[len(_this.NowKdataList)-1]
 		global.TradeLog.Println(_this.HunterName, "基础数据回填完毕", len(_this.NowKdataList), Last.TimeStr, Last.InstID)
 		return nil

@@ -15,7 +15,7 @@ func (_this *HunterObj) SetNowKdata() error {
 	})
 
 	if len(NowList) < 100 || len(_this.NowKdataList) < 200 {
-		err := fmt.Errorf(_this.HunterName, "hunter.SetNowKdata 数据不足")
+		err := fmt.Errorf(_this.HunterName + "hunter.SetNowKdata 数据不足")
 		return err
 	}
 

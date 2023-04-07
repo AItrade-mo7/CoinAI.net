@@ -8,7 +8,7 @@ import (
 	"github.com/EasyGolang/goTools/mJson"
 )
 
-func (_this *HunterObj) SetTradeInst() (resErr error) {
+func (_this *HunterObj) SetTradeInst(InstID string) (resErr error) {
 	resErr = nil
 	if len(okxInfo.NowTicker.TickerVol) < 4 {
 		resErr = fmt.Errorf("hunter.SetTradeInst TickerVol %+v", len(okxInfo.NowTicker.TickerVol))
@@ -29,26 +29,7 @@ func (_this *HunterObj) SetTradeInst() (resErr error) {
 	}
 	// 在这里按照涨幅的绝对值排个序SetTradeInst
 
-	HLPerList := Sort_HLPer(okxInfo.NowTicker.MillionCoin)
-	HLPerInstID := "ETH-USDT"
-	// 在这里 取出 最末尾的三个 然后取第一个
-
-	InstIDList := []string{}
-	rangeCount := 0
-	for i := len(HLPerList) - 1; i >= 0; i-- {
-		item := HLPerList[i]
-		rangeCount++
-		// if rangeCount > _this.HLPerLevel {
-		// 	break
-		// }
-		InstIDList = append(InstIDList, item.InstID)
-	}
-
-	if len(InstIDList) > 0 {
-		HLPerInstID = InstIDList[len(InstIDList)-1]
-	}
-
-	CoinId := HLPerInstID
+	CoinId := InstID
 
 	if len(CoinId) < 1 {
 		resErr = fmt.Errorf("hunter.SetTradeInst CoinId %+v", CoinId)
@@ -76,7 +57,7 @@ func (_this *HunterObj) SetTradeInst() (resErr error) {
 	_this.KdataInst = KdataInst
 	_this.TradeInst = TradeInst
 
-	global.TradeLog.Println(_this.HunterName, "hunter.SetTradeInst", InstIDList, CoinId)
+	global.TradeLog.Println(_this.HunterName, "hunter.SetTradeInst", CoinId)
 
 	return
 }

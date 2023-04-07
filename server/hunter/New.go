@@ -13,6 +13,7 @@ type HunterOpt struct {
 
 type HunterObj struct {
 	HunterName     string // 策略的名字
+	InstID         string // 当前策略主打币种
 	MaxLen         int
 	TradeInst      mOKX.TypeInst         // 交易的 InstID SWAP
 	KdataInst      mOKX.TypeInst         // K线的 InstID SPOT
@@ -33,8 +34,14 @@ func New(opt HunterOpt) *HunterObj {
 	}
 
 	obj.MaxLen = opt.MaxLen
-	if (obj.MaxLen) < 900 {
+	if obj.MaxLen < 900 {
 		obj.MaxLen = 900
+	}
+
+	obj.InstID = opt.InstID
+
+	if len(obj.InstID) < 1 {
+		obj.InstID = "BTC-USDT"
 	}
 
 	return &obj
