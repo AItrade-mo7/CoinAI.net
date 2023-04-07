@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/utils/taskPush"
 	"CoinAI.net/task/testHunter"
 	"github.com/EasyGolang/goTools/mCount"
@@ -13,10 +14,7 @@ import (
 	"github.com/EasyGolang/goTools/mTime"
 )
 
-
-type BackOpt struct {
-	
-}
+type BackOpt struct{}
 
 func BackTest() {
 	StartTime := mTime.GetUnix()
@@ -38,13 +36,22 @@ func BackTest() {
 
 	// 构建参数
 	// 新建回测参数 ( 按照核心数进行任务拆分 )
+	// configObj := testHunter.GetConfig(testHunter.GetConfigOpt{
+	// 	EmaPArr: []int{
+	// 		70, 72, 74, 76, 77, 78, 80, 82, 84,
+	// 		164, 166, 168, 170, 171, 172, 174, 176, 178,
+	// 		538, 540, 542, 544, 545, 546, 548, 550, 552,
+	// 	},
+	// 	CAPArr: []int{3, 4},
+	// })
 	configObj := testHunter.GetConfig(testHunter.GetConfigOpt{
-		EmaPArr: []int{
-			70, 72, 74, 76, 77, 78, 80, 82, 84,
-			164, 166, 168, 170, 171, 172, 174, 176, 178,
-			538, 540, 542, 544, 545, 546, 548, 550, 552,
+		ConfArr: []okxInfo.TradeKdataOpt{
+			{
+				EMA_Period:    171, // 171
+				CAP_Period:    4,   // 4
+				MaxTradeLever: 1,
+			},
 		},
-		CAPArr: []int{3, 4},
 	})
 
 	TaskChan := make(chan string, len(configObj.GorMap)) // 记录线程任务完成

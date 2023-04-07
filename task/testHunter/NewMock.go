@@ -67,7 +67,6 @@ type BillingType struct {
 type NewMockOpt struct {
 	MockName      string // 策略名字 MA_x_CAP_x
 	InitMoney     string // 初始金钱  1000
-	Level         string // 杠杆倍数  1
 	Charge        string // 手续费  0.05
 	TradeKdataOpt okxInfo.TradeKdataOpt
 }
@@ -94,7 +93,7 @@ func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 	obj.Billing.MockName = opt.MockName
 	obj.Billing.InitMoney = opt.InitMoney // 设定初始资金
 	obj.Billing.Money = opt.InitMoney     // 设定当前账户资金
-	obj.Billing.Level = opt.Level
+	obj.Billing.Level = mStr.ToStr(opt.TradeKdataOpt.MaxTradeLever)
 	obj.Billing.Charge = opt.Charge
 	obj.Billing.InstID = _this.KdataList[0].InstID
 	obj.Billing.Days = (_this.EndTime - _this.StartTime) / mTime.UnixTimeInt64.Day
@@ -116,9 +115,10 @@ func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 }
 
 type GetConfigOpt struct {
-	EmaPArr []int
-	CAPArr  []int
-	ConfArr []okxInfo.TradeKdataOpt
+	EmaPArr  []int                   // Ema 步长
+	CAPArr   []int                   // CAP 步长
+	LevelArr []int                   // 杠杆倍数
+	ConfArr  []okxInfo.TradeKdataOpt // 成型的参数数组
 }
 
 type GetConfigReturn struct {
@@ -138,11 +138,11 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 				NewMockOpt{
 					MockName:  mStr.Join("EMA_", mStr.ToStr(conf.EMA_Period), "_CAP_", mStr.ToStr(conf.CAP_Period)),
 					InitMoney: "1000", // 初始资金
-					Level:     "1",    // 杠杆倍数
-					Charge:    "0.05", // 吃单标准手续费率 0.05%
+					Charge:    "0.5",  // 吃单标准手续费率 0.05%
 					TradeKdataOpt: okxInfo.TradeKdataOpt{
-						EMA_Period: conf.EMA_Period,
-						CAP_Period: conf.CAP_Period,
+						EMA_Period:    conf.EMA_Period,
+						CAP_Period:    conf.CAP_Period,
+						MaxTradeLever: conf.MaxTradeLever,
 					},
 				},
 			)
@@ -150,18 +150,20 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 	} else {
 		for _, emaP := range opt.EmaPArr {
 			for _, cap := range opt.CAPArr {
-				MockConfigArr = append(MockConfigArr,
-					NewMockOpt{
-						MockName:  mStr.Join("EMA_", mStr.ToStr(emaP), "_CAP_", mStr.ToStr(cap)),
-						InitMoney: "1000", // 初始资金
-						Level:     "1",    // 杠杆倍数
-						Charge:    "0.05", // 吃单标准手续费率 0.05%
-						TradeKdataOpt: okxInfo.TradeKdataOpt{
-							EMA_Period: emaP,
-							CAP_Period: cap,
+				for _, level := range opt.LevelArr {
+					MockConfigArr = append(MockConfigArr,
+						NewMockOpt{
+							MockName:  mStr.Join("EMA_", mStr.ToStr(emaP), "_CAP_", mStr.ToStr(cap), "_level_", mStr.ToStr(level)),
+							InitMoney: "1000", // 初始资金
+							Charge:    "0.05", // 吃单标准手续费率 0.05% x 10 倍
+							TradeKdataOpt: okxInfo.TradeKdataOpt{
+								EMA_Period:    emaP,
+								CAP_Period:    cap,
+								MaxTradeLever: level,
+							},
 						},
-					},
-				)
+					)
+				}
 			}
 		}
 	}
