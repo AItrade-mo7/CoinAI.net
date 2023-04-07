@@ -2,11 +2,13 @@ package hunter
 
 import (
 	"fmt"
+	"time"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/utils/taskPush"
+	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
@@ -15,12 +17,9 @@ import (
 )
 
 func (_this *HunterObj) Start() {
-	go func() {
-		// for ok := range okxInfo.ReadyChan {
-		// global.TradeLog.Println(_this.HunterName, " ===== hunter.Start 执行 ===== ", mTime.UnixFormat(mTime.GetUnixInt64()), ok)
-		_this.Running()
-		// }
-	}()
+	RoundNum := mCount.GetRound(0, 60) // 构建请求延迟
+	time.Sleep(time.Second * time.Duration(RoundNum))
+	_this.Running()
 }
 
 func (_this *HunterObj) Running() {

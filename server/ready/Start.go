@@ -1,20 +1,48 @@
 package ready
 
 import (
+	"time"
+
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mClock"
+	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 )
 
 func Start() {
+	// 发送启动邮件
 	StartEmail()
-
+	// 数据预填充
 	GetAnalyData()
+
+	// 准备策略
+	BTCHunter := hunter.New(hunter.HunterOpt{
+		HunterName: "BTC-CoinAI",
+		InstID:     "BTC-USDT",
+		Describe:   "以 BTC-USDT 交易对为主执行自动交易,支持的资金量更大,更加稳定",
+	})
+	BTCHunter.Start()
+
+	ETHHunter := hunter.New(hunter.HunterOpt{
+		HunterName: "ETH-CoinAI",
+		InstID:     "ETH-USDT",
+		Describe:   "以 ETH-USDT 交易对为主执行自动交易,交易次数更加频发,可以收货更高收益",
+	})
+	ETHHunter.Start()
+
+	// 构建定时任务
 	go mClock.New(mClock.OptType{
-		Func: GetAnalyData,
+		Func: func() {
+			RoundNum := mCount.GetRound(0, 60) // 构建请求延迟
+			time.Sleep(time.Second * time.Duration(RoundNum))
+			GetAnalyData()
+			go BTCHunter.Start() // BTC 策略
+			go ETHHunter.Start() // ETH 策略
+		},
 		Spec: "10 1,6,11,16,21,26,31,36,41,46,51,56 * * * ? ", // 每隔5分钟比标准时间晚一分钟 过 10 秒执行查询
 	})
 }
