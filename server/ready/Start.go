@@ -14,6 +14,7 @@ import (
 )
 
 func Start() {
+	// 加入 Auto 参数
 	okxInfo.NowHunterData["Auto"] = okxInfo.HunterData{
 		HunterName: "Auto",
 		Describe:   "根据市场情况为您的账户选择其中一个策略执行交易【目前此功能尚在开发中】",
@@ -26,20 +27,20 @@ func Start() {
 	GetAnalyData()
 
 	// 准备策略
+	// 策略 1
 	BTCHunter := hunter.New(hunter.HunterOpt{
 		HunterName: "BTC-CoinAI",
 		InstID:     "BTC-USDT",
 		Describe:   "以 BTC-USDT 交易对为主执行自动交易,支持的资金量更大,更加稳定",
 	})
-
 	BTCHunter.Start()
 
+	// 策略 2
 	ETHHunter := hunter.New(hunter.HunterOpt{
 		HunterName: "ETH-CoinAI",
 		InstID:     "ETH-USDT",
-		Describe:   "以 ETH-USDT 交易对为主执行自动交易,交易次数更加频发,可以收货更高收益",
+		Describe:   "以 ETH-USDT 交易对为主执行自动交易,交易次数更加频发,可以收获更高收益",
 	})
-
 	ETHHunter.Start()
 
 	// 构建定时任务
