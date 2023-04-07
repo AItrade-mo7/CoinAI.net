@@ -37,11 +37,11 @@ var CoinTradeConfig = map[string]TradeKdataOpt{
 	"BTC-USDT": {
 		EMA_Period:    171,
 		CAP_Period:    4,
-		MaxTradeLever: 3,
+		MaxTradeLever: 2,
 	},
 	"ETH-USDT": {
 		EMA_Period:    77,
 		CAP_Period:    3,
-		MaxTradeLever: 2,
+		MaxTradeLever: 4,
 	},
 }

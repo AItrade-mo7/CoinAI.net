@@ -29,18 +29,14 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 	resObj = &AccountObj{}
 	resErr = nil
 
-	NowHunter := okxInfo.HunterData{}
-	for key, item := range okxInfo.NowHunterData {
-		if opt.OkxKey.Hunter == key {
-			NowHunter = item
-			break
-		}
-	}
+	// NowHunter := okxInfo.HunterData{}
+	// for key, item := range okxInfo.NowHunterData {
+	// 	if opt.OkxKey.Hunter == key {
+	// 		NowHunter = item
+	// 		break
+	// 	}
+	// }
 
-	if len(NowHunter.HunterName) < 1 {
-		resErr = fmt.Errorf("okxApi.NewAccount 当前 Key 策略不正确:" + opt.OkxKey.Hunter)
-		return
-	}
 	if len(opt.OkxKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("okxApi.NewAccount ApiKey 不能为空 Name:" + opt.OkxKey.Name)
 		return
