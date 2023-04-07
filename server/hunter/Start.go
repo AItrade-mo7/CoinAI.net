@@ -17,13 +17,14 @@ import (
 )
 
 func (_this *HunterObj) Start() {
-	RoundNum := mCount.GetRound(0, 60) // 构建请求延迟
-	time.Sleep(time.Second * time.Duration(RoundNum))
-	_this.Running()
+	go _this.Running()
 }
 
 func (_this *HunterObj) Running() {
 	global.TradeLog.Println(_this.HunterName, " === hunter.Running === ", _this.KdataInst.InstID)
+
+	RoundNum := mCount.GetRound(0, 60) // 延迟随机秒数
+	time.Sleep(time.Second * time.Duration(RoundNum))
 
 	// 选取K线和合约信息
 	if len(_this.KdataInst.InstID) < 2 || len(_this.TradeInst.InstID) < 2 {

@@ -14,9 +14,15 @@ import (
 )
 
 func Start() {
+	okxInfo.NowHunterData["Auto"] = okxInfo.HunterData{
+		HunterName: "Auto",
+		Describe:   "根据市场情况为您的账户选择其中一个策略执行交易【目前此功能尚在开发中】",
+	}
+
 	// 发送启动邮件
 	StartEmail()
 	// 数据预填充
+
 	GetAnalyData()
 
 	// 准备策略
@@ -25,6 +31,7 @@ func Start() {
 		InstID:     "BTC-USDT",
 		Describe:   "以 BTC-USDT 交易对为主执行自动交易,支持的资金量更大,更加稳定",
 	})
+
 	BTCHunter.Start()
 
 	ETHHunter := hunter.New(hunter.HunterOpt{
@@ -32,6 +39,7 @@ func Start() {
 		InstID:     "ETH-USDT",
 		Describe:   "以 ETH-USDT 交易对为主执行自动交易,交易次数更加频发,可以收货更高收益",
 	})
+
 	ETHHunter.Start()
 
 	// 构建定时任务
@@ -40,8 +48,8 @@ func Start() {
 			RoundNum := mCount.GetRound(0, 60) // 构建请求延迟
 			time.Sleep(time.Second * time.Duration(RoundNum))
 			GetAnalyData()
-			go BTCHunter.Start() // BTC 策略
-			go ETHHunter.Start() // ETH 策略
+			BTCHunter.Start() // BTC 策略
+			ETHHunter.Start() // ETH 策略
 		},
 		Spec: "10 1,6,11,16,21,26,31,36,41,46,51,56 * * * ? ", // 每隔5分钟比标准时间晚一分钟 过 10 秒执行查询
 	})

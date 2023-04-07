@@ -5,7 +5,6 @@ import (
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mTime"
-	jsoniter "github.com/json-iterator/go"
 )
 
 type OutPut struct {
@@ -88,27 +87,30 @@ type HunterDataType struct {
 func GetHunterData() map[string]HunterDataType {
 	HunterData := make(map[string]HunterDataType)
 
-	for key, item := range okxInfo.NowHunterData {
-		var newData HunterDataType
-		newData.HunterName = item.HunterName
-		newData.KdataLen = len(item.NowKdataList)
-		newData.TradeKdataLen = len(item.TradeKdataList)
-		newData.TradeInstID = item.TradeInst.InstID
-		newData.KdataInstID = item.KdataInst.InstID
-		newData.Describe = item.Describe
+	mJson.Println(HunterData)
 
-		var newKdata NowKdataType
-		if len(item.NowKdataList) > 1 {
-			lastKdata := item.NowKdataList[len(item.NowKdataList)-1]
-			jsoniter.Unmarshal(mJson.ToJson(lastKdata), &newKdata)
-		}
+	// for key, item := range okxInfo.NowHunterData {
+	// 	var newData HunterDataType
+	// 	newData.HunterName = item.HunterName
+	// 	newData.KdataLen = len(item.NowKdataList)
+	// 	newData.TradeKdataLen = len(item.TradeKdataList)
+	// 	newData.TradeInstID = item.TradeInst.InstID
+	// 	newData.KdataInstID = item.KdataInst.InstID
+	// 	newData.Describe = item.Describe
 
-		newData.NowKdata = newKdata
+	// 	var newKdata NowKdataType
+	// 	if len(item.NowKdataList) > 1 {
+	// 		lastKdata := item.NowKdataList[len(item.NowKdataList)-1]
+	// 		jsoniter.Unmarshal(mJson.ToJson(lastKdata), &newKdata)
+	// 	}
 
-		newData.TradeKdataOpt = item.TradeKdataOpt
+	// 	newData.NowKdata = newKdata
 
-		HunterData[key] = newData
-	}
+	// 	newData.TradeKdataOpt = item.TradeKdataOpt
+
+	// 	HunterData[key] = newData
+
+	// }
 
 	return HunterData
 }

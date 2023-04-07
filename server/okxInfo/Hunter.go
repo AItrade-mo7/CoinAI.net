@@ -30,12 +30,7 @@ type HunterData struct {
 	TradeKdataOpt  TradeKdataOpt
 }
 
-var NowHunterData = map[string]HunterData{
-	"Auto": {
-		HunterName: "Auto",
-		Describe:   "根据市场情况为您的账户选择其中一个策略执行交易【目前此功能尚在开发中】",
-	},
-}
+var NowHunterData = make(map[string]HunterData)
 
 // 最优参数
 
