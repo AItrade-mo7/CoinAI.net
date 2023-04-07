@@ -21,6 +21,7 @@ type PositionType struct {
 	NowC        string
 	InstID      string // 下单币种
 	UplRatio    string // 未实现收益率
+	CAP_EMA     string //
 }
 type OrderType struct {
 	Type    string // 平仓,Close  开空,Sell  开多,Buy
@@ -132,13 +133,16 @@ type GetConfigReturn struct {
 func GetConfig(opt GetConfigOpt) GetConfigReturn {
 	MockConfigArr := []NewMockOpt{}
 
+	Charge := "0.05"
+	InitMoney := "1000"
+
 	if len(opt.ConfArr) > 0 {
 		for _, conf := range opt.ConfArr {
 			MockConfigArr = append(MockConfigArr,
 				NewMockOpt{
-					MockName:  mStr.Join("EMA_", mStr.ToStr(conf.EMA_Period), "_CAP_", mStr.ToStr(conf.CAP_Period)),
-					InitMoney: "1000", // 初始资金
-					Charge:    "0.5",  // 吃单标准手续费率 0.05%
+					MockName:  mStr.Join("EMA_", conf.EMA_Period, "_CAP_", conf.CAP_Period, "_level_", conf.MaxTradeLever),
+					InitMoney: InitMoney, // 初始资金
+					Charge:    Charge,    // 吃单标准手续费率 0.05%
 					TradeKdataOpt: okxInfo.TradeKdataOpt{
 						EMA_Period:    conf.EMA_Period,
 						CAP_Period:    conf.CAP_Period,
@@ -153,9 +157,9 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 				for _, level := range opt.LevelArr {
 					MockConfigArr = append(MockConfigArr,
 						NewMockOpt{
-							MockName:  mStr.Join("EMA_", mStr.ToStr(emaP), "_CAP_", mStr.ToStr(cap), "_level_", mStr.ToStr(level)),
-							InitMoney: "1000", // 初始资金
-							Charge:    "0.05", // 吃单标准手续费率 0.05% x 10 倍
+							MockName:  mStr.Join("EMA_", emaP, "_CAP_", cap, "_level_", level),
+							InitMoney: InitMoney, // 初始资金
+							Charge:    Charge,    // 吃单标准手续费率 0.05% x 10 倍
 							TradeKdataOpt: okxInfo.TradeKdataOpt{
 								EMA_Period:    emaP,
 								CAP_Period:    cap,

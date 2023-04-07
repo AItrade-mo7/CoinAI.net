@@ -84,6 +84,7 @@ func (_this *MockObj) Analy() {
 	}
 	_this.NowPosition.NowTimeStr = NowKdata.TimeStr
 	_this.NowPosition.NowC = NowKdata.C
+	_this.NowPosition.CAP_EMA = NowKdata.CAP_EMA
 	_this.PositionArr = append(_this.PositionArr, _this.NowPosition)
 
 	if mCount.Le(_this.NowPosition.UplRatio, _this.Billing.PositionMinRatio.Value) < 0 {
@@ -196,6 +197,7 @@ func (_this *MockObj) OnOrder(dir int, NowKdata okxInfo.TradeKdType) {
 			NowC:        NowKdata.C,
 			OpenTimeStr: NowKdata.TimeStr, // 开仓时间
 			InstID:      NowKdata.InstID,  // 开仓币种
+			CAP_EMA:     NowKdata.CAP_EMA,
 		}
 	}
 
@@ -216,6 +218,7 @@ func (_this *MockObj) OnOrder(dir int, NowKdata okxInfo.TradeKdType) {
 			NowC:        NowKdata.C,
 			OpenTimeStr: NowKdata.TimeStr, // 开仓时间
 			InstID:      NowKdata.InstID,  // 开仓币种
+			CAP_EMA:     NowKdata.CAP_EMA,
 		}
 	}
 
@@ -236,6 +239,7 @@ func (_this *MockObj) OnOrder(dir int, NowKdata okxInfo.TradeKdType) {
 			NowC:        NowKdata.C,
 			OpenTimeStr: NowKdata.TimeStr, // 开仓时间
 			InstID:      NowKdata.InstID,  // 开仓币种
+			CAP_EMA:     NowKdata.CAP_EMA,
 		}
 	}
 }
