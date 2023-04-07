@@ -13,6 +13,11 @@ import (
 	"github.com/EasyGolang/goTools/mTime"
 )
 
+
+type BackOpt struct {
+	
+}
+
 func BackTest() {
 	StartTime := mTime.GetUnix()
 

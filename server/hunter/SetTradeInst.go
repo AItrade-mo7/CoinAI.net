@@ -38,9 +38,9 @@ func (_this *HunterObj) SetTradeInst() (resErr error) {
 	for i := len(HLPerList) - 1; i >= 0; i-- {
 		item := HLPerList[i]
 		rangeCount++
-		if rangeCount > _this.HLPerLevel {
-			break
-		}
+		// if rangeCount > _this.HLPerLevel {
+		// 	break
+		// }
 		InstIDList = append(InstIDList, item.InstID)
 	}
 

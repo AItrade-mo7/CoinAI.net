@@ -92,7 +92,6 @@ func GetHunterData() map[string]HunterDataType {
 	for key, item := range okxInfo.NowHunterData {
 		var newData HunterDataType
 		newData.HunterName = item.HunterName
-		newData.HLPerLevel = item.HLPerLevel
 		newData.KdataLen = len(item.NowKdataList)
 		newData.TradeKdataLen = len(item.TradeKdataList)
 		newData.TradeInstID = item.TradeInst.InstID

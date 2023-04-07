@@ -105,7 +105,6 @@ func (_this *HunterObj) Sync_okxInfo() {
 	Name := _this.HunterName
 	HunterData := okxInfo.HunterData{
 		HunterName:     _this.HunterName,
-		HLPerLevel:     _this.HLPerLevel,
 		MaxLen:         _this.MaxLen,
 		TradeInst:      _this.TradeInst,
 		KdataInst:      _this.KdataInst,

@@ -19,7 +19,6 @@ type TradeKdType struct {
 
 type HunterData struct {
 	HunterName     string // 策略的名字
-	HLPerLevel     int    // 震荡等级
 	MaxLen         int
 	TradeInst      mOKX.TypeInst // 交易的 InstID SWAP
 	KdataInst      mOKX.TypeInst // K线的 InstID SPOT
