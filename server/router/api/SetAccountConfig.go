@@ -42,8 +42,8 @@ func SetAccountConfig(c *fiber.Ctx) error {
 		if len(NowHunter.HunterName) < 1 {
 			return c.JSON(result.Fail.WithMsg(fmt.Sprintf("必须选择一个有效策略 %+v", json.Hunter)))
 		}
-		if json.TradeLever > NowHunter.MaxTradeLever {
-			return c.JSON(result.Fail.WithMsg(fmt.Sprintf("TradeLever不可大于 %+v", NowHunter.MaxTradeLever)))
+		if json.TradeLever > NowHunter.TradeKdataOpt.MaxTradeLever {
+			return c.JSON(result.Fail.WithMsg(fmt.Sprintf("TradeLever不可大于 %+v", NowHunter.TradeKdataOpt.MaxTradeLever)))
 		}
 	}
 

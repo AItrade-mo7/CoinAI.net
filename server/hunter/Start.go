@@ -52,6 +52,13 @@ func (_this *HunterObj) Running() {
 		return
 	}
 
+	err = _this.SetTradeConfig()
+	if err != nil { // 在这里检查数据出了问题
+		global.LogErr(err)
+		_this.Running() // 立即重新执行一次 Running
+		return
+	}
+
 	err = _this.FormatTradeKdata()
 	if err != nil { // 这里参数出了问题
 		global.LogErr(err)
@@ -61,7 +68,7 @@ func (_this *HunterObj) Running() {
 
 	_this.Analy()
 
-	_this.Sync_okxInfo()
+	_this.SyncInfoToGlobal()
 }
 
 func (_this *HunterObj) FileBaseKdata() error {
@@ -129,7 +136,7 @@ func (_this *HunterObj) SendEmail(Message string) {
 	})
 }
 
-func (_this *HunterObj) Sync_okxInfo() {
+func (_this *HunterObj) SyncInfoToGlobal() {
 	Name := _this.HunterName
 	HunterData := okxInfo.HunterData{
 		HunterName:     _this.HunterName,
@@ -139,7 +146,6 @@ func (_this *HunterObj) Sync_okxInfo() {
 		NowKdataList:   _this.NowKdataList,
 		TradeKdataList: _this.TradeKdataList,
 		TradeKdataOpt:  _this.TradeKdataOpt,
-		MaxTradeLever:  _this.MaxTradeLever,
 	}
 	okxInfo.NowHunterData[Name] = HunterData
 }

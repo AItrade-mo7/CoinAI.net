@@ -96,7 +96,6 @@ func GetHunterData() map[string]HunterDataType {
 		newData.TradeKdataLen = len(item.TradeKdataList)
 		newData.TradeInstID = item.TradeInst.InstID
 		newData.KdataInstID = item.KdataInst.InstID
-		newData.MaxTradeLever = item.MaxTradeLever
 
 		var newKdata NowKdataType
 		lastKdata := item.NowKdataList[len(item.NowKdataList)-1]

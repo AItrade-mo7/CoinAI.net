@@ -47,14 +47,12 @@ func (_this *HunterObj) FormatTradeKdata() error {
 
 type TradeKdataObj struct {
 	EMA_Arr []string
-	// MA_Arr  []string
-	Opt okxInfo.TradeKdataOpt
+	Opt     okxInfo.TradeKdataOpt
 }
 
 func NewTradeKdataObj(opt okxInfo.TradeKdataOpt) *TradeKdataObj {
 	obj := TradeKdataObj{}
 	obj.EMA_Arr = []string{}
-	// obj.MA_Arr = []string{}
 	obj.Opt = opt
 
 	if obj.Opt.EMA_Period < 0 {
