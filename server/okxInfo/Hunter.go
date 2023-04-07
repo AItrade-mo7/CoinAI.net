@@ -7,7 +7,6 @@ type TradeKdataOpt struct {
 	EMA_Period    int // 171
 	CAP_Period    int // 4
 	MaxTradeLever int
-	ReadyChan     chan string
 }
 
 type TradeKdType struct {
