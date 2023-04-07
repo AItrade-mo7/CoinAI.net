@@ -46,5 +46,7 @@ func New(opt HunterOpt) *HunterObj {
 		obj.InstID = "BTC-USDT"
 	}
 
+	obj.Describe = opt.Describe
+
 	return &obj
 }
