@@ -76,14 +76,13 @@ type NowKdataType struct {
 
 type HunterDataType struct {
 	HunterName    string
-	HLPerLevel    int          // 震荡等级
+	Describe      string       // 描述
 	TradeInstID   string       // 交易的 InstID SWAP
 	KdataInstID   string       // K线的 InstID SPOT
 	NowKdata      NowKdataType // 现货的原始K线
 	KdataLen      int
 	TradeKdataLen int
 	TradeKdataOpt okxInfo.TradeKdataOpt
-	MaxTradeLever int
 }
 
 func GetHunterData() map[string]HunterDataType {
@@ -96,10 +95,13 @@ func GetHunterData() map[string]HunterDataType {
 		newData.TradeKdataLen = len(item.TradeKdataList)
 		newData.TradeInstID = item.TradeInst.InstID
 		newData.KdataInstID = item.KdataInst.InstID
+		newData.Describe = item.Describe
 
 		var newKdata NowKdataType
-		lastKdata := item.NowKdataList[len(item.NowKdataList)-1]
-		jsoniter.Unmarshal(mJson.ToJson(lastKdata), &newKdata)
+		if len(item.NowKdataList) > 1 {
+			lastKdata := item.NowKdataList[len(item.NowKdataList)-1]
+			jsoniter.Unmarshal(mJson.ToJson(lastKdata), &newKdata)
+		}
 
 		newData.NowKdata = newKdata
 

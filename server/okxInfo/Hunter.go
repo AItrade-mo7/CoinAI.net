@@ -7,6 +7,7 @@ type TradeKdataOpt struct {
 	EMA_Period    int // 171
 	CAP_Period    int // 4
 	MaxTradeLever int
+	ReadyChan     chan string
 }
 
 type TradeKdType struct {
@@ -20,6 +21,7 @@ type TradeKdType struct {
 
 type HunterData struct {
 	HunterName     string // 策略的名字
+	Describe       string // 描述
 	MaxLen         int
 	TradeInst      mOKX.TypeInst // 交易的 InstID SWAP
 	KdataInst      mOKX.TypeInst // K线的 InstID SPOT
@@ -28,7 +30,12 @@ type HunterData struct {
 	TradeKdataOpt  TradeKdataOpt
 }
 
-var NowHunterData = make(map[string]HunterData)
+var NowHunterData = map[string]HunterData{
+	"Auto": {
+		HunterName: "Auto",
+		Describe:   "根据市场情况为您的账户选择其中一个策略执行交易【目前此功能尚在开发中】",
+	},
+}
 
 // 最优参数
 
@@ -36,11 +43,11 @@ var CoinTradeConfig = map[string]TradeKdataOpt{
 	"BTC-USDT": {
 		EMA_Period:    171,
 		CAP_Period:    4,
-		MaxTradeLever: 1,
+		MaxTradeLever: 3,
 	},
 	"ETH-USDT": {
 		EMA_Period:    77,
 		CAP_Period:    3,
-		MaxTradeLever: 1,
+		MaxTradeLever: 2,
 	},
 }

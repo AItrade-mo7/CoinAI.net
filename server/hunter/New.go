@@ -9,10 +9,12 @@ type HunterOpt struct {
 	HunterName string // 默认 MyHunter
 	InstID     string // 当前策略交易对
 	MaxLen     int    // 900
+	Describe   string // 描述
 }
 
 type HunterObj struct {
 	HunterName     string // 策略的名字
+	Describe       string // 描述
 	InstID         string // 当前策略主打币种
 	MaxLen         int
 	TradeInst      mOKX.TypeInst         // 交易的 InstID SWAP

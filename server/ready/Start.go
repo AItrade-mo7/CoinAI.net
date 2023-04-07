@@ -41,6 +41,4 @@ func GetAnalyData() {
 		global.LogErr("ready.GetAnalyData okxInfo.NowTicker.TickerVol 长度不足", len(okxInfo.NowTicker.TickerVol))
 		return
 	}
-
-	okxInfo.ReadyChan <- "Tick"
 }

@@ -10,17 +10,16 @@ import (
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
-	"github.com/EasyGolang/goTools/mTime"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (_this *HunterObj) Start() {
 	go func() {
-		for ok := range okxInfo.ReadyChan {
-			global.TradeLog.Println(_this.HunterName, " ===== hunter.Start 执行 ===== ", mTime.UnixFormat(mTime.GetUnixInt64()), ok)
-			_this.Running()
-		}
+		// for ok := range okxInfo.ReadyChan {
+		// global.TradeLog.Println(_this.HunterName, " ===== hunter.Start 执行 ===== ", mTime.UnixFormat(mTime.GetUnixInt64()), ok)
+		_this.Running()
+		// }
 	}()
 }
 
@@ -146,6 +145,7 @@ func (_this *HunterObj) SyncInfoToGlobal() {
 		NowKdataList:   _this.NowKdataList,
 		TradeKdataList: _this.TradeKdataList,
 		TradeKdataOpt:  _this.TradeKdataOpt,
+		Describe:       _this.Describe,
 	}
 	okxInfo.NowHunterData[Name] = HunterData
 }
