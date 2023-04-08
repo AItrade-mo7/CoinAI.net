@@ -11,5 +11,6 @@ func main() {
 	// 初始化系统参数
 	global.Start()
 
-	taskStart.BackTest()
+	taskStart.BackTest("ETH-USDT")
+	taskStart.BackTest("BTC-USDT")
 }
