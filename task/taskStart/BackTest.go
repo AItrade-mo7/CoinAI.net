@@ -8,6 +8,7 @@ import (
 	"CoinAI.net/server/utils/taskPush"
 	"CoinAI.net/task/testHunter"
 	"github.com/EasyGolang/goTools/mCount"
+	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
@@ -37,14 +38,20 @@ func BackTest() {
 	// 新建回测参数 ( 按照核心数进行任务拆分 )
 	configObj := testHunter.GetConfig(testHunter.GetConfigOpt{
 		EmaPArr: []int{
-			60, 62, 64, 66, 68, 70, 72, 74, 76, 77, 78, 80, 82, 84, 86, 88,
-			160, 162, 164, 166, 168, 170, 172, 174, 176, 178, 180, 182, 184, 186, 188, 190,
+			60,  // 62, 64, 66, 68, 70, 72, 74, 76, 77, 78, 80, 82, 84, 86, 88,
+			160, // 162, 164, 166, 168, 170, 172, 174, 176, 178, 180, 182, 184, 186, 188, 190,
 		},
-		CAPArr:   []int{3, 4, 5},
+		CAPArr: []int{
+			3,
+			// 4,
+			// 5,
+		},
 		LevelArr: []int{1},
 	})
 
 	TaskChan := make(chan string, len(configObj.GorMap)) // 记录线程任务完成
+
+	BillingArr := []testHunter.BillingType{}
 
 	// 建立一个线程要运行的任务
 	NewGorTask := func(GorName string, confArr []testHunter.NewMockOpt) {
@@ -53,7 +60,8 @@ func BackTest() {
 
 		for _, conf := range confArr {
 			MockObj := backObj.NewMock(conf)
-			MockObj.MockRun()
+			Billing := MockObj.MockRun()
+			BillingArr = append(BillingArr, Billing)
 		}
 
 		EndTime := mTime.GetUnix()
@@ -91,12 +99,19 @@ func BackTest() {
 	DiffTime := mCount.Sub(EndTime, StartTime)
 	DiffMin := mCount.Div(DiffTime, mTime.UnixTime.Minute)
 
+	BillingArr_Path := mStr.Join(config.Dir.JsonData, "/", "BillingArr.json")
+	mFile.Write(BillingArr_Path, string(mJson.ToJson(BillingArr)))
+	global.Run.Println("BillingArr: ", BillingArr_Path)
+
 	taskPush.SysEmail(taskPush.SysEmailOpt{
-		From:        config.SysName,
-		To:          config.NoticeEmail,
-		Subject:     "任务结束",
-		Title:       mStr.Join("共计耗时", DiffMin, "分钟"),
-		Content:     "任务视图:<br />" + mJson.Format(configObj.GorMapView),
+		From:    config.SysName,
+		To:      config.NoticeEmail,
+		Subject: "任务结束",
+		Title:   mStr.Join("共计耗时", DiffMin, "分钟"),
+		Content: mStr.Join(
+			"任务视图:<br />", mJson.Format(configObj.GorMapView), "<br />",
+			"结果:", mJson.Format(BillingArr),
+		),
 		Description: "回测结束通知",
 	})
 }
