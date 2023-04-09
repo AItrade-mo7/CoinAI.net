@@ -10,7 +10,7 @@ import (
 	"github.com/EasyGolang/goTools/mTime"
 )
 
-var ResultBasePath = "/root/AItrade/CoinAI.net/task/analyConfig/data"
+var ResultBasePath = "/root/AItrade/CoinAI.net/task/analyConfig/最近8个月"
 
 func main() {
 	// 初始化系统参数
