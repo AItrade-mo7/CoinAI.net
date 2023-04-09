@@ -14,7 +14,7 @@ import (
 )
 
 func (_this *HunterObj) FormatTradeKdata() error {
-	if len(_this.NowKdataList) < _this.TradeKdataOpt.EMA_Period {
+	if len(_this.NowKdataList) < _this.TradeKdataOpt.EMA_Period+1 {
 		err := fmt.Errorf(_this.HunterName, "hunter.FormatTradeKdata 数据不足")
 		return err
 	}

@@ -42,7 +42,7 @@ func New(opt HunterOpt) *HunterObj {
 	obj.HunterName = opt.HunterName
 	obj.Describe = opt.Describe
 	obj.InstID = opt.InstID
-	obj.MaxLen = 600
+	obj.MaxLen = 900
 	obj.TradeInst = mOKX.TypeInst{}
 	obj.KdataInst = mOKX.TypeInst{}
 

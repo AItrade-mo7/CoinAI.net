@@ -1,6 +1,7 @@
 package testHunter
 
 import (
+	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
@@ -31,6 +32,8 @@ func (_this *MockObj) Analy() {
 		_this.Billing.PositionMaxRatio.Value = _this.NowVirtualPosition.NowUplRatio
 		_this.Billing.PositionMaxRatio.TimeStr = _this.NowVirtualPosition.NowTimeStr
 	}
+
+	global.Run.Println(NowKdata.TimeStr, _this.NowVirtualPosition.NowDir, AnalyDir)
 
 	// 当前持仓与 判断方向不符合时，执行一次下单操作
 	if _this.NowVirtualPosition.NowDir != AnalyDir {
@@ -64,10 +67,6 @@ func (_this *MockObj) CountPosition() {
 func (_this *MockObj) OnOrder(dir int) {
 	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
 
-	_this.NowVirtualPosition.OpenAvgPx = NowKTradeData.C
-	_this.NowVirtualPosition.OpenTimeStr = NowKTradeData.TimeStr
-	_this.NowVirtualPosition.OpenTime = mTime.GetTime().TimeUnix
-
 	// 在这里计算当前的 Money
 	Upl := mCount.Div(_this.NowVirtualPosition.NowUplRatio, "100")     // 格式化收益率
 	ChargeUpl := mCount.Div(_this.NowVirtualPosition.ChargeUpl, "100") // 格式化手续费率
@@ -81,23 +80,25 @@ func (_this *MockObj) OnOrder(dir int) {
 	Money = mCount.CentRound(Money, 3)        // 四舍五入保留三位小数
 	_this.NowVirtualPosition.Money = Money    // 保存结果到当前持仓
 
-	// 在这里将当前订单推入数组 在这里相当于平仓了 。 当前的 dir 一定跟计算好的 dir 不一样
-	_this.OrderArr = append(_this.OrderArr, _this.NowVirtualPosition)
-
+	// 在这里将当前订单进行结算,相当于平仓了一次
 	_this.BillingFun()
 
+	// 同步持仓状态, 相当于下单了
 	if dir > 0 {
 		// 开多
 		_this.NowVirtualPosition.NowDir = 1
 	}
-
 	if dir < 0 {
 		// 开空
 		_this.NowVirtualPosition.NowDir = -1
 	}
+	// 同步下单价格
+	_this.NowVirtualPosition.OpenAvgPx = NowKTradeData.C
+	_this.NowVirtualPosition.OpenTimeStr = NowKTradeData.TimeStr
+	_this.NowVirtualPosition.OpenTime = mTime.GetTime().TimeUnix
 
+	// 同步平仓状态
 	if dir == 0 {
-		// 平仓,且不开仓
 		_this.NowVirtualPosition.NowDir = 0
 		_this.NowVirtualPosition.OpenAvgPx = ""
 		_this.NowVirtualPosition.OpenTimeStr = ""
@@ -105,4 +106,7 @@ func (_this *MockObj) OnOrder(dir int) {
 	}
 	// 平仓后未实现盈亏重置为 0
 	_this.NowVirtualPosition.NowUplRatio = "0"
+
+	// 下单一次
+	_this.OrderArr = append(_this.OrderArr, _this.NowVirtualPosition)
 }
