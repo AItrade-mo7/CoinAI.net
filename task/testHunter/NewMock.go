@@ -173,7 +173,7 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 	}
 
 	// 根据 cpu 核心数计算每个 Goroutine 的最大任务数
-	CpuNum := runtime.NumCPU() - 1
+	CpuNum := runtime.NumCPU()
 	CpuNumStr := mStr.ToStr(CpuNum)
 	taskNumStr := mStr.ToStr(len(MockConfigArr))
 	MaxNumStr := mCount.Div(taskNumStr, CpuNumStr)
