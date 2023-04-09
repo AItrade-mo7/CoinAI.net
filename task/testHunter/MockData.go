@@ -17,11 +17,11 @@ func (_this *MockObj) MockRun() BillingType {
 	TradeKlineObj := hunter.NewTradeKdataObj(_this.TradeKdataOpt)
 
 	FormatEnd := []mOKX.TypeKd{}
-	MaxLen := 900
+	MaxLen := 600
 	for _, Kdata := range _this.RunKdataList {
 		FormatEnd = append(FormatEnd, Kdata)
 
-		if len(FormatEnd) < _this.TradeKdataOpt.EMA_Period+1 {
+		if len(FormatEnd) < 600 {
 			continue
 		}
 
@@ -35,13 +35,13 @@ func (_this *MockObj) MockRun() BillingType {
 			FormatEnd = FormatEnd[len(FormatEnd)-MaxLen:]
 		}
 
-		if mCount.Le(_this.NowPosition.UplRatio, "-45") < 0 {
-			global.Log.Println("爆仓！", _this.Billing.MockName, Kdata.TimeStr)
+		if mCount.Le(_this.NowPosition.NowUplRatio, "-45") < 0 {
+			global.Log.Println("爆仓！", _this.Billing.HunterName, Kdata.TimeStr)
 			break
 		}
 
 		if mCount.Le(_this.Billing.Money, lossVal) < 0 {
-			global.Log.Println("亏完！", _this.Billing.MockName, Kdata.TimeStr)
+			global.Log.Println("亏完！", _this.Billing.HunterName, Kdata.TimeStr)
 			break
 		}
 	}
@@ -51,8 +51,9 @@ func (_this *MockObj) MockRun() BillingType {
 	}
 
 	// 搜集和整理结果
-	global.TradeLog.Println(" ===== 分析交易结束 ===== ", _this.Billing.MockName)
+	global.TradeLog.Println(" ===== 分析交易结束 ===== ", _this.Billing.HunterName)
 	_this.ResultCollect()
 
+	// 在这里抛出结果
 	return _this.Billing
 }
