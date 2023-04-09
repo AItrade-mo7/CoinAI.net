@@ -52,11 +52,12 @@ func BackTest(opt BackOpt) BackReturn {
 		global.Run.Println("开始执行Goroutine:", GorName)
 		StartTime := mTime.GetUnix()
 
-		// for _, conf := range confArr {
-		// MockObj := backObj.NewMock(conf)
-		// Billing := MockObj.MockRun()
-		// BillingArr = append(BillingArr, Billing)
-		// }
+		for _, conf := range confArr {
+			backObj.NewMock(conf)
+			// MockObj := backObj.NewMock(conf)
+			// Billing := MockObj.MockRun()
+			// BillingArr = append(BillingArr, Billing)
+		}
 
 		EndTime := mTime.GetUnix()
 		DiffTime := mCount.Sub(EndTime, StartTime)

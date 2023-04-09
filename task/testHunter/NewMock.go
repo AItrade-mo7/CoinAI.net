@@ -12,17 +12,6 @@ import (
 	"github.com/EasyGolang/goTools/mTime"
 )
 
-// 开仓信息记录
-type PositionType struct {
-	Dir         int    // 开仓方向
-	OpenAvgPx   string // 开仓价格
-	OpenTimeStr string // 开仓时间
-	NowTimeStr  string
-	NowC        string
-	InstID      string // 下单币种
-	UplRatio    string // 未实现收益率
-	CAP_EMA     string //
-}
 type OrderType struct {
 	Type    string // 平仓,Close  开空,Sell  开多,Buy
 	AvgPx   string // 开仓价格
@@ -30,57 +19,49 @@ type OrderType struct {
 	TimeStr string // 开仓时间
 }
 
-type RecordType struct {
-	Value   string
-	TimeStr string
-}
-
 // 收益结算
 type BillingType struct {
-	InstID           string     // 交易币种
-	MockName         string     // 策略名称
-	Days             int64      // 总天数
-	StartTime        string     // 第一次持仓时间 数组第一个
-	EndTime          string     // 结束时间 数组组后一个
-	NilNum           int        // 空仓次数 平仓后未开仓 NowDir = 0
-	SellNum          int        // 开空次数 平空次数 NowDir = -1
-	BuyNum           int        // 开多次数 平多次数 NowDir = 1
-	AllNum           int        // 总开仓次数 总的平仓次数 数组长度
-	Win              int        // 盈利次数 NowUplRatio > 0 的次数
-	WinRatioAll      string     // 胜率 盈利次数/(平空次数+平多次数)
-	WinRatio         string     // 总盈利比率 NowUplRatio > 0 的总和
-	WinMoney         string     // 盈利总金额 1000 块钱 从头计算一次 盈利部分相加
-	LoseMoney        string     // 亏损总金额 同上
-	Lose             int        // 亏损次数 同 盈利次数
-	LoseRatio        string     // 总亏损比率 同总的盈利比率
-	MaxRatio         RecordType // 平仓后单笔最大盈利比率   平仓后的记录
-	MinRatio         RecordType // 平仓后单笔最小盈利比率
-	Charge           string     // 手续费率  平仓时再计算一遍
-	ChargeAll        string     // 总手续费  同上
-	InitMoney        string     // 初始金钱
-	Money            string     // 账户当前余额
-	MinMoney         RecordType // 平仓后历史最低余额  遍历一次就知道
-	MaxMoney         RecordType // 平仓后历史最高余额  遍历一次就知道
-	PositionMinRatio RecordType // 持仓过程中最低盈利比率  // 持仓过程中才知道 结合K线才能得出
-	PositionMaxRatio RecordType // 持仓过程中最高盈利比率 // 持仓过程中才知道
-	Level            string     // 杠杆倍数
+	okxInfo.VirtualPositionType // 虚拟持仓的数据
+
+	AllDay           int64                  // 总天数 | 结束时计算
+	StartTime        string                 // 第一次持仓时间 数组第一个 | 结束时计算
+	EndTime          string                 // 结束时间 数组组后一个
+	NilNum           int                    // 空仓次数 平仓后未开仓 NowDir = 0 | 结束时计算
+	SellNum          int                    // 开空次数 平空次数 NowDir = -1 | 结束时计算
+	BuyNum           int                    // 开多次数 平多次数 NowDir = 1 | 结束时计算
+	AllNum           int                    // 总开仓次数 总的平仓次数 数组长度 | 结束时计算
+	WinNum           int                    // 盈利次数 NowUplRatio > 0 的次数
+	LoseNum          int                    // 亏损次数 同 盈利次数
+	WinRatioAll      string                 // 胜率 盈利次数/(平空次数+平多次数)
+	PLratio          string                 // 盈亏比
+	WinRatio         string                 // 总盈利比率 NowUplRatio > 0 的总和
+	WinMoney         string                 // 盈利总金额 1000 块钱 从头计算一次 盈利部分相加
+	LoseRatio        string                 // 总亏损比率 同总的盈利比率
+	LoseMoney        string                 // 亏损总金额 同上
+	MaxRatio         okxInfo.RecordNodeType // 平仓后单笔最大盈利比率   平仓后的记录
+	MinRatio         okxInfo.RecordNodeType // 平仓后单笔最小盈利比率
+	ChargeAll        string                 // 总手续费  同上
+	MinMoney         okxInfo.RecordNodeType // 平仓后历史最低余额  遍历一次就知道
+	MaxMoney         okxInfo.RecordNodeType // 平仓后历史最高余额  遍历一次就知道
+	PositionMinRatio okxInfo.RecordNodeType // 持仓过程中最低盈利比率  // 持仓过程中才知道 结合K线才能得出
+	PositionMaxRatio okxInfo.RecordNodeType // 持仓过程中最高盈利比率 // 持仓过程中才知道
 }
 
 type NewMockOpt struct {
 	MockName      string // 策略名字 MA_x_CAP_x
 	InitMoney     string // 初始金钱  1000
-	Charge        string // 手续费  0.05
+	ChargeUpl     string // 手续费率  0.05
 	TradeKdataOpt okxInfo.TradeKdataOpt
 }
 
 type MockObj struct {
-	NowPosition    PositionType   // 当前持仓
-	PositionArr    []PositionType // 当前持仓
-	OrderArr       []OrderType    // 下单列表
-	Billing        BillingType
-	RunKdataList   []mOKX.TypeKd
-	TradeKdataList []okxInfo.TradeKdType // 计算好各种指标之后的K线
-	TradeKdataOpt  okxInfo.TradeKdataOpt
+	NowPosition    okxInfo.VirtualPositionType   // 当前持仓
+	PositionArr    []okxInfo.VirtualPositionType // 当前持仓列表
+	OrderArr       []okxInfo.VirtualPositionType // 平仓列表
+	Billing        BillingType                   // 交易结果
+	RunKdataList   []mOKX.TypeKd                 // 运行中的 Kdata
+	TradeKdataList []okxInfo.TradeKdType         // 计算好各种指标之后的K线
+	TradeKdataOpt  okxInfo.TradeKdataOpt         // 交易指标
 }
 
 /*
@@ -92,29 +73,29 @@ type MockObj struct {
 func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 	var obj MockObj
 
-	obj.NowPosition = PositionType{}
-	obj.PositionArr = []PositionType{}
-	obj.OrderArr = []OrderType{}
+	obj.NowPosition = okxInfo.VirtualPositionType{}
+	obj.PositionArr = []okxInfo.VirtualPositionType{}
+	obj.OrderArr = []okxInfo.VirtualPositionType{}
 	obj.RunKdataList = _this.KdataList
 	// 开始处理参数
 	obj.Billing = BillingType{}
-	obj.Billing.MockName = opt.MockName
+	obj.Billing.HunterName = opt.MockName
 	obj.Billing.InitMoney = opt.InitMoney // 设定初始资金
 	obj.Billing.Money = opt.InitMoney     // 设定当前账户资金
-	obj.Billing.Level = mStr.ToStr(opt.TradeKdataOpt.MaxTradeLever)
-	obj.Billing.Charge = opt.Charge
+	obj.Billing.HunterConfig.MaxTradeLever = opt.TradeKdataOpt.MaxTradeLever
+	obj.Billing.ChargeUpl = opt.ChargeUpl
 	obj.Billing.InstID = _this.KdataList[0].InstID
-	obj.Billing.Days = (_this.EndTime - _this.StartTime) / mTime.UnixTimeInt64.Day
+	obj.Billing.AllDay = (_this.EndTime - _this.StartTime) / mTime.UnixTimeInt64.Day
 	obj.Billing.MinMoney.Value = opt.InitMoney
 	obj.Billing.MaxMoney.Value = opt.InitMoney
 	obj.TradeKdataOpt = opt.TradeKdataOpt
 
 	global.Run.Println("新建Mock",
 		mJson.Format(map[string]any{
-			"参数组名称":   obj.Billing.MockName,
+			"参数组名称":   obj.Billing.HunterName,
 			"初始资金":    obj.Billing.InitMoney,
-			"杠杆倍率":    obj.Billing.Level,
-			"手续费率(%)": obj.Billing.Charge,
+			"杠杆倍率":    obj.Billing.HunterConfig.MaxTradeLever,
+			"手续费率(%)": obj.Billing.ChargeUpl,
 		}),
 		mJson.Format(obj.TradeKdataOpt),
 	)
@@ -140,7 +121,7 @@ type GetConfigReturn struct {
 func GetConfig(opt GetConfigOpt) GetConfigReturn {
 	MockConfigArr := []NewMockOpt{}
 
-	Charge := "0.05"
+	ChargeUpl := "0.05"
 	InitMoney := "1000"
 
 	AppendConfig := func(conf okxInfo.TradeKdataOpt) {
@@ -148,7 +129,7 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 			NewMockOpt{
 				MockName:  mStr.Join("EMA_", conf.EMA_Period, "_CAP_", conf.CAP_Period, "_CAPMax_", conf.CAP_Max, "_level_", conf.MaxTradeLever),
 				InitMoney: InitMoney, // 初始资金
-				Charge:    Charge,    // 吃单标准手续费率 0.05%
+				ChargeUpl: ChargeUpl, // 吃单标准手续费率 0.05%
 				TradeKdataOpt: okxInfo.TradeKdataOpt{
 					EMA_Period:    conf.EMA_Period,
 					CAP_Period:    conf.CAP_Period,
