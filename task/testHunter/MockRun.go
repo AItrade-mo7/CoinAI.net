@@ -14,17 +14,23 @@ func (_this *MockObj) MockRun() BillingType {
 	_this.TradeKdataList = []okxInfo.TradeKdType{}
 	TradeKlineObj := hunter.NewTradeKdataObj(_this.TradeKdataOpt)
 
-	MaxLen := 600
+	MaxLen := 900
 	FormatEnd := []mOKX.TypeKd{}
 	for _, Kdata := range _this.RunKdataList {
 		FormatEnd = append(FormatEnd, Kdata)
 
-		if len(FormatEnd) < 600 {
+		// 小于步长则不执行
+		if len(FormatEnd) < _this.TradeKdataOpt.EMA_Period+1 {
 			continue
 		}
 
 		TradeKdata := TradeKlineObj.NewTradeKdata(FormatEnd)
 		_this.TradeKdataList = append(_this.TradeKdataList, TradeKdata)
+
+		// 小于 600 则不交易
+		if len(FormatEnd) < 600 {
+			continue
+		}
 
 		// 开始执行分析交易
 		_this.Analy()

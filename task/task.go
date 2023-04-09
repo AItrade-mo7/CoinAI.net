@@ -4,6 +4,7 @@ import (
 	_ "embed"
 
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/task/taskStart"
 	"CoinAI.net/task/testHunter"
 	"github.com/EasyGolang/goTools/mTime"
@@ -37,12 +38,12 @@ var EmaPArr = []int{
 	// 520, 522, 524, 526, 528, 530, 532, 534, 536, 538, 540, 542, 544, 546, 548,
 	// 550, 552, 554, 556, 558, 560, 562, 564, 566, 568, 570, 572, 574, 576, 578,
 	// 580, 582, 584, 586, 588, 590, 592,
-	60, // 108, 344, 590,
+
 }
 
 var (
 	CAPArr = []int{
-		2,
+		// 2,
 		// 3,
 		// 4,
 		// 5,
@@ -54,7 +55,16 @@ var (
 		//  "0.4",
 		//  "0.6",
 		//  "0.8",
-		"1",
+		// "1",
+	}
+
+	ConfArr = []okxInfo.TradeKdataOpt{
+		{
+			EMA_Period:    70,
+			CAP_Period:    2,
+			CAP_Max:       "0.2",
+			MaxTradeLever: 1,
+		},
 	}
 )
 
@@ -72,6 +82,7 @@ func BackAnaly() {
 			CAPArr:   CAPArr,
 			LevelArr: LevelArr,
 			CAPMax:   CAPMax,
+			ConfArr:  ConfArr,
 		},
 	})
 	BTCResult.ResultBasePath = ResultBasePath
