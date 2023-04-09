@@ -2,82 +2,86 @@ package testHunter
 
 import (
 	"CoinAI.net/server/global"
+	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
 )
 
 // // 根据下单结果进行模拟持仓
-// func (_this *MockObj) BillingFun(NowKdata okxInfo.TradeKdType) {
-// 	fmt.Println(_this.Billing.MockName, "下单总结一次",
-// 		NowKdata.TimeStr,
-// 		"持仓方向", _this.NowPosition.Dir,
-// 		"收益率", _this.NowPosition.UplRatio,
-// 		"结算", _this.Billing.Money,
-// 	)
+func (_this *MockObj) BillingFun() {
+	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
 
-// 	// 记录单次最大亏损和单次最大盈利
-// 	if mCount.Le(_this.NowPosition.UplRatio, _this.Billing.MaxRatio.Value) > 0 {
-// 		_this.Billing.MaxRatio.Value = _this.NowPosition.UplRatio
-// 		_this.Billing.MaxRatio.TimeStr = _this.NowPosition.NowTimeStr
-// 	}
-// 	if mCount.Le(_this.NowPosition.UplRatio, _this.Billing.MinRatio.Value) < 0 {
-// 		_this.Billing.MinRatio.Value = _this.NowPosition.UplRatio
-// 		_this.Billing.MinRatio.TimeStr = _this.NowPosition.NowTimeStr
-// 	}
+	global.KdataLog.Println(_this.Billing.MockName, "下单总结一次",
+		NowKTradeData.TimeStr,
+		"平仓方向", _this.NowVirtualPosition.NowDir,
+		"收益率", _this.NowVirtualPosition.NowUplRatio,
+		"结算", _this.NowVirtualPosition.Money,
+	)
 
-// 	Upl := mCount.Div(_this.NowPosition.UplRatio, "100") // 格式化收益率
-// 	ChargeUpl := mCount.Div(_this.Billing.Charge, "100") // 格式化手续费率
+	// 记录平仓时最大亏损和单次最大盈利
+	if mCount.Le(_this.NowVirtualPosition.NowUplRatio, _this.Billing.MaxRatio.Value) > 0 {
+		_this.Billing.MaxRatio.Value = _this.NowVirtualPosition.NowUplRatio
+		_this.Billing.MaxRatio.TimeStr = _this.NowVirtualPosition.NowTimeStr
+	}
+	if mCount.Le(_this.NowVirtualPosition.NowUplRatio, _this.Billing.MinRatio.Value) < 0 {
+		_this.Billing.MinRatio.Value = _this.NowVirtualPosition.NowUplRatio
+		_this.Billing.MinRatio.TimeStr = _this.NowVirtualPosition.NowTimeStr
+	}
 
-// 	makeMoney := mCount.Mul(_this.Billing.Money, Upl)                // 当前盈利的金钱
-// 	_this.Billing.Money = mCount.Add(_this.Billing.Money, makeMoney) // 相加得出当账户总资金量
+	// 在这里计算当前的 Money
+	Upl := mCount.Div(_this.NowVirtualPosition.NowUplRatio, "100")     // 格式化收益率
+	ChargeUpl := mCount.Div(_this.NowVirtualPosition.ChargeUpl, "100") // 格式化手续费率
 
-// 	nowCharge := mCount.Mul(_this.Billing.Money, ChargeUpl)                  // 当前产生的手续费
-// 	_this.Billing.Money = mCount.Sub(_this.Billing.Money, nowCharge)         // 减去手续费
-// 	_this.Billing.ChargeAll = mCount.Add(_this.Billing.ChargeAll, nowCharge) // 记录一下手续费
+	Money := _this.NowVirtualPosition.Money // 提取 Money
+	makeMoney := mCount.Mul(Money, Upl)     // 当前盈利的金钱
+	Money = mCount.Add(Money, makeMoney)    // 相加得出当账户剩余资金
 
-// 	_this.Billing.Money = mCount.CentRound(_this.Billing.Money, 3)         // 四舍五入保留两位小数
-// 	_this.Billing.ChargeAll = mCount.CentRound(_this.Billing.ChargeAll, 3) // 四舍五入保留两位小数
+	nowCharge := mCount.Mul(Money, ChargeUpl)              // 当前产生的手续费
+	Money = mCount.Sub(Money, nowCharge)                   // 减去手续费
+	_this.Billing.ResultMoney = mCount.CentRound(Money, 3) // 四舍五入保留三位小数
 
-// 	if mCount.Le(_this.Billing.Money, _this.Billing.MinMoney.Value) < 0 {
-// 		_this.Billing.MinMoney.Value = _this.Billing.Money
-// 		_this.Billing.MinMoney.TimeStr = _this.NowPosition.NowTimeStr
-// 	}
+	_this.Billing.ChargeAdd = mCount.Add(_this.Billing.ChargeAdd, nowCharge) // 总手续费
 
-// 	if mCount.Le(_this.Billing.Money, _this.Billing.MaxMoney.Value) > 0 {
-// 		_this.Billing.MaxMoney.Value = _this.Billing.Money
-// 		_this.Billing.MaxMoney.TimeStr = _this.NowPosition.NowTimeStr
-// 	}
+	if mCount.Le(_this.Billing.ResultMoney, _this.Billing.MinMoney.Value) < 0 {
+		_this.Billing.MinMoney.Value = _this.Billing.ResultMoney
+		_this.Billing.MinMoney.TimeStr = _this.NowVirtualPosition.NowTimeStr
+	}
 
-// 	// 盈利计数
-// 	if mCount.Le(_this.NowPosition.UplRatio, "0") > 0 {
-// 		_this.Billing.Win++                                                                     // 盈利次数计数
-// 		_this.Billing.WinRatio = mCount.Add(_this.NowPosition.UplRatio, _this.Billing.WinRatio) // 盈利比例相加
-// 		_this.Billing.WinMoney = mCount.Add(_this.Billing.WinMoney, makeMoney)
-// 	}
-// 	// 亏损计数
-// 	if mCount.Le(_this.NowPosition.UplRatio, "0") < 0 {
-// 		_this.Billing.Lose++                                                                      // 亏损次数计数
-// 		_this.Billing.LoseRatio = mCount.Add(_this.NowPosition.UplRatio, _this.Billing.LoseRatio) // 盈利比例相加
-// 		_this.Billing.LoseMoney = mCount.Add(_this.Billing.LoseMoney, makeMoney)
-// 	}
+	if mCount.Le(_this.Billing.ResultMoney, _this.Billing.MaxMoney.Value) > 0 {
+		_this.Billing.MaxMoney.Value = _this.Billing.ResultMoney
+		_this.Billing.MaxMoney.TimeStr = _this.NowVirtualPosition.NowTimeStr
+	}
 
-// 	if _this.NowPosition.Dir == 0 {
-// 		_this.Billing.NilNum++ // 空仓计数
-// 	} else {
-// 		if len(_this.Billing.StartTime) == 0 {
-// 			_this.Billing.StartTime = _this.NowPosition.OpenTimeStr // 首次开仓时间
-// 		}
-// 	}
+	// 盈利计数
+	if mCount.Le(_this.NowVirtualPosition.NowUplRatio, "0") > 0 {
+		_this.Billing.WinNum++                                                                                        // 盈利次数计数
+		_this.Billing.WinUplRatioAdd = mCount.Add(_this.Billing.WinUplRatioAdd, _this.NowVirtualPosition.NowUplRatio) // 盈利比例相加
+		_this.Billing.WinMoneyAdd = mCount.Add(_this.Billing.WinMoneyAdd, makeMoney)
+	}
+	// 亏损计数
+	if mCount.Le(_this.NowVirtualPosition.NowUplRatio, "0") < 0 {
+		_this.Billing.LoseNum++                                                                                         // 亏损次数计数
+		_this.Billing.LoseUplRatioAdd = mCount.Add(_this.Billing.LoseUplRatioAdd, _this.NowVirtualPosition.NowUplRatio) // 盈利比例相加
+		_this.Billing.LoseMoneyAdd = mCount.Add(_this.Billing.LoseMoneyAdd, makeMoney)
+	}
 
-// 	if _this.NowPosition.Dir < 0 {
-// 		_this.Billing.SellNum++ // 开空 计数
-// 	}
-// 	if _this.NowPosition.Dir > 0 {
-// 		_this.Billing.BuyNum++ // 开多 计数
-// 	}
-// 	_this.Billing.AllNum++ // 总交易计数
-// }
+	if _this.NowVirtualPosition.NowDir == 0 {
+		_this.Billing.NilNum++ // 空仓计数
+	} else {
+		if len(_this.Billing.StartTime) == 0 {
+			_this.Billing.StartTime = _this.NowVirtualPosition.OpenTimeStr // 首次开仓时间
+		}
+	}
+
+	if _this.NowVirtualPosition.NowDir < 0 {
+		_this.Billing.SellNum++ // 开空 计数
+	}
+	if _this.NowVirtualPosition.NowDir > 0 {
+		_this.Billing.BuyNum++ // 开多 计数
+	}
+	_this.Billing.AllNum++ // 总交易计数
+}
 
 func (_this *MockObj) ResultCollect() {
 	// 记录 整理好的数组
@@ -109,7 +113,7 @@ InstID: ${InstID}
 空仓次数: ${NilNum}
 平空次数: ${SellNum}
 平多次数: ${BuyNum}
-平仓次数: ${AllNum}
+下单总次数: ${AllNum}
 盈利次数: ${WinNum}
 亏损次数: ${LoseNum}
 胜率: ${WinRatio}
@@ -120,7 +124,7 @@ InstID: ${InstID}
 亏损总金额: ${LoseMoneyAdd}
 平仓后单笔最大盈利比率: ${MaxRatio}
 平仓后单笔最小盈利比率: ${MinRatio}
-总手续费: ${ChargeAll}
+总手续费: ${ChargeAdd}
 平仓后历史最低余额: ${MinMoney}
 平仓后历史最高余额: ${MaxMoney}
 持仓过程中最低盈利比率: ${PositionMinRatio}
@@ -130,14 +134,16 @@ InstID: ${InstID}
 杠杆倍率: ${Level}
 `
 
-	// ValidAllNum := _this.Billing.SellNum + _this.Billing.BuyNum // 开空次数 + 开多次数
-	// _this.Billing.WinRatioAll = mCount.Div(mStr.ToStr(_this.Billing.Win), mStr.ToStr(ValidAllNum))
+	// 计算胜率
+	ValidAllNum := _this.Billing.SellNum + _this.Billing.BuyNum // 开空次数 + 开多次数
+	_this.Billing.WinRatio = mCount.Div(mStr.ToStr(_this.Billing.WinNum), mStr.ToStr(ValidAllNum))
 
-	// LoseMoneyAbs := mCount.Abs(mStr.ToStr(_this.Billing.LoseMoney))
+	// 盈亏比 (盈利总金额/盈利次数)  /  (亏损总金额/亏损次数)
+	WinMoneyR := mCount.Div(_this.Billing.WinMoneyAdd, mStr.ToStr(_this.Billing.WinNum))
+	LoseMoneyR := mCount.Div(_this.Billing.LoseMoneyAdd, mStr.ToStr(_this.Billing.LoseNum))
+	_this.Billing.PLratio = mCount.Div(WinMoneyR, LoseMoneyR)
 
-	// AveWinRatio := mCount.Div(mStr.ToStr(_this.Billing.WinMoney), mStr.ToStr(_this.Billing.Win))
-	// AveLoseRatio := mCount.Div(LoseMoneyAbs, mStr.ToStr(_this.Billing.Lose))
-	// PLratio := mCount.Div(AveWinRatio, AveLoseRatio)
+	_this.Billing.EndTime = _this.PositionArr[len(_this.PositionArr)-1].NowTimeStr
 
 	Data := map[string]string{
 		"MockName":         _this.Billing.MockName,
@@ -159,7 +165,7 @@ InstID: ${InstID}
 		"LoseMoneyAdd":     _this.Billing.LoseMoneyAdd,                 // 亏损总金额 同上
 		"MaxRatio":         mStr.ToStr(_this.Billing.MaxRatio),         // 平仓后单笔最大盈利比率   平仓后的记录
 		"MinRatio":         mStr.ToStr(_this.Billing.MinRatio),         // 平仓后单笔最小盈利比率
-		"ChargeAll":        _this.Billing.ChargeAll,                    // 总手续费 同上
+		"ChargeAdd":        _this.Billing.ChargeAdd,                    // 总手续费 同上
 		"MinMoney":         mStr.ToStr(_this.Billing.MinMoney),         // 平仓后历史最低余额  遍历一次就知道
 		"MaxMoney":         mStr.ToStr(_this.Billing.MaxMoney),         // 平仓后历史最高余额  遍历一次就知道
 		"PositionMinRatio": mStr.ToStr(_this.Billing.PositionMinRatio), // 持仓过程中最低盈利比率  // 持仓过程中才知道 结合K线才能得出

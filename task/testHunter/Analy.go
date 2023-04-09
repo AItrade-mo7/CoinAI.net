@@ -22,14 +22,15 @@ func (_this *MockObj) Analy() {
 	_this.CountPosition()
 	_this.PositionArr = append(_this.PositionArr, _this.NowVirtualPosition)
 
-	// if mCount.Le(_this.NowPosition.UplRatio, _this.Billing.PositionMinRatio.Value) < 0 {
-	// 	_this.Billing.PositionMinRatio.Value = _this.NowPosition.UplRatio
-	// 	_this.Billing.PositionMinRatio.TimeStr = _this.NowPosition.NowTimeStr
-	// }
-	// if mCount.Le(_this.NowPosition.UplRatio, _this.Billing.PositionMaxRatio.Value) > 0 {
-	// 	_this.Billing.PositionMaxRatio.Value = _this.NowPosition.UplRatio
-	// 	_this.Billing.PositionMaxRatio.TimeStr = _this.NowPosition.NowTimeStr
-	// }
+	// 持仓过程中最低和最高盈利比率
+	if mCount.Le(_this.NowVirtualPosition.NowUplRatio, _this.Billing.PositionMinRatio.Value) < 0 {
+		_this.Billing.PositionMinRatio.Value = _this.NowVirtualPosition.NowUplRatio
+		_this.Billing.PositionMinRatio.TimeStr = _this.NowVirtualPosition.NowTimeStr
+	}
+	if mCount.Le(_this.NowVirtualPosition.NowUplRatio, _this.Billing.PositionMaxRatio.Value) > 0 {
+		_this.Billing.PositionMaxRatio.Value = _this.NowVirtualPosition.NowUplRatio
+		_this.Billing.PositionMaxRatio.TimeStr = _this.NowVirtualPosition.NowTimeStr
+	}
 
 	// 当前持仓与 判断方向不符合时，执行一次下单操作
 	if _this.NowVirtualPosition.NowDir != AnalyDir {
@@ -78,11 +79,12 @@ func (_this *MockObj) OnOrder(dir int) {
 	nowCharge := mCount.Mul(Money, ChargeUpl) // 当前产生的手续费
 	Money = mCount.Sub(Money, nowCharge)      // 减去手续费
 	Money = mCount.CentRound(Money, 3)        // 四舍五入保留三位小数
+	_this.NowVirtualPosition.Money = Money    // 保存结果到当前持仓
 
-	_this.NowVirtualPosition.Money = Money // 保存结果到当前持仓
-
-	// 在这里将当前订单推入数组
+	// 在这里将当前订单推入数组 在这里相当于平仓了 。 当前的 dir 一定跟计算好的 dir 不一样
 	_this.OrderArr = append(_this.OrderArr, _this.NowVirtualPosition)
+
+	_this.BillingFun()
 
 	if dir > 0 {
 		// 开多
@@ -95,8 +97,11 @@ func (_this *MockObj) OnOrder(dir int) {
 	}
 
 	if dir == 0 {
-		// 平仓
+		// 平仓,且不开仓
 		_this.NowVirtualPosition.NowDir = 0
+		_this.NowVirtualPosition.OpenAvgPx = ""
+		_this.NowVirtualPosition.OpenTimeStr = ""
+		_this.NowVirtualPosition.OpenTime = 0
 	}
 	// 平仓后未实现盈亏重置为 0
 	_this.NowVirtualPosition.NowUplRatio = "0"
