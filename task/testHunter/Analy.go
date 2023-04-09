@@ -10,11 +10,11 @@ func (_this *MockObj) Analy() {
 	NowKdata := _this.TradeKdataList[len(_this.TradeKdataList)-1]
 	AnalyDir := 0 // 分析的方向，默认为 0 不开仓
 
-	if mCount.Le(NowKdata.CAP_EMA, "0") > 0 { // 大于 0 则开多
+	if mCount.Le(NowKdata.CAP_EMA, _this.TradeKdataOpt.CAP_Max) > 0 { // 大于 CAPMax 则开多
 		AnalyDir = 1
 	}
 
-	if mCount.Le(NowKdata.CAP_EMA, "0") < 0 { // 小于 0 则开空
+	if mCount.Le(NowKdata.CAP_EMA, "-"+_this.TradeKdataOpt.CAP_Max) < 0 { // 小于 负 的 CAPMax 则开空
 		AnalyDir = -1
 	}
 

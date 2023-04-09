@@ -46,6 +46,7 @@ type BillingType struct {
 	SellNum          int        // 开空次数
 	BuyNum           int        // 开多次数
 	AllNum           int        // 总开仓次数
+	WinRatioAll      string     // 胜率
 	Win              int        // 盈利次数
 	WinRatio         string     // 总盈利比率
 	WinMoney         string     // 盈利总金额
@@ -118,6 +119,7 @@ func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 type GetConfigOpt struct {
 	EmaPArr  []int                   // Ema 步长
 	CAPArr   []int                   // CAP 步长
+	CAPMax   []string                // CAPMax 步长
 	LevelArr []int                   // 杠杆倍数
 	ConfArr  []okxInfo.TradeKdataOpt // 成型的参数数组
 }
@@ -140,13 +142,14 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 		for _, conf := range opt.ConfArr {
 			MockConfigArr = append(MockConfigArr,
 				NewMockOpt{
-					MockName:  mStr.Join("EMA_", conf.EMA_Period, "_CAP_", conf.CAP_Period, "_level_", conf.MaxTradeLever),
+					MockName:  mStr.Join("EMA_", conf.EMA_Period, "_CAP_", conf.CAP_Period, "_CAPMax_", conf.CAP_Max, "_level_", conf.MaxTradeLever),
 					InitMoney: InitMoney, // 初始资金
 					Charge:    Charge,    // 吃单标准手续费率 0.05%
 					TradeKdataOpt: okxInfo.TradeKdataOpt{
 						EMA_Period:    conf.EMA_Period,
 						CAP_Period:    conf.CAP_Period,
 						MaxTradeLever: conf.MaxTradeLever,
+						CAP_Max:       conf.CAP_Max,
 					},
 				},
 			)
@@ -155,18 +158,21 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 		for _, emaP := range opt.EmaPArr {
 			for _, cap := range opt.CAPArr {
 				for _, level := range opt.LevelArr {
-					MockConfigArr = append(MockConfigArr,
-						NewMockOpt{
-							MockName:  mStr.Join("EMA_", emaP, "_CAP_", cap, "_level_", level),
-							InitMoney: InitMoney, // 初始资金
-							Charge:    Charge,    // 吃单标准手续费率 0.05% x 10 倍
-							TradeKdataOpt: okxInfo.TradeKdataOpt{
-								EMA_Period:    emaP,
-								CAP_Period:    cap,
-								MaxTradeLever: level,
+					for _, capMax := range opt.CAPMax {
+						MockConfigArr = append(MockConfigArr,
+							NewMockOpt{
+								MockName:  mStr.Join("EMA_", emaP, "_CAP_", cap, "_CAPMax_", capMax, "_level_", level),
+								InitMoney: InitMoney, // 初始资金
+								Charge:    Charge,    // 吃单标准手续费率 0.05% x 10 倍
+								TradeKdataOpt: okxInfo.TradeKdataOpt{
+									EMA_Period:    emaP,
+									CAP_Period:    cap,
+									MaxTradeLever: level,
+									CAP_Max:       capMax,
+								},
 							},
-						},
-					)
+						)
+					}
 				}
 			}
 		}

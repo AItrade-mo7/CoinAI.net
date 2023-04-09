@@ -60,36 +60,3 @@ func MoneySort(arr []testHunter.BillingType) []testHunter.BillingType {
 	}
 	return list
 }
-
-/*
-
-2021-01
-2022-01
-最优
-
-BTC
-EMA_86_CAP_2_level_1
-EMA_84_CAP_2_level_1
-EMA_80_CAP_2_level_1
-EMA_88_CAP_4_level_1
-EMA_82_CAP_5_level_1
-EMA_88_CAP_5_level_1
-
-//参数 范围 82 83  84  85 86  87 88
-
-ETH
-EMA_78_CAP_2_level_1
-EMA_80_CAP_2_level_1
-EMA_74_CAP_3_level_1
-EMA_76_CAP_2_level_1
-
-//参数 范围 76 77  78  79  80  81 82
-
-接下来是带上杠杆，求最优值
-
-
-公共参数则为:
-76 77  78  79  80  81 82 83  84  85 86  87 88
-
-
-*/

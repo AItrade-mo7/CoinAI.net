@@ -4,8 +4,9 @@ import "github.com/EasyGolang/goTools/mOKX"
 
 // Hunter 内部 数据 同步
 type TradeKdataOpt struct {
-	EMA_Period    int // 171
-	CAP_Period    int // 4
+	EMA_Period    int    // 171
+	CAP_Period    int    // 4
+	CAP_Max       string // 0.2
 	MaxTradeLever int
 }
 

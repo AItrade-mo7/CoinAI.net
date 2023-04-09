@@ -138,7 +138,7 @@ InstID: ${InstID}
 盈亏比: ${PLratio}
 `
 
-	WinRatioAll := mCount.Div(mStr.ToStr(_this.Billing.Win), mStr.ToStr(_this.Billing.AllNum))
+	_this.Billing.WinRatioAll = mCount.Div(mStr.ToStr(_this.Billing.Win), mStr.ToStr(_this.Billing.AllNum))
 
 	LoseMoneyAbs := mCount.Abs(mStr.ToStr(_this.Billing.LoseMoney))
 
@@ -173,7 +173,7 @@ InstID: ${InstID}
 		"WinMoney":         _this.Billing.WinMoney,
 		"LoseMoney":        _this.Billing.LoseMoney,
 		"Level":            _this.Billing.Level,
-		"WinRatioAll":      WinRatioAll,
+		"WinRatioAll":      _this.Billing.WinRatioAll,
 		"AveWinRatio":      AveWinRatio,
 		"AveLoseRatio":     AveLoseRatio,
 		"PLratio":          PLratio,
