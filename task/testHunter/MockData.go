@@ -10,7 +10,6 @@ import (
 
 // 模拟数据流动并执行分析交易
 func (_this *MockObj) MockRun() BillingType {
-	// 清理 TradeKdataList
 	lossVal := mCount.Mul(_this.Billing.InitMoney, "0.5") // 当余额 低于 50% 时 判定为 亏完
 
 	// 清理 TradeKdataList
