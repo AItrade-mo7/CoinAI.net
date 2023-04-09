@@ -1,0 +1,26 @@
+{
+  "Gor_0": [
+    "EMA_60_CAP_2_CAPMax_0.2_level_1",
+    "EMA_60_CAP_2_CAPMax_1_level_1",
+    "EMA_60_CAP_3_CAPMax_0.2_level_1",
+    "EMA_60_CAP_3_CAPMax_1_level_1"
+  ],
+  "Gor_1": [
+    "EMA_108_CAP_2_CAPMax_0.2_level_1",
+    "EMA_108_CAP_2_CAPMax_1_level_1",
+    "EMA_108_CAP_3_CAPMax_0.2_level_1",
+    "EMA_108_CAP_3_CAPMax_1_level_1"
+  ],
+  "Gor_2": [
+    "EMA_344_CAP_2_CAPMax_0.2_level_1",
+    "EMA_344_CAP_2_CAPMax_1_level_1",
+    "EMA_344_CAP_3_CAPMax_0.2_level_1",
+    "EMA_344_CAP_3_CAPMax_1_level_1"
+  ],
+  "Gor_3": [
+    "EMA_590_CAP_2_CAPMax_0.2_level_1",
+    "EMA_590_CAP_2_CAPMax_1_level_1",
+    "EMA_590_CAP_3_CAPMax_0.2_level_1",
+    "EMA_590_CAP_3_CAPMax_1_level_1"
+  ]
+}
