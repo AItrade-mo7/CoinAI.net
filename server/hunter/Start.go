@@ -2,13 +2,11 @@ package hunter
 
 import (
 	"fmt"
-	"time"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/utils/taskPush"
-	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
@@ -23,8 +21,8 @@ func (_this *HunterObj) Start() {
 func (_this *HunterObj) Running() {
 	global.TradeLog.Println(_this.HunterName, " === hunter.Running === ", _this.KdataInst.InstID)
 
-	RoundNum := mCount.GetRound(0, 60) // 延迟随机秒数
-	time.Sleep(time.Second * time.Duration(RoundNum))
+	// RoundNum := mCount.GetRound(0, 60) // 延迟随机秒数
+	// time.Sleep(time.Second * time.Duration(RoundNum))
 
 	// 选取K线和合约信息
 	if len(_this.KdataInst.InstID) < 2 || len(_this.TradeInst.InstID) < 2 {

@@ -33,6 +33,12 @@ func Start() {
 		InstID:     "BTC-USDT",
 		Describe:   "以 BTC-USDT 交易对为主执行自动交易,支持的资金量更大,更加稳定",
 	})
+	// 在这里初始化模拟持仓
+	BTCHunter.NowVirtualPosition.InitMoney = "1000"
+	BTCHunter.NowVirtualPosition.Money = "1000"
+	BTCHunter.NowVirtualPosition.Charge = "0.05"
+	BTCHunter.NowVirtualPosition.Dir = 0
+
 	BTCHunter.Start()
 
 	// 策略 2
@@ -41,6 +47,12 @@ func Start() {
 		InstID:     "ETH-USDT",
 		Describe:   "以 ETH-USDT 交易对为主执行自动交易,交易次数更加频发,可以收获更高收益",
 	})
+	// 在这里初始化模拟持仓
+	BTCHunter.NowVirtualPosition.InitMoney = "1000"
+	BTCHunter.NowVirtualPosition.Money = "1000"
+	BTCHunter.NowVirtualPosition.Charge = "0.05"
+	BTCHunter.NowVirtualPosition.Dir = 0
+
 	ETHHunter.Start()
 
 	// 构建定时任务

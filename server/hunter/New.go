@@ -13,16 +13,16 @@ type HunterOpt struct {
 }
 
 type HunterObj struct {
-	HunterName     string // 策略的名字
-	Describe       string // 描述
-	InstID         string // 当前策略主打币种
-	MaxLen         int
-	TradeInst      mOKX.TypeInst         // 交易的 InstID SWAP
-	KdataInst      mOKX.TypeInst         // K线的 InstID SPOT
-	NowKdataList   []mOKX.TypeKd         // 现货的原始K线
-	TradeKdataList []okxInfo.TradeKdType // 计算好各种指标之后的K线
-	TradeKdataOpt  okxInfo.TradeKdataOpt
-	MaxTradeLever  int // 最优秀的交易杠杆数
+	HunterName         string // 策略的名字
+	Describe           string // 描述
+	InstID             string // 当前策略主打币种
+	MaxLen             int
+	TradeInst          mOKX.TypeInst         // 交易的 InstID SWAP
+	KdataInst          mOKX.TypeInst         // K线的 InstID SPOT
+	NowKdataList       []mOKX.TypeKd         // 现货的原始K线
+	TradeKdataList     []okxInfo.TradeKdType // 计算好各种指标之后的K线
+	TradeKdataOpt      okxInfo.TradeKdataOpt
+	NowVirtualPosition okxInfo.VirtualPositionType // 当前虚拟持仓
 }
 
 func New(opt HunterOpt) *HunterObj {
