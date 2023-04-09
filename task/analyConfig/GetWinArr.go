@@ -26,7 +26,7 @@ func GetWinArr(opt taskStart.BackReturn) {
 		BillingArr = opt.BillingArr
 	}
 
-	// 收益最高的排序
+	// 胜率 最高来排序
 	WinArr := MoneySort(BillingArr)
 
 	// 取出来最后 5 个
@@ -47,8 +47,8 @@ func MoneySort(arr []testHunter.BillingType) []testHunter.BillingType {
 	for i := size - 1; i > 0; i-- {
 		swapped = false
 		for j := 0; j < i; j++ {
-			a := list[j+1].Money
-			b := list[j].Money
+			a := list[j+1].WinRatioAll
+			b := list[j].WinRatioAll
 			if mCount.Le(a, b) < 0 {
 				list[j], list[j+1] = list[j+1], list[j]
 				swapped = true
