@@ -24,8 +24,8 @@ type OrderType struct {
 
 // 收益结算
 type BillingType struct {
-	okxInfo.VirtualPositionType // 虚拟持仓的数据
-
+	MockName         string
+	InstID           string
 	AllDay           int64                  // 总天数 | 结束时计算
 	StartTime        string                 // 第一次持仓时间 数组第一个 | 结束时计算
 	EndTime          string                 // 结束时间 数组组后一个
@@ -35,19 +35,22 @@ type BillingType struct {
 	AllNum           int                    // 总开仓次数 总的平仓次数 数组长度 | 结束时计算
 	WinNum           int                    // 盈利次数 NowUplRatio > 0 的次数
 	LoseNum          int                    // 亏损次数 同 盈利次数
-	WinRatioAll      string                 // 胜率 盈利次数/(平空次数+平多次数)
+	WinRatio         string                 // 胜率 盈利次数/(平空次数+平多次数)
 	PLratio          string                 // 盈亏比
-	WinRatio         string                 // 总盈利比率 NowUplRatio > 0 的总和
-	WinMoney         string                 // 盈利总金额 1000 块钱 从头计算一次 盈利部分相加
-	LoseRatio        string                 // 总亏损比率 同总的盈利比率
-	LoseMoney        string                 // 亏损总金额 同上
+	WinUplRatioAdd   string                 // 总盈利比率 NowUplRatio > 0 的总和
+	WinMoneyAdd      string                 // 盈利总金额 1000 块钱 从头计算一次 盈利部分相加
+	LoseUplRatioAdd  string                 // 总亏损比率 同总的盈利比率
+	LoseMoneyAdd     string                 // 亏损总金额 同上
 	MaxRatio         okxInfo.RecordNodeType // 平仓后单笔最大盈利比率   平仓后的记录
 	MinRatio         okxInfo.RecordNodeType // 平仓后单笔最小盈利比率
-	ChargeAll        string                 // 总手续费  同上
+	ChargeAll        string                 // 总手续费 同上
 	MinMoney         okxInfo.RecordNodeType // 平仓后历史最低余额  遍历一次就知道
 	MaxMoney         okxInfo.RecordNodeType // 平仓后历史最高余额  遍历一次就知道
 	PositionMinRatio okxInfo.RecordNodeType // 持仓过程中最低盈利比率  // 持仓过程中才知道 结合K线才能得出
 	PositionMaxRatio okxInfo.RecordNodeType // 持仓过程中最高盈利比率 // 持仓过程中才知道
+	InitMoney        string                 // 初始金钱
+	ResultMoney      string                 // 最终金钱
+	Level            string                 // 杠杆倍率
 }
 
 type NewMockOpt struct {
@@ -58,14 +61,15 @@ type NewMockOpt struct {
 }
 
 type MockObj struct {
-	VirtualPositionType okxInfo.VirtualPositionType   // 当前持仓
-	PositionArr         []okxInfo.VirtualPositionType // 当前持仓列表
-	OrderArr            []okxInfo.VirtualPositionType // 平仓列表
-	Billing             BillingType                   // 交易结果
-	RunKdataList        []mOKX.TypeKd                 // 原始的 Kdata 数据
-	TradeKdataList      []okxInfo.TradeKdType         // 计算好各种指标之后的K线
-	TradeKdataOpt       okxInfo.TradeKdataOpt         // 交易指标
-	OutPutDirectory     string                        // 数据读写的目录
+	HunterName         string
+	NowVirtualPosition okxInfo.VirtualPositionType   // 当前持仓
+	PositionArr        []okxInfo.VirtualPositionType // 当前持仓列表
+	OrderArr           []okxInfo.VirtualPositionType // 平仓列表
+	Billing            BillingType                   // 交易结果
+	RunKdataList       []mOKX.TypeKd                 // 原始的 Kdata 数据
+	TradeKdataList     []okxInfo.TradeKdType         // 计算好各种指标之后的K线
+	TradeKdataOpt      okxInfo.TradeKdataOpt         // 交易指标
+	OutPutDirectory    string                        // 数据读写的目录
 }
 
 /*
@@ -77,10 +81,12 @@ type MockObj struct {
 func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 	var obj MockObj
 
-	obj.VirtualPositionType = okxInfo.VirtualPositionType{}
-	obj.VirtualPositionType.InitMoney = opt.InitMoney
-	obj.VirtualPositionType.Money = opt.InitMoney
-	obj.VirtualPositionType.ChargeUpl = opt.ChargeUpl
+	obj.HunterName = opt.MockName
+
+	obj.NowVirtualPosition = okxInfo.VirtualPositionType{}
+	obj.NowVirtualPosition.InitMoney = opt.InitMoney
+	obj.NowVirtualPosition.Money = opt.InitMoney
+	obj.NowVirtualPosition.ChargeUpl = opt.ChargeUpl
 
 	obj.PositionArr = []okxInfo.VirtualPositionType{}
 	obj.OrderArr = []okxInfo.VirtualPositionType{}
@@ -96,10 +102,14 @@ func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 
 	// 汇总结果的初始化
 	obj.Billing = BillingType{}
+	obj.Billing.MockName = opt.MockName
+	obj.Billing.InstID = _this.KdataList[len(_this.KdataList)-1].InstID
 	obj.Billing.AllDay = (_this.EndTime - _this.StartTime) / mTime.UnixTimeInt64.Day
 	obj.Billing.MinMoney.Value = opt.InitMoney
 	obj.Billing.MaxMoney.Value = opt.InitMoney
-
+	obj.Billing.InitMoney = opt.InitMoney
+	obj.Billing.ResultMoney = opt.InitMoney
+	obj.Billing.Level = mStr.ToStr(opt.TradeKdataOpt.MaxTradeLever)
 	// 设置交易指标
 	obj.TradeKdataOpt = opt.TradeKdataOpt
 

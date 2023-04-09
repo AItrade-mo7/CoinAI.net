@@ -47,8 +47,8 @@ func MoneySort(arr []testHunter.BillingType) []testHunter.BillingType {
 	for i := size - 1; i > 0; i-- {
 		swapped = false
 		for j := 0; j < i; j++ {
-			a := list[j+1].WinRatioAll
-			b := list[j].WinRatioAll
+			a := list[j+1].WinRatio
+			b := list[j].WinRatio
 			if mCount.Le(a, b) < 0 {
 				list[j], list[j+1] = list[j+1], list[j]
 				swapped = true

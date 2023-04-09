@@ -10,14 +10,12 @@ import (
 
 // 模拟数据流动并执行分析交易
 func (_this *MockObj) MockRun() BillingType {
-	lossVal := mCount.Mul(_this.Billing.InitMoney, "0.5") // 当余额 低于 50% 时 判定为 亏完
-
 	// 清理 TradeKdataList
 	_this.TradeKdataList = []okxInfo.TradeKdType{}
 	TradeKlineObj := hunter.NewTradeKdataObj(_this.TradeKdataOpt)
 
-	FormatEnd := []mOKX.TypeKd{}
 	MaxLen := 600
+	FormatEnd := []mOKX.TypeKd{}
 	for _, Kdata := range _this.RunKdataList {
 		FormatEnd = append(FormatEnd, Kdata)
 
@@ -35,13 +33,8 @@ func (_this *MockObj) MockRun() BillingType {
 			FormatEnd = FormatEnd[len(FormatEnd)-MaxLen:]
 		}
 
-		if mCount.Le(_this.NowPosition.NowUplRatio, "-45") < 0 {
-			global.Log.Println("爆仓！", _this.Billing.HunterName, Kdata.TimeStr)
-			break
-		}
-
-		if mCount.Le(_this.Billing.Money, lossVal) < 0 {
-			global.Log.Println("亏完！", _this.Billing.HunterName, Kdata.TimeStr)
+		if mCount.Le(_this.NowVirtualPosition.NowUplRatio, "-45") < 0 {
+			global.Log.Println("爆仓！", _this.Billing.MockName, Kdata.TimeStr)
 			break
 		}
 	}
@@ -51,8 +44,8 @@ func (_this *MockObj) MockRun() BillingType {
 	}
 
 	// 搜集和整理结果
-	global.TradeLog.Println(" ===== 分析交易结束 ===== ", _this.Billing.HunterName)
-	_this.ResultCollect()
+	global.TradeLog.Println(" ===== 分析交易结束 ===== ", _this.Billing.MockName)
+	// _this.ResultCollect()
 
 	// 在这里抛出结果
 	return _this.Billing
