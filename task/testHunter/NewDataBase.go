@@ -26,7 +26,14 @@ type TestObj struct {
 	KdataList []mOKX.TypeKd
 }
 
-func New(opt TestOpt) *TestObj {
+/*
+新建基础数据
+
+主要内容：
+接受时间范围和币种
+产出数据源
+*/
+func NewDataBase(opt TestOpt) *TestObj {
 	obj := TestObj{}
 
 	NowTime := mTime.GetUnixInt64()

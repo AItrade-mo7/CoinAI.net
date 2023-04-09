@@ -2,34 +2,41 @@ package okxInfo
 
 import "github.com/EasyGolang/goTools/mOKX"
 
+// 交易K线需要的参数
 type TradeKdataOpt struct {
-	EMA_Period    int    // 171
-	CAP_Period    int    // 4
-	CAP_Max       string // 0.2
+	EMA_Period    int    // EMA 步长 171
+	CAP_Period    int    // CAP 步长 4
+	CAP_Max       string // CAP 判断的边界值 0.2
 	MaxTradeLever int
 }
 
-type RecordType struct {
-	Value   string
-	TimeStr string
+type RecordNodeType struct {
+	Value   string // 值
+	TimeStr string // 产生该值的K线时间
+	Time    int64  // 产生该值的实际时间
 }
 
+// 模拟持仓的数据
 type VirtualPositionType struct {
 	InstID       string        // 下单币种 | 运行中设置
 	HunterName   string        // 策略名称 | 运行中设置
-	Dir          int           // 没持仓0  持多仓 1  持空仓 -1 | 初始化设置，下单时设置
-	OpenAvgPx    string        // 开仓价格 | 下单时设置
-	OpenTimeStr  string        // 开仓K线时间 | 下单时设置
-	OpenTime     int64         // 开仓实际时间戳
 	NowTimeStr   string        // 当前K线时间 | 运行中设置
-	NowTime      int64         // 当前实际时间戳
+	NowTime      int64         // 当前实际时间戳 | 运行中设置
 	NowC         string        // 当前收盘价 | 运行中设置
-	UplRatio     string        // 未实现收益率 | 运行中设置
 	CAP_EMA      string        // 当前的 CAP 值 | 运行中设置
-	InitMoney    string        // 初始金钱 | 初始值设置
-	Money        string        // 账户当前余额 | 初始值设置，平仓时计算
-	Charge       string        // 当前是手续费率 | 初始值设置
-	HunterConfig TradeKdataOpt // 运行中设置
+	EMA          string        // 当前的 EMA 值 | 运行中设置
+	HunterConfig TradeKdataOpt // 当前的交易K线参数  | 运行中设置
+	// 下单时设置
+	OpenAvgPx   string // 开仓价格 | 下单时设置
+	OpenTimeStr string // 开仓K线时间 | 下单时设置
+	OpenTime    int64  // 开仓实际时间戳  | 下单时设置
+	NowDir      int    // 当前持仓状态 没持仓0  持多仓 1  持空仓 -1 | 初始化设置为0，下单时更新
+
+	// 通过原始数据计算得出
+	InitMoney   string // 初始金钱 | 固定值初始值设置
+	ChargeUpl   string // 当前手续费率 | 固定值初始值设置
+	NowUplRatio string // 当前未实现收益率(计算得出) | 运行中设置
+	Money       string // 账户当前余额 | 如果没有初始值设置一次，下单时计算
 }
 
 type TradeKdType struct {
@@ -41,32 +48,44 @@ type TradeKdType struct {
 	Opt TradeKdataOpt
 }
 
+// 对外展示策略的数据
 type HunterData struct {
-	HunterName     string // 策略的名字
-	Describe       string // 描述
-	MaxLen         int
-	TradeInst      mOKX.TypeInst // 交易的 InstID SWAP
-	KdataInst      mOKX.TypeInst // K线的 InstID SPOT
-	NowKdataList   []mOKX.TypeKd // 现货的原始K线
-	TradeKdataList []TradeKdType // 计算好各种指标之后的K线
-	TradeKdataOpt  TradeKdataOpt
+	HunterName         string              // 策略的名字
+	Describe           string              // 描述
+	InstID             string              // 当前策略主打币种
+	TradeInst          mOKX.TypeInst       // 交易的 InstID SWAP
+	KdataInst          mOKX.TypeInst       // K线的 InstID SPOT
+	NowKdataList       []mOKX.TypeKd       // 现货的原始K线
+	TradeKdataList     []TradeKdType       // 计算好各种指标之后的K线
+	TradeKdataOpt      TradeKdataOpt       // 当前参数
+	NowVirtualPosition VirtualPositionType // 当前的虚拟持仓
 }
 
 var NowHunterData = make(map[string]HunterData)
 
 // 最优参数
+var CoinTradeConfig = make(map[string]TradeKdataOpt)
 
-var CoinTradeConfig = map[string]TradeKdataOpt{
-	"BTC-USDT": {
-		EMA_Period:    86,
-		CAP_Period:    2,
-		MaxTradeLever: 2,
-		CAP_Max:       "0.5",
-	},
-	"ETH-USDT": {
-		EMA_Period:    78,
-		CAP_Period:    2,
-		MaxTradeLever: 4,
-		CAP_Max:       "0.5",
-	},
+func OkxInfoInit() {
+	// 加入 Hunter Auto
+	NowHunterData["Auto"] = HunterData{
+		HunterName: "Auto",
+		Describe:   "根据市场情况为您的账户选择其中一个策略执行交易【目前此功能尚在开发中】",
+	}
+
+	// 设置最优参数
+	CoinTradeConfig = map[string]TradeKdataOpt{
+		"BTC-USDT": {
+			EMA_Period:    86,
+			CAP_Period:    2,
+			CAP_Max:       "0.5",
+			MaxTradeLever: 2,
+		},
+		"ETH-USDT": {
+			EMA_Period:    78,
+			CAP_Period:    2,
+			CAP_Max:       "0.5",
+			MaxTradeLever: 4,
+		},
+	}
 }

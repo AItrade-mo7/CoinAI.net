@@ -38,7 +38,7 @@ func (_this *HunterObj) Analy() {
 	_this.CountPosition()
 
 	// 当前持仓与 判断方向不符合时，执行一次下单操作
-	if _this.NowVirtualPosition.Dir != AnalyDir {
+	if _this.NowVirtualPosition.NowDir != AnalyDir {
 		_this.OnOrder(AnalyDir)
 	}
 }
@@ -53,12 +53,12 @@ func (_this *HunterObj) CountPosition() {
 	_this.NowVirtualPosition.InstID = NowKTradeData.InstID
 	_this.NowVirtualPosition.HunterConfig = NowKTradeData.Opt
 
-	if _this.NowVirtualPosition.Dir != 0 { // 当前为持仓状态，则计算收益率
+	if _this.NowVirtualPosition.NowDir != 0 { // 当前为持仓状态，则计算收益率
 		UplRatio := mCount.RoseCent(NowKTradeData.C, _this.NowVirtualPosition.OpenAvgPx)
-		if _this.NowVirtualPosition.Dir < 0 { // 当前为持空仓状态则翻转该值
+		if _this.NowVirtualPosition.NowDir < 0 { // 当前为持空仓状态则翻转该值
 			UplRatio = mCount.Sub("0", UplRatio)
 		}
-		_this.NowVirtualPosition.UplRatio = mCount.Mul(UplRatio, mStr.ToStr(_this.TradeKdataOpt.MaxTradeLever)) // 乘以杠杆倍数
+		_this.NowVirtualPosition.NowUplRatio = mCount.Mul(UplRatio, mStr.ToStr(_this.TradeKdataOpt.MaxTradeLever)) // 乘以杠杆倍数
 		// 这里应该在客户端执行 金钱收益  Money * UplRatio = NowMoney
 	}
 }
@@ -70,8 +70,8 @@ func (_this *HunterObj) OnOrder(dir int) {
 	_this.NowVirtualPosition.OpenTimeStr = NowKTradeData.TimeStr
 	_this.NowVirtualPosition.OpenTime = mTime.GetTime().TimeUnix
 	// 在这里计算当前的 Money
-	Upl := mCount.Div(_this.NowVirtualPosition.UplRatio, "100")     // 格式化收益率
-	ChargeUpl := mCount.Div(_this.NowVirtualPosition.Charge, "100") // 格式化手续费率
+	Upl := mCount.Div(_this.NowVirtualPosition.NowUplRatio, "100")     // 格式化收益率
+	ChargeUpl := mCount.Div(_this.NowVirtualPosition.ChargeUpl, "100") // 格式化手续费率
 
 	Money := _this.NowVirtualPosition.Money   // 提取 Money
 	makeMoney := mCount.Mul(Money, Upl)       // 当前盈利的金钱
@@ -83,18 +83,18 @@ func (_this *HunterObj) OnOrder(dir int) {
 
 	if dir > 0 {
 		// 开多
-		_this.NowVirtualPosition.Dir = 1
+		_this.NowVirtualPosition.NowDir = 1
 	}
 
 	if dir < 0 {
 		// 开空
-		_this.NowVirtualPosition.Dir = -1
+		_this.NowVirtualPosition.NowDir = -1
 	}
 
 	if dir == 0 {
 		// 平仓
-		_this.NowVirtualPosition.Dir = 0
+		_this.NowVirtualPosition.NowDir = 0
 	}
 	// 平仓后未实现盈亏重置为 0
-	_this.NowVirtualPosition.UplRatio = "0"
+	_this.NowVirtualPosition.NowUplRatio = "0"
 }

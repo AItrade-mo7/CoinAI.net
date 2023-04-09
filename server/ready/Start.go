@@ -14,12 +14,8 @@ import (
 )
 
 func Start() {
-	// 加入 Auto 参数
-	okxInfo.NowHunterData["Auto"] = okxInfo.HunterData{
-		HunterName: "Auto",
-		Describe:   "根据市场情况为您的账户选择其中一个策略执行交易【目前此功能尚在开发中】",
-	}
-
+	// 初始化数据初始值
+	okxInfo.OkxInfoInit()
 	// 发送启动邮件
 	StartEmail()
 	// 数据预填充
@@ -33,12 +29,8 @@ func Start() {
 		InstID:     "BTC-USDT",
 		Describe:   "以 BTC-USDT 交易对为主执行自动交易,支持的资金量更大,更加稳定",
 	})
-	// 在这里初始化模拟持仓
-	BTCHunter.NowVirtualPosition.InitMoney = "1000"
-	BTCHunter.NowVirtualPosition.Money = "1000"
-	BTCHunter.NowVirtualPosition.Charge = "0.05"
-	BTCHunter.NowVirtualPosition.Dir = 0
 
+	BTCHunter.ReadVirtualPosition()
 	BTCHunter.Start()
 
 	// 策略 2
@@ -47,12 +39,8 @@ func Start() {
 		InstID:     "ETH-USDT",
 		Describe:   "以 ETH-USDT 交易对为主执行自动交易,交易次数更加频发,可以收获更高收益",
 	})
-	// 在这里初始化模拟持仓
-	BTCHunter.NowVirtualPosition.InitMoney = "1000"
-	BTCHunter.NowVirtualPosition.Money = "1000"
-	BTCHunter.NowVirtualPosition.Charge = "0.05"
-	BTCHunter.NowVirtualPosition.Dir = 0
 
+	ETHHunter.ReadVirtualPosition()
 	ETHHunter.Start()
 
 	// 构建定时任务

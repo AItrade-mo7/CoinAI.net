@@ -135,15 +135,17 @@ func (_this *HunterObj) SendEmail(Message string) {
 
 func (_this *HunterObj) SyncInfoToGlobal() {
 	Name := _this.HunterName
+
 	HunterData := okxInfo.HunterData{
-		HunterName:     _this.HunterName,
-		MaxLen:         _this.MaxLen,
-		TradeInst:      _this.TradeInst,
-		KdataInst:      _this.KdataInst,
-		NowKdataList:   _this.NowKdataList,
-		TradeKdataList: _this.TradeKdataList,
-		TradeKdataOpt:  _this.TradeKdataOpt,
-		Describe:       _this.Describe,
+		HunterName:         _this.HunterName,         // 策略的名字
+		Describe:           _this.Describe,           // 描述
+		InstID:             _this.InstID,             // 当前策略主打币种
+		TradeInst:          _this.TradeInst,          // 交易的 InstID SWAP
+		KdataInst:          _this.KdataInst,          // K线的 InstID SPOT
+		NowKdataList:       _this.NowKdataList,       // 现货的原始K线
+		TradeKdataList:     _this.TradeKdataList,     // 计算好各种指标之后的K线
+		TradeKdataOpt:      _this.TradeKdataOpt,      // 当前参数
+		NowVirtualPosition: _this.NowVirtualPosition, // 当前的虚拟持仓
 	}
 	okxInfo.NowHunterData[Name] = HunterData
 }

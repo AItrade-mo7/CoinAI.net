@@ -40,29 +40,29 @@ type BillingType struct {
 	InstID           string     // 交易币种
 	MockName         string     // 策略名称
 	Days             int64      // 总天数
-	StartTime        string     // 第一次持仓时间
-	EndTime          string     // 结束时间
-	NilNum           int        // 空仓次数
-	SellNum          int        // 开空次数
-	BuyNum           int        // 开多次数
-	AllNum           int        // 总开仓次数
-	WinRatioAll      string     // 胜率
-	Win              int        // 盈利次数
-	WinRatio         string     // 总盈利比率
-	WinMoney         string     // 盈利总金额
-	LoseMoney        string     // 亏损总金额
-	Lose             int        // 亏损次数
-	LoseRatio        string     // 总亏损比率
-	MaxRatio         RecordType // 平仓后单笔最大盈利比率
+	StartTime        string     // 第一次持仓时间 数组第一个
+	EndTime          string     // 结束时间 数组组后一个
+	NilNum           int        // 空仓次数 平仓后未开仓 NowDir = 0
+	SellNum          int        // 开空次数 平空次数 NowDir = -1
+	BuyNum           int        // 开多次数 平多次数 NowDir = 1
+	AllNum           int        // 总开仓次数 总的平仓次数 数组长度
+	Win              int        // 盈利次数 NowUplRatio > 0 的次数
+	WinRatioAll      string     // 胜率 盈利次数/(平空次数+平多次数)
+	WinRatio         string     // 总盈利比率 NowUplRatio > 0 的总和
+	WinMoney         string     // 盈利总金额 1000 块钱 从头计算一次 盈利部分相加
+	LoseMoney        string     // 亏损总金额 同上
+	Lose             int        // 亏损次数 同 盈利次数
+	LoseRatio        string     // 总亏损比率 同总的盈利比率
+	MaxRatio         RecordType // 平仓后单笔最大盈利比率   平仓后的记录
 	MinRatio         RecordType // 平仓后单笔最小盈利比率
-	Charge           string     // 手续费率
-	ChargeAll        string     // 总手续费
+	Charge           string     // 手续费率  平仓时再计算一遍
+	ChargeAll        string     // 总手续费  同上
 	InitMoney        string     // 初始金钱
 	Money            string     // 账户当前余额
-	MinMoney         RecordType // 平仓后历史最低余额
-	MaxMoney         RecordType // 平仓后历史最高余额
-	PositionMinRatio RecordType // 持仓过程中最低盈利比率
-	PositionMaxRatio RecordType // 持仓过程中最高盈利比率
+	MinMoney         RecordType // 平仓后历史最低余额  遍历一次就知道
+	MaxMoney         RecordType // 平仓后历史最高余额  遍历一次就知道
+	PositionMinRatio RecordType // 持仓过程中最低盈利比率  // 持仓过程中才知道 结合K线才能得出
+	PositionMaxRatio RecordType // 持仓过程中最高盈利比率 // 持仓过程中才知道
 	Level            string     // 杠杆倍数
 }
 
@@ -83,6 +83,12 @@ type MockObj struct {
 	TradeKdataOpt  okxInfo.TradeKdataOpt
 }
 
+/*
+新建回测
+
+接受参数 NewMockOpt
+产出： 收益结果
+*/
 func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 	var obj MockObj
 

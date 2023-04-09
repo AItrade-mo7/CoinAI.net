@@ -25,7 +25,7 @@ func BackTest(opt BackOpt) BackReturn {
 	StartTime := mTime.GetUnix()
 
 	// 新建回测
-	backObj := testHunter.New(testHunter.TestOpt{
+	backObj := testHunter.NewDataBase(testHunter.TestOpt{
 		StartTime: opt.StartTime,
 		EndTime:   opt.EndTime,
 		InstID:    opt.InstID,
