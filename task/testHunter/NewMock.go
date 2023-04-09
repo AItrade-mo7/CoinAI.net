@@ -26,9 +26,10 @@ type OrderType struct {
 type BillingType struct {
 	MockName         string
 	InstID           string
-	AllDay           int64                  // 总天数 | 结束时计算
 	StartTime        string                 // 第一次持仓时间 数组第一个 | 结束时计算
 	EndTime          string                 // 结束时间 数组组后一个
+	AllDay           int64                  // 总天数 | 结束时计算
+	OrderRate        string                 // 开仓频率 (总天数/AllNum)
 	NilNum           int                    // 空仓次数 平仓后未开仓 NowDir = 0 | 结束时计算
 	SellNum          int                    // 平空次数 平空次数 NowDir = -1 | 结束时计算
 	BuyNum           int                    // 平多次数 平多次数 NowDir = 1 | 结束时计算
