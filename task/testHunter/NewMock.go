@@ -131,11 +131,10 @@ type GetConfigOpt struct {
 }
 
 type GetConfigReturn struct {
-	GorMap     map[string][]NewMockOpt
-	GorMapView map[string][]string
-	ConfigArr  []NewMockOpt
-	TaskNum    int
-	CpuNum     int
+	GorMap        map[string][]NewMockOpt
+	GorMapView    map[string][]string
+	ConfigArr     []NewMockOpt
+	GorMapNameArr []string
 }
 
 func GetConfig(opt GetConfigOpt) GetConfigReturn {
@@ -144,41 +143,37 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 	Charge := "0.05"
 	InitMoney := "1000"
 
-	if len(opt.ConfArr) > 0 {
-		for _, conf := range opt.ConfArr {
-			MockConfigArr = append(MockConfigArr,
-				NewMockOpt{
-					MockName:  mStr.Join("EMA_", conf.EMA_Period, "_CAP_", conf.CAP_Period, "_CAPMax_", conf.CAP_Max, "_level_", conf.MaxTradeLever),
-					InitMoney: InitMoney, // 初始资金
-					Charge:    Charge,    // 吃单标准手续费率 0.05%
-					TradeKdataOpt: okxInfo.TradeKdataOpt{
-						EMA_Period:    conf.EMA_Period,
-						CAP_Period:    conf.CAP_Period,
-						MaxTradeLever: conf.MaxTradeLever,
-						CAP_Max:       conf.CAP_Max,
-					},
+	AppendConfig := func(conf okxInfo.TradeKdataOpt) {
+		MockConfigArr = append(MockConfigArr,
+			NewMockOpt{
+				MockName:  mStr.Join("EMA_", conf.EMA_Period, "_CAP_", conf.CAP_Period, "_CAPMax_", conf.CAP_Max, "_level_", conf.MaxTradeLever),
+				InitMoney: InitMoney, // 初始资金
+				Charge:    Charge,    // 吃单标准手续费率 0.05%
+				TradeKdataOpt: okxInfo.TradeKdataOpt{
+					EMA_Period:    conf.EMA_Period,
+					CAP_Period:    conf.CAP_Period,
+					MaxTradeLever: conf.MaxTradeLever,
+					CAP_Max:       conf.CAP_Max,
 				},
-			)
-		}
-	} else {
-		for _, emaP := range opt.EmaPArr {
-			for _, cap := range opt.CAPArr {
-				for _, level := range opt.LevelArr {
-					for _, capMax := range opt.CAPMax {
-						MockConfigArr = append(MockConfigArr,
-							NewMockOpt{
-								MockName:  mStr.Join("EMA_", emaP, "_CAP_", cap, "_CAPMax_", capMax, "_level_", level),
-								InitMoney: InitMoney, // 初始资金
-								Charge:    Charge,    // 吃单标准手续费率 0.05% x 10 倍
-								TradeKdataOpt: okxInfo.TradeKdataOpt{
-									EMA_Period:    emaP,
-									CAP_Period:    cap,
-									MaxTradeLever: level,
-									CAP_Max:       capMax,
-								},
-							},
-						)
+			},
+		)
+	}
+
+	for _, conf := range opt.ConfArr {
+		AppendConfig(conf)
+	}
+
+	for _, emaP := range opt.EmaPArr {
+		for _, cap := range opt.CAPArr {
+			for _, level := range opt.LevelArr {
+				for _, capMax := range opt.CAPMax {
+					conf := okxInfo.TradeKdataOpt{
+						EMA_Period:    emaP,
+						CAP_Period:    cap,
+						MaxTradeLever: level,
+						CAP_Max:       capMax,
 					}
+					AppendConfig(conf)
 				}
 			}
 		}
@@ -196,14 +191,14 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 	}
 
 	GorMap := map[string][]NewMockOpt{}
+	GorMapView := map[string][]string{}
 	GorMapNameArr := []string{}
-	for i := 0; i < CpuNum; i++ {
+	for i := 0; i < CpuNum; i++ { // 按照Cpu核心数创建线程
 		GorName := mStr.Join("Gor_", i)
 		GorMap[GorName] = []NewMockOpt{}
 		GorMapNameArr = append(GorMapNameArr, GorName)
 	}
 
-	GorMapView := map[string][]string{}
 	NowNameIdx := 0
 	for _, config := range MockConfigArr {
 		gorName := GorMapNameArr[NowNameIdx]
@@ -215,16 +210,14 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 	}
 
 	global.Run.Println("新建参数集合:",
-		"当前任务总数量:", len(MockConfigArr),
-		"当前CPU核心数量", CpuNum,
-		"\n任务视图:\n", mJson.Format(GorMapView),
+		"\n 任务视图: \n", mJson.Format(GorMapView),
+		"\n 线程数量: \n", mJson.Format(GorMapNameArr),
 	)
 
 	return GetConfigReturn{
-		GorMap:     GorMap,
-		GorMapView: GorMapView,
-		ConfigArr:  MockConfigArr,
-		TaskNum:    len(MockConfigArr),
-		CpuNum:     CpuNum,
+		GorMap:        GorMap,
+		GorMapView:    GorMapView,
+		ConfigArr:     MockConfigArr,
+		GorMapNameArr: GorMapNameArr,
 	}
 }

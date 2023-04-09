@@ -24,7 +24,7 @@ type BackOpt struct {
 func BackTest(opt BackOpt) BackReturn {
 	StartTime := mTime.GetUnix()
 
-	// 新建回测
+	// 新建数据
 	backObj := testHunter.NewDataBase(testHunter.TestOpt{
 		StartTime: opt.StartTime,
 		EndTime:   opt.EndTime,
@@ -43,26 +43,26 @@ func BackTest(opt BackOpt) BackReturn {
 	// 新建回测参数 ( 按照核心数进行任务拆分 )
 	configObj := testHunter.GetConfig(opt.GetConfigOpt)
 
-	TaskChan := make(chan string, len(configObj.GorMap)) // 记录线程任务完成
+	BillingArr := []testHunter.BillingType{} // 模拟交易的结果
 
-	BillingArr := []testHunter.BillingType{}
+	TaskChan := make(chan string, len(configObj.GorMap)) // 记录线程Chan
 
 	// 建立一个线程要运行的任务
 	NewGorTask := func(GorName string, confArr []testHunter.NewMockOpt) {
 		global.Run.Println("开始执行Goroutine:", GorName)
 		StartTime := mTime.GetUnix()
 
-		for _, conf := range confArr {
-			MockObj := backObj.NewMock(conf)
-			Billing := MockObj.MockRun()
-			BillingArr = append(BillingArr, Billing)
-		}
+		// for _, conf := range confArr {
+		// MockObj := backObj.NewMock(conf)
+		// Billing := MockObj.MockRun()
+		// BillingArr = append(BillingArr, Billing)
+		// }
 
 		EndTime := mTime.GetUnix()
 		DiffTime := mCount.Sub(EndTime, StartTime)
 		DiffMin := mCount.Div(DiffTime, mTime.UnixTime.Minute)
 		global.Run.Println("Goroutine:", GorName, "执行结束,共计耗时:", DiffMin, "分钟")
-		TaskChan <- GorName
+		TaskChan <- GorName // 线程完成
 	}
 
 	goRoName := []string{}
@@ -75,7 +75,7 @@ func BackTest(opt BackOpt) BackReturn {
 		From:        config.SysName,
 		To:          config.NoticeEmail,
 		Subject:     "新建任务" + opt.InstID,
-		Title:       mStr.Join("Cpu核心数(默认-1):", configObj.CpuNum, "任务总数:", configObj.TaskNum),
+		Title:       mStr.Join("并行任务数:", len(configObj.GorMap), "任务总数:", len(configObj.ConfigArr)),
 		Content:     "任务视图:<br />" + mJson.Format(configObj.GorMapView) + "线程数量:<br />" + mJson.Format(goRoName),
 		Description: "回测开始通知",
 	})
@@ -101,9 +101,10 @@ func BackTest(opt BackOpt) BackReturn {
 		From:    config.SysName,
 		To:      config.NoticeEmail,
 		Subject: "任务结束",
-		Title:   mStr.Join("共计耗时", DiffMin, "分钟"),
+		Title:   mStr.Join("任务总数:", len(configObj.ConfigArr), "共计耗时", DiffMin, "分钟"),
 		Content: mStr.Join(
 			"任务视图:<br />", mJson.Format(configObj.GorMapView), "<br />",
+			"线程数量:<br />"+mJson.Format(goRoName),
 			"结果:<br />", BillingArr_Path, "<br />",
 		),
 		Description: "回测结束通知",

@@ -51,8 +51,8 @@ func NewDataBase(opt TestOpt) *TestObj {
 		obj.StartTime = earliest
 	}
 
-	global.Run.Println("新建回测数据", mJson.Format(map[string]any{
-		"opt":       obj,
+	global.Run.Println("新建数据", mJson.Format(map[string]any{
+		"InstID":    obj.InstID,
 		"StartTime": mTime.UnixFormat(obj.StartTime),
 		"EndTime":   mTime.UnixFormat(obj.EndTime),
 		"Days":      (obj.EndTime - obj.StartTime) / mTime.UnixTimeInt64.Day,
