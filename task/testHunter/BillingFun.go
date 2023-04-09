@@ -86,22 +86,22 @@ func (_this *MockObj) BillingFun(NowKdata okxInfo.TradeKdType) {
 
 func (_this *MockObj) ResultCollect() {
 	// 记录 整理好的数组
-	TradeKdataList_Path := mStr.Join(config.Dir.JsonData, "/", _this.Billing.MockName, "-TradeKdataList.json")
+	TradeKdataList_Path := mStr.Join(config.Dir.JsonData, "/", _this.Billing.MockName, _this.Billing.InstID, "-TradeKdataList.json")
 	mFile.Write(TradeKdataList_Path, string(mJson.ToJson(_this.TradeKdataList)))
 	global.Run.Println("TradeKdataList: ", TradeKdataList_Path)
 
 	// 记录 持仓数组
-	PositionArr_Path := mStr.Join(config.Dir.JsonData, "/", _this.Billing.MockName, "-PositionArr.json")
+	PositionArr_Path := mStr.Join(config.Dir.JsonData, "/", _this.Billing.MockName, _this.Billing.InstID, "-PositionArr.json")
 	mFile.Write(PositionArr_Path, string(mJson.ToJson(_this.PositionArr)))
 	global.Run.Println("PositionArr: ", PositionArr_Path)
 
 	// 记录 下单数组
-	OrderArr_Path := mStr.Join(config.Dir.JsonData, "/", _this.Billing.MockName, "-OrderArr.json")
+	OrderArr_Path := mStr.Join(config.Dir.JsonData, "/", _this.Billing.MockName, _this.Billing.InstID, "-OrderArr.json")
 	mFile.Write(OrderArr_Path, string(mJson.ToJson(_this.OrderArr)))
 	global.Run.Println("OrderArr: ", OrderArr_Path)
 
 	// 记录 交易结果
-	Billing_Path := mStr.Join(config.Dir.JsonData, "/", _this.Billing.MockName, "-Billing.json")
+	Billing_Path := mStr.Join(config.Dir.JsonData, "/", _this.Billing.MockName, _this.Billing.InstID, "-Billing.json")
 	mFile.Write(Billing_Path, string(mJson.ToJson(_this.Billing)))
 	global.Run.Println("Billing: ", Billing_Path)
 
@@ -138,7 +138,8 @@ InstID: ${InstID}
 盈亏比: ${PLratio}
 `
 
-	_this.Billing.WinRatioAll = mCount.Div(mStr.ToStr(_this.Billing.Win), mStr.ToStr(_this.Billing.AllNum))
+	ValidAllNum := _this.Billing.SellNum + _this.Billing.BuyNum // 开空次数 + 开多次数
+	_this.Billing.WinRatioAll = mCount.Div(mStr.ToStr(_this.Billing.Win), mStr.ToStr(ValidAllNum))
 
 	LoseMoneyAbs := mCount.Abs(mStr.ToStr(_this.Billing.LoseMoney))
 

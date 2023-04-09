@@ -104,7 +104,7 @@ func BackTest(opt BackOpt) BackReturn {
 		Title:   mStr.Join("共计耗时", DiffMin, "分钟"),
 		Content: mStr.Join(
 			"任务视图:<br />", mJson.Format(configObj.GorMapView), "<br />",
-			"结果:<br />", mJson.Format(BillingArr), "<br />",
+			"结果:<br />", BillingArr_Path, "<br />",
 		),
 		Description: "回测结束通知",
 	})
