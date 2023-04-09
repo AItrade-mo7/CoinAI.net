@@ -1,9 +1,9 @@
 package analyConfig
 
 import (
-	"fmt"
 	"os"
 
+	"CoinAI.net/task/taskStart"
 	"CoinAI.net/task/testHunter"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
@@ -12,28 +12,29 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-var ResultPath = "/root/AItrade/CoinAI.net/task/analyConfig/data"
+func GetWinArr(opt taskStart.BackReturn) {
+	var file []byte
 
-func AnalyBillingArr(InstID string) {
-	fmt.Println("开始分析")
-	BtcFilePath := mStr.Join(ResultPath, "/", InstID, "-BillingArr.json")
-	file, _ := os.ReadFile(BtcFilePath)
-
-	var BillingArr []testHunter.BillingType
-	jsoniter.Unmarshal(file, &BillingArr)
-
-	MoneySortArr := MoneySort(BillingArr)
-
-	WinArr := []testHunter.BillingType{}
-	for _, Billing := range MoneySortArr {
-		// fmt.Println(Billing.Money)
-		if mCount.Le(Billing.Money, "6600") > 0 {
-			WinArr = append(WinArr, Billing)
-		}
+	if len(opt.BillingPath) > 1 {
+		file, _ = os.ReadFile(opt.BillingPath)
 	}
 
-	resultPath := mStr.Join(ResultPath, "/", InstID, "-WinArr.json")
+	var BillingArr []testHunter.BillingType // 数据来源
+	jsoniter.Unmarshal(file, &BillingArr)
 
+	if len(opt.BillingArr) > 2 {
+		BillingArr = opt.BillingArr
+	}
+
+	// 收益最高的排序
+	WinArr := MoneySort(BillingArr)
+
+	// 取出来最后 5 个
+	WinArr = WinArr[len(WinArr)-5:]
+
+	resultPath := mStr.Join(opt.ResultBasePath, "/", opt.InstID, "-WinArr.json")
+
+	// 排序结果分析
 	mFile.Write(resultPath, mJson.ToStr(WinArr))
 }
 
@@ -61,6 +62,11 @@ func MoneySort(arr []testHunter.BillingType) []testHunter.BillingType {
 }
 
 /*
+
+2021-01
+2022-01
+最优
+
 BTC
 EMA_86_CAP_2_level_1
 EMA_84_CAP_2_level_1
@@ -69,15 +75,16 @@ EMA_88_CAP_4_level_1
 EMA_82_CAP_5_level_1
 EMA_88_CAP_5_level_1
 
-//参数 范围  83  84  85 86   87
-*/
+//参数 范围 82 83  84  85 86  87 88
 
-/*
 ETH
 EMA_78_CAP_2_level_1
 EMA_80_CAP_2_level_1
 EMA_74_CAP_3_level_1
 EMA_76_CAP_2_level_1
 
-//参数 范围  77  78  79  80  81
+//参数 范围 76 77  78  79  80  81 82
+
+接下来是带上杠杆，求最优值
+
 */
