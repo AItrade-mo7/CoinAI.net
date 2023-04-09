@@ -45,7 +45,7 @@ func (_this *MockObj) MockRun() BillingType {
 
 	// 搜集和整理结果
 	global.TradeLog.Println(" ===== 分析交易结束 ===== ", _this.Billing.MockName)
-	// _this.ResultCollect()
+	_this.ResultCollect()
 
 	// 在这里抛出结果
 	return _this.Billing

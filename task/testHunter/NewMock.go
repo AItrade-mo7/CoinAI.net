@@ -134,7 +134,7 @@ type GetConfigReturn struct {
 func GetConfig(opt GetConfigOpt) GetConfigReturn {
 	MockConfigArr := []NewMockOpt{}
 
-	ChargeUpl := "0.05"
+	ChargeUpl := "0.05" //  https://www.okx.com/cn/fees
 	InitMoney := "1000"
 
 	AppendConfig := func(conf okxInfo.TradeKdataOpt) {

@@ -1,8 +1,6 @@
 package testHunter
 
 import (
-	"fmt"
-
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
@@ -22,6 +20,8 @@ func (_this *MockObj) Analy() {
 
 	// 更新持仓状态
 	_this.CountPosition()
+	_this.PositionArr = append(_this.PositionArr, _this.NowVirtualPosition)
+
 	// if mCount.Le(_this.NowPosition.UplRatio, _this.Billing.PositionMinRatio.Value) < 0 {
 	// 	_this.Billing.PositionMinRatio.Value = _this.NowPosition.UplRatio
 	// 	_this.Billing.PositionMinRatio.TimeStr = _this.NowPosition.NowTimeStr
@@ -35,20 +35,18 @@ func (_this *MockObj) Analy() {
 	if _this.NowVirtualPosition.NowDir != AnalyDir {
 		_this.OnOrder(AnalyDir)
 	}
-
-	// global.KdataLog.Println(_this.Billing.MockName, NowKdata.TimeStr, AnalyDir)
 }
 
 func (_this *MockObj) CountPosition() {
 	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
-	fmt.Println(NowKTradeData.TimeStr)
 
+	_this.NowVirtualPosition.InstID = NowKTradeData.InstID
 	_this.NowVirtualPosition.HunterName = _this.HunterName
 	_this.NowVirtualPosition.NowTimeStr = NowKTradeData.TimeStr
 	_this.NowVirtualPosition.NowTime = mTime.GetTime().TimeUnix
 	_this.NowVirtualPosition.NowC = NowKTradeData.C
 	_this.NowVirtualPosition.CAP_EMA = NowKTradeData.CAP_EMA
-	_this.NowVirtualPosition.InstID = NowKTradeData.InstID
+	_this.NowVirtualPosition.EMA = NowKTradeData.EMA
 	_this.NowVirtualPosition.HunterConfig = NowKTradeData.Opt
 
 	if _this.NowVirtualPosition.NowDir != 0 { // 当前为持仓状态，则计算收益率
@@ -56,76 +54,50 @@ func (_this *MockObj) CountPosition() {
 		if _this.NowVirtualPosition.NowDir < 0 { // 当前为持空仓状态则翻转该值
 			UplRatio = mCount.Sub("0", UplRatio)
 		}
-		_this.NowVirtualPosition.NowUplRatio = mCount.Mul(UplRatio, mStr.ToStr(_this.TradeKdataOpt.MaxTradeLever)) // 乘以杠杆倍数
-		// 这里应该在客户端执行 金钱收益  Money * UplRatio = NowMoney
+		Level := _this.NowVirtualPosition.HunterConfig.MaxTradeLever
+		_this.NowVirtualPosition.NowUplRatio = mCount.Mul(UplRatio, mStr.ToStr(Level)) // 乘以杠杆倍数
 	}
 }
 
 // // 下单  参数：dir 下单方向 NowKdata : 当前市场行情
 func (_this *MockObj) OnOrder(dir int) {
-	// 	_this.BillingFun(NowKdata) // 下单之前 计算一次收益
+	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
 
-	// 	if dir > 0 { // 开多
-	// 		// 下订单
-	// 		_this.OrderArr = append(_this.OrderArr, OrderType{
-	// 			Type:    "Buy",            // 下多单
-	// 			InstID:  NowKdata.InstID,  // 下单币种
-	// 			AvgPx:   NowKdata.C,       // 记录下单价格
-	// 			TimeStr: NowKdata.TimeStr, // 记录下单时间
-	// 		})
-	// 		// 更新持仓状态
-	// 		_this.NowPosition = PositionType{
-	// 			Dir:         1,          // 持仓多方向
-	// 			OpenAvgPx:   NowKdata.C, // 持仓价格
-	// 			NowTimeStr:  NowKdata.TimeStr,
-	// 			UplRatio:    "0", // 当前收益率
-	// 			NowC:        NowKdata.C,
-	// 			OpenTimeStr: NowKdata.TimeStr, // 开仓时间
-	// 			InstID:      NowKdata.InstID,  // 开仓币种
-	// 			CAP_EMA:     NowKdata.CAP_EMA,
-	// 		}
-	// 	}
+	_this.NowVirtualPosition.OpenAvgPx = NowKTradeData.C
+	_this.NowVirtualPosition.OpenTimeStr = NowKTradeData.TimeStr
+	_this.NowVirtualPosition.OpenTime = mTime.GetTime().TimeUnix
 
-	// 	if dir < 0 { // 开空
-	// 		// 下订单
-	// 		_this.OrderArr = append(_this.OrderArr, OrderType{
-	// 			Type:    "Sell",           // 下空单
-	// 			InstID:  NowKdata.InstID,  // 下单币种
-	// 			AvgPx:   NowKdata.C,       // 记录下单价格
-	// 			TimeStr: NowKdata.TimeStr, // 记录下单时间
-	// 		})
-	// 		// 更新持仓状态
-	// 		_this.NowPosition = PositionType{
-	// 			Dir:         -1,         // 持仓空方向
-	// 			OpenAvgPx:   NowKdata.C, // 持仓价格
-	// 			NowTimeStr:  NowKdata.TimeStr,
-	// 			UplRatio:    "0", // 当前收益率
-	// 			NowC:        NowKdata.C,
-	// 			OpenTimeStr: NowKdata.TimeStr, // 开仓时间
-	// 			InstID:      NowKdata.InstID,  // 开仓币种
-	// 			CAP_EMA:     NowKdata.CAP_EMA,
-	// 		}
-	// 	}
+	// 在这里计算当前的 Money
+	Upl := mCount.Div(_this.NowVirtualPosition.NowUplRatio, "100")     // 格式化收益率
+	ChargeUpl := mCount.Div(_this.NowVirtualPosition.ChargeUpl, "100") // 格式化手续费率
 
-	// if dir == 0 { // 平仓
-	//
-	//		// 下订单
-	//		_this.OrderArr = append(_this.OrderArr, OrderType{
-	//			Type:    "Close",          // 平仓
-	//			InstID:  NowKdata.InstID,  // 下单币种
-	//			AvgPx:   NowKdata.C,       // 记录下单价格
-	//			TimeStr: NowKdata.TimeStr, // 记录下单时间
-	//		})
-	//		// 更新为空仓状态
-	//		_this.NowPosition = PositionType{
-	//			Dir:         0,  // 持仓空方向
-	//			OpenAvgPx:   "", // 持仓价格
-	//			NowTimeStr:  NowKdata.TimeStr,
-	//			UplRatio:    "0", // 当前收益率
-	//			NowC:        NowKdata.C,
-	//			OpenTimeStr: NowKdata.TimeStr, // 开仓时间
-	//			InstID:      NowKdata.InstID,  // 开仓币种
-	//			CAP_EMA:     NowKdata.CAP_EMA,
-	//		}
-	//	}
+	Money := _this.NowVirtualPosition.Money // 提取 Money
+	makeMoney := mCount.Mul(Money, Upl)     // 当前盈利的金钱
+	Money = mCount.Add(Money, makeMoney)    // 相加得出当账户剩余资金
+
+	nowCharge := mCount.Mul(Money, ChargeUpl) // 当前产生的手续费
+	Money = mCount.Sub(Money, nowCharge)      // 减去手续费
+	Money = mCount.CentRound(Money, 3)        // 四舍五入保留三位小数
+
+	_this.NowVirtualPosition.Money = Money // 保存结果到当前持仓
+
+	// 在这里将当前订单推入数组
+	_this.OrderArr = append(_this.OrderArr, _this.NowVirtualPosition)
+
+	if dir > 0 {
+		// 开多
+		_this.NowVirtualPosition.NowDir = 1
+	}
+
+	if dir < 0 {
+		// 开空
+		_this.NowVirtualPosition.NowDir = -1
+	}
+
+	if dir == 0 {
+		// 平仓
+		_this.NowVirtualPosition.NowDir = 0
+	}
+	// 平仓后未实现盈亏重置为 0
+	_this.NowVirtualPosition.NowUplRatio = "0"
 }
