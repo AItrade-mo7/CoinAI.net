@@ -1,13 +1,16 @@
 package testHunter
 
 import (
+	"os"
 	"runtime"
 
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
+	"github.com/EasyGolang/goTools/mPath"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
 )
@@ -55,13 +58,14 @@ type NewMockOpt struct {
 }
 
 type MockObj struct {
-	NowPosition    okxInfo.VirtualPositionType   // 当前持仓
-	PositionArr    []okxInfo.VirtualPositionType // 当前持仓列表
-	OrderArr       []okxInfo.VirtualPositionType // 平仓列表
-	Billing        BillingType                   // 交易结果
-	RunKdataList   []mOKX.TypeKd                 // 运行中的 Kdata
-	TradeKdataList []okxInfo.TradeKdType         // 计算好各种指标之后的K线
-	TradeKdataOpt  okxInfo.TradeKdataOpt         // 交易指标
+	VirtualPositionType okxInfo.VirtualPositionType   // 当前持仓
+	PositionArr         []okxInfo.VirtualPositionType // 当前持仓列表
+	OrderArr            []okxInfo.VirtualPositionType // 平仓列表
+	Billing             BillingType                   // 交易结果
+	RunKdataList        []mOKX.TypeKd                 // 原始的 Kdata 数据
+	TradeKdataList      []okxInfo.TradeKdType         // 计算好各种指标之后的K线
+	TradeKdataOpt       okxInfo.TradeKdataOpt         // 交易指标
+	OutPutDirectory     string                        // 数据读写的目录
 }
 
 /*
@@ -73,32 +77,31 @@ type MockObj struct {
 func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 	var obj MockObj
 
-	obj.NowPosition = okxInfo.VirtualPositionType{}
+	obj.VirtualPositionType = okxInfo.VirtualPositionType{}
+	obj.VirtualPositionType.InitMoney = opt.InitMoney
+	obj.VirtualPositionType.Money = opt.InitMoney
+	obj.VirtualPositionType.ChargeUpl = opt.ChargeUpl
+
 	obj.PositionArr = []okxInfo.VirtualPositionType{}
 	obj.OrderArr = []okxInfo.VirtualPositionType{}
 	obj.RunKdataList = _this.KdataList
-	// 开始处理参数
+	obj.TradeKdataList = []okxInfo.TradeKdType{}
+	obj.OutPutDirectory = mStr.Join(config.Dir.JsonData, "/", opt.MockName)
+	// 默认目录在 jsonData 下
+	isOutPutDirectoryPath := mPath.Exists(obj.OutPutDirectory)
+	if !isOutPutDirectoryPath {
+		// 不存在则创建 logs 目录
+		os.MkdirAll(obj.OutPutDirectory, 0o777)
+	}
+
+	// 汇总结果的初始化
 	obj.Billing = BillingType{}
-	obj.Billing.HunterName = opt.MockName
-	obj.Billing.InitMoney = opt.InitMoney // 设定初始资金
-	obj.Billing.Money = opt.InitMoney     // 设定当前账户资金
-	obj.Billing.HunterConfig.MaxTradeLever = opt.TradeKdataOpt.MaxTradeLever
-	obj.Billing.ChargeUpl = opt.ChargeUpl
-	obj.Billing.InstID = _this.KdataList[0].InstID
 	obj.Billing.AllDay = (_this.EndTime - _this.StartTime) / mTime.UnixTimeInt64.Day
 	obj.Billing.MinMoney.Value = opt.InitMoney
 	obj.Billing.MaxMoney.Value = opt.InitMoney
-	obj.TradeKdataOpt = opt.TradeKdataOpt
 
-	global.Run.Println("新建Mock",
-		mJson.Format(map[string]any{
-			"参数组名称":   obj.Billing.HunterName,
-			"初始资金":    obj.Billing.InitMoney,
-			"杠杆倍率":    obj.Billing.HunterConfig.MaxTradeLever,
-			"手续费率(%)": obj.Billing.ChargeUpl,
-		}),
-		mJson.Format(obj.TradeKdataOpt),
-	)
+	// 设置交易指标
+	obj.TradeKdataOpt = opt.TradeKdataOpt
 
 	return &obj
 }

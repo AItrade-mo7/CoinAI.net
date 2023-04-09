@@ -4,6 +4,7 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
+	"github.com/EasyGolang/goTools/mStr"
 )
 
 func (_this *MockObj) Analy() {
@@ -19,12 +20,12 @@ func (_this *MockObj) Analy() {
 	}
 
 	// 更新持仓状态
-	if _this.NowPosition.Dir != 0 { // 当前为持持仓状态，则计算收益率
+	if _this.NowPosition.NowDir != 0 { // 当前为持持仓状态，则计算收益率
 		UplRatio := mCount.RoseCent(NowKdata.C, _this.NowPosition.OpenAvgPx)
-		if _this.NowPosition.Dir < 0 { // 当前为持 空 仓状态 则翻转该值
+		if _this.NowPosition.NowDir < 0 { // 当前为持 空 仓状态 则翻转该值
 			UplRatio = mCount.Sub("0", UplRatio)
 		}
-		_this.NowPosition.UplRatio = mCount.Mul(UplRatio, _this.Billing.Level) // 乘以杠杆倍数
+		_this.NowPosition.NowUplRatio = mCount.Mul(UplRatio, mStr.ToStr(_this.Billing.HunterConfig.MaxTradeLever)) // 乘以杠杆倍数
 	}
 	_this.NowPosition.NowTimeStr = NowKdata.TimeStr
 	_this.NowPosition.NowC = NowKdata.C

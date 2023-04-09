@@ -53,9 +53,10 @@ func BackTest(opt BackOpt) BackReturn {
 		StartTime := mTime.GetUnix()
 
 		for _, conf := range confArr {
-			MockObj := backObj.NewMock(conf)
-			Billing := MockObj.MockRun()
-			BillingArr = append(BillingArr, Billing)
+			backObj.NewMock(conf)
+			// MockObj := backObj.NewMock(conf)
+			// Billing := MockObj.MockRun()
+			// BillingArr = append(BillingArr, Billing)
 		}
 
 		EndTime := mTime.GetUnix()
