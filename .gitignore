@@ -27,7 +27,7 @@ logs
 *.log
 dist
 goRun-*
-/jsonData
+jsonData
 /www
 hunter_release
 *.zip
