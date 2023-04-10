@@ -30,10 +30,15 @@ func (_this *HunterObj) Analy() {
 	_this.CountPosition()
 
 	_this.PositionArr = append(_this.PositionArr, _this.NowVirtualPosition)
+	// 控制最大数量 防止内存爆炸
+	if len(_this.PositionArr)-_this.MaxLen > 0 {
+		_this.PositionArr = _this.PositionArr[len(_this.PositionArr)-_this.MaxLen:]
+	}
+	// 打印日志和文件写入
 	global.TradeLog.Println(_this.HunterName, "更新持仓状态", AnalyDir, mJson.ToStr(_this.NowVirtualPosition))
 	mFile.Write(_this.OutPutDirectory+"/PositionArr.json", mJson.ToStr(_this.PositionArr))
 
-	// 当前持仓与 判断方向不符合时，执行一次下单操作
+	// 当前持仓方向不符合计算结果时，执行一次下单操作
 	if _this.NowVirtualPosition.NowDir != AnalyDir {
 		_this.OnOrder(AnalyDir)
 	}

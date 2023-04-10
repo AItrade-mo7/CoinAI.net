@@ -25,7 +25,6 @@ func (_this *HunterObj) OnOrder(dir int) {
 	Money = mCount.CentRound(Money, 3)        // 四舍五入保留三位小数
 	_this.NowVirtualPosition.Money = Money    // 保存结果到当前持仓
 
-	// 在这里将当前订单进行结算,相当于平仓了一次
 	// 在这里执行平仓, 平掉所有仓位
 	_this.OrderClose()
 
@@ -63,6 +62,7 @@ func (_this *HunterObj) OnOrder(dir int) {
 func (_this *HunterObj) OrderClose() {
 	// 在这里优先平掉所有仓位  在这里进行平仓结算 和 持仓状态存储
 	global.Run.Println("平仓", mJson.ToStr(_this.NowVirtualPosition))
+	// 数据库存储一次 平仓 通知 Message 去存储
 }
 
 func (_this *HunterObj) OrderOpen() {
@@ -73,4 +73,6 @@ func (_this *HunterObj) OrderOpen() {
 		_this.NowVirtualPosition.NowDir > 0 则开多单
 		_this.NowVirtualPosition.NowDir < 0 则开空单
 	*/
+
+	// 数据库存储一次 开仓 通知 Message 去存储
 }
