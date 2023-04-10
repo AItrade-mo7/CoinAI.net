@@ -18,6 +18,7 @@ type OkxKeyType struct {
 
 type AppEnvType struct {
 	SysName      string       `bson:"SysName"`      // 系统的名字  ， 自动生成项
+	SysType      string       `bson:"SysType"`      // 系统的类型
 	Describe     string       `bson:"Describe"`     // 描述
 	SysVersion   string       `bson:"SysVersion"`   // 系统的版本  ， 自动回填
 	UserID       string       `bson:"UserID"`       // 用户名字 必填项  ， 禁止野生主机的存在
