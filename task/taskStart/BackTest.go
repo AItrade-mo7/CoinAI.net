@@ -74,11 +74,16 @@ func BackTest(opt BackOpt) BackReturn {
 	}
 
 	taskPush.SysEmail(taskPush.SysEmailOpt{
-		From:        config.SysName,
-		To:          config.NoticeEmail,
-		Subject:     "新建任务" + opt.InstID,
-		Title:       mStr.Join("并行任务数:", len(configObj.GorMap), "任务总数:", len(configObj.ConfigArr)),
-		Content:     "任务视图:<br />" + mJson.Format(configObj.GorMapView) + "线程数量:<br />" + mJson.Format(goRoName),
+		From:    config.SysName,
+		To:      config.NoticeEmail,
+		Subject: "新建任务" + opt.InstID,
+		Title:   mStr.Join("并行任务数:", len(configObj.GorMap), "任务总数:", len(configObj.ConfigArr)),
+		Content: mStr.Join(
+			"<br />任务视图:<br />",
+			mJson.Format(configObj.GorMapView),
+			"<br />线程数量:<br />",
+			mJson.Format(goRoName),
+		),
 		Description: "回测开始通知",
 	})
 
@@ -106,7 +111,7 @@ func BackTest(opt BackOpt) BackReturn {
 		Title:   mStr.Join("任务总数:", len(configObj.ConfigArr), "共计耗时", DiffMin, "分钟"),
 		Content: mStr.Join(
 			"任务视图:<br />", mJson.Format(configObj.GorMapView), "<br />",
-			"线程数量:<br />"+mJson.Format(goRoName),
+			"线程数量:<br />"+mJson.Format(goRoName), "<br />",
 			"结果:<br />", BillingArr_Path, "<br />",
 		),
 		Description: "回测结束通知",
