@@ -3,8 +3,6 @@ package dbType
 import "CoinAI.net/server/okxInfo"
 
 type CoinOrderTable struct {
-	CreateTime   int64                 `bson:"CreateTime"`   // 创建时间
-	UpdateTime   int64                 `bson:"UpdateTime"`   // 更新时间
 	InstID       string                `bson:"InstID"`       // 下单币种 | 运行中设置
 	HunterName   string                `bson:"HunterName"`   // 策略名称 | 运行中设置
 	NowTimeStr   string                `bson:"NowTimeStr"`   // 当前K线时间 | 运行中设置
@@ -17,4 +15,9 @@ type CoinOrderTable struct {
 	OpenTimeStr  string                `bson:"OpenTimeStr"`  // 开仓K线时间 | 下单时设置
 	OpenTime     int64                 `bson:"OpenTime"`     // 开仓实际时间戳  | 下单时设置
 	NowDir       int                   `bson:"NowDir"`       // 当前持仓状态 没持仓0  持多仓 1  持空仓 -1 | 初始化设置为0，下单时更新
+	CreateTime   int64                 `bson:"CreateTime"`   // 创建时间
+	Type         string                `bson:"Type"`         // 当前订单类型  Close:平仓  Buy:买多  Sell:卖空
+	ServeID      string                `bson:"ServeID"`      // ServeID ，  ip+端口
+	TimeID       string                `bson:"TimeID"`       // 精确到分钟
+	OrderID      string                `bson:"OrderID"`      // UUID
 }

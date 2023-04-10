@@ -1,14 +1,17 @@
 package hunter
 
 import (
-	"fmt"
-
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mCount"
+	"github.com/EasyGolang/goTools/mEncrypt"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
+	"github.com/EasyGolang/goTools/mMongo"
+	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTime"
+	jsoniter "github.com/json-iterator/go"
 )
 
 // // 下单  参数：dir 下单方向 NowKdata : 当前市场行情
@@ -66,20 +69,36 @@ func (_this *HunterObj) OrderClose() {
 	// 在这里优先平掉所有仓位  在这里进行平仓结算 和 持仓状态存储
 	global.Run.Println("平仓", mJson.ToStr(_this.NowVirtualPosition))
 	// 数据库存储一次 平仓 通知 Message 去存储
+
+	_this.SetOrderDB("Close")
 }
 
 func (_this *HunterObj) OrderOpen() {
 	// 在这里进行 下单存储。
 	global.Run.Println("下单", mJson.ToStr(_this.NowVirtualPosition))
+	if _this.NowVirtualPosition.NowDir > 0 {
+		_this.SetOrderDB("Buy")
+	}
+	if _this.NowVirtualPosition.NowDir < 0 {
+		_this.SetOrderDB("Sell")
+	}
+}
 
-	orderData := dbType.CoinOrderTable{}
-	orderData.OrderInfo = _this.NowVirtualPosition
-	fmt.Println(orderData)
+func (_this *HunterObj) SetOrderDB(Type string) {
+	var orderData dbType.CoinOrderTable
+	jsoniter.Unmarshal(mJson.ToJson(_this.NowVirtualPosition), &orderData)
+	orderData.CreateTime = mTime.GetUnixInt64()
+	orderData.Type = Type
+	orderData.ServeID = config.AppEnv.ServeID
+	orderData.TimeID = mOKX.GetTimeID(orderData.NowTime)
+	orderData.OrderID = mEncrypt.GetUUID()
 
-	/*
-		_this.NowVirtualPosition.NowDir > 0 则开多单
-		_this.NowVirtualPosition.NowDir < 0 则开空单
-	*/
-
-	// 数据库存储一次 开仓 通知 Message 去存储
+	db := mMongo.New(mMongo.Opt{
+		UserName: config.SysEnv.MongoUserName,
+		Password: config.SysEnv.MongoPassword,
+		Address:  config.SysEnv.MongoAddress,
+		DBName:   "AIServe",
+	}).Connect().Collection("CoinOrder")
+	defer db.Close()
+	db.Table.InsertOne(db.Ctx, orderData)
 }
