@@ -8,7 +8,6 @@ import (
 	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
-	"github.com/EasyGolang/goTools/mOKX"
 )
 
 type AccountParam struct {
@@ -17,25 +16,17 @@ type AccountParam struct {
 
 type AccountObj struct {
 	OkxKey       dbType.OkxKeyType
-	TradeInst    mOKX.TypeInst // 交易币种信息
 	Balance      []account.AccountBalance
 	Positions    []account.PositionsData
 	MaxSize      account.MaxSizeType
 	PendingOrder []account.PendingOrderType
+	NowHunter    okxInfo.HunterData
 }
 
 // 创建一个新账户
 func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 	resObj = &AccountObj{}
 	resErr = nil
-
-	// NowHunter := okxInfo.HunterData{}
-	// for key, item := range okxInfo.NowHunterData {
-	// 	if opt.OkxKey.Hunter == key {
-	// 		NowHunter = item
-	// 		break
-	// 	}
-	// }
 
 	if len(opt.OkxKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("okxApi.NewAccount ApiKey 不能为空 Name:" + opt.OkxKey.Name)
@@ -53,6 +44,27 @@ func NewAccount(opt AccountParam) (resObj *AccountObj, resErr error) {
 	return
 }
 
+// 获取当前账户的 Hunter
+// 凡是涉及到 下单，设置杠杆
+func (_this *AccountObj) GetHunter() (resErr error) {
+	NowHunter := okxInfo.HunterData{}
+	for key, item := range okxInfo.NowHunterData {
+		if _this.OkxKey.Hunter == key {
+			NowHunter = item
+			break
+		}
+	}
+
+	if len(NowHunter.HunterName) < 1 {
+		resErr = fmt.Errorf("okxApi.NewAccount Hunter 为空" + NowHunter.HunterName)
+		return
+	}
+
+	_this.NowHunter = NowHunter
+
+	return
+}
+
 // 设置持仓模式
 func (_this *AccountObj) SetPositionMode() (resErr error) {
 	if len(_this.Positions) < 1 {
@@ -63,16 +75,17 @@ func (_this *AccountObj) SetPositionMode() (resErr error) {
 
 // 下单 买多
 func (_this *AccountObj) Buy() (resErr error) {
+	_this.GetHunter()
 	_this.GetMaxSize() // 获取最大开仓数量
 	Sz := _this.MaxSize.MaxBuy
 	resErr = account.Order(account.OrderParam{
 		OKXKey:    _this.OkxKey,
-		TradeInst: _this.TradeInst,
+		TradeInst: _this.NowHunter.TradeInst,
 		Side:      "buy",
 		Sz:        Sz,
 	})
 	// 如果下单数量大于最大值，则再来一次
-	if mCount.Le(Sz, _this.TradeInst.MaxMktSz) > 0 {
+	if mCount.Le(Sz, _this.NowHunter.TradeInst.MaxMktSz) > 0 {
 		_this.Buy()
 	}
 	return
@@ -80,25 +93,44 @@ func (_this *AccountObj) Buy() (resErr error) {
 
 // 下单 买空
 func (_this *AccountObj) Sell() (resErr error) {
-	_this.GetMaxSize() // 获取最大开仓数量
+	err := _this.GetHunter()
+	if err != nil {
+		resErr = err
+		return
+	}
+	err = _this.GetMaxSize()
+	if err != nil {
+		resErr = err
+		return
+	}
 	Sz := _this.MaxSize.MaxSell
 	account.Order(account.OrderParam{
 		OKXKey:    _this.OkxKey,
-		TradeInst: _this.TradeInst,
+		TradeInst: _this.NowHunter.TradeInst,
 		Side:      "sell",
 		Sz:        Sz,
 	})
 	// 如果下单数量大于最大值，则再来一次
-	if mCount.Le(Sz, _this.TradeInst.MaxMktSz) > 0 {
-		_this.Sell()
+	if mCount.Le(Sz, _this.NowHunter.TradeInst.MaxMktSz) > 0 {
+		err = _this.Sell()
+	}
+
+	if err != nil {
+		resErr = err
+		return
 	}
 	return
 }
 
 // 设置杠杆倍数
 func (_this *AccountObj) SetLeverage() (resErr error) {
+	err := _this.GetHunter()
+	if err != nil {
+		resErr = err
+		return
+	}
 	resErr = account.SetLeverage(account.SetLeverageParam{
-		InstID: _this.TradeInst.InstID,
+		InstID: _this.NowHunter.TradeInst.InstID,
 		OKXKey: _this.OkxKey,
 	})
 	return
@@ -120,9 +152,19 @@ func (_this *AccountObj) GetPositions() (resErr error) {
 
 // 获取最大可开仓数量
 func (_this *AccountObj) GetMaxSize() (resErr error) {
-	_this.SetLeverage() // 设置杠杆倍数
+	err := _this.GetHunter()
+	if err != nil {
+		resErr = err
+		return
+	}
+
+	err = _this.SetLeverage() // 设置杠杆倍数
+	if err != nil {
+		resErr = err
+		return
+	}
 	resData, resErr := account.GetMaxSize(account.GetMaxSizeParam{
-		InstID: _this.TradeInst.InstID,
+		InstID: _this.NowHunter.TradeInst.InstID,
 		OKXKey: _this.OkxKey,
 	})
 	_this.MaxSize = resData
@@ -158,9 +200,23 @@ func (_this *AccountObj) CancelOrder() (resErr error) {
 
 // 下单 平仓,平掉当前所有仓位
 func (_this *AccountObj) Close() (resErr error) {
-	_this.GetOrdersPending() // 获取未成交订单
-	_this.CancelOrder()      // 取消所有未成交订单
-	_this.GetPositions()     // 获取所有持仓
+	err := _this.GetOrdersPending() // 获取未成交订单
+	if err != nil {
+		resErr = err
+		return
+	}
+
+	err = _this.CancelOrder() // 取消所有未成交订单
+	if err != nil {
+		resErr = err
+		return
+	}
+
+	err = _this.GetPositions() // 获取所有持仓
+	if err != nil {
+		resErr = err
+		return
+	}
 
 	errArr := []error{}
 	isAgin := false
@@ -212,7 +268,12 @@ func (_this *AccountObj) Close() (resErr error) {
 
 	// isAgin 为真，则再来一次
 	if isAgin {
-		_this.Close()
+		err = _this.Close()
+	}
+
+	if err != nil {
+		resErr = err
+		return
 	}
 
 	return
