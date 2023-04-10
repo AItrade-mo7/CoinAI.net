@@ -29,8 +29,7 @@ func Start() {
 		InstID:     "BTC-USDT",
 		Describe:   "以 BTC-USDT 交易对为主执行自动交易,支持的资金量更大,更加稳定",
 	})
-
-	// BTCHunter.Start()
+	BTCHunter.Start()
 
 	// 策略 2
 	ETHHunter := hunter.New(hunter.HunterOpt{
@@ -38,8 +37,7 @@ func Start() {
 		InstID:     "ETH-USDT",
 		Describe:   "以 ETH-USDT 交易对为主执行自动交易,交易次数更加频发,可以收获更高收益",
 	})
-
-	// ETHHunter.Start()
+	ETHHunter.Start()
 
 	// 构建定时任务
 	go mClock.New(mClock.OptType{
