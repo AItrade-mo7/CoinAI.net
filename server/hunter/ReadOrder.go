@@ -1,15 +1,13 @@
 package hunter
 
 import (
-	"fmt"
-
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/global/dbType"
+	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
-	"github.com/EasyGolang/goTools/mTime"
+	jsoniter "github.com/json-iterator/go"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -39,13 +37,27 @@ func (_this *HunterObj) ReadOrder() {
 		global.LogErr("hunter.ReadOrder 数据读取失败", _this.HunterName, err)
 	}
 
-	var CoinOrder []dbType.CoinOrderTable
+	var OrderArr []okxInfo.VirtualPositionType
 	for cur.Next(db.Ctx) {
-		var result dbType.CoinOrderTable
+		var result map[string]any
 		cur.Decode(&result)
-		CoinOrder = append(CoinOrder, result)
-		fmt.Println(mTime.TimeGet(result.CreateTime).TimeStr)
+
+		var order okxInfo.VirtualPositionType
+		jsoniter.Unmarshal(mJson.ToJson(result), &order)
+		OrderArr = append(OrderArr, order)
 	}
 
-	mFile.Write(_this.OutPutDirectory+"/CoinOrder.json", mJson.ToStr(CoinOrder))
+	for i := len(OrderArr) - 1; i >= 0; i-- {
+		item := OrderArr[i]
+		_this.OrderArr = append(_this.OrderArr, item)
+		_this.PositionArr = append(_this.PositionArr, item)
+	}
+
+	if len(OrderArr) > 0 {
+		_this.NowVirtualPosition = OrderArr[0]
+
+		mJson.Println(_this.NowVirtualPosition)
+	}
+
+	mFile.Write(_this.OutPutDirectory+"/OrderArr.json", mJson.ToStr(OrderArr))
 }
