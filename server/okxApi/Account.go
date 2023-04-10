@@ -75,8 +75,16 @@ func (_this *AccountObj) SetPositionMode() (resErr error) {
 
 // 下单 买多
 func (_this *AccountObj) Buy() (resErr error) {
-	_this.GetHunter()
-	_this.GetMaxSize() // 获取最大开仓数量
+	err := _this.GetHunter()
+	if err != nil {
+		resErr = err
+		return
+	}
+	err = _this.GetMaxSize()
+	if err != nil {
+		resErr = err
+		return
+	}
 	Sz := _this.MaxSize.MaxBuy
 	resErr = account.Order(account.OrderParam{
 		OKXKey:    _this.OkxKey,
