@@ -3,6 +3,7 @@ package hunter
 import (
 	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mCount"
+	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mTime"
 )
@@ -53,9 +54,10 @@ func (_this *HunterObj) OnOrder(dir int) {
 	_this.NowVirtualPosition.NowUplRatio = "0"
 
 	// 在这里执行下单
-
-	_this.OrderArr = append(_this.OrderArr, _this.NowVirtualPosition)
 	_this.OrderOpen()
+	global.TradeLog.Println(_this.HunterName, "下单一次", mJson.ToStr(_this.NowVirtualPosition))
+	_this.OrderArr = append(_this.OrderArr, _this.NowVirtualPosition)
+	mFile.Write(_this.OutPutDirectory+"/OrderArr.json", mJson.ToStr(_this.OrderArr))
 }
 
 func (_this *HunterObj) OrderClose() {

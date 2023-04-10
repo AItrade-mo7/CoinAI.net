@@ -27,9 +27,9 @@ type HunterObj struct {
 	NowKdataList       []mOKX.TypeKd                 // 现货的原始K线
 	TradeKdataList     []okxInfo.TradeKdType         // 交易K线-计算好各种指标之后的K线
 	TradeKdataOpt      okxInfo.TradeKdataOpt         // 计算交易指标的参数
-	NowVirtualPosition okxInfo.VirtualPositionType   // 当前的虚拟持仓
-	PositionArr        []okxInfo.VirtualPositionType // 当前持仓列表
-	OrderArr           []okxInfo.VirtualPositionType // 平仓列表
+	NowVirtualPosition okxInfo.VirtualPositionType   // 当前的虚拟持仓 数据库 OrderArr 最后一位
+	PositionArr        []okxInfo.VirtualPositionType // 当前持仓列表 读写在本地, 最大数量为 MaxLen
+	OrderArr           []okxInfo.VirtualPositionType // 平仓列表 读写都在数据库中 启动时加载最近10条
 	OutPutDirectory    string                        // 数据读写的目录
 }
 

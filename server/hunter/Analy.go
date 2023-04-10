@@ -3,6 +3,7 @@ package hunter
 import (
 	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mCount"
+	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
@@ -15,16 +16,7 @@ func (_this *HunterObj) Analy() {
 	}
 
 	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
-	LastPrint := map[string]any{
-		"InstID":  NowKTradeData.InstID,
-		"TimeStr": NowKTradeData.TimeStr,
-		"AllLen":  len(_this.TradeKdataList),
-		"C":       NowKTradeData.C,
-		"EMA":     NowKTradeData.EMA,
-		"CAP_EMA": NowKTradeData.CAP_EMA,
-		"Opt":     NowKTradeData.Opt,
-	}
-	global.TradeLog.Println("hunter.Analy 开始分析并执行交易 NowKTradeData", mJson.Format(LastPrint))
+
 	AnalyDir := 0                                                          // 分析的方向，默认为 0 不开仓
 	if mCount.Le(NowKTradeData.CAP_EMA, _this.TradeKdataOpt.CAP_Max) > 0 { // 大于 CAPMax 则开多
 		AnalyDir = 1
@@ -36,9 +28,10 @@ func (_this *HunterObj) Analy() {
 
 	// 更新持仓状态
 	_this.CountPosition()
-	_this.PositionArr = append(_this.PositionArr, _this.NowVirtualPosition)
 
-	global.Run.Println(NowKTradeData.TimeStr, _this.NowVirtualPosition.NowDir, AnalyDir)
+	_this.PositionArr = append(_this.PositionArr, _this.NowVirtualPosition)
+	global.TradeLog.Println(_this.HunterName, "更新持仓状态", AnalyDir, mJson.ToStr(_this.NowVirtualPosition))
+	mFile.Write(_this.OutPutDirectory+"/PositionArr.json", mJson.ToStr(_this.PositionArr))
 
 	// 当前持仓与 判断方向不符合时，执行一次下单操作
 	if _this.NowVirtualPosition.NowDir != AnalyDir {
