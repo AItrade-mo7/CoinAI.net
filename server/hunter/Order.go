@@ -1,7 +1,10 @@
 package hunter
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
@@ -68,6 +71,10 @@ func (_this *HunterObj) OrderClose() {
 func (_this *HunterObj) OrderOpen() {
 	// 在这里进行 下单存储。
 	global.Run.Println("下单", mJson.ToStr(_this.NowVirtualPosition))
+
+	orderData := dbType.CoinOrderTable{}
+	orderData.OrderInfo = _this.NowVirtualPosition
+	fmt.Println(orderData)
 
 	/*
 		_this.NowVirtualPosition.NowDir > 0 则开多单
