@@ -36,6 +36,9 @@ func (_this *HunterObj) Analy() {
 
 	// 更新持仓状态
 	_this.CountPosition()
+	_this.PositionArr = append(_this.PositionArr, _this.NowVirtualPosition)
+
+	global.Run.Println(NowKTradeData.TimeStr, _this.NowVirtualPosition.NowDir, AnalyDir)
 
 	// 当前持仓与 判断方向不符合时，执行一次下单操作
 	if _this.NowVirtualPosition.NowDir != AnalyDir {

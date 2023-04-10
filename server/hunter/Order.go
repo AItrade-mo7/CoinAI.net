@@ -3,6 +3,7 @@ package hunter
 import (
 	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mCount"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mTime"
 )
 
@@ -53,16 +54,18 @@ func (_this *HunterObj) OnOrder(dir int) {
 
 	// 在这里执行下单
 
+	_this.OrderArr = append(_this.OrderArr, _this.NowVirtualPosition)
 	_this.OrderOpen()
 }
 
 func (_this *HunterObj) OrderClose() {
-	// 在这里优先平掉所有仓位
-	global.Run.Println("平仓", _this.NowVirtualPosition)
+	// 在这里优先平掉所有仓位  在这里进行平仓结算 和 持仓状态存储
+	global.Run.Println("平仓", mJson.ToStr(_this.NowVirtualPosition))
 }
 
 func (_this *HunterObj) OrderOpen() {
-	global.Run.Println("下单", _this.NowVirtualPosition)
+	// 在这里进行 下单存储。
+	global.Run.Println("下单", mJson.ToStr(_this.NowVirtualPosition))
 
 	/*
 		_this.NowVirtualPosition.NowDir > 0 则开多单

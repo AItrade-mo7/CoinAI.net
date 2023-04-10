@@ -22,13 +22,15 @@ type HunterObj struct {
 	Describe           string // 描述
 	InstID             string // 当前策略主打币种
 	MaxLen             int
-	TradeInst          mOKX.TypeInst               // 交易的 InstID SWAP
-	KdataInst          mOKX.TypeInst               // K线的 InstID SPOT
-	NowKdataList       []mOKX.TypeKd               // 现货的原始K线
-	TradeKdataList     []okxInfo.TradeKdType       // 交易K线-计算好各种指标之后的K线
-	TradeKdataOpt      okxInfo.TradeKdataOpt       // 计算交易指标的参数
-	NowVirtualPosition okxInfo.VirtualPositionType // 当前的虚拟持仓
-	OutPutDirectory    string                      // 数据读写的目录
+	TradeInst          mOKX.TypeInst                 // 交易的 InstID SWAP
+	KdataInst          mOKX.TypeInst                 // K线的 InstID SPOT
+	NowKdataList       []mOKX.TypeKd                 // 现货的原始K线
+	TradeKdataList     []okxInfo.TradeKdType         // 交易K线-计算好各种指标之后的K线
+	TradeKdataOpt      okxInfo.TradeKdataOpt         // 计算交易指标的参数
+	NowVirtualPosition okxInfo.VirtualPositionType   // 当前的虚拟持仓
+	PositionArr        []okxInfo.VirtualPositionType // 当前持仓列表
+	OrderArr           []okxInfo.VirtualPositionType // 平仓列表
+	OutPutDirectory    string                        // 数据读写的目录
 }
 
 /*
