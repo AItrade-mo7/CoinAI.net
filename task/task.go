@@ -2,14 +2,12 @@ package main
 
 import (
 	_ "embed"
-	"fmt"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/task/analyConfig"
 	"CoinAI.net/task/taskStart"
 	"CoinAI.net/task/testHunter"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mTime"
 )
 
@@ -43,23 +41,29 @@ var (
 	}
 
 	ConfArr = []okxInfo.TradeKdataOpt{
-		// {
-		// 	EMA_Period:    70,
-		// 	CAP_Period:    2,
-		// 	CAP_Max:       "0.2",
-		// 	MaxTradeLever: 1,
-		// },
+		{
+			EMA_Period:    70,
+			CAP_Period:    2,
+			CAP_Max:       "0.2",
+			MaxTradeLever: 1,
+		},
+		{
+			EMA_Period:    542,
+			CAP_Period:    2,
+			CAP_Max:       "0.2",
+			MaxTradeLever: 1,
+		},
 	}
 )
 
 func BackAnaly() {
-	StarNum := 70
-	for i := 0; i < 520; i += 2 {
-		StarNum = 60 + i
-		EmaPArr = append(EmaPArr, StarNum)
-	}
+	// StarNum := 70
+	// for i := 0; i < 520; i += 2 {
+	// 	StarNum = 60 + i
+	// 	EmaPArr = append(EmaPArr, StarNum)
+	// }
 
-	fmt.Println(mJson.ToStr(EmaPArr))
+	// fmt.Println(mJson.ToStr(EmaPArr))
 
 	EndTime := mTime.GetUnixInt64()
 	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 260)
