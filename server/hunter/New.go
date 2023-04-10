@@ -81,7 +81,3 @@ func New(opt HunterOpt) *HunterObj {
 
 	return &obj
 }
-
-func (_this *HunterObj) ReadVirtualPosition() {
-	// 在这里读取虚拟持仓并设置初始值
-}
