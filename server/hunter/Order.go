@@ -100,5 +100,8 @@ func (_this *HunterObj) SetOrderDB(Type string) {
 		DBName:   "AIServe",
 	}).Connect().Collection("CoinOrder")
 	defer db.Close()
-	db.Table.InsertOne(db.Ctx, orderData)
+	_, err := db.Table.InsertOne(db.Ctx, orderData)
+	if err != nil {
+		global.LogErr("hunter.SetOrderDB 数据存储失败", _this.HunterName, err)
+	}
 }

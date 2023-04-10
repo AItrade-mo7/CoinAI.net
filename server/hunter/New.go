@@ -79,5 +79,6 @@ func New(opt HunterOpt) *HunterObj {
 		os.MkdirAll(obj.OutPutDirectory, 0o777)
 	}
 
+	obj.ReadOrder()
 	return &obj
 }

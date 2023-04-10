@@ -18,25 +18,25 @@ type RecordNodeType struct {
 
 // 模拟持仓的数据
 type VirtualPositionType struct {
-	InstID       string        // 下单币种 | 运行中设置
-	HunterName   string        // 策略名称 | 运行中设置
-	NowTimeStr   string        // 当前K线时间 | 运行中设置
-	NowTime      int64         // 当前实际时间戳 | 运行中设置
-	NowC         string        // 当前收盘价 | 运行中设置
-	CAP_EMA      string        // 当前的 CAP 值 | 运行中设置
-	EMA          string        // 当前的 EMA 值 | 运行中设置
-	HunterConfig TradeKdataOpt // 当前的交易K线参数  | 运行中设置
+	InstID       string        `bson:"InstID"`       // 下单币种 | 运行中设置
+	HunterName   string        `bson:"HunterName"`   // 策略名称 | 运行中设置
+	NowTimeStr   string        `bson:"NowTimeStr"`   // 当前K线时间 | 运行中设置
+	NowTime      int64         `bson:"NowTime"`      // 当前实际时间戳 | 运行中设置
+	NowC         string        `bson:"NowC"`         // 当前收盘价 | 运行中设置
+	CAP_EMA      string        `bson:"CAP_EMA"`      // 当前的 CAP 值 | 运行中设置
+	EMA          string        `bson:"EMA"`          // 当前的 EMA 值 | 运行中设置
+	HunterConfig TradeKdataOpt `bson:"HunterConfig"` // 当前的交易K线参数  | 运行中设置
 	// 下单时设置
-	OpenAvgPx   string // 开仓价格 | 下单时设置
-	OpenTimeStr string // 开仓K线时间 | 下单时设置
-	OpenTime    int64  // 开仓实际时间戳  | 下单时设置
-	NowDir      int    // 当前持仓状态 没持仓0  持多仓 1  持空仓 -1 | 初始化设置为0，下单时更新
+	OpenAvgPx   string `bson:"OpenAvgPx"`   // 开仓价格 | 下单时设置
+	OpenTimeStr string `bson:"OpenTimeStr"` // 开仓K线时间 | 下单时设置
+	OpenTime    int64  `bson:"OpenTime"`    // 开仓实际时间戳  | 下单时设置
+	NowDir      int    `bson:"NowDir"`      // 当前持仓状态 没持仓0  持多仓 1  持空仓 -1 | 初始化设置为0，下单时更新
 
 	// 通过原始数据计算得出
-	InitMoney   string // 初始金钱 | 固定值初始值设置
-	ChargeUpl   string // 当前手续费率 | 固定值初始值设置
-	NowUplRatio string // 当前未实现收益率(计算得出) | 运行中设置
-	Money       string // 账户当前余额 | 如果没有初始值设置一次，下单时计算
+	InitMoney   string `bson:"InitMoney"`   // 初始金钱 | 固定值初始值设置
+	ChargeUpl   string `bson:"ChargeUpl"`   // 当前手续费率 | 固定值初始值设置
+	NowUplRatio string `bson:"NowUplRatio"` // 当前未实现收益率(计算得出) | 运行中设置
+	Money       string `bson:"Money"`       // 账户当前余额 | 如果没有初始值设置一次，下单时计算
 }
 
 type TradeKdType struct {
