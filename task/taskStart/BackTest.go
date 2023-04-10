@@ -107,7 +107,7 @@ func BackTest(opt BackOpt) BackReturn {
 	taskPush.SysEmail(taskPush.SysEmailOpt{
 		From:    config.SysName,
 		To:      config.NoticeEmail,
-		Subject: "任务结束",
+		Subject: "任务结束" + opt.InstID,
 		Title:   mStr.Join("任务总数:", len(configObj.ConfigArr), "共计耗时", DiffMin, "分钟"),
 		Content: mStr.Join(
 			"任务视图:<br />", mJson.Format(configObj.GorMapView), "<br />",
