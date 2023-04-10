@@ -1,15 +1,20 @@
 package hunter
 
 import (
+	"fmt"
+
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
+	"CoinAI.net/server/okxApi"
+	"CoinAI.net/server/utils/taskPush"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mEncrypt"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
+	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -50,6 +55,8 @@ func (_this *HunterObj) OnOrder(dir int) {
 	global.TradeLog.Println(_this.HunterName, "下单一次", mJson.ToStr(_this.NowVirtualPosition))
 	_this.OrderArr = append(_this.OrderArr, _this.NowVirtualPosition)
 	mFile.Write(_this.OutPutDirectory+"/OrderArr.json", mJson.ToStr(_this.OrderArr))
+
+	_this.SyncAllApiKey()
 }
 
 func (_this *HunterObj) BillingFun() {
@@ -103,4 +110,130 @@ func (_this *HunterObj) SetOrderDB(Type string) {
 	if err != nil {
 		global.LogErr("hunter.SetOrderDB 数据存储失败", _this.HunterName, err)
 	}
+}
+
+type ErrObj struct {
+	Err  string //
+	Name string
+}
+
+func (_this *HunterObj) SyncAllApiKey() {
+	global.TradeLog.Println(_this.HunterName, "开始执行所有的ApiKey")
+	ApiKeyList := []dbType.OkxKeyType{}
+
+	for _, item := range config.AppEnv.ApiKeyList {
+		if item.Hunter == _this.HunterName {
+			ApiKeyList = append(ApiKeyList, item)
+		}
+	}
+
+	if len(ApiKeyList) < 1 {
+		return
+	}
+
+	RightAccount := []dbType.OkxKeyType{}
+	var ErrList []ErrObj
+	for _, OkxKey := range ApiKeyList {
+		// 新建账户
+		OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
+			OkxKey: OkxKey,
+		})
+		if err != nil {
+			ErrList = append(ErrList, ErrObj{
+				Err:  mStr.ToStr(err),
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+		// 读取当前持仓
+		err = OKXAccount.GetPositions()
+		if err != nil {
+			ErrList = append(ErrList, ErrObj{
+				Err:  mStr.ToStr(err),
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+		// 获取 Hunter
+		err = OKXAccount.GetHunter()
+		if err != nil {
+			ErrList = append(ErrList, ErrObj{
+				Err:  mStr.ToStr(err),
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+		var NowAccountPos struct {
+			Dir    int
+			InstID string
+		}
+		for _, Positions := range OKXAccount.Positions {
+			if OKXAccount.NowHunter.TradeInst.InstID == Positions.InstID {
+				NowAccountPos.InstID = Positions.InstID
+				NowAccountPos.Dir = mCount.Le(Positions.Pos, "0")
+			}
+		}
+		if NowAccountPos.Dir == _this.NowVirtualPosition.NowDir {
+			ErrList = append(ErrList, ErrObj{
+				Err:  "当前账户持仓已经与策略保持一致,无需下单。",
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+		if _this.NowVirtualPosition.NowDir > 0 {
+			err = OKXAccount.Buy()
+		}
+		if _this.NowVirtualPosition.NowDir < 0 {
+			err = OKXAccount.Sell()
+		}
+		if _this.NowVirtualPosition.NowDir == 0 {
+			err = OKXAccount.Close()
+		}
+		if err != nil {
+			ErrList = append(ErrList, ErrObj{
+				Err:  mStr.ToStr(err),
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+
+		RightAccount = append(RightAccount, OkxKey)
+	}
+
+	DirText := "保持空仓"
+	if _this.NowVirtualPosition.NowDir > 0 {
+		DirText = "买多看涨"
+	}
+	if _this.NowVirtualPosition.NowDir < 0 {
+		DirText = "买空看跌"
+	}
+
+	tmplStr := `
+<br />
+策略名称： ${HunterName}  <br />
+当前持仓建议： ${NowDir}  <br />
+需要同步账户数量：${TradeAccountNum}  <br />
+已同步完成：${RightAccountNum}  <br />
+报错账户信息: ${ErrList}  <br />
+`
+
+	lMap := map[string]string{
+		"HunterName":      _this.HunterName,
+		"NowDir":          DirText,
+		"TradeAccountNum": mStr.ToStr(len(ApiKeyList)),
+		"RightAccountNum": mStr.ToStr(len(RightAccount)),
+		"ErrList":         mJson.ToStr(ErrList),
+	}
+
+	Content := mStr.Temp(tmplStr, lMap)
+	taskPush.SysEmail(taskPush.SysEmailOpt{
+		From:        config.SysName,
+		To:          config.NoticeEmail,
+		Subject:     "市场方向已改变",
+		Title:       "市场方向已改变,所有账户均以同步持仓",
+		Content:     Content,
+		Description: "系统启动邮件",
+	})
+
+	fmt.Println(_this.HunterName, "交易失败列表", ErrList)
 }

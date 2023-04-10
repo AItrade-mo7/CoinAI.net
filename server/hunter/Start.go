@@ -56,16 +56,19 @@ func (_this *HunterObj) Running() {
 		return
 	}
 
+	_this.SyncInfoToGlobal() // 同步一次数据
+
+	// 策略执行的核心
 	err = _this.FormatTradeKdata()
 	if err != nil { // 这里参数出了问题
 		global.LogErr(err)
 		_this.Running() // 立即重新执行一次 Running
 		return
 	}
-
 	_this.Analy()
+	// 策略执行的核心模块
 
-	_this.SyncInfoToGlobal()
+	_this.SyncInfoToGlobal() // 同步一次数据
 }
 
 func (_this *HunterObj) FileBaseKdata() error {
