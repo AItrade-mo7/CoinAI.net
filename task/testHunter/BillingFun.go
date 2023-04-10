@@ -151,32 +151,32 @@ InstID: ${InstID}
 	Data := map[string]string{
 		"MockName":         _this.Billing.MockName,
 		"InstID":           _this.Billing.InstID,
-		"AllDay":           mStr.ToStr(_this.Billing.AllDay),           // 总天数 | 结束时计算
-		"OrderRate":        _this.Billing.OrderRate,                    // 开仓频率
-		"StartTime":        _this.Billing.StartTime,                    // 第一次持仓时间 数组第一个 | 结束时计算
-		"EndTime":          _this.Billing.EndTime,                      // 结束时间 数组组后一个
-		"NilNum":           mStr.ToStr(_this.Billing.NilNum),           // 空仓次数 平仓后未开仓 NowDir = 0 | 结束时计算
-		"SellNum":          mStr.ToStr(_this.Billing.SellNum),          // 开空次数 平空次数 NowDir = -1 | 结束时计算
-		"BuyNum":           mStr.ToStr(_this.Billing.BuyNum),           // 开多次数 平多次数 NowDir = 1 | 结束时计算
-		"AllNum":           mStr.ToStr(_this.Billing.AllNum),           // 总开仓次数 总的平仓次数 数组长度 | 结束时计算
-		"WinNum":           mStr.ToStr(_this.Billing.WinNum),           // 盈利次数 NowUplRatio > 0 的次数
-		"LoseNum":          mStr.ToStr(_this.Billing.LoseNum),          // 亏损次数 同 盈利次数
-		"WinRatio":         _this.Billing.WinRatio,                     // 胜率 盈利次数/(平空次数+平多次数)
-		"PLratio":          _this.Billing.PLratio,                      // 盈亏比
-		"WinUplRatioAdd":   _this.Billing.WinUplRatioAdd,               // 总盈利比率 NowUplRatio > 0 的总和
-		"WinMoneyAdd":      _this.Billing.WinMoneyAdd,                  // 盈利总金额 1000 块钱 从头计算一次 盈利部分相加
-		"LoseUplRatioAdd":  _this.Billing.LoseUplRatioAdd,              // 总亏损比率 同总的盈利比率
-		"LoseMoneyAdd":     _this.Billing.LoseMoneyAdd,                 // 亏损总金额 同上
-		"MaxRatio":         mStr.ToStr(_this.Billing.MaxRatio),         // 平仓后单笔最大盈利比率   平仓后的记录
-		"MinRatio":         mStr.ToStr(_this.Billing.MinRatio),         // 平仓后单笔最小盈利比率
-		"ChargeAdd":        _this.Billing.ChargeAdd,                    // 总手续费 同上
-		"MinMoney":         mStr.ToStr(_this.Billing.MinMoney),         // 平仓后历史最低余额  遍历一次就知道
-		"MaxMoney":         mStr.ToStr(_this.Billing.MaxMoney),         // 平仓后历史最高余额  遍历一次就知道
-		"PositionMinRatio": mStr.ToStr(_this.Billing.PositionMinRatio), // 持仓过程中最低盈利比率  // 持仓过程中才知道 结合K线才能得出
-		"PositionMaxRatio": mStr.ToStr(_this.Billing.PositionMaxRatio), // 持仓过程中最高盈利比率 // 持仓过程中才知道
-		"InitMoney":        _this.Billing.InitMoney,                    // 初始金钱
-		"ResultMoney":      _this.Billing.ResultMoney,                  // 最终金钱
-		"Level":            _this.Billing.Level,                        // 杠杆倍率
+		"AllDay":           mStr.ToStr(_this.Billing.AllDay),            // 总天数 | 结束时计算
+		"OrderRate":        _this.Billing.OrderRate,                     // 开仓频率
+		"StartTime":        _this.Billing.StartTime,                     // 第一次持仓时间 数组第一个 | 结束时计算
+		"EndTime":          _this.Billing.EndTime,                       // 结束时间 数组组后一个
+		"NilNum":           mStr.ToStr(_this.Billing.NilNum),            // 空仓次数 平仓后未开仓 NowDir = 0 | 结束时计算
+		"SellNum":          mStr.ToStr(_this.Billing.SellNum),           // 开空次数 平空次数 NowDir = -1 | 结束时计算
+		"BuyNum":           mStr.ToStr(_this.Billing.BuyNum),            // 开多次数 平多次数 NowDir = 1 | 结束时计算
+		"AllNum":           mStr.ToStr(_this.Billing.AllNum),            // 总开仓次数 总的平仓次数 数组长度 | 结束时计算
+		"WinNum":           mStr.ToStr(_this.Billing.WinNum),            // 盈利次数 NowUplRatio > 0 的次数
+		"LoseNum":          mStr.ToStr(_this.Billing.LoseNum),           // 亏损次数 同 盈利次数
+		"WinRatio":         _this.Billing.WinRatio,                      // 胜率 盈利次数/(平空次数+平多次数)
+		"PLratio":          _this.Billing.PLratio,                       // 盈亏比
+		"WinUplRatioAdd":   _this.Billing.WinUplRatioAdd,                // 总盈利比率 NowUplRatio > 0 的总和
+		"WinMoneyAdd":      _this.Billing.WinMoneyAdd,                   // 盈利总金额 1000 块钱 从头计算一次 盈利部分相加
+		"LoseUplRatioAdd":  _this.Billing.LoseUplRatioAdd,               // 总亏损比率 同总的盈利比率
+		"LoseMoneyAdd":     _this.Billing.LoseMoneyAdd,                  // 亏损总金额 同上
+		"MaxRatio":         mJson.ToStr(_this.Billing.MaxRatio),         // 平仓后单笔最大盈利比率   平仓后的记录
+		"MinRatio":         mJson.ToStr(_this.Billing.MinRatio),         // 平仓后单笔最小盈利比率
+		"ChargeAdd":        _this.Billing.ChargeAdd,                     // 总手续费 同上
+		"MinMoney":         mJson.ToStr(_this.Billing.MinMoney),         // 平仓后历史最低余额  遍历一次就知道
+		"MaxMoney":         mJson.ToStr(_this.Billing.MaxMoney),         // 平仓后历史最高余额  遍历一次就知道
+		"PositionMinRatio": mJson.ToStr(_this.Billing.PositionMinRatio), // 持仓过程中最低盈利比率  // 持仓过程中才知道 结合K线才能得出
+		"PositionMaxRatio": mJson.ToStr(_this.Billing.PositionMaxRatio), // 持仓过程中最高盈利比率 // 持仓过程中才知道
+		"InitMoney":        _this.Billing.InitMoney,                     // 初始金钱
+		"ResultMoney":      _this.Billing.ResultMoney,                   // 最终金钱
+		"Level":            _this.Billing.Level,                         // 杠杆倍率
 	}
 
 	global.TradeLog.Println(mStr.Temp(Tmp, Data))
