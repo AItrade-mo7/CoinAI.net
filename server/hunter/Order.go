@@ -18,21 +18,8 @@ import (
 func (_this *HunterObj) OnOrder(dir int) {
 	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
 
-	// 在这里计算当前的 Money
-	Upl := mCount.Div(_this.NowVirtualPosition.NowUplRatio, "100")     // 格式化收益率
-	ChargeUpl := mCount.Div(_this.NowVirtualPosition.ChargeUpl, "100") // 格式化手续费率
-
-	Money := _this.NowVirtualPosition.Money // 提取 Money
-	makeMoney := mCount.Mul(Money, Upl)     // 当前盈利的金钱
-	Money = mCount.Add(Money, makeMoney)    // 相加得出当账户剩余资金
-
-	nowCharge := mCount.Mul(Money, ChargeUpl) // 当前产生的手续费
-	Money = mCount.Sub(Money, nowCharge)      // 减去手续费
-	Money = mCount.CentRound(Money, 3)        // 四舍五入保留三位小数
-	_this.NowVirtualPosition.Money = Money    // 保存结果到当前持仓
-
-	// 在这里执行平仓, 平掉所有仓位
-	_this.OrderClose()
+	// 结算本期持仓
+	_this.BillingFun()
 
 	// 同步持仓状态, 相当于下单了
 	if dir > 0 {
@@ -59,18 +46,26 @@ func (_this *HunterObj) OnOrder(dir int) {
 	_this.NowVirtualPosition.NowUplRatio = "0"
 
 	// 在这里执行下单
-	_this.OrderOpen()
+	_this.OrderOpen() // 这里的结果 要么是 1 要么是 0  要么 是 -1 没有第三种了
 	global.TradeLog.Println(_this.HunterName, "下单一次", mJson.ToStr(_this.NowVirtualPosition))
 	_this.OrderArr = append(_this.OrderArr, _this.NowVirtualPosition)
 	mFile.Write(_this.OutPutDirectory+"/OrderArr.json", mJson.ToStr(_this.OrderArr))
 }
 
-func (_this *HunterObj) OrderClose() {
-	// 在这里优先平掉所有仓位  在这里进行平仓结算 和 持仓状态存储
-	global.Run.Println("平仓", mJson.ToStr(_this.NowVirtualPosition))
-	// 数据库存储一次 平仓 通知 Message 去存储
+func (_this *HunterObj) BillingFun() {
+	// 这里是下单之前的结算周期
+	Upl := mCount.Div(_this.NowVirtualPosition.NowUplRatio, "100")     // 格式化收益率
+	ChargeUpl := mCount.Div(_this.NowVirtualPosition.ChargeUpl, "100") // 格式化手续费率
 
-	_this.SetOrderDB("Close")
+	Money := _this.NowVirtualPosition.Money // 提取 Money
+	makeMoney := mCount.Mul(Money, Upl)     // 当前盈利的金钱
+	Money = mCount.Add(Money, makeMoney)    // 相加得出当账户剩余资金
+
+	nowCharge := mCount.Mul(Money, ChargeUpl) // 当前产生的手续费
+	Money = mCount.Sub(Money, nowCharge)      // 减去手续费
+	Money = mCount.CentRound(Money, 3)        // 四舍五入保留三位小数
+	_this.NowVirtualPosition.Money = Money    // 保存结果到当前持仓
+	global.Run.Println("结算一次", mJson.ToStr(_this.NowVirtualPosition))
 }
 
 func (_this *HunterObj) OrderOpen() {
@@ -81,6 +76,10 @@ func (_this *HunterObj) OrderOpen() {
 	}
 	if _this.NowVirtualPosition.NowDir < 0 {
 		_this.SetOrderDB("Sell")
+	}
+
+	if _this.NowVirtualPosition.NowDir == 0 {
+		_this.SetOrderDB("Close")
 	}
 }
 

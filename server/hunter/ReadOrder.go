@@ -27,10 +27,15 @@ func (_this *HunterObj) ReadOrder() {
 	findOpt.SetAllowDiskUse(true)
 	findOpt.SetLimit(100)
 
-	FK := bson.D{{
-		Key:   "HunterName",
-		Value: _this.HunterName,
-	}}
+	FK := bson.D{
+		{
+			Key:   "HunterName",
+			Value: _this.HunterName,
+		}, {
+			Key:   "ServeID",
+			Value: config.AppEnv.ServeID,
+		},
+	}
 
 	cur, err := db.Table.Find(db.Ctx, FK, findOpt)
 	if err != nil {
@@ -55,9 +60,22 @@ func (_this *HunterObj) ReadOrder() {
 
 	if len(OrderArr) > 0 {
 		_this.NowVirtualPosition = OrderArr[0]
+	}
 
-		mJson.Println(_this.NowVirtualPosition)
+	// 填充当前除持仓数据
+	if len(_this.NowVirtualPosition.InitMoney) < 1 {
+		_this.NowVirtualPosition.InitMoney = "1000"
+	}
+
+	if len(_this.NowVirtualPosition.ChargeUpl) < 1 {
+		_this.NowVirtualPosition.ChargeUpl = "0.05"
+	}
+
+	if len(_this.NowVirtualPosition.Money) < 1 {
+		_this.NowVirtualPosition.Money = _this.NowVirtualPosition.InitMoney
 	}
 
 	mFile.Write(_this.OutPutDirectory+"/OrderArr.json", mJson.ToStr(OrderArr))
+
+	global.TradeLog.Println(_this.HunterName, "加载初始持仓", mJson.ToStr(_this.NowVirtualPosition))
 }
