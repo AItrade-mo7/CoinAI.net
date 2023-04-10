@@ -43,6 +43,8 @@ func BackTest(opt BackOpt) BackReturn {
 	// 新建回测参数 ( 按照核心数进行任务拆分 )
 	configObj := testHunter.GetConfig(opt.GetConfigOpt)
 
+	fmt.Println("任务总数:", len(configObj.ConfigArr))
+
 	BillingArr := []testHunter.BillingType{} // 模拟交易的结果
 
 	TaskChan := make(chan string, len(configObj.GorMap)) // 记录线程Chan

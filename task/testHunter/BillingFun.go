@@ -107,9 +107,10 @@ func (_this *MockObj) ResultCollect() {
 	Tmp := `交易结果:
 参数名称: ${MockName}
 InstID: ${InstID}
-总天数: ${AllDay}
 第一次持仓时间: ${StartTime}
 数据结束时间: ${EndTime}
+总天数: ${AllDay}
+开仓频率: ${OrderRate} 
 空仓次数: ${NilNum}
 平空次数: ${SellNum}
 平多次数: ${BuyNum}
@@ -145,10 +146,13 @@ InstID: ${InstID}
 
 	_this.Billing.EndTime = _this.PositionArr[len(_this.PositionArr)-1].NowTimeStr
 
+	_this.Billing.OrderRate = mCount.Div(mStr.ToStr(_this.Billing.AllDay), mStr.ToStr(_this.Billing.AllNum))
+
 	Data := map[string]string{
 		"MockName":         _this.Billing.MockName,
 		"InstID":           _this.Billing.InstID,
 		"AllDay":           mStr.ToStr(_this.Billing.AllDay),           // 总天数 | 结束时计算
+		"OrderRate":        _this.Billing.OrderRate,                    // 开仓频率
 		"StartTime":        _this.Billing.StartTime,                    // 第一次持仓时间 数组第一个 | 结束时计算
 		"EndTime":          _this.Billing.EndTime,                      // 结束时间 数组组后一个
 		"NilNum":           mStr.ToStr(_this.Billing.NilNum),           // 空仓次数 平仓后未开仓 NowDir = 0 | 结束时计算
