@@ -28,13 +28,14 @@ func GetWinArr(opt taskStart.BackReturn) []testHunter.BillingType {
 	}
 
 	MoneyRight := "1700" // 金钱阈值
+	WinRight := "0.3"    /// 胜率 阈值
 
 	// Money最高来排序
 	MoneyArr := MoneySort(BillingArr)
 	MoneyNewArr := []testHunter.BillingType{}
 
 	for _, item := range MoneyArr {
-		if mCount.Le(item.ResultMoney, MoneyRight) > 0 {
+		if mCount.Le(item.ResultMoney, MoneyRight) > 0 && mCount.Le(item.WinRatio, WinRight) > 0 {
 			Tmp := `结算最高:
 参数名称: ${MockName}
 InstID: ${InstID}
