@@ -20,8 +20,8 @@ func main() {
 
 	// Step1("BTC-USDT")
 	// Step2("BTC-USDT")
-	Step3("BTC-USDT")
-	// Step4("BTC-USDT")
+	// Step3("BTC-USDT")
+	Step4("BTC-USDT")
 }
 
 func Step1(InstID string) {
@@ -94,6 +94,6 @@ func Step4(InstID string) {
 		OutPutDir:  mStr.Join(ResultBasePath, "/三步最终结果"),
 		MoneyRight: "1000",
 		// WinRight:   "0.3",
-		Sort: "Win", //  Win
+		// Sort: "Win", //  Win
 	})
 }
