@@ -13,7 +13,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func GetWinArr(opt taskStart.BackReturn) {
+func GetWinArr(opt taskStart.BackReturn) []testHunter.BillingType {
 	var file []byte
 
 	if len(opt.BillingPath) > 1 {
@@ -32,6 +32,7 @@ func GetWinArr(opt taskStart.BackReturn) {
 	// Money最高来排序
 	MoneyArr := MoneySort(BillingArr)
 	MoneyNewArr := []testHunter.BillingType{}
+
 	for _, item := range MoneyArr {
 		if mCount.Le(item.ResultMoney, MoneyRight) > 0 {
 			Tmp := `结算最高:
@@ -67,39 +68,41 @@ InstID: ${InstID}
 	resultPath := mStr.Join(opt.ResultBasePath, "/", opt.InstID, "-MoneyNewArr.json")
 	mFile.Write(resultPath, mJson.ToStr(MoneyNewArr))
 
+	return MoneyNewArr
+
 	//  将Money的结果按照 胜率 最高来排序
-	WinArr := WinSort(MoneyNewArr)
-	for _, item := range WinArr {
-		if mCount.Le(item.ResultMoney, "1000") > 0 {
-			Tmp := `胜率最高:
-参数名称: ${MockName}
-InstID: ${InstID}
-开仓频率: ${OrderRate} 
-胜率: ${WinRatio}
-盈亏比: ${PLratio}
-最终金钱: ${ResultMoney}
-平仓后历史最低余额: ${MinMoney}
-持仓过程中最低盈利比率: ${PositionMinRatio}
-杠杆倍率: ${Level}
-总手续费: ${ChargeAdd}
-`
-			Data := map[string]string{
-				"MockName":         item.MockName,
-				"InstID":           item.InstID,
-				"OrderRate":        item.OrderRate,
-				"WinRatio":         item.WinRatio,
-				"PLratio":          item.PLratio,
-				"ResultMoney":      item.ResultMoney,
-				"MinMoney":         mJson.ToStr(item.MinMoney),
-				"PositionMinRatio": mJson.ToStr(item.PositionMinRatio),
-				"Level":            item.Level,
-				"ChargeAdd":        item.ChargeAdd,
+	/* WinArr := WinSort(MoneyNewArr)
+		for _, item := range WinArr {
+			if mCount.Le(item.ResultMoney, "1000") > 0 {
+				Tmp := `胜率最高:
+	参数名称: ${MockName}
+	InstID: ${InstID}
+	开仓频率: ${OrderRate}
+	胜率: ${WinRatio}
+	盈亏比: ${PLratio}
+	最终金钱: ${ResultMoney}
+	平仓后历史最低余额: ${MinMoney}
+	持仓过程中最低盈利比率: ${PositionMinRatio}
+	杠杆倍率: ${Level}
+	总手续费: ${ChargeAdd}
+	`
+				Data := map[string]string{
+					"MockName":         item.MockName,
+					"InstID":           item.InstID,
+					"OrderRate":        item.OrderRate,
+					"WinRatio":         item.WinRatio,
+					"PLratio":          item.PLratio,
+					"ResultMoney":      item.ResultMoney,
+					"MinMoney":         mJson.ToStr(item.MinMoney),
+					"PositionMinRatio": mJson.ToStr(item.PositionMinRatio),
+					"Level":            item.Level,
+					"ChargeAdd":        item.ChargeAdd,
+				}
+				global.TradeLog.Println(mStr.Temp(Tmp, Data))
 			}
-			global.TradeLog.Println(mStr.Temp(Tmp, Data))
 		}
-	}
-	resultPath = mStr.Join(opt.ResultBasePath, "/", opt.InstID, "-WinArr.json")
-	mFile.Write(resultPath, mJson.ToStr(WinArr))
+		resultPath = mStr.Join(opt.ResultBasePath, "/", opt.InstID, "-WinArr.json")
+		mFile.Write(resultPath, mJson.ToStr(WinArr)) */
 }
 
 // Money 排序
