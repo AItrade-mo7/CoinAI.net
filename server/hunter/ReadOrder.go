@@ -27,15 +27,15 @@ func (_this *HunterObj) ReadOrder() {
 	findOpt.SetAllowDiskUse(true)
 	findOpt.SetLimit(100)
 
-	FK := bson.D{
-		{
-			Key:   "HunterName",
-			Value: _this.HunterName,
-		}, {
-			Key:   "ServeID",
-			Value: config.AppEnv.ServeID,
-		},
-	}
+	FK := bson.D{}
+	FK = append(FK, bson.E{
+		Key:   "HunterName",
+		Value: _this.HunterName,
+	})
+	FK = append(FK, bson.E{
+		Key:   "ServeID",
+		Value: config.AppEnv.ServeID,
+	})
 
 	cur, err := db.Table.Find(db.Ctx, FK, findOpt)
 	if err != nil {

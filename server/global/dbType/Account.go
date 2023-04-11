@@ -24,6 +24,7 @@ db: Account
 collection : Order
 */
 
+// OKX 持仓
 type PositionsData struct {
 	AvgPx       string `bson:"AvgPx"`       // 开仓均价
 	CTime       string `bson:"CTime"`       // 持仓创建时间
@@ -44,10 +45,19 @@ type PositionsData struct {
 	Imr         string `bson:"Imr"`         // 初始保证金
 }
 
+// OKX 账户余额
+type AccountBalance struct {
+	TimeUnix int64  `bson:"TimeUnix"`
+	TimeStr  string `bson:"TimeStr"`
+	CcyName  string `bson:"CcyName"` // 币种
+	Balance  string `bson:"Balance"` // 币种
+}
+
 type UserOrderTable struct {
-	OkxPositions PositionsData `bson:"OkxPositions"`
-	OkxKey       OkxKeyType    `bson:"OkxKey"`
-	UserID       string        `bson:"UserID"`
-	OrderID      string        `bson:"OrderID"`
-	CreateTime   int64         `bson:"CreateTime"` // 创建时间
+	OkxPositions PositionsData  `bson:"OkxPositions"`
+	OKXBalance   AccountBalance `bson:"OKXBalance"`
+	OkxKey       OkxKeyType     `bson:"OkxKey"`
+	UserID       string         `bson:"UserID"`
+	OrderID      string         `bson:"OrderID"`
+	CreateTime   int64          `bson:"CreateTime"` // 创建时间
 }

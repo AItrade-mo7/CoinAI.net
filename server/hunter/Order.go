@@ -121,6 +121,7 @@ type ErrObj struct {
 type SettlementType struct {
 	OkxPositions dbType.PositionsData
 	OkxKey       dbType.OkxKeyType
+	OKXBalance   []dbType.AccountBalance
 }
 
 func (_this *HunterObj) SyncAllApiKey() {
@@ -143,22 +144,13 @@ func (_this *HunterObj) SyncAllApiKey() {
 
 	var ErrList []ErrObj
 	for _, OkxKey := range ApiKeyList {
-		// 新建账户
+		// 新建账户对象
 		OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
 			OkxKey: OkxKey,
 		})
 		if err != nil {
 			ErrList = append(ErrList, ErrObj{
-				Err:  mStr.ToStr(err),
-				Name: OkxKey.Name,
-			})
-			continue
-		}
-		// 读取当前持仓
-		err = OKXAccount.GetPositions()
-		if err != nil {
-			ErrList = append(ErrList, ErrObj{
-				Err:  mStr.ToStr(err),
+				Err:  mStr.Join("创建用户对象失败:", err),
 				Name: OkxKey.Name,
 			})
 			continue
@@ -167,11 +159,21 @@ func (_this *HunterObj) SyncAllApiKey() {
 		err = OKXAccount.GetHunter()
 		if err != nil {
 			ErrList = append(ErrList, ErrObj{
-				Err:  mStr.ToStr(err),
+				Err:  mStr.Join("获取Hunter失败:", err),
 				Name: OkxKey.Name,
 			})
 			continue
 		}
+		// 读取当前持仓
+		err = OKXAccount.GetPositions()
+		if err != nil {
+			ErrList = append(ErrList, ErrObj{
+				Err:  mStr.Join("读取持仓失败:", err),
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+
 		var NowAccountPos struct {
 			Dir          int
 			InstID       string
@@ -195,7 +197,16 @@ func (_this *HunterObj) SyncAllApiKey() {
 		err = OKXAccount.Close()
 		if err != nil {
 			ErrList = append(ErrList, ErrObj{
-				Err:  mStr.ToStr(err),
+				Err:  mStr.Join("平仓失败:", err),
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+
+		err = OKXAccount.GetBalance()
+		if err != nil {
+			ErrList = append(ErrList, ErrObj{
+				Err:  mStr.Join("读取余额失败:", err),
 				Name: OkxKey.Name,
 			})
 			continue
@@ -203,6 +214,7 @@ func (_this *HunterObj) SyncAllApiKey() {
 
 		AccountSettlement = append(AccountSettlement, SettlementType{
 			OkxPositions: NowAccountPos.OkxPositions,
+			OKXBalance:   OKXAccount.Balance,
 			OkxKey:       OkxKey,
 		})
 
@@ -215,7 +227,7 @@ func (_this *HunterObj) SyncAllApiKey() {
 
 		if err != nil {
 			ErrList = append(ErrList, ErrObj{
-				Err:  mStr.ToStr(err),
+				Err:  mStr.Join("交易所下单失败:", err),
 				Name: OkxKey.Name,
 			})
 			continue
