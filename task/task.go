@@ -25,8 +25,8 @@ func main() {
 
 	// Step1("ETH-USDT")
 	// Step2("ETH-USDT")
-	Step3("ETH-USDT")
-	// Step4("ETH-USDT")
+	// Step3("ETH-USDT")
+	Step4("ETH-USDT")
 }
 
 func Step1(InstID string) {
