@@ -48,7 +48,7 @@ func OkxInfoInit() {
 	// 设置最优参数
 	CoinTradeConfig = map[string]dbType.TradeKdataOpt{
 		"BTC-USDT": {
-			EMA_Period:    272,
+			EMA_Period:    272, // 参数已确定  2023-04-11 18:14
 			CAP_Period:    5,
 			CAP_Max:       "2.5",
 			MaxTradeLever: 5,

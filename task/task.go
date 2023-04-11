@@ -21,7 +21,12 @@ func main() {
 	// Step1("BTC-USDT")
 	// Step2("BTC-USDT")
 	// Step3("BTC-USDT")
-	Step4("BTC-USDT")
+	// Step4("BTC-USDT")
+
+	// Step1("ETH-USDT")
+	// Step2("ETH-USDT")
+	Step3("ETH-USDT")
+	// Step4("ETH-USDT")
 }
 
 func Step1(InstID string) {
@@ -52,11 +57,11 @@ func Step1(InstID string) {
 func Step2(InstID string) {
 	// 第二步骤：根据胜率和最终营收 筛选
 	analyConfig.GetWinArr(analyConfig.GetWinArrOpt{
-		InstID:     InstID,
-		OutPutDir:  ResultBasePath,
-		MoneyRight: "1700",
-		WinRight:   "0.3",
-		Sort:       "Win",
+		InstID:    InstID,
+		OutPutDir: ResultBasePath,
+		// MoneyRight: "1700",
+		WinRight: "0.3",
+		// Sort:     "Win",
 	})
 }
 
@@ -67,7 +72,7 @@ func Step3(InstID string) {
 	// 	InstID:    InstID,
 	// })
 
-	EmaPArr := []int{430, 334, 336, 272}
+	EmaPArr := []int{194, 220, 250, 276, 330, 360, 396}
 
 	// 新一轮求解，计算最优杠杆倍率 用  2022 年 8 月 的 260 天前进行回测
 	EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-09-01")
