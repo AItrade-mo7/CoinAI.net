@@ -2,30 +2,30 @@ package hunter
 
 import (
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
+	"CoinAI.net/server/okxApi"
+	"CoinAI.net/server/utils/taskPush"
 	"github.com/EasyGolang/goTools/mCount"
+	"github.com/EasyGolang/goTools/mEncrypt"
+	"github.com/EasyGolang/goTools/mFile"
+	"github.com/EasyGolang/goTools/mJson"
+	"github.com/EasyGolang/goTools/mMongo"
+	"github.com/EasyGolang/goTools/mOKX"
+	"github.com/EasyGolang/goTools/mStr"
+	"github.com/EasyGolang/goTools/mStruct"
 	"github.com/EasyGolang/goTools/mTime"
+	jsoniter "github.com/json-iterator/go"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // // 下单  参数：dir 下单方向 NowKdata : 当前市场行情
 func (_this *HunterObj) OnOrder(dir int) {
 	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
 
-	// 在这里计算当前的 Money
-	Upl := mCount.Div(_this.NowVirtualPosition.NowUplRatio, "100")     // 格式化收益率
-	ChargeUpl := mCount.Div(_this.NowVirtualPosition.ChargeUpl, "100") // 格式化手续费率
-
-	Money := _this.NowVirtualPosition.Money // 提取 Money
-	makeMoney := mCount.Mul(Money, Upl)     // 当前盈利的金钱
-	Money = mCount.Add(Money, makeMoney)    // 相加得出当账户剩余资金
-
-	nowCharge := mCount.Mul(Money, ChargeUpl) // 当前产生的手续费
-	Money = mCount.Sub(Money, nowCharge)      // 减去手续费
-	Money = mCount.CentRound(Money, 3)        // 四舍五入保留三位小数
-	_this.NowVirtualPosition.Money = Money    // 保存结果到当前持仓
-
-	// 在这里将当前订单进行结算,相当于平仓了一次
-	// 在这里执行平仓, 平掉所有仓位
-	_this.OrderClose()
+	// 结算本期持仓
+	_this.BillingFun()
 
 	// 同步持仓状态, 相当于下单了
 	if dir > 0 {
@@ -52,20 +52,289 @@ func (_this *HunterObj) OnOrder(dir int) {
 	_this.NowVirtualPosition.NowUplRatio = "0"
 
 	// 在这里执行下单
+	_this.OrderOpen() // 这里的结果 要么是 1 要么是 0  要么 是 -1 没有第三种了
+	global.TradeLog.Println(_this.HunterName, "下单一次", mJson.ToStr(_this.NowVirtualPosition))
+	_this.OrderArr = append(_this.OrderArr, _this.NowVirtualPosition)
+	mFile.Write(_this.OutPutDirectory+"/OrderArr.json", mJson.ToStr(_this.OrderArr))
 
-	_this.OrderOpen()
+	_this.SyncAllApiKey()
 }
 
-func (_this *HunterObj) OrderClose() {
-	// 在这里优先平掉所有仓位
-	global.Run.Println("平仓", _this.NowVirtualPosition)
+func (_this *HunterObj) BillingFun() {
+	// 这里是下单之前的结算周期
+	Upl := mCount.Div(_this.NowVirtualPosition.NowUplRatio, "100")     // 格式化收益率
+	ChargeUpl := mCount.Div(_this.NowVirtualPosition.ChargeUpl, "100") // 格式化手续费率
+
+	Money := _this.NowVirtualPosition.Money // 提取 Money
+	makeMoney := mCount.Mul(Money, Upl)     // 当前盈利的金钱
+	Money = mCount.Add(Money, makeMoney)    // 相加得出当账户剩余资金
+
+	nowCharge := mCount.Mul(Money, ChargeUpl) // 当前产生的手续费
+	Money = mCount.Sub(Money, nowCharge)      // 减去手续费
+	Money = mCount.CentRound(Money, 3)        // 四舍五入保留三位小数
+	_this.NowVirtualPosition.Money = Money    // 保存结果到当前持仓
+	global.Run.Println("结算一次", mJson.ToStr(_this.NowVirtualPosition))
 }
 
 func (_this *HunterObj) OrderOpen() {
-	global.Run.Println("下单", _this.NowVirtualPosition)
+	// 在这里进行 下单存储。
+	global.Run.Println("下单", mJson.ToStr(_this.NowVirtualPosition))
+	if _this.NowVirtualPosition.NowDir > 0 {
+		_this.SetOrderDB("Buy")
+	}
+	if _this.NowVirtualPosition.NowDir < 0 {
+		_this.SetOrderDB("Sell")
+	}
 
-	/*
-		_this.NowVirtualPosition.NowDir > 0 则开多单
-		_this.NowVirtualPosition.NowDir < 0 则开空单
-	*/
+	if _this.NowVirtualPosition.NowDir == 0 {
+		_this.SetOrderDB("Close")
+	}
+}
+
+func (_this *HunterObj) SetOrderDB(Type string) {
+	var orderData dbType.CoinOrderTable
+	jsoniter.Unmarshal(mJson.ToJson(_this.NowVirtualPosition), &orderData)
+	orderData.CreateTime = mTime.GetUnixInt64()
+	orderData.Type = Type
+	orderData.ServeID = config.AppEnv.ServeID
+	orderData.TimeID = mOKX.GetTimeID(orderData.NowTime)
+	orderData.OrderID = mEncrypt.GetUUID()
+
+	db := mMongo.New(mMongo.Opt{
+		UserName: config.SysEnv.MongoUserName,
+		Password: config.SysEnv.MongoPassword,
+		Address:  config.SysEnv.MongoAddress,
+		DBName:   "AIServe",
+	}).Connect().Collection("CoinOrder")
+	defer db.Close()
+	_, err := db.Table.InsertOne(db.Ctx, orderData)
+	if err != nil {
+		global.LogErr("hunter.SetOrderDB 数据存储失败", _this.HunterName, err)
+	}
+}
+
+type ErrObj struct {
+	Name string
+	Err  string //
+}
+
+type SettlementType struct {
+	OkxPositions dbType.PositionsData
+	OkxKey       dbType.OkxKeyType
+}
+
+func (_this *HunterObj) SyncAllApiKey() {
+	global.TradeLog.Println(_this.HunterName, "开始执行所有的ApiKey")
+	ApiKeyList := []dbType.OkxKeyType{}
+
+	for _, item := range config.AppEnv.ApiKeyList {
+		if item.Hunter == _this.HunterName {
+			ApiKeyList = append(ApiKeyList, item)
+		}
+	}
+
+	if len(ApiKeyList) < 1 {
+		return
+	}
+
+	RightAccount := []dbType.OkxKeyType{}
+
+	AccountSettlement := []SettlementType{} // 用于存储当前用户的平仓订单
+
+	var ErrList []ErrObj
+	for _, OkxKey := range ApiKeyList {
+		// 新建账户
+		OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
+			OkxKey: OkxKey,
+		})
+		if err != nil {
+			ErrList = append(ErrList, ErrObj{
+				Err:  mStr.ToStr(err),
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+		// 读取当前持仓
+		err = OKXAccount.GetPositions()
+		if err != nil {
+			ErrList = append(ErrList, ErrObj{
+				Err:  mStr.ToStr(err),
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+		// 获取 Hunter
+		err = OKXAccount.GetHunter()
+		if err != nil {
+			ErrList = append(ErrList, ErrObj{
+				Err:  mStr.ToStr(err),
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+		var NowAccountPos struct {
+			Dir          int
+			InstID       string
+			OkxPositions dbType.PositionsData
+		}
+		for _, Positions := range OKXAccount.Positions {
+			if OKXAccount.NowHunter.TradeInst.InstID == Positions.InstID {
+				NowAccountPos.InstID = Positions.InstID
+				NowAccountPos.Dir = mCount.Le(Positions.Pos, "0")
+				NowAccountPos.OkxPositions = Positions
+			}
+		}
+		if NowAccountPos.Dir == _this.NowVirtualPosition.NowDir {
+			ErrList = append(ErrList, ErrObj{
+				Err:  "当前账户持仓已经与策略保持一致,无需下单。",
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+
+		err = OKXAccount.Close()
+		if err != nil {
+			ErrList = append(ErrList, ErrObj{
+				Err:  mStr.ToStr(err),
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+
+		AccountSettlement = append(AccountSettlement, SettlementType{
+			OkxPositions: NowAccountPos.OkxPositions,
+			OkxKey:       OkxKey,
+		})
+
+		if _this.NowVirtualPosition.NowDir > 0 {
+			err = OKXAccount.Buy()
+		}
+		if _this.NowVirtualPosition.NowDir < 0 {
+			err = OKXAccount.Sell()
+		}
+
+		if err != nil {
+			ErrList = append(ErrList, ErrObj{
+				Err:  mStr.ToStr(err),
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+
+		RightAccount = append(RightAccount, OkxKey)
+	}
+
+	DirText := "保持空仓"
+	if _this.NowVirtualPosition.NowDir > 0 {
+		DirText = "买多看涨"
+	}
+	if _this.NowVirtualPosition.NowDir < 0 {
+		DirText = "买空看跌"
+	}
+
+	tmplStr := `
+<br />
+策略名称： ${HunterName}  <br />
+当前持仓建议： ${NowDir}  <br />
+需要同步账户数量：${TradeAccountNum}  <br />
+已同步完成：${RightAccountNum}  <br />
+报错账户信息: ${ErrList}  <br />
+`
+
+	lMap := map[string]string{
+		"HunterName":      _this.HunterName,
+		"NowDir":          DirText,
+		"TradeAccountNum": mStr.ToStr(len(ApiKeyList)),
+		"RightAccountNum": mStr.ToStr(len(RightAccount)),
+		"ErrList":         mJson.ToStr(ErrList),
+	}
+
+	Content := mStr.Temp(tmplStr, lMap)
+	taskPush.SysEmail(taskPush.SysEmailOpt{
+		From:        config.SysName,
+		To:          config.NoticeEmail,
+		Subject:     "市场方向已改变",
+		Title:       "市场方向已改变,所有账户均以同步持仓",
+		Content:     Content,
+		Description: "同步持仓邮件",
+	})
+
+	global.TradeLog.Println(_this.HunterName, "交易失败列表", ErrList)
+
+	_this.CloseOrderSettlement(AccountSettlement)
+}
+
+func (_this *HunterObj) CloseOrderSettlement(Settlement []SettlementType) {
+	UserOrderArr := []dbType.UserOrderTable{}
+
+	resErr := []string{}
+	for _, item := range Settlement {
+		if len(item.OkxKey.UserID) > 10 {
+			UserOrderArr = append(UserOrderArr, dbType.UserOrderTable{
+				OkxPositions: item.OkxPositions,
+				OkxKey:       item.OkxKey,
+				UserID:       item.OkxKey.UserID,
+				OrderID:      mEncrypt.GetUUID(),
+				CreateTime:   mTime.GetUnixInt64(),
+			})
+		} else {
+			resErr = append(resErr, mStr.Join(
+				"hunter.CloseOrderSettlement UserID为空",
+				"ServeID:", config.AppEnv.ServeID, "<br />",
+				"HunterName", _this.HunterName, "<br />",
+				"OkxKeyName", item.OkxKey.Name, "<br />",
+			))
+		}
+	}
+
+	if len(resErr) > 0 {
+		taskPush.SysEmail(taskPush.SysEmailOpt{
+			From:        config.SysName,
+			To:          []string{"meichangliang@outlook.com"},
+			Subject:     "存储用户订单出错",
+			Title:       "存储用户订单出错,错误信息如下",
+			Content:     mJson.ToStr(resErr),
+			Description: "同步持仓邮件",
+		})
+	}
+
+	db := mMongo.New(mMongo.Opt{
+		UserName: config.SysEnv.MongoUserName,
+		Password: config.SysEnv.MongoPassword,
+		Address:  config.SysEnv.MongoAddress,
+		DBName:   "Account",
+		Timeout:  len(UserOrderArr) * 20,
+	}).Connect().Collection("OkxOrder")
+	defer db.Close()
+
+	for _, Kd := range UserOrderArr {
+		FK := bson.D{{
+			Key:   "CreateTime",
+			Value: Kd.CreateTime,
+		}}
+		UK := bson.D{}
+		mStruct.Traverse(Kd, func(key string, val any) {
+			UK = append(UK, bson.E{
+				Key: "$set",
+				Value: bson.D{
+					{
+						Key:   key,
+						Value: val,
+					},
+				},
+			})
+		})
+
+		upOpt := options.Update()
+		upOpt.SetUpsert(true)
+		_, err := db.Table.UpdateOne(db.Ctx, FK, UK, upOpt)
+		if err != nil {
+			global.LogErr("数据更插失败  %+v", mStr.Join(
+				"hunter.CloseOrderSettlement UserID为空",
+				"ServeID:", config.AppEnv.ServeID, "<br />",
+				"HunterName", _this.HunterName, "<br />",
+				"OkxKeyName", Kd.OkxKey.Name, "<br />",
+			))
+		}
+	}
 }
