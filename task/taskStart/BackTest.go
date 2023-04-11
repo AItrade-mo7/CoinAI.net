@@ -10,6 +10,7 @@ import (
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
+	"github.com/EasyGolang/goTools/mPath"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
 )
@@ -19,9 +20,15 @@ type BackOpt struct {
 	StartTime    int64
 	EndTime      int64
 	GetConfigOpt testHunter.GetConfigOpt
+	OutPutDir    string // 输出目录
 }
 
 func BackTest(opt BackOpt) BackReturn {
+	if !mPath.Exists(opt.OutPutDir) {
+		err := fmt.Errorf("目录不存在 %+v", opt.OutPutDir)
+		panic(err)
+	}
+
 	StartTime := mTime.GetUnix()
 
 	// 新建数据
@@ -100,7 +107,7 @@ func BackTest(opt BackOpt) BackReturn {
 	DiffTime := mCount.Sub(EndTime, StartTime)
 	DiffMin := mCount.Div(DiffTime, mTime.UnixTime.Minute)
 
-	BillingArr_Path := mStr.Join(config.Dir.JsonData, "/", opt.InstID, "-BillingArr.json")
+	BillingArr_Path := mStr.Join(opt.OutPutDir, "/", opt.InstID, "-BillingArr.json")
 	mFile.Write(BillingArr_Path, string(mJson.ToJson(BillingArr)))
 	global.Run.Println("BillingArr: ", BillingArr_Path)
 
