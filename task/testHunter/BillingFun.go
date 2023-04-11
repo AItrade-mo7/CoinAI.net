@@ -141,8 +141,8 @@ InstID: ${InstID}
 
 	// 盈亏比 (盈利总金额/盈利次数)  /  (亏损总金额/亏损次数)
 	WinMoneyR := mCount.Div(_this.Billing.WinMoneyAdd, mStr.ToStr(_this.Billing.WinNum))
-	LoseMoneyR := mCount.Div(_this.Billing.LoseMoneyAdd, mStr.ToStr(_this.Billing.LoseNum))
-	_this.Billing.PLratio = mCount.Div(WinMoneyR, mCount.Abs(LoseMoneyR))
+	LoseMoneyR := mCount.Div(mCount.Abs(_this.Billing.LoseMoneyAdd), mStr.ToStr(_this.Billing.LoseNum))
+	_this.Billing.PLratio = mCount.Div(WinMoneyR, LoseMoneyR)
 
 	_this.Billing.EndTime = _this.PositionArr[len(_this.PositionArr)-1].NowTimeStr
 
