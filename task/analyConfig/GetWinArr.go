@@ -1,6 +1,7 @@
 package analyConfig
 
 import (
+	"fmt"
 	"os"
 
 	"CoinAI.net/server/global"
@@ -68,6 +69,8 @@ InstID: ${InstID}
 
 	resultPath := mStr.Join(opt.ResultBasePath, "/", opt.InstID, "-MoneyNewArr.json")
 	mFile.Write(resultPath, mJson.ToStr(MoneyNewArr))
+
+	fmt.Println("文件已写入", resultPath, len(MoneyNewArr))
 
 	return MoneyNewArr
 
