@@ -16,7 +16,7 @@ type AccountParam struct {
 
 type AccountObj struct {
 	OkxKey       dbType.OkxKeyType
-	Balance      []account.AccountBalance
+	Balance      []dbType.AccountBalance
 	Positions    []dbType.PositionsData
 	MaxSize      account.MaxSizeType
 	PendingOrder []account.PendingOrderType

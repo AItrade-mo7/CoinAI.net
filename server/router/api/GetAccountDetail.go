@@ -7,7 +7,6 @@ import (
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/global/middle"
 	"CoinAI.net/server/okxApi"
-	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/router/result"
 	"github.com/EasyGolang/goTools/mFiber"
 	"github.com/EasyGolang/goTools/mStr"
@@ -20,7 +19,7 @@ type AccountDetailParam struct {
 
 type AccountDetail struct {
 	Positions []dbType.PositionsData
-	Balance   []account.AccountBalance
+	Balance   []dbType.AccountBalance
 }
 
 func GetAccountDetail(c *fiber.Ctx) error {

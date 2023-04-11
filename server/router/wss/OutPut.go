@@ -2,7 +2,9 @@ package wss
 
 import (
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/okxInfo"
+	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mTime"
 	jsoniter "github.com/json-iterator/go"
@@ -15,11 +17,13 @@ type OutPut struct {
 	IP           string                    `bson:"IP"`
 	ServeID      string                    `bson:"ServeID"`
 	UserID       string                    `bson:"UserID"`
-	SysTime      int64                     `bson:"SysTime"` // 系统时间
-	DataSource   string                    `bson:"DataSource"`
+	SysTime      int64                     `bson:"SysTime"`    // 系统时间
+	DataSource   string                    `bson:"DataSource"` // 数据提供者
 	MaxApiKeyNum int                       `bson:"MaxApiKeyNum"`
 	ApiKeyNum    int                       `bson:"ApiKeyNum"`
 	NowTicker    NowTicker                 `bson:"Type"`
+	CreateTime   int64                     `bson:"CreateTime"` // 创建时间
+	UpdateTime   int64                     `bson:"UpdateTime"` // 更新时间
 	HunterData   map[string]HunterDataType `bson:"Hunter"`
 }
 
@@ -34,6 +38,8 @@ func GetOutPut() (resData OutPut) {
 	resData.UserID = config.AppEnv.UserID
 	resData.SysTime = mTime.GetUnixInt64()
 	resData.DataSource = config.SysName
+	resData.CreateTime = config.AppEnv.CreateTime
+	resData.UpdateTime = config.AppEnv.UpdateTime
 	// ApiKey 信息
 	resData.ApiKeyNum = len(config.AppEnv.ApiKeyList)
 	resData.MaxApiKeyNum = config.AppEnv.MaxApiKeyNum
@@ -92,6 +98,7 @@ type PositionType struct {
 	ChargeUpl   string `bson:"ChargeUpl"`   // 当前手续费率 | 固定值初始值设置
 	NowUplRatio string `bson:"NowUplRatio"` // 当前未实现收益率(计算得出) | 运行中设置
 	Money       string `bson:"Money"`       // 账户当前余额 | 如果没有初始值设置一次，下单时计算
+	MakeMoney   string `bson:"MakeMoney"`   // 本单盈利
 }
 
 type HunterDataType struct {
@@ -102,7 +109,7 @@ type HunterDataType struct {
 	NowKdata           NowKdataType // 现货的原始K线
 	KdataLen           int
 	TradeKdataLen      int
-	TradeKdataOpt      okxInfo.TradeKdataOpt
+	TradeKdataOpt      dbType.TradeKdataOpt
 	NowVirtualPosition PositionType
 }
 
@@ -129,6 +136,13 @@ func GetHunterData() map[string]HunterDataType {
 		var Position PositionType
 		jsoniter.Unmarshal(mJson.ToJson(item.NowVirtualPosition), &Position)
 		newData.NowVirtualPosition = Position
+
+		Upl := mCount.Div(item.NowVirtualPosition.NowUplRatio, "100")         // 格式化收益率
+		Money := item.NowVirtualPosition.Money                                // 提取 Money
+		MakeMoney := mCount.Mul(Money, Upl)                                   // 当前盈利的金钱
+		Money = mCount.Add(Money, MakeMoney)                                  // 相加得出当账户应当剩余资金
+		newData.NowVirtualPosition.Money = mCount.CentRound(Money, 3)         // 四舍五入
+		newData.NowVirtualPosition.MakeMoney = mCount.CentRound(MakeMoney, 3) // 四舍五入
 
 		HunterData[key] = newData
 	}

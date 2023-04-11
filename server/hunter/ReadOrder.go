@@ -3,7 +3,7 @@ package hunter
 import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
-	"CoinAI.net/server/okxInfo"
+	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
@@ -42,12 +42,12 @@ func (_this *HunterObj) ReadOrder() {
 		global.LogErr("hunter.ReadOrder 数据读取失败", _this.HunterName, err)
 	}
 
-	var OrderArr []okxInfo.VirtualPositionType
+	var OrderArr []dbType.VirtualPositionType
 	for cur.Next(db.Ctx) {
 		var result map[string]any
 		cur.Decode(&result)
 
-		var order okxInfo.VirtualPositionType
+		var order dbType.VirtualPositionType
 		jsoniter.Unmarshal(mJson.ToJson(result), &order)
 		OrderArr = append(OrderArr, order)
 	}

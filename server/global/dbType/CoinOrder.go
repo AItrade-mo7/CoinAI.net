@@ -1,16 +1,14 @@
 package dbType
 
-import "CoinAI.net/server/okxInfo"
-
 type CoinOrderTable struct {
-	InstID       string                `bson:"InstID"`       // 下单币种 | 运行中设置
-	HunterName   string                `bson:"HunterName"`   // 策略名称 | 运行中设置
-	NowTimeStr   string                `bson:"NowTimeStr"`   // 当前K线时间 | 运行中设置
-	NowTime      int64                 `bson:"NowTime"`      // 当前实际时间戳 | 运行中设置
-	NowC         string                `bson:"NowC"`         // 当前收盘价 | 运行中设置
-	CAP_EMA      string                `bson:"CAP_EMA"`      // 当前的 CAP 值 | 运行中设置
-	EMA          string                `bson:"EMA"`          // 当前的 EMA 值 | 运行中设置
-	HunterConfig okxInfo.TradeKdataOpt `bson:"HunterConfig"` // 当前的交易K线参数  | 运行中设置
+	InstID       string        `bson:"InstID"`       // 下单币种 | 运行中设置
+	HunterName   string        `bson:"HunterName"`   // 策略名称 | 运行中设置
+	NowTimeStr   string        `bson:"NowTimeStr"`   // 当前K线时间 | 运行中设置
+	NowTime      int64         `bson:"NowTime"`      // 当前实际时间戳 | 运行中设置
+	NowC         string        `bson:"NowC"`         // 当前收盘价 | 运行中设置
+	CAP_EMA      string        `bson:"CAP_EMA"`      // 当前的 CAP 值 | 运行中设置
+	EMA          string        `bson:"EMA"`          // 当前的 EMA 值 | 运行中设置
+	HunterConfig TradeKdataOpt `bson:"HunterConfig"` // 当前的交易K线参数  | 运行中设置
 	// 下单时设置
 	OpenAvgPx   string `bson:"OpenAvgPx"`   // 开仓价格 | 下单时设置
 	OpenTimeStr string `bson:"OpenTimeStr"` // 开仓K线时间 | 下单时设置

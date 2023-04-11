@@ -4,7 +4,7 @@ import (
 	_ "embed"
 
 	"CoinAI.net/server/global"
-	"CoinAI.net/server/okxInfo"
+	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/task/analyConfig"
 	"CoinAI.net/task/taskStart"
 	"CoinAI.net/task/testHunter"
@@ -46,7 +46,7 @@ func Step1(InstID string) {
 			CAPArr:   []int{2, 3, 4, 5, 6},
 			LevelArr: []int{1},
 			CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"},
-			ConfArr:  []okxInfo.TradeKdataOpt{},
+			ConfArr:  []dbType.TradeKdataOpt{},
 		},
 	})
 }
@@ -70,7 +70,7 @@ func Step3(InstID string) {
 
 	LevelArr := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 
-	NewConfigArr := []okxInfo.TradeKdataOpt{}
+	NewConfigArr := []dbType.TradeKdataOpt{}
 	for _, leave := range LevelArr {
 		for _, conf := range confArr {
 			conf.MaxTradeLever = leave
