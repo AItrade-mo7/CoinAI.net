@@ -6,6 +6,8 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/task/analyConfig"
+	"CoinAI.net/task/taskStart"
+	"CoinAI.net/task/testHunter"
 	"github.com/EasyGolang/goTools/mTime"
 )
 
@@ -16,7 +18,7 @@ func main() {
 	global.Start()
 
 	// Step1("BTC-USDT")
-	// Step2("BTC-USDT")
+	Step2("BTC-USDT")
 	Step3("BTC-USDT")
 }
 
@@ -30,16 +32,18 @@ func Step1(InstID string) {
 	}
 	EndTime := mTime.GetUnixInt64()
 	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 260)
-	analyConfig.Violence(analyConfig.ViolenceOpt{
+	taskStart.BackTest(taskStart.BackOpt{
 		StartTime: StartTime,
 		EndTime:   EndTime,
 		InstID:    InstID,
-		EmaPArr:   EmaPArr,
-		CAPArr:    []int{2, 3, 4, 5, 6},
-		LevelArr:  []int{1},
-		CAPMax:    []string{"0.5", "1", "1.5", "2", "2.5", "3"},
-		ConfArr:   []okxInfo.TradeKdataOpt{},
 		OutPutDir: ResultBasePath,
+		GetConfigOpt: testHunter.GetConfigOpt{
+			EmaPArr:  EmaPArr,
+			CAPArr:   []int{2, 3, 4, 5, 6},
+			LevelArr: []int{1},
+			CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"},
+			ConfArr:  []okxInfo.TradeKdataOpt{},
+		},
 	})
 }
 
@@ -54,9 +58,31 @@ func Step2(InstID string) {
 }
 
 func Step3(InstID string) {
-	// 第三步：提取第二步的配置
-	analyConfig.GetWinConfig(analyConfig.GetWinConfigOpt{
+	// 第三步：提取第二步的配置，加上杠杆得出新的参数组合 大概 几百个 然后 换个新的时间进行测试
+	confArr := analyConfig.GetWinConfig(analyConfig.GetWinConfigOpt{
 		OutPutDir: ResultBasePath,
 		InstID:    InstID,
+	})
+
+	LevelArr := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+	NewConfigArr := []okxInfo.TradeKdataOpt{}
+	for _, leave := range LevelArr {
+		for _, conf := range confArr {
+			conf.MaxTradeLever = leave
+			NewConfigArr = append(NewConfigArr, conf)
+		}
+	}
+	// 新一轮求解，计算最优杠杆倍率 用  2022 年 8 月 的 380 天前进行回测
+	EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-08-01")
+	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 380)
+	taskStart.BackTest(taskStart.BackOpt{
+		StartTime: StartTime,
+		EndTime:   EndTime,
+		InstID:    InstID,
+		OutPutDir: "/root/AItrade/CoinAI.net/task/analyConfig/最终结果04-11",
+		GetConfigOpt: testHunter.GetConfigOpt{
+			ConfArr: NewConfigArr,
+		},
 	})
 }

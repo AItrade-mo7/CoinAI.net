@@ -3,8 +3,11 @@ package analyConfig
 import (
 	"fmt"
 	"os"
+	"regexp"
 
+	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/task/testHunter"
+	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mPath"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"
@@ -15,7 +18,7 @@ type GetWinConfigOpt struct {
 	InstID    string
 }
 
-func GetWinConfig(opt GetWinConfigOpt) {
+func GetWinConfig(opt GetWinConfigOpt) []okxInfo.TradeKdataOpt {
 	WinArrDataPath := mStr.Join(opt.OutPutDir, "/", opt.InstID, "-WinArr.json")
 	if !mPath.Exists(WinArrDataPath) {
 		err := fmt.Errorf("文件不存在 %+v", opt.OutPutDir)
@@ -29,7 +32,39 @@ func GetWinConfig(opt GetWinConfigOpt) {
 	var BillingArr []testHunter.BillingType // 数据来源
 	jsoniter.Unmarshal(file, &BillingArr)
 
+	confArr := []okxInfo.TradeKdataOpt{}
 	for _, item := range BillingArr {
-		fmt.Println(item.MockName)
+		MockName := item.MockName //  EMA_320_CAP_5_CAPMax_1_level_1
+		EMA := regText(MockName, []string{
+			"EMA_", "_CAP_",
+		})
+		CAP := regText(MockName, []string{
+			"_CAP_", "_CAPMax_",
+		})
+		CAPMax := regText(MockName, []string{
+			"_CAPMax_", "_level_",
+		})
+
+		conf := okxInfo.TradeKdataOpt{
+			EMA_Period: mCount.ToInt(EMA),
+			CAP_Period: mCount.ToInt(CAP),
+			CAP_Max:    CAPMax, // CAP 判断的边界值 0.2
+		}
+		confArr = append(confArr, conf)
 	}
+
+	return confArr
+}
+
+func regText(origin string, reg []string) string {
+	comp := mStr.Join(reg[0], "(.*?)", reg[1])
+	flysnowRegexp := regexp.MustCompile(comp)
+	params := flysnowRegexp.FindStringSubmatch(origin)
+	if len(params) == 2 {
+		return params[1]
+	}
+	if len(params) == 1 {
+		return params[0]
+	}
+	return ""
 }
