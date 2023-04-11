@@ -18,7 +18,8 @@ type GetWinArrOpt struct {
 	InstID     string
 	OutPutDir  string
 	MoneyRight string // 边界金钱余额
-	WinRight   string // 边界胜率
+	WinRight   string // 边界胜率int
+	Sort       string // Money  Win
 }
 
 func GetWinArr(opt GetWinArrOpt) []testHunter.BillingType {
@@ -32,17 +33,27 @@ func GetWinArr(opt GetWinArrOpt) []testHunter.BillingType {
 		err := fmt.Errorf("读取文件出错 %+v", err)
 		panic(err)
 	}
+	if len(opt.Sort) < 1 {
+		opt.Sort = "Money"
+	}
 
 	var BillingArr []testHunter.BillingType // 数据来源
 	jsoniter.Unmarshal(file, &BillingArr)
 
 	// Money最高来排序
-	MoneyArr := MoneySort(BillingArr)
+	var MoneyArr []testHunter.BillingType
+	if opt.Sort == "Win" {
+		MoneyArr = WinSort(BillingArr)
+	} else {
+		// 默认 Money 排序
+		MoneyArr = MoneySort(BillingArr)
+	}
+
 	NewMoneyArr := []testHunter.BillingType{}
 
 	for _, item := range MoneyArr {
 		if mCount.Le(item.ResultMoney, opt.MoneyRight) > 0 && mCount.Le(item.WinRatio, opt.WinRight) > 0 {
-			Tmp := `结算最高:
+			Tmp := `排序方式:${Sort}
 参数名称: ${MockName}
 开始时间: ${StartTime}
 结束时间: ${EndTime}
@@ -57,6 +68,7 @@ InstID: ${InstID}
 总手续费: ${ChargeAdd}
 `
 			Data := map[string]string{
+				"Sort":             opt.Sort,
 				"MockName":         item.MockName,
 				"StartTime":        item.StartTime,
 				"EndTime":          item.EndTime,

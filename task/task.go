@@ -20,8 +20,8 @@ func main() {
 
 	// Step1("BTC-USDT")
 	// Step2("BTC-USDT")
-	// Step3("BTC-USDT")
-	Step4("BTC-USDT")
+	Step3("BTC-USDT")
+	// Step4("BTC-USDT")
 }
 
 func Step1(InstID string) {
@@ -56,35 +56,32 @@ func Step2(InstID string) {
 		OutPutDir:  ResultBasePath,
 		MoneyRight: "1700",
 		WinRight:   "0.3",
+		Sort:       "Win",
 	})
 }
 
 func Step3(InstID string) {
 	// 第三步：提取第二步的配置，加上杠杆得出新的参数组合 大概 几百个 然后 换个新的时间进行测试
-	confArr := analyConfig.GetWinConfig(analyConfig.GetWinConfigOpt{
-		OutPutDir: ResultBasePath,
-		InstID:    InstID,
-	})
+	// confArr := analyConfig.GetWinConfig(analyConfig.GetWinConfigOpt{
+	// 	OutPutDir: ResultBasePath,
+	// 	InstID:    InstID,
+	// })
 
-	LevelArr := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	EmaPArr := []int{430, 334, 336, 272}
 
-	NewConfigArr := []dbType.TradeKdataOpt{}
-	for _, leave := range LevelArr {
-		for _, conf := range confArr {
-			conf.MaxTradeLever = leave
-			NewConfigArr = append(NewConfigArr, conf)
-		}
-	}
-	// 新一轮求解，计算最优杠杆倍率 用  2022 年 8 月 的 380 天前进行回测
-	EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-08-01")
-	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 380)
+	// 新一轮求解，计算最优杠杆倍率 用  2022 年 8 月 的 260 天前进行回测
+	EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-09-01")
+	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 260)
 	taskStart.BackTest(taskStart.BackOpt{
 		StartTime: StartTime,
 		EndTime:   EndTime,
 		InstID:    InstID,
 		OutPutDir: mStr.Join(ResultBasePath, "/三步最终结果"),
 		GetConfigOpt: testHunter.GetConfigOpt{
-			ConfArr: NewConfigArr,
+			EmaPArr:  EmaPArr,
+			CAPArr:   []int{2, 3, 4, 5, 6},
+			LevelArr: []int{1, 2, 3, 4, 5},
+			CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"},
 		},
 	})
 }
@@ -92,9 +89,11 @@ func Step3(InstID string) {
 func Step4(InstID string) {
 	// 第四步： 根据第三步的结果进行筛选 (胜率和最终营收)
 	analyConfig.GetWinArr(analyConfig.GetWinArrOpt{
-		InstID:    InstID,
-		OutPutDir: mStr.Join(ResultBasePath),
-		// MoneyRight: "1000",
+		InstID: InstID,
+		// OutPutDir:  mStr.Join(ResultBasePath),
+		OutPutDir:  mStr.Join(ResultBasePath, "/三步最终结果"),
+		MoneyRight: "1000",
 		// WinRight:   "0.3",
+		Sort: "Win", //  Win
 	})
 }
