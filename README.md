@@ -2,4 +2,5 @@
 
 https://trade.mo7.cc/
 
-EMA_236_CAP_6_CAPMax_3_level_1
+BTC 出炉
+EMA_272_CAP_5_CAPMax_2.5_level_5
