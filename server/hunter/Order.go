@@ -5,7 +5,6 @@ import (
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/okxApi"
-	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/utils/taskPush"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mEncrypt"
@@ -123,7 +122,7 @@ type SettlementType struct {
 	OkxPositions    dbType.PositionsData
 	OKXBalance      []dbType.AccountBalance
 	OkxKey          dbType.OkxKeyType
-	VirtualPosition okxInfo.VirtualPositionType // 当前的虚拟持仓 数据库 OrderArr 最后一位
+	VirtualPosition dbType.VirtualPositionType // 当前的虚拟持仓 数据库 OrderArr 最后一位
 }
 
 func (_this *HunterObj) SyncAllApiKey() {

@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
@@ -47,10 +48,10 @@ func (_this *HunterObj) FormatTradeKdata() error {
 
 type TradeKdataObj struct {
 	EMA_Arr []string
-	Opt     okxInfo.TradeKdataOpt
+	Opt     dbType.TradeKdataOpt
 }
 
-func NewTradeKdataObj(opt okxInfo.TradeKdataOpt) *TradeKdataObj {
+func NewTradeKdataObj(opt dbType.TradeKdataOpt) *TradeKdataObj {
 	obj := TradeKdataObj{}
 	obj.EMA_Arr = []string{}
 	obj.Opt = opt

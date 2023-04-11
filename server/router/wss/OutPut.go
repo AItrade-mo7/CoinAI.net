@@ -2,6 +2,7 @@ package wss
 
 import (
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mTime"
@@ -102,7 +103,7 @@ type HunterDataType struct {
 	NowKdata           NowKdataType // 现货的原始K线
 	KdataLen           int
 	TradeKdataLen      int
-	TradeKdataOpt      okxInfo.TradeKdataOpt
+	TradeKdataOpt      dbType.TradeKdataOpt
 	NowVirtualPosition PositionType
 }
 

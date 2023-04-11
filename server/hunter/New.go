@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mPath"
@@ -22,15 +23,15 @@ type HunterObj struct {
 	Describe           string // 描述
 	InstID             string // 当前策略主打币种
 	MaxLen             int
-	TradeInst          mOKX.TypeInst                 // 交易的 InstID SWAP
-	KdataInst          mOKX.TypeInst                 // K线的 InstID SPOT
-	NowKdataList       []mOKX.TypeKd                 // 现货的原始K线
-	TradeKdataList     []okxInfo.TradeKdType         // 交易K线-计算好各种指标之后的K线
-	TradeKdataOpt      okxInfo.TradeKdataOpt         // 计算交易指标的参数
-	NowVirtualPosition okxInfo.VirtualPositionType   // 当前的虚拟持仓 数据库 OrderArr 最后一位
-	PositionArr        []okxInfo.VirtualPositionType // 当前持仓列表 读写在本地, 最大数量为 MaxLen
-	OrderArr           []okxInfo.VirtualPositionType // 平仓列表 读写都在数据库中 启动时加载最近10条
-	OutPutDirectory    string                        // 数据读写的目录
+	TradeInst          mOKX.TypeInst                // 交易的 InstID SWAP
+	KdataInst          mOKX.TypeInst                // K线的 InstID SPOT
+	NowKdataList       []mOKX.TypeKd                // 现货的原始K线
+	TradeKdataList     []okxInfo.TradeKdType        // 交易K线-计算好各种指标之后的K线
+	TradeKdataOpt      dbType.TradeKdataOpt         // 计算交易指标的参数
+	NowVirtualPosition dbType.VirtualPositionType   // 当前的虚拟持仓 数据库 OrderArr 最后一位
+	PositionArr        []dbType.VirtualPositionType // 当前持仓列表 读写在本地, 最大数量为 MaxLen
+	OrderArr           []dbType.VirtualPositionType // 平仓列表 读写都在数据库中 启动时加载最近10条
+	OutPutDirectory    string                       // 数据读写的目录
 }
 
 /*
@@ -51,8 +52,8 @@ func New(opt HunterOpt) *HunterObj {
 	obj.NowKdataList = []mOKX.TypeKd{}
 	obj.TradeKdataList = []okxInfo.TradeKdType{}
 
-	obj.TradeKdataOpt = okxInfo.TradeKdataOpt{}
-	obj.NowVirtualPosition = okxInfo.VirtualPositionType{}
+	obj.TradeKdataOpt = dbType.TradeKdataOpt{}
+	obj.NowVirtualPosition = dbType.VirtualPositionType{}
 
 	obj.OutPutDirectory = opt.OutPutDirectory
 

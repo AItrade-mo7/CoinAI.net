@@ -5,7 +5,7 @@ import (
 	"os"
 	"regexp"
 
-	"CoinAI.net/server/okxInfo"
+	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/task/testHunter"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mPath"
@@ -18,7 +18,7 @@ type GetWinConfigOpt struct {
 	InstID    string
 }
 
-func GetWinConfig(opt GetWinConfigOpt) []okxInfo.TradeKdataOpt {
+func GetWinConfig(opt GetWinConfigOpt) []dbType.TradeKdataOpt {
 	WinArrDataPath := mStr.Join(opt.OutPutDir, "/", opt.InstID, "-WinArr.json")
 	if !mPath.Exists(WinArrDataPath) {
 		err := fmt.Errorf("文件不存在 %+v", opt.OutPutDir)
@@ -32,7 +32,7 @@ func GetWinConfig(opt GetWinConfigOpt) []okxInfo.TradeKdataOpt {
 	var BillingArr []testHunter.BillingType // 数据来源
 	jsoniter.Unmarshal(file, &BillingArr)
 
-	confArr := []okxInfo.TradeKdataOpt{}
+	confArr := []dbType.TradeKdataOpt{}
 	for _, item := range BillingArr {
 		MockName := item.MockName //  EMA_320_CAP_5_CAPMax_1_level_1
 		EMA := regText(MockName, []string{
@@ -45,7 +45,7 @@ func GetWinConfig(opt GetWinConfigOpt) []okxInfo.TradeKdataOpt {
 			"_CAPMax_", "_level_",
 		})
 
-		conf := okxInfo.TradeKdataOpt{
+		conf := dbType.TradeKdataOpt{
 			EMA_Period: mCount.ToInt(EMA),
 			CAP_Period: mCount.ToInt(CAP),
 			CAP_Max:    CAPMax, // CAP 判断的边界值 0.2

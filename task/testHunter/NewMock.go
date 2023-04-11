@@ -6,6 +6,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mJson"
@@ -52,26 +53,26 @@ type BillingType struct {
 	InitMoney        string                 // 初始金钱
 	ResultMoney      string                 // 最终金钱
 	Level            string                 // 杠杆倍率
-	Opt              okxInfo.TradeKdataOpt
+	Opt              dbType.TradeKdataOpt
 }
 
 type NewMockOpt struct {
 	MockName      string // 策略名字 MA_x_CAP_x
 	InitMoney     string // 初始金钱  1000
 	ChargeUpl     string // 手续费率  0.05
-	TradeKdataOpt okxInfo.TradeKdataOpt
+	TradeKdataOpt dbType.TradeKdataOpt
 }
 
 type MockObj struct {
 	HunterName         string
-	NowVirtualPosition okxInfo.VirtualPositionType   // 当前持仓
-	PositionArr        []okxInfo.VirtualPositionType // 当前持仓列表
-	OrderArr           []okxInfo.VirtualPositionType // 平仓列表
-	Billing            BillingType                   // 交易结果
-	RunKdataList       []mOKX.TypeKd                 // 原始的 Kdata 数据
-	TradeKdataList     []okxInfo.TradeKdType         // 计算好各种指标之后的K线
-	TradeKdataOpt      okxInfo.TradeKdataOpt         // 交易指标
-	OutPutDirectory    string                        // 数据读写的目录
+	NowVirtualPosition dbType.VirtualPositionType   // 当前持仓
+	PositionArr        []dbType.VirtualPositionType // 当前持仓列表
+	OrderArr           []dbType.VirtualPositionType // 平仓列表
+	Billing            BillingType                  // 交易结果
+	RunKdataList       []mOKX.TypeKd                // 原始的 Kdata 数据
+	TradeKdataList     []okxInfo.TradeKdType        // 计算好各种指标之后的K线
+	TradeKdataOpt      dbType.TradeKdataOpt         // 交易指标
+	OutPutDirectory    string                       // 数据读写的目录
 }
 
 /*
@@ -85,13 +86,13 @@ func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 
 	obj.HunterName = opt.MockName
 
-	obj.NowVirtualPosition = okxInfo.VirtualPositionType{}
+	obj.NowVirtualPosition = dbType.VirtualPositionType{}
 	obj.NowVirtualPosition.InitMoney = opt.InitMoney
 	obj.NowVirtualPosition.Money = opt.InitMoney
 	obj.NowVirtualPosition.ChargeUpl = opt.ChargeUpl
 
-	obj.PositionArr = []okxInfo.VirtualPositionType{}
-	obj.OrderArr = []okxInfo.VirtualPositionType{}
+	obj.PositionArr = []dbType.VirtualPositionType{}
+	obj.OrderArr = []dbType.VirtualPositionType{}
 	obj.RunKdataList = _this.KdataList
 	obj.TradeKdataList = []okxInfo.TradeKdType{}
 	obj.OutPutDirectory = mStr.Join(config.Dir.JsonData, "/", opt.MockName)
@@ -120,11 +121,11 @@ func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 }
 
 type GetConfigOpt struct {
-	EmaPArr  []int                   // Ema 步长
-	CAPArr   []int                   // CAP 步长
-	CAPMax   []string                // CAPMax 步长
-	LevelArr []int                   // 杠杆倍数
-	ConfArr  []okxInfo.TradeKdataOpt // 成型的参数数组
+	EmaPArr  []int                  // Ema 步长
+	CAPArr   []int                  // CAP 步长
+	CAPMax   []string               // CAPMax 步长
+	LevelArr []int                  // 杠杆倍数
+	ConfArr  []dbType.TradeKdataOpt // 成型的参数数组
 }
 
 type GetConfigReturn struct {
@@ -140,13 +141,13 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 	ChargeUpl := "0.05" //  https://www.okx.com/cn/fees
 	InitMoney := "1000"
 
-	AppendConfig := func(conf okxInfo.TradeKdataOpt) {
+	AppendConfig := func(conf dbType.TradeKdataOpt) {
 		MockConfigArr = append(MockConfigArr,
 			NewMockOpt{
 				MockName:  mStr.Join("EMA_", conf.EMA_Period, "_CAP_", conf.CAP_Period, "_CAPMax_", conf.CAP_Max, "_level_", conf.MaxTradeLever),
 				InitMoney: InitMoney, // 初始资金
 				ChargeUpl: ChargeUpl, // 吃单标准手续费率 0.05%
-				TradeKdataOpt: okxInfo.TradeKdataOpt{
+				TradeKdataOpt: dbType.TradeKdataOpt{
 					EMA_Period:    conf.EMA_Period,
 					CAP_Period:    conf.CAP_Period,
 					MaxTradeLever: conf.MaxTradeLever,
@@ -164,7 +165,7 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 		for _, cap := range opt.CAPArr {
 			for _, level := range opt.LevelArr {
 				for _, capMax := range opt.CAPMax {
-					conf := okxInfo.TradeKdataOpt{
+					conf := dbType.TradeKdataOpt{
 						EMA_Period:    emaP,
 						CAP_Period:    cap,
 						MaxTradeLever: level,
