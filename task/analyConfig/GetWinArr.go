@@ -27,12 +27,11 @@ func GetWinArr(opt taskStart.BackReturn) {
 		BillingArr = opt.BillingArr
 	}
 
-	AfterN := 40
-
 	// Money最高来排序
 	MoneyArr := MoneySort(BillingArr)
+	MoneyNewArr := []testHunter.BillingType{}
 	for _, item := range MoneyArr {
-		if mCount.Le(item.ResultMoney, "1000") > 0 {
+		if mCount.Le(item.ResultMoney, "1700") > 0 {
 			Tmp := `结算最高:
 参数名称: ${MockName}
 InstID: ${InstID}
@@ -58,15 +57,16 @@ InstID: ${InstID}
 				"ChargeAdd":        item.ChargeAdd,
 			}
 			global.Run.Println(mStr.Temp(Tmp, Data))
+
+			MoneyNewArr = append(MoneyNewArr, item)
 		}
 	}
 
-	MoneyArr = MoneyArr[0:AfterN] // 取前 20 位
-	resultPath := mStr.Join(opt.ResultBasePath, "/", opt.InstID, "-MoneyArr.json")
-	mFile.Write(resultPath, mJson.ToStr(MoneyArr))
+	resultPath := mStr.Join(opt.ResultBasePath, "/", opt.InstID, "-MoneyNewArr.json")
+	mFile.Write(resultPath, mJson.ToStr(MoneyNewArr))
 
-	// 胜率 最高来排序
-	WinArr := WinSort(BillingArr)
+	//  将Money的结果按照 胜率 最高来排序
+	WinArr := WinSort(MoneyNewArr)
 	for _, item := range WinArr {
 		if mCount.Le(item.ResultMoney, "1000") > 0 {
 			Tmp := `胜率最高:
@@ -96,7 +96,6 @@ InstID: ${InstID}
 			global.TradeLog.Println(mStr.Temp(Tmp, Data))
 		}
 	}
-	WinArr = WinArr[0:AfterN]
 	resultPath = mStr.Join(opt.ResultBasePath, "/", opt.InstID, "-WinArr.json")
 	mFile.Write(resultPath, mJson.ToStr(WinArr))
 }
