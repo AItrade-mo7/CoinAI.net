@@ -1,8 +1,6 @@
 package hunter
 
 import (
-	"fmt"
-
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
@@ -15,8 +13,11 @@ import (
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
+	"github.com/EasyGolang/goTools/mStruct"
 	"github.com/EasyGolang/goTools/mTime"
 	jsoniter "github.com/json-iterator/go"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // // 下单  参数：dir 下单方向 NowKdata : 当前市场行情
@@ -113,8 +114,13 @@ func (_this *HunterObj) SetOrderDB(Type string) {
 }
 
 type ErrObj struct {
-	Err  string //
 	Name string
+	Err  string //
+}
+
+type SettlementType struct {
+	OkxPositions dbType.PositionsData
+	OkxKey       dbType.OkxKeyType
 }
 
 func (_this *HunterObj) SyncAllApiKey() {
@@ -132,6 +138,9 @@ func (_this *HunterObj) SyncAllApiKey() {
 	}
 
 	RightAccount := []dbType.OkxKeyType{}
+
+	AccountSettlement := []SettlementType{} // 用于存储当前用户的平仓订单
+
 	var ErrList []ErrObj
 	for _, OkxKey := range ApiKeyList {
 		// 新建账户
@@ -164,13 +173,15 @@ func (_this *HunterObj) SyncAllApiKey() {
 			continue
 		}
 		var NowAccountPos struct {
-			Dir    int
-			InstID string
+			Dir          int
+			InstID       string
+			OkxPositions dbType.PositionsData
 		}
 		for _, Positions := range OKXAccount.Positions {
 			if OKXAccount.NowHunter.TradeInst.InstID == Positions.InstID {
 				NowAccountPos.InstID = Positions.InstID
 				NowAccountPos.Dir = mCount.Le(Positions.Pos, "0")
+				NowAccountPos.OkxPositions = Positions
 			}
 		}
 		if NowAccountPos.Dir == _this.NowVirtualPosition.NowDir {
@@ -180,15 +191,28 @@ func (_this *HunterObj) SyncAllApiKey() {
 			})
 			continue
 		}
+
+		err = OKXAccount.Close()
+		if err != nil {
+			ErrList = append(ErrList, ErrObj{
+				Err:  mStr.ToStr(err),
+				Name: OkxKey.Name,
+			})
+			continue
+		}
+
+		AccountSettlement = append(AccountSettlement, SettlementType{
+			OkxPositions: NowAccountPos.OkxPositions,
+			OkxKey:       OkxKey,
+		})
+
 		if _this.NowVirtualPosition.NowDir > 0 {
 			err = OKXAccount.Buy()
 		}
 		if _this.NowVirtualPosition.NowDir < 0 {
 			err = OKXAccount.Sell()
 		}
-		if _this.NowVirtualPosition.NowDir == 0 {
-			err = OKXAccount.Close()
-		}
+
 		if err != nil {
 			ErrList = append(ErrList, ErrObj{
 				Err:  mStr.ToStr(err),
@@ -232,8 +256,85 @@ func (_this *HunterObj) SyncAllApiKey() {
 		Subject:     "市场方向已改变",
 		Title:       "市场方向已改变,所有账户均以同步持仓",
 		Content:     Content,
-		Description: "系统启动邮件",
+		Description: "同步持仓邮件",
 	})
 
-	fmt.Println(_this.HunterName, "交易失败列表", ErrList)
+	global.TradeLog.Println(_this.HunterName, "交易失败列表", ErrList)
+
+	_this.CloseOrderSettlement(AccountSettlement)
+}
+
+func (_this *HunterObj) CloseOrderSettlement(Settlement []SettlementType) {
+	UserOrderArr := []dbType.UserOrderTable{}
+
+	resErr := []string{}
+	for _, item := range Settlement {
+		if len(item.OkxKey.UserID) > 10 {
+			UserOrderArr = append(UserOrderArr, dbType.UserOrderTable{
+				OkxPositions: item.OkxPositions,
+				OkxKey:       item.OkxKey,
+				UserID:       item.OkxKey.UserID,
+				OrderID:      mEncrypt.GetUUID(),
+				CreateTime:   mTime.GetUnixInt64(),
+			})
+		} else {
+			resErr = append(resErr, mStr.Join(
+				"hunter.CloseOrderSettlement UserID为空",
+				"ServeID:", config.AppEnv.ServeID, "<br />",
+				"HunterName", _this.HunterName, "<br />",
+				"OkxKeyName", item.OkxKey.Name, "<br />",
+			))
+		}
+	}
+
+	if len(resErr) > 0 {
+		taskPush.SysEmail(taskPush.SysEmailOpt{
+			From:        config.SysName,
+			To:          []string{"meichangliang@outlook.com"},
+			Subject:     "存储用户订单出错",
+			Title:       "存储用户订单出错,错误信息如下",
+			Content:     mJson.ToStr(resErr),
+			Description: "同步持仓邮件",
+		})
+	}
+
+	db := mMongo.New(mMongo.Opt{
+		UserName: config.SysEnv.MongoUserName,
+		Password: config.SysEnv.MongoPassword,
+		Address:  config.SysEnv.MongoAddress,
+		DBName:   "Account",
+		Timeout:  len(UserOrderArr) * 20,
+	}).Connect().Collection("OkxOrder")
+	defer db.Close()
+
+	for _, Kd := range UserOrderArr {
+		FK := bson.D{{
+			Key:   "CreateTime",
+			Value: Kd.CreateTime,
+		}}
+		UK := bson.D{}
+		mStruct.Traverse(Kd, func(key string, val any) {
+			UK = append(UK, bson.E{
+				Key: "$set",
+				Value: bson.D{
+					{
+						Key:   key,
+						Value: val,
+					},
+				},
+			})
+		})
+
+		upOpt := options.Update()
+		upOpt.SetUpsert(true)
+		_, err := db.Table.UpdateOne(db.Ctx, FK, UK, upOpt)
+		if err != nil {
+			global.LogErr("数据更插失败  %+v", mStr.Join(
+				"hunter.CloseOrderSettlement UserID为空",
+				"ServeID:", config.AppEnv.ServeID, "<br />",
+				"HunterName", _this.HunterName, "<br />",
+				"OkxKeyName", Kd.OkxKey.Name, "<br />",
+			))
+		}
+	}
 }

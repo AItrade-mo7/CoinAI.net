@@ -19,7 +19,7 @@ type AccountDetailParam struct {
 }
 
 type AccountDetail struct {
-	Positions []account.PositionsData
+	Positions []dbType.PositionsData
 	Balance   []account.AccountBalance
 }
 

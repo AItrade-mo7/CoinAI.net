@@ -26,7 +26,7 @@ func (_this *HunterObj) Analy() {
 		AnalyDir = -1
 	}
 
-	AnalyDir = 1
+	AnalyDir = -1
 
 	// 更新持仓状态
 	_this.CountPosition()
