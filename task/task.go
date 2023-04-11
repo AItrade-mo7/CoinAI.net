@@ -8,6 +8,7 @@ import (
 	"CoinAI.net/task/analyConfig"
 	"CoinAI.net/task/taskStart"
 	"CoinAI.net/task/testHunter"
+	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
 )
 
@@ -80,7 +81,7 @@ func Step3(InstID string) {
 		StartTime: StartTime,
 		EndTime:   EndTime,
 		InstID:    InstID,
-		OutPutDir: "/root/AItrade/CoinAI.net/task/analyConfig/最终结果04-11",
+		OutPutDir: mStr.Join(ResultBasePath, "/三步最终结果"),
 		GetConfigOpt: testHunter.GetConfigOpt{
 			ConfArr: NewConfigArr,
 		},
