@@ -16,11 +16,12 @@ func main() {
 	global.Start()
 
 	// Step1("BTC-USDT")
-	Step2("BTC-USDT")
+	// Step2("BTC-USDT")
+	Step3("BTC-USDT")
 }
 
 func Step1(InstID string) {
-	// 第一步： 暴力求值 （海量参数结果罗列）
+	// 第一步： 暴力求值 （海量参数结果罗列） 需要几个小时甚至好几天
 	EmaPArr := []int{}
 	StarNum := 70
 	for i := 0; i < 520; i += 2 {
@@ -43,11 +44,19 @@ func Step1(InstID string) {
 }
 
 func Step2(InstID string) {
-	// 第二步骤：根据胜率和最高营收 进行筛选
+	// 第二步骤：根据胜率和最终营收 筛选
 	analyConfig.GetWinArr(analyConfig.GetWinArrOpt{
 		InstID:     InstID,
 		OutPutDir:  ResultBasePath,
 		MoneyRight: "1700",
 		WinRight:   "0.3",
+	})
+}
+
+func Step3(InstID string) {
+	// 第三步：提取第二步的配置
+	analyConfig.GetWinConfig(analyConfig.GetWinConfigOpt{
+		OutPutDir: ResultBasePath,
+		InstID:    InstID,
 	})
 }

@@ -52,6 +52,7 @@ type BillingType struct {
 	InitMoney        string                 // 初始金钱
 	ResultMoney      string                 // 最终金钱
 	Level            string                 // 杠杆倍率
+	Opt              okxInfo.TradeKdataOpt
 }
 
 type NewMockOpt struct {
@@ -111,6 +112,7 @@ func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 	obj.Billing.InitMoney = opt.InitMoney
 	obj.Billing.ResultMoney = opt.InitMoney
 	obj.Billing.Level = mStr.ToStr(opt.TradeKdataOpt.MaxTradeLever)
+	obj.Billing.Opt = opt.TradeKdataOpt // 在结果中显示参数
 	// 设置交易指标
 	obj.TradeKdataOpt = opt.TradeKdataOpt
 

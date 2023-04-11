@@ -75,7 +75,7 @@ InstID: ${InstID}
 	resultPath := mStr.Join(opt.OutPutDir, "/", opt.InstID, "-WinArr.json")
 	mFile.Write(resultPath, mJson.ToStr(NewMoneyArr))
 
-	global.Run.Println(NewMoneyArr, "文件已写入", resultPath, len(NewMoneyArr))
+	global.Run.Println("GetWinArr 文件已写入", resultPath, len(NewMoneyArr))
 
 	return NewMoneyArr
 }
