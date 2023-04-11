@@ -25,16 +25,9 @@ type BalanceDetails struct {
 	DisEq string // 美金层面折算
 }
 
-type AccountBalance struct {
-	TimeUnix int64  `bson:"TimeUnix"`
-	TimeStr  string `bson:"TimeStr"`
-	CcyName  string `bson:"CcyName"` // 币种
-	Balance  string `bson:"Balance"` // 币种
-}
-
 // 查看账户余额
-func GetOKXBalance(OKXKey dbType.OkxKeyType) (resData []AccountBalance, resErr error) {
-	resData = []AccountBalance{}
+func GetOKXBalance(OKXKey dbType.OkxKeyType) (resData []dbType.AccountBalance, resErr error) {
+	resData = []dbType.AccountBalance{}
 	resErr = nil
 
 	if len(OKXKey.ApiKey) < 10 {
@@ -80,7 +73,7 @@ func GetOKXBalance(OKXKey dbType.OkxKeyType) (resData []AccountBalance, resErr e
 		Details := Data[0].Details
 		for _, val := range Details {
 			myTime := mTime.MsToTime(val.UTime, "0")
-			NewBalance := AccountBalance{
+			NewBalance := dbType.AccountBalance{
 				TimeUnix: mTime.ToUnixMsec(myTime),
 				TimeStr:  mTime.UnixFormat(val.UTime),
 				CcyName:  val.Ccy,

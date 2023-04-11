@@ -5,6 +5,7 @@ import (
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/okxApi"
+	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/utils/taskPush"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mEncrypt"
@@ -119,9 +120,10 @@ type ErrObj struct {
 }
 
 type SettlementType struct {
-	OkxPositions dbType.PositionsData
-	OkxKey       dbType.OkxKeyType
-	OKXBalance   []dbType.AccountBalance
+	OkxPositions    dbType.PositionsData
+	OKXBalance      []dbType.AccountBalance
+	OkxKey          dbType.OkxKeyType
+	VirtualPosition okxInfo.VirtualPositionType // 当前的虚拟持仓 数据库 OrderArr 最后一位
 }
 
 func (_this *HunterObj) SyncAllApiKey() {
@@ -174,6 +176,7 @@ func (_this *HunterObj) SyncAllApiKey() {
 			continue
 		}
 
+		// 存储当前 Hunter 持仓
 		var NowAccountPos struct {
 			Dir          int
 			InstID       string
@@ -186,6 +189,8 @@ func (_this *HunterObj) SyncAllApiKey() {
 				NowAccountPos.OkxPositions = Positions
 			}
 		}
+
+		// 判断持仓是否一致, 一致则无需操作
 		if NowAccountPos.Dir == _this.NowVirtualPosition.NowDir {
 			ErrList = append(ErrList, ErrObj{
 				Err:  "当前账户持仓已经与策略保持一致,无需下单。",
@@ -194,6 +199,7 @@ func (_this *HunterObj) SyncAllApiKey() {
 			continue
 		}
 
+		// 执行平仓操作
 		err = OKXAccount.Close()
 		if err != nil {
 			ErrList = append(ErrList, ErrObj{
@@ -203,6 +209,7 @@ func (_this *HunterObj) SyncAllApiKey() {
 			continue
 		}
 
+		// 此时读取账户余额
 		err = OKXAccount.GetBalance()
 		if err != nil {
 			ErrList = append(ErrList, ErrObj{
@@ -212,12 +219,15 @@ func (_this *HunterObj) SyncAllApiKey() {
 			continue
 		}
 
+		// 平仓成功后，记录 okx 的持仓、账户余额、okxKey、虚拟持仓,也就是开仓。
 		AccountSettlement = append(AccountSettlement, SettlementType{
-			OkxPositions: NowAccountPos.OkxPositions,
-			OKXBalance:   OKXAccount.Balance,
-			OkxKey:       OkxKey,
+			OkxPositions:    NowAccountPos.OkxPositions,
+			OKXBalance:      OKXAccount.Balance,
+			OkxKey:          OkxKey,
+			VirtualPosition: _this.NowVirtualPosition,
 		})
 
+		// 根据情况开仓
 		if _this.NowVirtualPosition.NowDir > 0 {
 			err = OKXAccount.Buy()
 		}
@@ -232,7 +242,7 @@ func (_this *HunterObj) SyncAllApiKey() {
 			})
 			continue
 		}
-
+		// 记录走完流程的账户
 		RightAccount = append(RightAccount, OkxKey)
 	}
 
@@ -283,11 +293,13 @@ func (_this *HunterObj) CloseOrderSettlement(Settlement []SettlementType) {
 	for _, item := range Settlement {
 		if len(item.OkxKey.UserID) > 10 {
 			UserOrderArr = append(UserOrderArr, dbType.UserOrderTable{
-				OkxPositions: item.OkxPositions,
-				OkxKey:       item.OkxKey,
-				UserID:       item.OkxKey.UserID,
-				OrderID:      mEncrypt.GetUUID(),
-				CreateTime:   mTime.GetUnixInt64(),
+				OkxPositions:    item.OkxPositions,
+				OKXBalance:      item.OKXBalance,
+				OkxKey:          item.OkxKey,
+				VirtualPosition: item.VirtualPosition,
+				UserID:          item.OkxKey.UserID,
+				OrderID:         mEncrypt.GetUUID(),
+				CreateTime:      mTime.GetUnixInt64(),
 			})
 		} else {
 			resErr = append(resErr, mStr.Join(

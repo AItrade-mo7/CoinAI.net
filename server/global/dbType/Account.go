@@ -1,5 +1,7 @@
 package dbType
 
+import "CoinAI.net/server/okxInfo"
+
 /*
 用来存储 用户信息
 db: Account
@@ -54,10 +56,11 @@ type AccountBalance struct {
 }
 
 type UserOrderTable struct {
-	OkxPositions PositionsData  `bson:"OkxPositions"`
-	OKXBalance   AccountBalance `bson:"OKXBalance"`
-	OkxKey       OkxKeyType     `bson:"OkxKey"`
-	UserID       string         `bson:"UserID"`
-	OrderID      string         `bson:"OrderID"`
-	CreateTime   int64          `bson:"CreateTime"` // 创建时间
+	OkxPositions    PositionsData               `bson:"OkxPositions"`
+	OKXBalance      []AccountBalance            `bson:"OKXBalance"`
+	OkxKey          OkxKeyType                  `bson:"OkxKey"`
+	VirtualPosition okxInfo.VirtualPositionType `bson:"OkxKey"` // 当前的虚拟持仓 数据库 OrderArr 最后一位
+	UserID          string                      `bson:"UserID"`
+	OrderID         string                      `bson:"OrderID"`
+	CreateTime      int64                       `bson:"CreateTime"` // 创建时间
 }
