@@ -17,11 +17,13 @@ type OutPut struct {
 	IP           string                    `bson:"IP"`
 	ServeID      string                    `bson:"ServeID"`
 	UserID       string                    `bson:"UserID"`
-	SysTime      int64                     `bson:"SysTime"` // 系统时间
-	DataSource   string                    `bson:"DataSource"`
+	SysTime      int64                     `bson:"SysTime"`    // 系统时间
+	DataSource   string                    `bson:"DataSource"` // 数据提供者
 	MaxApiKeyNum int                       `bson:"MaxApiKeyNum"`
 	ApiKeyNum    int                       `bson:"ApiKeyNum"`
 	NowTicker    NowTicker                 `bson:"Type"`
+	CreateTime   int64                     `bson:"CreateTime"` // 创建时间
+	UpdateTime   int64                     `bson:"UpdateTime"` // 更新时间
 	HunterData   map[string]HunterDataType `bson:"Hunter"`
 }
 
@@ -36,6 +38,8 @@ func GetOutPut() (resData OutPut) {
 	resData.UserID = config.AppEnv.UserID
 	resData.SysTime = mTime.GetUnixInt64()
 	resData.DataSource = config.SysName
+	resData.CreateTime = config.AppEnv.CreateTime
+	resData.UpdateTime = config.AppEnv.UpdateTime
 	// ApiKey 信息
 	resData.ApiKeyNum = len(config.AppEnv.ApiKeyList)
 	resData.MaxApiKeyNum = config.AppEnv.MaxApiKeyNum
