@@ -5,9 +5,9 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
+	"CoinAI.net/task/analyConfig"
 	"CoinAI.net/task/taskStart"
-	"CoinAI.net/task/testHunter"
-	"github.com/EasyGolang/goTools/mTime"
+	"github.com/EasyGolang/goTools/mStr"
 )
 
 var ResultBasePath = "/root/AItrade/CoinAI.net/task/analyConfig/最近8个月2"
@@ -64,46 +64,46 @@ func BackAnaly() {
 
 	// fmt.Println(mJson.ToStr(EmaPArr))
 
-	EndTime := mTime.GetUnixInt64()
-	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 260)
+	// EndTime := mTime.GetUnixInt64()
+	// StartTime := EndTime - (mTime.UnixTimeInt64.Day * 260)
 
 	InstID := "BTC-USDT"
-	BTCResult := taskStart.BackTest(taskStart.BackOpt{
-		StartTime: StartTime,
-		EndTime:   EndTime,
-		InstID:    InstID,
-		GetConfigOpt: testHunter.GetConfigOpt{
-			EmaPArr:  EmaPArr,
-			CAPArr:   CAPArr,
-			LevelArr: LevelArr,
-			CAPMax:   CAPMax,
-			ConfArr:  ConfArr,
+	// BTCResult := taskStart.BackTest(taskStart.BackOpt{
+	// 	StartTime: StartTime,
+	// 	EndTime:   EndTime,
+	// 	InstID:    InstID,
+	// 	GetConfigOpt: testHunter.GetConfigOpt{
+	// 		EmaPArr:  EmaPArr,
+	// 		CAPArr:   CAPArr,
+	// 		LevelArr: LevelArr,
+	// 		CAPMax:   CAPMax,
+	// 		ConfArr:  ConfArr,
+	// 	},
+	// })
+	// BTCResult.ResultBasePath = ResultBasePath
+	analyConfig.GetWinArr(
+		// BTCResult,
+		taskStart.BackReturn{
+			InstID:         InstID,
+			BillingPath:    mStr.Join(ResultBasePath, "/", InstID, "-BillingArr.json"),
+			ResultBasePath: ResultBasePath,
 		},
-	})
-	BTCResult.ResultBasePath = ResultBasePath
-	// analyConfig.GetWinArr(
-	// 	BTCResult,
-	// 	// taskStart.BackReturn{
-	// 	// 	InstID:         InstID,
-	// 	// 	BillingPath:    mStr.Join(ResultBasePath, "/", InstID, "-BillingArr.json"),
-	// 	// 	ResultBasePath: ResultBasePath,
-	// 	// },
-	// )
+	)
 
-	InstID = "ETH-USDT"
-	ETHResult := taskStart.BackTest(taskStart.BackOpt{
-		StartTime: StartTime,
-		EndTime:   EndTime,
-		InstID:    InstID,
-		GetConfigOpt: testHunter.GetConfigOpt{
-			EmaPArr:  EmaPArr,
-			CAPArr:   CAPArr,
-			LevelArr: LevelArr,
-			CAPMax:   CAPMax,
-			ConfArr:  ConfArr,
-		},
-	})
-	ETHResult.ResultBasePath = ResultBasePath
+	// InstID = "ETH-USDT"
+	// ETHResult := taskStart.BackTest(taskStart.BackOpt{
+	// 	StartTime: StartTime,
+	// 	EndTime:   EndTime,
+	// 	InstID:    InstID,
+	// 	GetConfigOpt: testHunter.GetConfigOpt{
+	// 		EmaPArr:  EmaPArr,
+	// 		CAPArr:   CAPArr,
+	// 		LevelArr: LevelArr,
+	// 		CAPMax:   CAPMax,
+	// 		ConfArr:  ConfArr,
+	// 	},
+	// })
+	// ETHResult.ResultBasePath = ResultBasePath
 	// analyConfig.GetWinArr(
 	// 	ETHResult,
 	// 	// taskStart.BackReturn{
