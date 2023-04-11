@@ -66,7 +66,7 @@ InstID: ${InstID}
 	mFile.Write(resultPath, mJson.ToStr(MoneyArr))
 
 	// 胜率 最高来排序
-	WinArr := MoneySort(BillingArr)
+	WinArr := WinSort(BillingArr)
 	for _, item := range WinArr {
 		if mCount.Le(item.ResultMoney, "1000") > 0 {
 			Tmp := `胜率最高:
