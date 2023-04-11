@@ -1,0 +1,1082 @@
+[
+  {
+    "MockName": "EMA_314_CAP_4_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2",
+    "NilNum": 65,
+    "SellNum": 34,
+    "BuyNum": 31,
+    "AllNum": 130,
+    "WinNum": 19,
+    "LoseNum": 46,
+    "WinRatio": "0.2923076923076923",
+    "PLratio": "-8.7470160156440042",
+    "WinUplRatioAdd": "102.612",
+    "WinMoneyAdd": "1455.27345208",
+    "LoseUplRatioAdd": "-32.034",
+    "LoseMoneyAdd": "-402.79949351",
+    "MaxRatio": {
+      "Value": "32.265",
+      "TimeStr": "2023-01-31T06:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "81.150749479285",
+    "MinMoney": {
+      "Value": "976.277",
+      "TimeStr": "2022-08-19T04:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2134.53",
+      "TimeStr": "2023-03-27T23:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "39.058",
+      "TimeStr": "2023-01-30T03:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1740.193",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_306_CAP_5_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.2807017543859649",
+    "NilNum": 57,
+    "SellNum": 26,
+    "BuyNum": 31,
+    "AllNum": 114,
+    "WinNum": 18,
+    "LoseNum": 39,
+    "WinRatio": "0.3157894736842105",
+    "PLratio": "-7.7270996336480314",
+    "WinUplRatioAdd": "103.717",
+    "WinMoneyAdd": "1490.23115528",
+    "LoseUplRatioAdd": "-32.667",
+    "LoseMoneyAdd": "-417.85848803",
+    "MaxRatio": {
+      "Value": "32.331",
+      "TimeStr": "2023-01-31T06:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "72.739663833625",
+    "MinMoney": {
+      "Value": "980.901",
+      "TimeStr": "2022-08-19T06:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2192.281",
+      "TimeStr": "2023-03-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "39.128",
+      "TimeStr": "2023-01-30T03:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1744.081",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_316_CAP_4_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.0634920634920635",
+    "NilNum": 63,
+    "SellNum": 35,
+    "BuyNum": 28,
+    "AllNum": 126,
+    "WinNum": 18,
+    "LoseNum": 45,
+    "WinRatio": "0.2857142857142857",
+    "PLratio": "-9.2653325909224268",
+    "WinUplRatioAdd": "101.866",
+    "WinMoneyAdd": "1449.94933488",
+    "LoseUplRatioAdd": "-31.066",
+    "LoseMoneyAdd": "-391.2297051",
+    "MaxRatio": {
+      "Value": "32.265",
+      "TimeStr": "2023-01-31T06:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "79.30150731489",
+    "MinMoney": {
+      "Value": "976.277",
+      "TimeStr": "2022-08-19T04:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2143.876",
+      "TimeStr": "2023-03-27T23:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "39.058",
+      "TimeStr": "2023-01-30T03:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1747.812",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_326_CAP_4_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.1311475409836066",
+    "NilNum": 61,
+    "SellNum": 32,
+    "BuyNum": 29,
+    "AllNum": 122,
+    "WinNum": 19,
+    "LoseNum": 42,
+    "WinRatio": "0.3114754098360656",
+    "PLratio": "-7.9284803217542026",
+    "WinUplRatioAdd": "104.437",
+    "WinMoneyAdd": "1519.6167664",
+    "LoseUplRatioAdd": "-32.398",
+    "LoseMoneyAdd": "-423.6818048",
+    "MaxRatio": {
+      "Value": "34.799",
+      "TimeStr": "2023-02-05T20:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "77.2525409808",
+    "MinMoney": {
+      "Value": "983.84",
+      "TimeStr": "2022-08-19T04:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2215.463",
+      "TimeStr": "2023-03-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "40.78",
+      "TimeStr": "2023-02-02T08:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1751.088",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_298_CAP_4_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.03125",
+    "NilNum": 64,
+    "SellNum": 28,
+    "BuyNum": 36,
+    "AllNum": 128,
+    "WinNum": 20,
+    "LoseNum": 44,
+    "WinRatio": "0.3125",
+    "PLratio": "-7.5509209706818191",
+    "WinUplRatioAdd": "107.821",
+    "WinMoneyAdd": "1532.0902578",
+    "LoseUplRatioAdd": "-35.768",
+    "LoseMoneyAdd": "-446.3824453",
+    "MaxRatio": {
+      "Value": "32.356",
+      "TimeStr": "2023-01-31T05:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-4.758",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "80.55351490625",
+    "MinMoney": {
+      "Value": "979.526",
+      "TimeStr": "2022-08-18T17:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2193.469",
+      "TimeStr": "2023-03-27T23:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-4.758",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "39.058",
+      "TimeStr": "2023-01-30T03:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1754.111",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_324_CAP_4_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.0634920634920635",
+    "NilNum": 63,
+    "SellNum": 33,
+    "BuyNum": 30,
+    "AllNum": 126,
+    "WinNum": 19,
+    "LoseNum": 44,
+    "WinRatio": "0.3015873015873016",
+    "PLratio": "-8.3727675441266296",
+    "WinUplRatioAdd": "104.334",
+    "WinMoneyAdd": "1513.72853847",
+    "LoseUplRatioAdd": "-32.227",
+    "LoseMoneyAdd": "-418.67597505",
+    "MaxRatio": {
+      "Value": "34.799",
+      "TimeStr": "2023-02-05T20:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "79.78031078171",
+    "MinMoney": {
+      "Value": "983.84",
+      "TimeStr": "2022-08-19T04:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2207.384",
+      "TimeStr": "2023-03-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "40.78",
+      "TimeStr": "2023-02-02T08:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1756.212",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_312_CAP_4_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.0634920634920635",
+    "NilNum": 63,
+    "SellNum": 33,
+    "BuyNum": 30,
+    "AllNum": 126,
+    "WinNum": 18,
+    "LoseNum": 45,
+    "WinRatio": "0.2857142857142857",
+    "PLratio": "-9.1140601314519751",
+    "WinUplRatioAdd": "103.385",
+    "WinMoneyAdd": "1486.44468832",
+    "LoseUplRatioAdd": "-31.669",
+    "LoseMoneyAdd": "-407.73394812",
+    "MaxRatio": {
+      "Value": "32.356",
+      "TimeStr": "2023-01-31T05:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "79.8546358701",
+    "MinMoney": {
+      "Value": "976.277",
+      "TimeStr": "2022-08-19T04:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2170.368",
+      "TimeStr": "2023-03-27T23:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "39.058",
+      "TimeStr": "2023-01-30T03:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1757.56",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_308_CAP_5_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.2413793103448276",
+    "NilNum": 58,
+    "SellNum": 27,
+    "BuyNum": 31,
+    "AllNum": 116,
+    "WinNum": 17,
+    "LoseNum": 41,
+    "WinRatio": "0.2931034482758621",
+    "PLratio": "-8.8885499655880262",
+    "WinUplRatioAdd": "103.633",
+    "WinMoneyAdd": "1495.68096682",
+    "LoseUplRatioAdd": "-31.629",
+    "LoseMoneyAdd": "-405.82891259",
+    "MaxRatio": {
+      "Value": "32.331",
+      "TimeStr": "2023-01-31T06:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "74.174673027115",
+    "MinMoney": {
+      "Value": "980.901",
+      "TimeStr": "2022-08-19T06:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2211.301",
+      "TimeStr": "2023-03-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "39.128",
+      "TimeStr": "2023-01-30T03:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1759.214",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_322_CAP_5_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.5490196078431373",
+    "NilNum": 51,
+    "SellNum": 24,
+    "BuyNum": 27,
+    "AllNum": 102,
+    "WinNum": 16,
+    "LoseNum": 35,
+    "WinRatio": "0.3137254901960784",
+    "PLratio": "-8.7475180089693103",
+    "WinUplRatioAdd": "99.071",
+    "WinMoneyAdd": "1427.95669638",
+    "LoseUplRatioAdd": "-28.089",
+    "LoseMoneyAdd": "-357.09046499",
+    "MaxRatio": {
+      "Value": "34.885",
+      "TimeStr": "2023-02-05T21:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "65.445463115695",
+    "MinMoney": {
+      "Value": "986.093",
+      "TimeStr": "2022-08-19T04:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2077.337",
+      "TimeStr": "2023-03-28T01:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "40.851",
+      "TimeStr": "2023-02-02T08:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1760.843",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_324_CAP_3_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "1.7931034482758621",
+    "NilNum": 73,
+    "SellNum": 40,
+    "BuyNum": 32,
+    "AllNum": 145,
+    "WinNum": 18,
+    "LoseNum": 54,
+    "WinRatio": "0.25",
+    "PLratio": "-11.0061499856341334",
+    "WinUplRatioAdd": "104.715",
+    "WinMoneyAdd": "1521.12072313",
+    "LoseUplRatioAdd": "-31.613",
+    "LoseMoneyAdd": "-414.61929697",
+    "MaxRatio": {
+      "Value": "34.799",
+      "TimeStr": "2023-02-05T20:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-4.758",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "91.58886071308",
+    "MinMoney": {
+      "Value": "980.207",
+      "TimeStr": "2022-08-19T04:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2192.126",
+      "TimeStr": "2023-03-27T23:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-4.758",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "40.78",
+      "TimeStr": "2023-02-02T08:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1763.237",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_310_CAP_5_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.3214285714285714",
+    "NilNum": 56,
+    "SellNum": 27,
+    "BuyNum": 29,
+    "AllNum": 112,
+    "WinNum": 17,
+    "LoseNum": 39,
+    "WinRatio": "0.3035714285714286",
+    "PLratio": "-8.4424863944025525",
+    "WinUplRatioAdd": "103.912",
+    "WinMoneyAdd": "1497.44806865",
+    "LoseUplRatioAdd": "-31.93",
+    "LoseMoneyAdd": "-406.9088038",
+    "MaxRatio": {
+      "Value": "32.331",
+      "TimeStr": "2023-01-31T06:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "71.794598132425",
+    "MinMoney": {
+      "Value": "980.901",
+      "TimeStr": "2022-08-19T06:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2209.489",
+      "TimeStr": "2023-03-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "39.128",
+      "TimeStr": "2023-01-30T03:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1765.706",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_322_CAP_3_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "1.8705035971223022",
+    "NilNum": 70,
+    "SellNum": 37,
+    "BuyNum": 32,
+    "AllNum": 139,
+    "WinNum": 16,
+    "LoseNum": 53,
+    "WinRatio": "0.2318840579710145",
+    "PLratio": "-12.0595131188953576",
+    "WinUplRatioAdd": "104.813",
+    "WinMoneyAdd": "1528.39433625",
+    "LoseUplRatioAdd": "-31.767",
+    "LoseMoneyAdd": "-419.81846107",
+    "MaxRatio": {
+      "Value": "34.799",
+      "TimeStr": "2023-02-05T20:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-4.758",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "88.11308093759",
+    "MinMoney": {
+      "Value": "980.207",
+      "TimeStr": "2022-08-19T04:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2203.112",
+      "TimeStr": "2023-03-27T23:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-4.758",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "40.78",
+      "TimeStr": "2023-02-02T08:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1767.438",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_318_CAP_4_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.1666666666666667",
+    "NilNum": 60,
+    "SellNum": 32,
+    "BuyNum": 28,
+    "AllNum": 120,
+    "WinNum": 16,
+    "LoseNum": 44,
+    "WinRatio": "0.2666666666666667",
+    "PLratio": "-10.3537547415795486",
+    "WinUplRatioAdd": "102.425",
+    "WinMoneyAdd": "1470.25905803",
+    "LoseUplRatioAdd": "-30.703",
+    "LoseMoneyAdd": "-390.50687509",
+    "MaxRatio": {
+      "Value": "32.265",
+      "TimeStr": "2023-01-31T06:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "76.39040159147",
+    "MinMoney": {
+      "Value": "979.458",
+      "TimeStr": "2022-08-19T04:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2168.909",
+      "TimeStr": "2023-03-27T23:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "39.058",
+      "TimeStr": "2023-01-30T03:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1768.22",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_322_CAP_4_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.1311475409836066",
+    "NilNum": 61,
+    "SellNum": 31,
+    "BuyNum": 30,
+    "AllNum": 122,
+    "WinNum": 16,
+    "LoseNum": 45,
+    "WinRatio": "0.2622950819672131",
+    "PLratio": "-10.3796995768493497",
+    "WinUplRatioAdd": "104.788",
+    "WinMoneyAdd": "1525.05954266",
+    "LoseUplRatioAdd": "-31.885",
+    "LoseMoneyAdd": "-413.23257306",
+    "MaxRatio": {
+      "Value": "34.799",
+      "TimeStr": "2023-02-05T20:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "77.8166949848",
+    "MinMoney": {
+      "Value": "983.84",
+      "TimeStr": "2022-08-19T04:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2227.905",
+      "TimeStr": "2023-03-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "40.78",
+      "TimeStr": "2023-02-02T08:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1772.648",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_312_CAP_5_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.3214285714285714",
+    "NilNum": 56,
+    "SellNum": 27,
+    "BuyNum": 29,
+    "AllNum": 112,
+    "WinNum": 19,
+    "LoseNum": 37,
+    "WinRatio": "0.3392857142857143",
+    "PLratio": "-7.2149729751254132",
+    "WinUplRatioAdd": "104.279",
+    "WinMoneyAdd": "1505.74170614",
+    "LoseUplRatioAdd": "-31.837",
+    "LoseMoneyAdd": "-406.40954012",
+    "MaxRatio": {
+      "Value": "32.331",
+      "TimeStr": "2023-01-31T06:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "71.88885008301",
+    "MinMoney": {
+      "Value": "979.121",
+      "TimeStr": "2022-08-19T05:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2212.993",
+      "TimeStr": "2023-03-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "39.128",
+      "TimeStr": "2023-01-30T03:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1773.782",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_320_CAP_4_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.2807017543859649",
+    "NilNum": 57,
+    "SellNum": 29,
+    "BuyNum": 28,
+    "AllNum": 114,
+    "WinNum": 14,
+    "LoseNum": 43,
+    "WinRatio": "0.2456140350877193",
+    "PLratio": "-12.2847377955037837",
+    "WinUplRatioAdd": "104.666",
+    "WinMoneyAdd": "1529.56721644",
+    "LoseUplRatioAdd": "-29.976",
+    "LoseMoneyAdd": "-382.4221997",
+    "MaxRatio": {
+      "Value": "34.799",
+      "TimeStr": "2023-02-05T20:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "73.07266700837",
+    "MinMoney": {
+      "Value": "983.088",
+      "TimeStr": "2022-08-19T04:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2238.724",
+      "TimeStr": "2023-03-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-4.885",
+      "TimeStr": "2022-09-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "40.78",
+      "TimeStr": "2023-02-02T08:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1812.167",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_314_CAP_5_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.4528301886792453",
+    "NilNum": 53,
+    "SellNum": 26,
+    "BuyNum": 27,
+    "AllNum": 106,
+    "WinNum": 15,
+    "LoseNum": 38,
+    "WinRatio": "0.2830188679245283",
+    "PLratio": "-10.2895846103692726",
+    "WinUplRatioAdd": "104.461",
+    "WinMoneyAdd": "1533.9826728",
+    "LoseUplRatioAdd": "-29.509",
+    "LoseMoneyAdd": "-377.67213983",
+    "MaxRatio": {
+      "Value": "34.866",
+      "TimeStr": "2023-02-05T20:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "68.765085266485",
+    "MinMoney": {
+      "Value": "987.667",
+      "TimeStr": "2022-08-18T09:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2262.493",
+      "TimeStr": "2023-03-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "40.851",
+      "TimeStr": "2023-02-02T08:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1813.459",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_316_CAP_5_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.4528301886792453",
+    "NilNum": 53,
+    "SellNum": 26,
+    "BuyNum": 27,
+    "AllNum": 106,
+    "WinNum": 15,
+    "LoseNum": 38,
+    "WinRatio": "0.2830188679245283",
+    "PLratio": "-10.2894042822502174",
+    "WinUplRatioAdd": "104.936",
+    "WinMoneyAdd": "1540.86701728",
+    "LoseUplRatioAdd": "-29.706",
+    "LoseMoneyAdd": "-379.37373924",
+    "MaxRatio": {
+      "Value": "34.866",
+      "TimeStr": "2023-02-05T20:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "68.68726263902",
+    "MinMoney": {
+      "Value": "987.667",
+      "TimeStr": "2022-08-18T09:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2267.475",
+      "TimeStr": "2023-03-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "40.851",
+      "TimeStr": "2023-02-02T08:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1817.45",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_318_CAP_5_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.4528301886792453",
+    "NilNum": 53,
+    "SellNum": 26,
+    "BuyNum": 27,
+    "AllNum": 106,
+    "WinNum": 15,
+    "LoseNum": 38,
+    "WinRatio": "0.2830188679245283",
+    "PLratio": "-10.308121252484635",
+    "WinUplRatioAdd": "105.16",
+    "WinMoneyAdd": "1545.13420913",
+    "LoseUplRatioAdd": "-29.715",
+    "LoseMoneyAdd": "-379.73360039",
+    "MaxRatio": {
+      "Value": "34.866",
+      "TimeStr": "2023-02-05T20:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "68.67124680437",
+    "MinMoney": {
+      "Value": "987.667",
+      "TimeStr": "2022-08-18T09:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2258.627",
+      "TimeStr": "2023-03-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "40.851",
+      "TimeStr": "2023-02-02T08:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1821.211",
+    "Level": "1"
+  },
+  {
+    "MockName": "EMA_320_CAP_5_CAPMax_1_level_1",
+    "InstID": "BTC-USDT",
+    "StartTime": "2022-08-18T06:00:00",
+    "EndTime": "2023-04-10T06:00:00",
+    "AllDay": 260,
+    "OrderRate": "2.5490196078431373",
+    "NilNum": 51,
+    "SellNum": 24,
+    "BuyNum": 27,
+    "AllNum": 102,
+    "WinNum": 16,
+    "LoseNum": 35,
+    "WinRatio": "0.3137254901960784",
+    "PLratio": "-9.3294438261133398",
+    "WinUplRatioAdd": "104.979",
+    "WinMoneyAdd": "1557.33022402",
+    "LoseUplRatioAdd": "-28.349",
+    "LoseMoneyAdd": "-365.15144188",
+    "MaxRatio": {
+      "Value": "34.866",
+      "TimeStr": "2023-02-05T20:00:00",
+      "Time": 0
+    },
+    "MinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "ChargeAdd": "66.86748439107",
+    "MinMoney": {
+      "Value": "987.667",
+      "TimeStr": "2022-08-18T09:00:00",
+      "Time": 0
+    },
+    "MaxMoney": {
+      "Value": "2299.909",
+      "TimeStr": "2023-03-28T00:00:00",
+      "Time": 0
+    },
+    "PositionMinRatio": {
+      "Value": "-5.671",
+      "TimeStr": "2022-09-28T01:00:00",
+      "Time": 0
+    },
+    "PositionMaxRatio": {
+      "Value": "40.851",
+      "TimeStr": "2023-02-02T08:00:00",
+      "Time": 0
+    },
+    "InitMoney": "1000",
+    "ResultMoney": "1846.623",
+    "Level": "1"
+  }
+]
