@@ -44,6 +44,8 @@ func GetWinArr(opt GetWinArrOpt) []testHunter.BillingType {
 		if mCount.Le(item.ResultMoney, opt.MoneyRight) > 0 && mCount.Le(item.WinRatio, opt.WinRight) > 0 {
 			Tmp := `结算最高:
 参数名称: ${MockName}
+开始时间: ${StartTime}
+结束时间: ${EndTime}
 InstID: ${InstID}
 开仓频率: ${OrderRate} 
 胜率: ${WinRatio}
@@ -56,6 +58,8 @@ InstID: ${InstID}
 `
 			Data := map[string]string{
 				"MockName":         item.MockName,
+				"StartTime":        item.StartTime,
+				"EndTime":          item.EndTime,
 				"InstID":           item.InstID,
 				"OrderRate":        item.OrderRate,
 				"WinRatio":         item.WinRatio,

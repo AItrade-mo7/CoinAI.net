@@ -19,11 +19,9 @@ func main() {
 	global.Start()
 
 	// Step1("BTC-USDT")
-	Step2("BTC-USDT")
-	Step3("BTC-USDT")
-
-	Step2("ETH-USDT")
-	Step3("ETH-USDT")
+	// Step2("BTC-USDT")
+	// Step3("BTC-USDT")
+	Step4("BTC-USDT")
 }
 
 func Step1(InstID string) {
@@ -95,8 +93,8 @@ func Step4(InstID string) {
 	// 第四步： 根据第三步的结果进行筛选 (胜率和最终营收)
 	analyConfig.GetWinArr(analyConfig.GetWinArrOpt{
 		InstID:    InstID,
-		OutPutDir: mStr.Join(ResultBasePath, "/三步最终结果"),
-		// MoneyRight: "1700",
+		OutPutDir: mStr.Join(ResultBasePath),
+		// MoneyRight: "1000",
 		// WinRight:   "0.3",
 	})
 }

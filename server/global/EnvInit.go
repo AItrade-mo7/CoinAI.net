@@ -146,7 +146,8 @@ func WriteAppEnv() {
 	if err != nil {
 		LogErr("config.AppEnv 数据更插失败", err)
 	}
-	Log.Println("config.AppEnv 已更新至数据库", mJson.Format(config.AppEnv))
+
+	Log.Println("config.AppEnv 已更新至数据库")
 }
 
 func GetLocalAPI() (ip string) {
@@ -214,4 +215,20 @@ func GetMainUser() {
 
 	// 回填用户信息
 	config.MainUser = UserDB.Data
+}
+
+func GetFuzzyApiKey() []dbType.OkxKeyType {
+	ApiKeyList := config.AppEnv.ApiKeyList
+
+	NewKeyList := []dbType.OkxKeyType{}
+
+	for _, val := range ApiKeyList {
+		okxKey := val
+		okxKey.ApiKey = mStr.GetKeyFuzzy(val.ApiKey, 3, 1)
+		okxKey.SecretKey = mStr.GetKeyFuzzy(val.SecretKey, 3, 1)
+		okxKey.Passphrase = mStr.GetKeyFuzzy(val.Passphrase, 1, 1)
+		NewKeyList = append(NewKeyList, okxKey)
+	}
+
+	return NewKeyList
 }
