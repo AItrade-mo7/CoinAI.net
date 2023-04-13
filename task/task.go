@@ -66,7 +66,7 @@ func Step2(InstID string) {
 }
 
 func Step3(InstID string) {
-	// 第三步：提取第二步的配置，加上杠杆得出新的参数组合 大概 几百个 然后 换个新的时间进行测试
+	// 第三步：提取第二步的配置，加上杠杆得出新的参数组合 大概 几百个 然后 换个新的时间段进行新一轮测试
 	// confArr := analyConfig.GetWinConfig(analyConfig.GetWinConfigOpt{
 	// 	OutPutDir: ResultBasePath,
 	// 	InstID:    InstID,
