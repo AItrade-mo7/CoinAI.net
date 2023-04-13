@@ -37,8 +37,8 @@ func Step1(InstID string) {
 		StarNum = 60 + i
 		EmaPArr = append(EmaPArr, StarNum)
 	}
-	EndTime := mTime.GetUnixInt64()
-	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 260)
+	EndTime := mTime.TimeParse(mTime.Lay_DD, "2023-04-1")
+	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 210)
 	taskStart.BackTest(taskStart.BackOpt{
 		StartTime: StartTime,
 		EndTime:   EndTime,
