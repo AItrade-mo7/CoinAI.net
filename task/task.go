@@ -18,15 +18,15 @@ func main() {
 	// 初始化系统参数
 	global.Start()
 
-	// Step1("BTC-USDT")
+	Step1("BTC-USDT")
 	// Step2("BTC-USDT")
 	// Step3("BTC-USDT")
 	// Step4("BTC-USDT")
 
-	// Step1("ETH-USDT")
+	Step1("ETH-USDT")
 	// Step2("ETH-USDT")
 	// Step3("ETH-USDT")
-	Step4("ETH-USDT")
+	// Step4("ETH-USDT")
 }
 
 func Step1(InstID string) {
@@ -46,7 +46,7 @@ func Step1(InstID string) {
 		OutPutDir: ResultBasePath,
 		GetConfigOpt: testHunter.GetConfigOpt{
 			EmaPArr:  EmaPArr,
-			CAPArr:   []int{2, 3, 4, 5, 6},
+			CAPArr:   []int{2, 3, 4, 5, 6, 7},
 			LevelArr: []int{1},
 			CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"},
 			ConfArr:  []dbType.TradeKdataOpt{},
