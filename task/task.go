@@ -12,20 +12,20 @@ import (
 	"github.com/EasyGolang/goTools/mTime"
 )
 
-var ResultBasePath = "/root/AItrade/CoinAI.net/task/analyConfig/最近8个月2"
+var ResultBasePath = "/root/AItrade/CoinAI.net/task/analyConfig/一月份至今固定参数"
 
 func main() {
 	// 初始化系统参数
 	global.Start()
 
-	Step1("BTC-USDT")
+	// Step1("BTC-USDT")
 	// Step2("BTC-USDT")
-	// Step3("BTC-USDT")
+	Step3("BTC-USDT")
 	// Step4("BTC-USDT")
 
-	Step1("ETH-USDT")
+	// Step1("ETH-USDT")
 	// Step2("ETH-USDT")
-	// Step3("ETH-USDT")
+	Step3("ETH-USDT")
 	// Step4("ETH-USDT")
 }
 
@@ -72,21 +72,47 @@ func Step3(InstID string) {
 	// 	InstID:    InstID,
 	// })
 
-	EmaPArr := []int{194, 220, 250, 276, 330, 360, 396}
+	// EmaPArr := []int{194, 220, 250, 276, 330, 360, 396}
+
+	ConfArr := []dbType.TradeKdataOpt{}
+	if InstID == "BTC-USDT" {
+		ConfNow := dbType.TradeKdataOpt{
+			EMA_Period: 272, CAP_Period: 5, CAP_Max: "2.5", MaxTradeLever: 1,
+		}
+		ConfArr = append(ConfArr, ConfNow)
+		ConfNow2 := dbType.TradeKdataOpt{
+			EMA_Period: 272, CAP_Period: 5, CAP_Max: "2.5", MaxTradeLever: 5,
+		}
+		ConfArr = append(ConfArr, ConfNow2)
+	}
+
+	if InstID == "ETH-USDT" {
+		ConfNow := dbType.TradeKdataOpt{
+			EMA_Period: 396, CAP_Period: 6, CAP_Max: "1", MaxTradeLever: 1,
+		}
+		ConfArr = append(ConfArr, ConfNow)
+
+		ConfNow2 := dbType.TradeKdataOpt{
+			EMA_Period: 396, CAP_Period: 6, CAP_Max: "1", MaxTradeLever: 5,
+		}
+		ConfArr = append(ConfArr, ConfNow2)
+	}
 
 	// 新一轮求解，计算最优杠杆倍率 用  2022 年 8 月 的 260 天前进行回测 （此步骤会更换时间段反复进行）
-	EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-09-01")
-	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 260)
+	EndTime := mTime.TimeParse(mTime.Lay_DD, "2023-05-01")
+	// StartTime := EndTime - (mTime.UnixTimeInt64.Day * 260)
+	StartTime := mTime.TimeParse(mTime.Lay_DD, "2022-12-01")
 	taskStart.BackTest(taskStart.BackOpt{
 		StartTime: StartTime,
 		EndTime:   EndTime,
 		InstID:    InstID,
-		OutPutDir: mStr.Join(ResultBasePath, "/三步最终结果"),
+		OutPutDir: mStr.Join(ResultBasePath),
 		GetConfigOpt: testHunter.GetConfigOpt{
-			EmaPArr:  EmaPArr,
-			CAPArr:   []int{2, 3, 4, 5, 6},
-			LevelArr: []int{1, 2, 3, 4, 5},
-			CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"},
+			// EmaPArr:  EmaPArr,
+			// CAPArr:   []int{2, 3, 4, 5, 6},
+			// LevelArr: []int{1, 2, 3, 4, 5},
+			// CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"},
+			ConfArr: ConfArr,
 		},
 	})
 }
