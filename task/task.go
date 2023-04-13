@@ -74,7 +74,7 @@ func Step3(InstID string) {
 
 	EmaPArr := []int{194, 220, 250, 276, 330, 360, 396}
 
-	// 新一轮求解，计算最优杠杆倍率 用  2022 年 8 月 的 260 天前进行回测
+	// 新一轮求解，计算最优杠杆倍率 用  2022 年 8 月 的 260 天前进行回测 （此步骤会更换时间段反复进行）
 	EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-09-01")
 	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 260)
 	taskStart.BackTest(taskStart.BackOpt{
@@ -92,7 +92,7 @@ func Step3(InstID string) {
 }
 
 func Step4(InstID string) {
-	// 第四步： 根据第三步的结果进行筛选 (胜率和最终营收)
+	// 第四步： 根据第三步的结果进行筛选 (胜率和最终营收) 得出参数结果
 	analyConfig.GetWinArr(analyConfig.GetWinArrOpt{
 		InstID: InstID,
 		// OutPutDir:  mStr.Join(ResultBasePath),
