@@ -36,8 +36,8 @@ func EditConfig(c *fiber.Ctx) error {
 	if UserID != config.MainUser.UserID {
 		return c.JSON(result.Fail.WithMsg("无权操作"))
 	}
-	if len(json.Password) < 1 {
-		return c.JSON(result.Fail.WithMsg("需要密码"))
+	if len(json.Password) < 16 {
+		return c.JSON(result.ErrLogin.With("密码格式不正确", "可能原因:密码没有加密传输！"))
 	}
 	if len(json.SysName) < 1 {
 		return c.JSON(result.Fail.WithMsg("需要密码"))

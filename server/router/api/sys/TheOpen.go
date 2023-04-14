@@ -29,13 +29,10 @@ func TheOpen(c *fiber.Ctx) error {
 		return c.JSON(result.Fail.WithMsg("无权操作"))
 	}
 
-	if len(json.Password) < 1 {
-		return c.JSON(result.Fail.WithMsg("需要密码"))
-	}
 	if len(json.Code) < 1 {
 		return c.JSON(result.Fail.WithMsg("需要验证码"))
 	}
-	if len(json.Password) != 32 {
+	if len(json.Password) < 16 {
 		return c.JSON(result.ErrLogin.With("密码格式不正确", "可能原因:密码没有加密传输！"))
 	}
 
