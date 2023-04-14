@@ -54,9 +54,9 @@ func OkxInfoInit() {
 			MaxTradeLever: 5,
 		},
 		"ETH-USDT": {
-			EMA_Period:    396, // 参数确定时间 2023-4-11 20:28:37
-			CAP_Period:    6,
-			CAP_Max:       "1",
+			EMA_Period:    266, // 参数确定时间 2023-4-11 20:28:37
+			CAP_Period:    5,
+			CAP_Max:       "3",
 			MaxTradeLever: 5,
 		},
 	}

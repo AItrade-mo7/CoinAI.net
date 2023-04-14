@@ -19,8 +19,8 @@ func main() {
 	global.Start()
 
 	// Step1("BTC-USDT")
-	// Step2("BTC-USDT")
-	Step3("BTC-USDT")
+	Step2("BTC-USDT")
+	// Step3("BTC-USDT")
 	// Step4("BTC-USDT")
 
 	// Step1("ETH-USDT")
@@ -57,11 +57,11 @@ func Step1(InstID string) {
 func Step2(InstID string) {
 	// 第二步骤：根据胜率和最终营收 筛选
 	analyConfig.GetWinArr(analyConfig.GetWinArrOpt{
-		InstID:    InstID,
-		OutPutDir: ResultBasePath,
-		// MoneyRight: "1600",
-		WinRight: "0.5",
-		Sort:     "Win",
+		InstID:     InstID,
+		OutPutDir:  ResultBasePath,
+		MoneyRight: "1300",
+		WinRight:   "0.35",
+		Sort:       "Win",
 	})
 }
 
@@ -74,28 +74,14 @@ func Step3(InstID string) {
 
 	// 提取 EMA 的值
 
-	EmaMap := make(map[int]any)
-	CapMap := make(map[int]any)
-	CAPMaxMap := make(map[string]any)
-	for _, item := range confArr {
-		EmaMap[item.EMA_Period] = item.EMA_Period
-		CapMap[item.CAP_Period] = item.CAP_Period
-		CAPMaxMap[item.CAP_Max] = item.CAP_Max
-	}
+	ConfArr := []dbType.TradeKdataOpt{}
+	LevelArr := []int{2, 3, 4, 5}
 
-	EmaPArr := []int{}
-	for key := range EmaMap {
-		EmaPArr = append(EmaPArr, key)
-	}
-
-	CAPArr := []int{}
-	for key := range CapMap {
-		CAPArr = append(CAPArr, key)
-	}
-
-	CAPMax := []string{}
-	for key := range CAPMaxMap {
-		CAPMax = append(CAPMax, key)
+	for _, conf := range confArr {
+		for _, l := range LevelArr {
+			conf.MaxTradeLever = l
+			ConfArr = append(ConfArr, conf)
+		}
 	}
 
 	// 新一轮求解，计算最优杠杆倍率 用  2022 年 8 月 的 260 天前进行回测 （此步骤会更换时间段反复进行）
@@ -105,12 +91,9 @@ func Step3(InstID string) {
 		StartTime: StartTime,
 		EndTime:   EndTime,
 		InstID:    InstID,
-		OutPutDir: mStr.Join(ResultBasePath, "/三步最终结果"),
+		OutPutDir: mStr.Join(ResultBasePath, "/Step3"),
 		GetConfigOpt: testHunter.GetConfigOpt{
-			EmaPArr:  EmaPArr,
-			CAPArr:   CAPArr,
-			LevelArr: []int{1, 2, 3, 4, 5},
-			CAPMax:   CAPMax,
+			ConfArr: ConfArr,
 		},
 	})
 }
@@ -120,9 +103,9 @@ func Step4(InstID string) {
 	analyConfig.GetWinArr(analyConfig.GetWinArrOpt{
 		InstID: InstID,
 		// OutPutDir:  mStr.Join(ResultBasePath),
-		OutPutDir:  mStr.Join(ResultBasePath, "/三步最终结果"),
-		MoneyRight: "1000",
-		// WinRight:   "0.3",
+		OutPutDir: mStr.Join(ResultBasePath, "/Step3"),
+		// MoneyRight: "1000",
+		// WinRight:   "0.35",
 		// Sort: "Win", //  Win
 	})
 }
