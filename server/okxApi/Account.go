@@ -284,5 +284,20 @@ func (_this *AccountObj) Close() (resErr error) {
 		return
 	}
 
+	// 再次检查持仓  平仓保险机制
+	err = _this.GetPositions() // 获取所有持仓
+	if err != nil {
+		resErr = err
+		return
+	}
+	for _, Position := range _this.Positions {
+		TradeInst := okxInfo.Inst[Position.InstID]
+		account.ClosePosition(account.ClosePositionParam{
+			OKXKey:    _this.OkxKey,
+			TradeInst: TradeInst,
+		})
+		global.LogErr("触发了平仓保险机制", TradeInst, _this.OkxKey.Name)
+	}
+
 	return
 }
