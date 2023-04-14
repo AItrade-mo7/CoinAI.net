@@ -19,8 +19,8 @@ func main() {
 	global.Start()
 
 	// Step1("BTC-USDT")
-	Step2("BTC-USDT")
-	// Step3("BTC-USDT")
+	// Step2("BTC-USDT")
+	Step3("BTC-USDT")
 	// Step4("BTC-USDT")
 
 	// Step1("ETH-USDT")
@@ -67,22 +67,22 @@ func Step2(InstID string) {
 
 func Step3(InstID string) {
 	// 第三步：提取第二步的配置，加上杠杆得出新的参数组合 大概 几百个 然后 换个新的时间段进行新一轮测试
-	confArr := analyConfig.GetWinConfig(analyConfig.GetWinConfigOpt{
-		OutPutDir: ResultBasePath,
-		InstID:    InstID,
-	})
+	// confArr := analyConfig.GetWinConfig(analyConfig.GetWinConfigOpt{
+	// 	OutPutDir: ResultBasePath,
+	// 	InstID:    InstID,
+	// })
 
 	// 提取 EMA 的值
 
-	ConfArr := []dbType.TradeKdataOpt{}
-	LevelArr := []int{2, 3, 4, 5}
+	// ConfArr := []dbType.TradeKdataOpt{}
+	// LevelArr := []int{2, 3, 4, 5}
 
-	for _, conf := range confArr {
-		for _, l := range LevelArr {
-			conf.MaxTradeLever = l
-			ConfArr = append(ConfArr, conf)
-		}
-	}
+	// for _, conf := range confArr {
+	// 	for _, l := range LevelArr {
+	// 		conf.MaxTradeLever = l
+	// 		ConfArr = append(ConfArr, conf)
+	// 	}
+	// }
 
 	// 新一轮求解，计算最优杠杆倍率 用  2022 年 8 月 的 260 天前进行回测 （此步骤会更换时间段反复进行）
 	EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-10-01")
@@ -93,7 +93,11 @@ func Step3(InstID string) {
 		InstID:    InstID,
 		OutPutDir: mStr.Join(ResultBasePath, "/Step3"),
 		GetConfigOpt: testHunter.GetConfigOpt{
-			ConfArr: ConfArr,
+			EmaPArr:  []int{280, 338, 342, 348, 372, 440, 464},     // Ema 步长
+			CAPArr:   []int{2, 3, 4, 5, 6, 7},                      // CAP 步长
+			CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"}, // CAPMax 步长
+			LevelArr: []int{2, 3, 4, 5, 6},
+			// ConfArr: ConfArr,
 		},
 	})
 }
