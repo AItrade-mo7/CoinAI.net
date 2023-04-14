@@ -20,8 +20,8 @@ func main() {
 
 	// Step1("BTC-USDT")
 	// Step2("BTC-USDT")
-	Step3("BTC-USDT")
-	// Step4("BTC-USDT")
+	// Step3("BTC-USDT")
+	Step4("BTC-USDT")
 
 	// Step1("ETH-USDT")
 	// Step2("ETH-USDT")
@@ -31,25 +31,41 @@ func main() {
 
 func Step1(InstID string) {
 	// 第一步： 暴力求值 （海量参数结果罗列） 需要几个小时甚至好几天
-	EmaPArr := []int{}
-	StarNum := 70
-	for i := 0; i < 520; i += 2 {
-		StarNum = 60 + i
-		EmaPArr = append(EmaPArr, StarNum)
+	// EmaPArr := []int{}
+	// StarNum := 70
+	// for i := 0; i < 520; i += 2 {
+	// 	StarNum = 60 + i
+	// 	EmaPArr = append(EmaPArr, StarNum)
+	// }
+
+	LevelArr := []int{2, 3, 4, 5}
+	ConfArr := []dbType.TradeKdataOpt{}
+	for _, l := range LevelArr {
+
+		conf := dbType.TradeKdataOpt{
+			EMA_Period: 342,
+			CAP_Period: 7,
+			CAP_Max:    "2.5",
+		}
+		conf.MaxTradeLever = l
+		ConfArr = append(ConfArr, conf)
 	}
+
+	// EMA_342_CAP_7_CAPMax_2.5_level
 	EndTime := mTime.TimeParse(mTime.Lay_DD, "2023-04-01")
 	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 210)
 	taskStart.BackTest(taskStart.BackOpt{
 		StartTime: StartTime,
 		EndTime:   EndTime,
 		InstID:    InstID,
-		OutPutDir: ResultBasePath,
+		// OutPutDir: ResultBasePath,
+		OutPutDir: mStr.Join(ResultBasePath, "/Step3"),
 		GetConfigOpt: testHunter.GetConfigOpt{
-			EmaPArr:  EmaPArr,
-			CAPArr:   []int{2, 3, 4, 5, 6, 7},
-			LevelArr: []int{1},
-			CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"},
-			ConfArr:  []dbType.TradeKdataOpt{},
+			// EmaPArr:  EmaPArr,
+			// CAPArr:   []int{2, 3, 4, 5, 6, 7},
+			// LevelArr: []int{1},
+			// CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"},
+			ConfArr: ConfArr,
 		},
 	})
 }
@@ -85,7 +101,8 @@ func Step3(InstID string) {
 	// }
 
 	// 新一轮求解，计算最优杠杆倍率 用  2022 年 8 月 的 260 天前进行回测 （此步骤会更换时间段反复进行）
-	EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-10-01")
+	// EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-10-01")
+	EndTime := mTime.TimeParse(mTime.Lay_DD, "2023-04-01")
 	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 260)
 	taskStart.BackTest(taskStart.BackOpt{
 		StartTime: StartTime,
@@ -93,11 +110,13 @@ func Step3(InstID string) {
 		InstID:    InstID,
 		OutPutDir: mStr.Join(ResultBasePath, "/Step3"),
 		GetConfigOpt: testHunter.GetConfigOpt{
-			EmaPArr:  []int{280, 338, 342, 348, 372, 440, 464},     // Ema 步长
-			CAPArr:   []int{2, 3, 4, 5, 6, 7},                      // CAP 步长
-			CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"}, // CAPMax 步长
-			LevelArr: []int{2, 3, 4, 5, 6},
-			// ConfArr: ConfArr,
+			// EmaPArr:  []int{280, 338, 342, 348, 372, 440, 464},     // Ema 步长
+			// CAPArr:   []int{2, 3, 4, 5, 6, 7},                      // CAP 步长
+			// CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"}, // CAPMax 步长
+			// LevelArr: []int{2, 3, 4, 5, 6},
+			ConfArr: []dbType.TradeKdataOpt{
+				{},
+			},
 		},
 	})
 }
