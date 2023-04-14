@@ -8,6 +8,7 @@ import (
 	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbUser"
+	"github.com/EasyGolang/goTools/mEncrypt"
 	"github.com/EasyGolang/goTools/mFiber"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mStr"
@@ -73,9 +74,9 @@ func SetKey(c *fiber.Ctx) error {
 
 	var ApiKey dbType.OkxKeyType
 	ApiKey.Name = json.Name
-	ApiKey.ApiKey = json.ApiKey
-	ApiKey.SecretKey = json.SecretKey
-	ApiKey.Passphrase = json.Passphrase
+	ApiKey.ApiKey = mEncrypt.AseDecrypt(json.ApiKey, config.SecretKey)
+	ApiKey.SecretKey = mEncrypt.AseDecrypt(json.SecretKey, config.SecretKey)
+	ApiKey.Passphrase = mEncrypt.AseDecrypt(json.Passphrase, config.SecretKey)
 	ApiKey.UserID = UserID
 	ApiKey.Hunter = ""
 	ApiKey.TradeLever = 1
