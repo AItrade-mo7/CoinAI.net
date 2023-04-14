@@ -73,14 +73,29 @@ func Step3(InstID string) {
 	})
 
 	// 提取 EMA 的值
-	EmaPArr := []int{}
-	CAPArr := []int{}
-	CAPMax := []string{}
 
+	EmaMap := make(map[int]any)
+	CapMap := make(map[int]any)
+	CAPMaxMap := make(map[string]any)
 	for _, item := range confArr {
-		EmaPArr = append(EmaPArr, item.EMA_Period)
-		CAPArr = append(CAPArr, item.CAP_Period)
-		CAPMax = append(CAPMax, item.CAP_Max)
+		EmaMap[item.EMA_Period] = item.EMA_Period
+		CapMap[item.CAP_Period] = item.CAP_Period
+		CAPMaxMap[item.CAP_Max] = item.CAP_Max
+	}
+
+	EmaPArr := []int{}
+	for key := range EmaMap {
+		EmaPArr = append(EmaPArr, key)
+	}
+
+	CAPArr := []int{}
+	for key := range CapMap {
+		CAPArr = append(CAPArr, key)
+	}
+
+	CAPMax := []string{}
+	for key := range CAPMaxMap {
+		CAPMax = append(CAPMax, key)
 	}
 
 	// 新一轮求解，计算最优杠杆倍率 用  2022 年 8 月 的 260 天前进行回测 （此步骤会更换时间段反复进行）
