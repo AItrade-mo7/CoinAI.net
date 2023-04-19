@@ -49,17 +49,17 @@ func OkxInfoInit() {
 	// 设置最优参数
 	CoinTradeConfig = map[string]dbType.TradeKdataOpt{
 		"BTC-USDT": {
-			EMA_Period:    272, // 参数已确定  2023-04-11 18:14
-			CAP_Period:    5,
+			EMA_Period:    342, // 参数已确定  2023-04-11 18:14
+			CAP_Period:    7,
 			CAP_Max:       "2.5",
 			CAP_Min:       "-2.5",
 			MaxTradeLever: 5,
 		},
 		"ETH-USDT": {
-			EMA_Period:    396, // 参数确定时间 2023-4-11 20:28:37
-			CAP_Period:    6,
-			CAP_Max:       "1",
-			CAP_Min:       "-1",
+			EMA_Period:    266, // 参数确定时间 2023-4-11 20:28:37
+			CAP_Period:    5,
+			CAP_Max:       "3",
+			CAP_Min:       "-3",
 			MaxTradeLever: 5,
 		},
 	}
