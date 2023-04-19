@@ -2,6 +2,8 @@ package hunter
 
 import (
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/global/dbType"
+	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
@@ -14,26 +16,21 @@ func (_this *HunterObj) Analy() {
 		global.LogErr("hunter.Analy 数据长度错误", len(_this.TradeKdataList))
 		return
 	}
-
-	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
-
-	AnalyDir := 0
-	if mCount.Le(NowKTradeData.CAP_EMA, _this.TradeKdataOpt.CAP_Max) > 0 { // 大于 CAPMax 则开多
-		AnalyDir = 1
-	}
-
-	if mCount.Le(NowKTradeData.CAP_EMA, _this.TradeKdataOpt.CAP_Min) < 0 { // 小于 CAPMin 则开空
-		AnalyDir = -1
-	}
-
-	// 更新持仓状态
-	_this.CountPosition()
-
-	_this.PositionArr = append(_this.PositionArr, _this.NowVirtualPosition)
-	// 控制最大数量 防止内存爆炸
+	// 控制持仓的最大数量 防止内存爆炸
 	if len(_this.PositionArr)-_this.MaxLen > 0 {
 		_this.PositionArr = _this.PositionArr[len(_this.PositionArr)-_this.MaxLen:]
 	}
+
+	// 开始
+
+	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
+
+	AnalyDir := GetAnalyDir(NowKTradeData, _this.TradeKdataOpt)
+
+	// 更新持仓状态
+	_this.CountPosition()
+	_this.PositionArr = append(_this.PositionArr, _this.NowVirtualPosition)
+
 	// 打印日志和文件写入
 	global.TradeLog.Println(_this.HunterName, "更新持仓状态", AnalyDir, mJson.ToStr(_this.NowVirtualPosition))
 	mFile.Write(_this.OutPutDirectory+"/PositionArr.json", mJson.ToStr(_this.PositionArr))
@@ -64,4 +61,15 @@ func (_this *HunterObj) CountPosition() {
 		Level := _this.NowVirtualPosition.HunterConfig.MaxTradeLever
 		_this.NowVirtualPosition.NowUplRatio = mCount.Mul(UplRatio, mStr.ToStr(Level)) // 乘以杠杆倍数
 	}
+}
+
+func GetAnalyDir(NowKTradeData okxInfo.TradeKdType, TradeKdataOpt dbType.TradeKdataOpt) int {
+	CountDir := 0
+	if mCount.Le(NowKTradeData.CAP_EMA, TradeKdataOpt.CAP_Max) > 0 { // 大于 CAPMax 则开多
+		CountDir = 1
+	}
+	if mCount.Le(NowKTradeData.CAP_EMA, TradeKdataOpt.CAP_Min) < 0 { // 小于 CAPMin 则开空
+		CountDir = -1
+	}
+	return CountDir
 }

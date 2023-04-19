@@ -110,20 +110,20 @@ func Step3(InstID string) {
 		InstID:    InstID,
 		OutPutDir: mStr.Join(ResultBasePath, "/Step3"),
 		GetConfigOpt: testHunter.GetConfigOpt{
-			EmaPArr:  []int{342},      // Ema 步长
-			CAPArr:   []int{7},        // CAP 步长
-			CAPMax:   []string{"2.5"}, // CAPMax 步长
-			CAPMin:   []string{"-2.5"},
-			LevelArr: []int{2},
-			// ConfArr: []dbType.TradeKdataOpt{
-			// 	{
-			// 		EMA_Period:    342, // 参数已确定  2023-04-11 18:14
-			// 		CAP_Period:    7,
-			// 		CAP_Max:       "2.5",
-			// 		CAP_Min:       "-2.5",
-			// 		MaxTradeLever: 5,
-			// 	},
-			// },
+			// EmaPArr:  []int{342},      // Ema 步长
+			// CAPArr:   []int{7},        // CAP 步长
+			// CAPMax:   []string{"2.5"}, // CAPMax 步长
+			// CAPMin:   []string{"-2.5"},
+			// LevelArr: []int{2},
+			ConfArr: []dbType.TradeKdataOpt{
+				{
+					EMA_Period:    342,
+					CAP_Period:    7,
+					CAP_Max:       "2.5",
+					CAP_Min:       "-2.5",
+					MaxTradeLever: 5,
+				},
+			},
 		},
 	})
 }

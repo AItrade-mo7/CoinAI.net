@@ -2,22 +2,17 @@ package testHunter
 
 import (
 	"CoinAI.net/server/global"
+	"CoinAI.net/server/hunter"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
 )
 
 func (_this *MockObj) Analy() {
-	NowKdata := _this.TradeKdataList[len(_this.TradeKdataList)-1]
-	AnalyDir := 0 // 分析的方向，默认为 0 不开仓
+	// 开始
+	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
 
-	if mCount.Le(NowKdata.CAP_EMA, _this.TradeKdataOpt.CAP_Max) > 0 { // 大于 CAPMax 则开多
-		AnalyDir = 1
-	}
-
-	if mCount.Le(NowKdata.CAP_EMA, _this.TradeKdataOpt.CAP_Min) < 0 { // 小于 CAPMin 则开空
-		AnalyDir = -1
-	}
+	AnalyDir := hunter.GetAnalyDir(NowKTradeData, _this.TradeKdataOpt)
 
 	// 更新持仓状态
 	_this.CountPosition()
@@ -33,7 +28,8 @@ func (_this *MockObj) Analy() {
 		_this.Billing.PositionMaxRatio.TimeStr = _this.NowVirtualPosition.NowTimeStr
 	}
 
-	global.Run.Println(NowKdata.TimeStr, _this.NowVirtualPosition.NowDir, AnalyDir)
+	// 记录日志
+	global.Run.Println(NowKTradeData.TimeStr, _this.NowVirtualPosition.NowDir, AnalyDir)
 
 	// 当前持仓与 判断方向不符合时，执行一次下单操作
 	if _this.NowVirtualPosition.NowDir != AnalyDir {
