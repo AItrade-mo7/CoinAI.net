@@ -1,6 +1,6 @@
 {
   "name": "coin-ai",
-  "version": "0.19.1",
+  "version": "0.19.2",
   "scripts": {
     "serve": "./_shell/ServerStart.sh",
     "build": "./_shell/Build.sh",
