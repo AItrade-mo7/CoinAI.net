@@ -60,7 +60,8 @@ func Order(opt OrderParam) (resErr error) {
 		ordType = "optimal_limit_ioc"
 	}
 
-	// 小于最小数量
+	// 默认减去一个最小开仓单位，也就是每次开仓至少为 两个最小开仓单位
+	opt.Sz = mCount.Sub(opt.Sz, opt.TradeInst.MinSz)
 	if mCount.Le(opt.Sz, opt.TradeInst.MinSz) < 0 {
 		resErr = fmt.Errorf("交易数量太小 %+v Name:%+v", opt.Sz, opt.OKXKey.Name)
 		global.LogErr(resErr)
@@ -69,8 +70,7 @@ func Order(opt OrderParam) (resErr error) {
 
 	// 大于最大数量 则 最大数乘以 0.8
 	if mCount.Le(opt.Sz, opt.TradeInst.MaxMktSz) > 0 {
-		opt.Sz = mCount.Mul(opt.TradeInst.MaxMktSz, "0.7")
-
+		opt.Sz = mCount.Mul(opt.TradeInst.MaxMktSz, "0.8")
 		resErr = fmt.Errorf("交易数量超出限制 %+v Name:%+v", opt.Sz, opt.OKXKey.Name)
 		global.LogErr(resErr)
 	}
