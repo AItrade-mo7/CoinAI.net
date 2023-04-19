@@ -8,7 +8,6 @@ import (
 	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
-	"github.com/EasyGolang/goTools/mJson"
 )
 
 type AccountParam struct {
@@ -297,7 +296,6 @@ func (_this *AccountObj) Close() (resErr error) {
 			OKXKey:    _this.OkxKey,
 			TradeInst: TradeInst,
 		})
-		global.LogErr("触发了平仓保险机制", mJson.ToStr(TradeInst), mJson.ToStr(_this.OkxKey.Name), mJson.ToStr(Position))
 	}
 
 	return
