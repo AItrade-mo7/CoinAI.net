@@ -8,6 +8,7 @@ import (
 	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
+	"github.com/EasyGolang/goTools/mJson"
 )
 
 type AccountParam struct {
@@ -86,15 +87,23 @@ func (_this *AccountObj) Buy() (resErr error) {
 		return
 	}
 	Sz := _this.MaxSize.MaxBuy
-	resErr = account.Order(account.OrderParam{
+	err = account.Order(account.OrderParam{
 		OKXKey:    _this.OkxKey,
 		TradeInst: _this.NowHunter.TradeInst,
 		Side:      "buy",
 		Sz:        Sz,
 	})
+	if err != nil {
+		resErr = err
+		return
+	}
 	// 如果下单数量大于最大值，则再来一次
 	if mCount.Le(Sz, _this.NowHunter.TradeInst.MaxMktSz) > 0 {
-		_this.Buy()
+		err = _this.Buy()
+	}
+	if err != nil {
+		resErr = err
+		return
 	}
 	return
 }
@@ -112,17 +121,20 @@ func (_this *AccountObj) Sell() (resErr error) {
 		return
 	}
 	Sz := _this.MaxSize.MaxSell
-	account.Order(account.OrderParam{
+	err = account.Order(account.OrderParam{
 		OKXKey:    _this.OkxKey,
 		TradeInst: _this.NowHunter.TradeInst,
 		Side:      "sell",
 		Sz:        Sz,
 	})
+	if err != nil {
+		resErr = err
+		return
+	}
 	// 如果下单数量大于最大值，则再来一次
 	if mCount.Le(Sz, _this.NowHunter.TradeInst.MaxMktSz) > 0 {
 		err = _this.Sell()
 	}
-
 	if err != nil {
 		resErr = err
 		return
@@ -232,11 +244,6 @@ func (_this *AccountObj) Close() (resErr error) {
 		TradeInst := okxInfo.Inst[Position.InstID]
 		Side := ""
 		Sz := "0"
-
-		maxSize, err := account.GetMaxSize(account.GetMaxSizeParam{
-			InstID: TradeInst.InstID,
-			OKXKey: _this.OkxKey,
-		})
 		if err != nil {
 			err = fmt.Errorf("平仓 获取最大数量 失败")
 			global.LogErr(err)
@@ -245,13 +252,12 @@ func (_this *AccountObj) Close() (resErr error) {
 
 		if mCount.Le(Position.Pos, "0") > 0 {
 			Side = "sell"
-			Sz = maxSize.MaxSell
 		}
 		if mCount.Le(Position.Pos, "0") < 0 {
 			Side = "buy"
-			Sz = maxSize.MaxBuy
 		}
 
+		Sz = mCount.Abs(Position.Pos)
 		err = account.Order(account.OrderParam{
 			OKXKey:    _this.OkxKey,
 			TradeInst: TradeInst,
@@ -296,6 +302,7 @@ func (_this *AccountObj) Close() (resErr error) {
 			OKXKey:    _this.OkxKey,
 			TradeInst: TradeInst,
 		})
+		global.LogErr("触发平仓保险,", mJson.ToStr(_this.Positions))
 	}
 
 	return

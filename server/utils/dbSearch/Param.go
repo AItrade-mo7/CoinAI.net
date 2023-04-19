@@ -49,7 +49,6 @@ type CurOpt struct {
 	Param  FindParam
 	DB     *mMongo.DB
 	Total  int64
-	Lang   string
 	Cursor *mongo.Cursor
 }
 
