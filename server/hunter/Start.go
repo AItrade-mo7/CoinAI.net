@@ -2,11 +2,14 @@ package hunter
 
 import (
 	"fmt"
+	"time"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/okxInfo"
 	"CoinAI.net/server/utils/taskPush"
+	"github.com/EasyGolang/goTools/mClock"
+	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
@@ -16,13 +19,18 @@ import (
 
 func (_this *HunterObj) Start() {
 	go _this.Running()
+	go mClock.New(mClock.OptType{
+		Func: func() {
+			RoundNum := mCount.GetRound(0, 60) // 构建请求延迟
+			time.Sleep(time.Second * time.Duration(RoundNum))
+			_this.Running()
+		},
+		Spec: "10 1,6,11,16,21,26,31,36,41,46,51,56 * * * ? ", // 每隔5分钟比标准时间晚一分钟 过 10 秒执行查询
+	})
 }
 
 func (_this *HunterObj) Running() {
 	global.TradeLog.Println(_this.HunterName, " === hunter.Running === ", _this.KdataInst.InstID)
-
-	// RoundNum := mCount.GetRound(0, 60) // 延迟随机秒数
-	// time.Sleep(time.Second * time.Duration(RoundNum))
 
 	// 选取K线和合约信息
 	if len(_this.KdataInst.InstID) < 2 || len(_this.TradeInst.InstID) < 2 {

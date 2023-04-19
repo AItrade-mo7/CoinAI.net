@@ -38,11 +38,12 @@ var NowHunterData = make(map[string]HunterData)
 // 最优参数
 var CoinTradeConfig = make(map[string]dbType.TradeKdataOpt)
 
+// 设定初始值
 func OkxInfoInit() {
 	// 加入 Hunter Auto
-	NowHunterData["Auto"] = HunterData{
-		HunterName: "Auto",
-		Describe:   "根据市场情况为您的账户选择其中一个策略执行交易【目前此功能尚在开发中】",
+	NowHunterData["Market-AI"] = HunterData{
+		HunterName: "Market-AI",
+		Describe:   "横向分析市场进行最优币种交易【尚在开发中】",
 	}
 
 	// 设置最优参数
@@ -51,12 +52,14 @@ func OkxInfoInit() {
 			EMA_Period:    272, // 参数已确定  2023-04-11 18:14
 			CAP_Period:    5,
 			CAP_Max:       "2.5",
+			CAP_Min:       "-2.5",
 			MaxTradeLever: 5,
 		},
 		"ETH-USDT": {
 			EMA_Period:    396, // 参数确定时间 2023-4-11 20:28:37
 			CAP_Period:    6,
 			CAP_Max:       "1",
+			CAP_Min:       "-1",
 			MaxTradeLever: 5,
 		},
 	}

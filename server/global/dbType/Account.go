@@ -57,8 +57,9 @@ type AccountBalance struct {
 type TradeKdataOpt struct {
 	EMA_Period    int    // EMA 步长 171
 	CAP_Period    int    // CAP 步长 4
-	CAP_Max       string // CAP 判断的边界值 0.2
-	MaxTradeLever int
+	CAP_Max       string // CAP 最大边界值
+	CAP_Min       string // CAP 最小边界值
+	MaxTradeLever int    // 最大杠杆数
 }
 
 // 模拟持仓的数据
