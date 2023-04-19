@@ -16,7 +16,7 @@ type ClosePositionParam struct {
 	OKXKey    dbType.OkxKeyType
 }
 
-// 下单接口
+// 平仓接口
 func ClosePosition(opt ClosePositionParam) (resErr error) {
 	resErr = nil
 
