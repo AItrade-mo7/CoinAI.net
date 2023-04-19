@@ -20,8 +20,8 @@ func main() {
 
 	// Step1("BTC-USDT")
 	// Step2("BTC-USDT")
-	// Step3("BTC-USDT")
-	Step4("BTC-USDT")
+	Step3("BTC-USDT")
+	// Step4("BTC-USDT")
 
 	// Step1("ETH-USDT")
 	// Step2("ETH-USDT")
@@ -102,7 +102,7 @@ func Step3(InstID string) {
 
 	// 新一轮求解，计算最优杠杆倍率 用  2022 年 8 月 的 260 天前进行回测 （此步骤会更换时间段反复进行）
 	// EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-10-01")
-	EndTime := mTime.TimeParse(mTime.Lay_DD, "2023-04-01")
+	EndTime := mTime.TimeParse(mTime.Lay_DD, "2023-05-01")
 	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 260)
 	taskStart.BackTest(taskStart.BackOpt{
 		StartTime: StartTime,
@@ -110,13 +110,20 @@ func Step3(InstID string) {
 		InstID:    InstID,
 		OutPutDir: mStr.Join(ResultBasePath, "/Step3"),
 		GetConfigOpt: testHunter.GetConfigOpt{
-			// EmaPArr:  []int{280, 338, 342, 348, 372, 440, 464},     // Ema 步长
-			// CAPArr:   []int{2, 3, 4, 5, 6, 7},                      // CAP 步长
-			// CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"}, // CAPMax 步长
-			// LevelArr: []int{2, 3, 4, 5, 6},
-			ConfArr: []dbType.TradeKdataOpt{
-				{},
-			},
+			EmaPArr:  []int{342},      // Ema 步长
+			CAPArr:   []int{7},        // CAP 步长
+			CAPMax:   []string{"2.5"}, // CAPMax 步长
+			CAPMin:   []string{"-2.5"},
+			LevelArr: []int{2},
+			// ConfArr: []dbType.TradeKdataOpt{
+			// 	{
+			// 		EMA_Period:    342, // 参数已确定  2023-04-11 18:14
+			// 		CAP_Period:    7,
+			// 		CAP_Max:       "2.5",
+			// 		CAP_Min:       "-2.5",
+			// 		MaxTradeLever: 5,
+			// 	},
+			// },
 		},
 	})
 }

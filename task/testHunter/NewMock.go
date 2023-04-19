@@ -123,7 +123,8 @@ func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 type GetConfigOpt struct {
 	EmaPArr  []int                  // Ema 步长
 	CAPArr   []int                  // CAP 步长
-	CAPMax   []string               // CAPMax 步长
+	CAPMax   []string               // CAPMax 边界值
+	CAPMin   []string               // CAPMin 边界值
 	LevelArr []int                  // 杠杆倍数
 	ConfArr  []dbType.TradeKdataOpt // 成型的参数数组
 }
@@ -152,6 +153,7 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 					CAP_Period:    conf.CAP_Period,
 					MaxTradeLever: conf.MaxTradeLever,
 					CAP_Max:       conf.CAP_Max,
+					CAP_Min:       conf.CAP_Min,
 				},
 			},
 		)
@@ -165,13 +167,16 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 		for _, cap := range opt.CAPArr {
 			for _, level := range opt.LevelArr {
 				for _, capMax := range opt.CAPMax {
-					conf := dbType.TradeKdataOpt{
-						EMA_Period:    emaP,
-						CAP_Period:    cap,
-						MaxTradeLever: level,
-						CAP_Max:       capMax,
+					for _, capMin := range opt.CAPMin {
+						conf := dbType.TradeKdataOpt{
+							EMA_Period:    emaP,
+							CAP_Period:    cap,
+							MaxTradeLever: level,
+							CAP_Max:       capMax,
+							CAP_Min:       capMin,
+						}
+						AppendConfig(conf)
 					}
-					AppendConfig(conf)
 				}
 			}
 		}

@@ -15,7 +15,7 @@ func (_this *MockObj) Analy() {
 		AnalyDir = 1
 	}
 
-	if mCount.Le(NowKdata.CAP_EMA, "-"+_this.TradeKdataOpt.CAP_Max) < 0 { // 小于 负 的 CAPMax 则开空
+	if mCount.Le(NowKdata.CAP_EMA, _this.TradeKdataOpt.CAP_Min) < 0 { // 小于 CAPMin 则开空
 		AnalyDir = -1
 	}
 
