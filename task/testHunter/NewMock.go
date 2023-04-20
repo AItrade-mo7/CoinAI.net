@@ -145,7 +145,7 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 	AppendConfig := func(conf dbType.TradeKdataOpt) {
 		MockConfigArr = append(MockConfigArr,
 			NewMockOpt{
-				MockName:  mStr.Join("EMA_", conf.EMA_Period, "_CAP_", conf.CAP_Period, "_CAPMax_", conf.CAP_Max, "_level_", conf.MaxTradeLever),
+				MockName:  mStr.Join("EMA_", conf.EMA_Period, "_CAP_", conf.CAP_Period, "_CAPMax_", conf.CAP_Max, "_CAPMin_", conf.CAP_Min, "_level_", conf.MaxTradeLever),
 				InitMoney: InitMoney, // 初始资金
 				ChargeUpl: ChargeUpl, // 吃单标准手续费率 0.05%
 				TradeKdataOpt: dbType.TradeKdataOpt{
