@@ -302,7 +302,7 @@ func (_this *AccountObj) Close() (resErr error) {
 			OKXKey:    _this.OkxKey,
 			TradeInst: TradeInst,
 		})
-		global.LogErr("触发平仓保险,", mJson.ToStr(_this.Positions))
+		global.LogErr("触发平仓保险,", mJson.ToStr(_this.Positions), "用户", _this.OkxKey.Name)
 	}
 
 	return
