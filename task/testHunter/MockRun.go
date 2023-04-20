@@ -10,6 +10,9 @@ import (
 
 // 模拟数据流动并执行分析交易
 func (_this *MockObj) MockRun() BillingType {
+	// 设定最低值
+	MinMoney := mCount.Mul(_this.NowVirtualPosition.InitMoney, "0.6")
+
 	// 清理 TradeKdataList
 	_this.TradeKdataList = []okxInfo.TradeKdType{}
 	TradeKlineObj := hunter.NewTradeKdataObj(_this.TradeKdataOpt)
@@ -43,6 +46,12 @@ func (_this *MockObj) MockRun() BillingType {
 			global.Log.Println("爆仓！", _this.Billing.MockName, Kdata.TimeStr)
 			break
 		}
+
+		if mCount.Le(_this.NowVirtualPosition.Money, MinMoney) < 0 {
+			global.Log.Println("亏完", _this.Billing.MockName, Kdata.TimeStr)
+			break
+		}
+
 	}
 
 	if len(_this.TradeKdataList) > 0 {
