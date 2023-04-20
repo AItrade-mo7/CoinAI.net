@@ -12,18 +12,18 @@ import (
 	"github.com/EasyGolang/goTools/mTime"
 )
 
-var ResultBasePath = "/root/AItrade/CoinAI.net/task/analyConfig/最近8个月2"
+var ResultBasePath = "/root/AItrade/CoinAI.net/task/analyConfig/一整年"
 
 func main() {
 	// 初始化系统参数
 	global.Start()
 
-	// Step1("BTC-USDT")
+	Step1("BTC-USDT")
 	// Step2("BTC-USDT")
-	Step3("BTC-USDT")
+	// Step3("BTC-USDT")
 	// Step4("BTC-USDT")
 
-	// Step1("ETH-USDT")
+	Step1("ETH-USDT")
 	// Step2("ETH-USDT")
 	// Step3("ETH-USDT")
 	// Step4("ETH-USDT")
@@ -31,41 +31,39 @@ func main() {
 
 func Step1(InstID string) {
 	// 第一步： 暴力求值 （海量参数结果罗列） 需要几个小时甚至好几天
-	// EmaPArr := []int{}
-	// StarNum := 70
-	// for i := 0; i < 520; i += 2 {
-	// 	StarNum = 60 + i
-	// 	EmaPArr = append(EmaPArr, StarNum)
-	// }
-
-	LevelArr := []int{2, 3, 4, 5}
-	ConfArr := []dbType.TradeKdataOpt{}
-	for _, l := range LevelArr {
-
-		conf := dbType.TradeKdataOpt{
-			EMA_Period: 342,
-			CAP_Period: 7,
-			CAP_Max:    "2.5",
-		}
-		conf.MaxTradeLever = l
-		ConfArr = append(ConfArr, conf)
+	EmaPArr := []int{}
+	StarNum := 60
+	for i := 0; i < 520; i += 2 {
+		StarNum = 60 + i
+		EmaPArr = append(EmaPArr, StarNum)
 	}
 
-	// EMA_342_CAP_7_CAPMax_2.5_level
-	EndTime := mTime.TimeParse(mTime.Lay_DD, "2023-04-01")
-	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 210)
+	// LevelArr := []int{2, 3, 4, 5}
+	// ConfArr := []dbType.TradeKdataOpt{}
+	// for _, l := range LevelArr {
+	// 	conf := dbType.TradeKdataOpt{
+	// 		EMA_Period: 342,
+	// 		CAP_Period: 7,
+	// 		CAP_Max:    "2.5",
+	// 	}
+	// 	conf.MaxTradeLever = l
+	// 	ConfArr = append(ConfArr, conf)
+	// }
+
+	StartTime := mTime.TimeParse(mTime.Lay_DD, "2022-01-01")
+	EndTime := mTime.TimeParse(mTime.Lay_DD, "2023-01-01")
 	taskStart.BackTest(taskStart.BackOpt{
 		StartTime: StartTime,
 		EndTime:   EndTime,
 		InstID:    InstID,
-		// OutPutDir: ResultBasePath,
-		OutPutDir: mStr.Join(ResultBasePath, "/Step3"),
+		OutPutDir: mStr.Join(ResultBasePath),
 		GetConfigOpt: testHunter.GetConfigOpt{
-			// EmaPArr:  EmaPArr,
-			// CAPArr:   []int{2, 3, 4, 5, 6, 7},
-			// LevelArr: []int{1},
-			// CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"},
-			ConfArr: ConfArr,
+			EmaPArr:  EmaPArr,
+			CAPArr:   []int{2, 3, 4, 5, 6, 7},
+			LevelArr: []int{1},
+			CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"},
+			CAPMin:   []string{"-0.5", "-1", "-1.5", "-2", "-2.5", "-3"},
+			// ConfArr: ConfArr,
 		},
 	})
 }
