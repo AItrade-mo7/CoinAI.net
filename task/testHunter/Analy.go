@@ -9,14 +9,11 @@ import (
 )
 
 func (_this *MockObj) Analy() {
-	// 开始
-	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
-
-	AnalyDir := hunter.GetAnalyDir(NowKTradeData, _this.NowVirtualPosition)
-
 	// 更新持仓状态
 	_this.CountPosition()
 	_this.PositionArr = append(_this.PositionArr, _this.NowVirtualPosition)
+
+	AnalyDir := hunter.GetAnalyDir(_this.NowVirtualPosition)
 
 	// 持仓过程中最低和最高盈利比率
 	if mCount.Le(_this.NowVirtualPosition.NowUplRatio, _this.Billing.PositionMinRatio.Value) < 0 {
@@ -29,7 +26,7 @@ func (_this *MockObj) Analy() {
 	}
 
 	// 记录日志
-	global.Run.Println(NowKTradeData.TimeStr, _this.NowVirtualPosition.NowDir, AnalyDir)
+	global.Run.Println(_this.NowVirtualPosition.NowTimeStr, _this.NowVirtualPosition.NowDir, AnalyDir)
 
 	// 当前持仓与 判断方向不符合时，执行一次下单操作
 	if _this.NowVirtualPosition.NowDir != AnalyDir {
@@ -38,24 +35,28 @@ func (_this *MockObj) Analy() {
 }
 
 func (_this *MockObj) CountPosition() {
-	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
+	NowTradeKdata := _this.TradeKdataList[len(_this.TradeKdataList)-1]
 
-	_this.NowVirtualPosition.InstID = NowKTradeData.InstID
+	_this.NowVirtualPosition.InstID = NowTradeKdata.InstID
 	_this.NowVirtualPosition.HunterName = _this.HunterName
-	_this.NowVirtualPosition.NowTimeStr = NowKTradeData.TimeStr
+	_this.NowVirtualPosition.NowTimeStr = NowTradeKdata.TimeStr
 	_this.NowVirtualPosition.NowTime = mTime.GetTime().TimeUnix
-	_this.NowVirtualPosition.NowC = NowKTradeData.C
-	_this.NowVirtualPosition.CAP_EMA = NowKTradeData.CAP_EMA
-	_this.NowVirtualPosition.EMA = NowKTradeData.EMA
-	_this.NowVirtualPosition.HunterConfig = NowKTradeData.Opt
+	_this.NowVirtualPosition.NowC = NowTradeKdata.C
+	_this.NowVirtualPosition.CAP_EMA = NowTradeKdata.CAP_EMA
+	_this.NowVirtualPosition.EMA = NowTradeKdata.EMA
+	_this.NowVirtualPosition.HunterConfig = NowTradeKdata.Opt
 
 	if _this.NowVirtualPosition.NowDir != 0 { // 当前为持仓状态，则计算收益率
-		UplRatio := mCount.RoseCent(NowKTradeData.C, _this.NowVirtualPosition.OpenAvgPx)
+		UplRatio := mCount.RoseCent(NowTradeKdata.C, _this.NowVirtualPosition.OpenAvgPx)
 		if _this.NowVirtualPosition.NowDir < 0 { // 当前为持空仓状态则翻转该值
 			UplRatio = mCount.Sub("0", UplRatio)
 		}
 		Level := _this.NowVirtualPosition.HunterConfig.MaxTradeLever
 		_this.NowVirtualPosition.NowUplRatio = mCount.Mul(UplRatio, mStr.ToStr(Level)) // 乘以杠杆倍数
+
+		// 表示当前正在持仓，持仓状态下收窄 边界值 80%
+		_this.NowVirtualPosition.HunterConfig.CAP_Max = mCount.Mul(_this.NowVirtualPosition.HunterConfig.CAP_Max, "0.8")
+		_this.NowVirtualPosition.HunterConfig.CAP_Min = mCount.Mul(_this.NowVirtualPosition.HunterConfig.CAP_Min, "0.8")
 	}
 }
 

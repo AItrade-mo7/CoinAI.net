@@ -3,7 +3,6 @@ package hunter
 import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbType"
-	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
@@ -21,14 +20,11 @@ func (_this *HunterObj) Analy() {
 		_this.PositionArr = _this.PositionArr[len(_this.PositionArr)-_this.MaxLen:]
 	}
 
-	// 开始
-	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
-
-	AnalyDir := GetAnalyDir(NowKTradeData, _this.NowVirtualPosition)
-
 	// 更新持仓状态
 	_this.CountPosition()
 	_this.PositionArr = append(_this.PositionArr, _this.NowVirtualPosition)
+
+	AnalyDir := GetAnalyDir(_this.NowVirtualPosition)
 
 	// 打印日志和文件写入
 	global.TradeLog.Println(_this.HunterName, "更新持仓状态", AnalyDir, mJson.ToStr(_this.NowVirtualPosition))
@@ -41,37 +37,35 @@ func (_this *HunterObj) Analy() {
 }
 
 func (_this *HunterObj) CountPosition() {
-	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
+	NowTradeKdata := _this.TradeKdataList[len(_this.TradeKdataList)-1]
 
-	_this.NowVirtualPosition.InstID = NowKTradeData.InstID
+	_this.NowVirtualPosition.InstID = NowTradeKdata.InstID
 	_this.NowVirtualPosition.HunterName = _this.HunterName
-	_this.NowVirtualPosition.NowTimeStr = NowKTradeData.TimeStr
+	_this.NowVirtualPosition.NowTimeStr = NowTradeKdata.TimeStr
 	_this.NowVirtualPosition.NowTime = mTime.GetTime().TimeUnix
-	_this.NowVirtualPosition.NowC = NowKTradeData.C
-	_this.NowVirtualPosition.CAP_EMA = NowKTradeData.CAP_EMA
-	_this.NowVirtualPosition.EMA = NowKTradeData.EMA
-	_this.NowVirtualPosition.HunterConfig = NowKTradeData.Opt
+	_this.NowVirtualPosition.NowC = NowTradeKdata.C
+	_this.NowVirtualPosition.CAP_EMA = NowTradeKdata.CAP_EMA
+	_this.NowVirtualPosition.EMA = NowTradeKdata.EMA
+	_this.NowVirtualPosition.HunterConfig = NowTradeKdata.Opt
 
 	if _this.NowVirtualPosition.NowDir != 0 { // 当前为持仓状态，则计算收益率
-		UplRatio := mCount.RoseCent(NowKTradeData.C, _this.NowVirtualPosition.OpenAvgPx)
+		UplRatio := mCount.RoseCent(NowTradeKdata.C, _this.NowVirtualPosition.OpenAvgPx)
 		if _this.NowVirtualPosition.NowDir < 0 { // 当前为持空仓状态则翻转该值
 			UplRatio = mCount.Sub("0", UplRatio)
 		}
 		Level := _this.NowVirtualPosition.HunterConfig.MaxTradeLever
 		_this.NowVirtualPosition.NowUplRatio = mCount.Mul(UplRatio, mStr.ToStr(Level)) // 乘以杠杆倍数
+
+		// 表示当前正在持仓，持仓状态下收窄 边界值 80%
+		_this.NowVirtualPosition.HunterConfig.CAP_Max = mCount.Mul(_this.NowVirtualPosition.HunterConfig.CAP_Max, "0.8")
+		_this.NowVirtualPosition.HunterConfig.CAP_Min = mCount.Mul(_this.NowVirtualPosition.HunterConfig.CAP_Min, "0.8")
 	}
 }
 
-func GetAnalyDir(NowKTradeData okxInfo.TradeKdType, NowPosition dbType.VirtualPositionType) int {
-	CAP_EMA := NowKTradeData.CAP_EMA     // 当前CAP
-	CAP_Max := NowKTradeData.Opt.CAP_Max // Max 边界值
-	CAP_Min := NowKTradeData.Opt.CAP_Min // Min 边界值
-
-	if NowPosition.NowDir != 0 {
-		// 表示当前正在持仓，持仓状态下收窄 边界值 80%
-		CAP_Max = mCount.Mul(CAP_Max, "0.8")
-		CAP_Min = mCount.Mul(CAP_Min, "0.8")
-	}
+func GetAnalyDir(NowPosition dbType.VirtualPositionType) int {
+	CAP_EMA := NowPosition.CAP_EMA              // 当前CAP
+	CAP_Max := NowPosition.HunterConfig.CAP_Max // Max 边界值
+	CAP_Min := NowPosition.HunterConfig.CAP_Min // Min 边界值
 
 	CountDir := 0
 	if mCount.Le(CAP_EMA, CAP_Max) > 0 { // 大于 Max 则向上
