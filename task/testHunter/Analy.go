@@ -12,7 +12,7 @@ func (_this *MockObj) Analy() {
 	// 开始
 	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
 
-	AnalyDir := hunter.GetAnalyDir(NowKTradeData, _this.TradeKdataOpt)
+	AnalyDir := hunter.GetAnalyDir(NowKTradeData, _this.NowVirtualPosition)
 
 	// 更新持仓状态
 	_this.CountPosition()
