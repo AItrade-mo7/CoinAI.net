@@ -67,6 +67,12 @@ func GetAnalyDir(NowKTradeData okxInfo.TradeKdType, NowPosition dbType.VirtualPo
 	CAP_Max := NowKTradeData.Opt.CAP_Max // Max 边界值
 	CAP_Min := NowKTradeData.Opt.CAP_Min // Min 边界值
 
+	if NowPosition.NowDir != 0 {
+		// 表示当前正在持仓，持仓状态下收窄 边界值 80%
+		CAP_Max = mCount.Mul(CAP_Max, "0.8")
+		CAP_Min = mCount.Mul(CAP_Min, "0.8")
+	}
+
 	CountDir := 0
 	if mCount.Le(CAP_EMA, CAP_Max) > 0 { // 大于 Max 则向上
 		CountDir = 1
