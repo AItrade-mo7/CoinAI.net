@@ -1,8 +1,6 @@
 package hunter
 
 import (
-	"fmt"
-
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/okxInfo"
@@ -65,13 +63,15 @@ func (_this *HunterObj) CountPosition() {
 }
 
 func GetAnalyDir(NowKTradeData okxInfo.TradeKdType, NowPosition dbType.VirtualPositionType) int {
-	fmt.Println(NowKTradeData)
-	fmt.Println(NowPosition)
+	CAP_EMA := NowKTradeData.CAP_EMA     // 当前CAP
+	CAP_Max := NowKTradeData.Opt.CAP_Max // Max 边界值
+	CAP_Min := NowKTradeData.Opt.CAP_Min // Min 边界值
+
 	CountDir := 0
-	if mCount.Le(NowKTradeData.CAP_EMA, NowKTradeData.Opt.CAP_Max) > 0 { // 大于 CAPMax 则开多
+	if mCount.Le(CAP_EMA, CAP_Max) > 0 { // 大于 Max 则向上
 		CountDir = 1
 	}
-	if mCount.Le(NowKTradeData.CAP_EMA, NowKTradeData.Opt.CAP_Min) < 0 { // 小于 CAPMin 则开空
+	if mCount.Le(CAP_EMA, CAP_Min) < 0 { // 小于 Min 则向下
 		CountDir = -1
 	}
 	return CountDir
