@@ -22,12 +22,14 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 
 	if len(opt.OKXKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("account.CancelOrder opt.OKXKey.ApiKey 不能为空 Name:%+v", opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 	if len(opt.Order.InstID) < 3 {
 		resErr = fmt.Errorf("account.CancelOrder opt.Orders.InstID 不能为空:%+v Name:%+v", opt.Order.InstID, opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 
@@ -55,7 +57,8 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 
 	if err != nil {
 		resErr = fmt.Errorf("account.CancelOrder1 %+v %+v Name:%+v", mStr.ToStr(err), opt.OKXKey, opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 
@@ -63,7 +66,8 @@ func CancelOrder(opt CancelOrderParam) (resErr error) {
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf("account.CancelOrder2 %s %+v Name:%+v", mStr.ToStr(res), opt.OKXKey, opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 

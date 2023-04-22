@@ -27,18 +27,21 @@ func Order(opt OrderParam) (resErr error) {
 
 	if len(opt.TradeInst.InstID) < 3 {
 		resErr = fmt.Errorf("account.Order opt.InstID 不能为空 %+v Name:%+v", opt.TradeInst.InstID, opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 	if mCount.Le(opt.TradeInst.MinSz, "0") < 1 {
 		resErr = fmt.Errorf("account.Order opt.TradeInst.MinSz 不能为空 %+v Name:%+v", opt.TradeInst.MinSz, opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 
 	if len(opt.OKXKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("account.Order opt.OKXKey.ApiKey 不能为空 %+v Name:%+v", opt.OKXKey.ApiKey, opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 
@@ -49,7 +52,8 @@ func Order(opt OrderParam) (resErr error) {
 	if opt.Side == "buy" || opt.Side == "sell" {
 	} else {
 		resErr = fmt.Errorf("account.Order opt.Side 不正确 %+v Name:%+v", opt.Side, opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 
@@ -64,7 +68,8 @@ func Order(opt OrderParam) (resErr error) {
 	opt.Sz = mCount.Sub(opt.Sz, opt.TradeInst.MinSz)
 	if mCount.Le(opt.Sz, opt.TradeInst.MinSz) < 0 {
 		resErr = fmt.Errorf("交易数量太小 %+v Name:%+v", opt.Sz, opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 
@@ -72,7 +77,8 @@ func Order(opt OrderParam) (resErr error) {
 	if mCount.Le(opt.Sz, opt.TradeInst.MaxMktSz) > 0 {
 		opt.Sz = mCount.Mul(opt.TradeInst.MaxMktSz, "0.8")
 		resErr = fmt.Errorf("交易数量超出限制 %+v Name:%+v", opt.Sz, opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 	}
 
 	opt.Sz = mCount.Cent(opt.Sz, 0)
@@ -106,7 +112,8 @@ func Order(opt OrderParam) (resErr error) {
 
 	if err != nil {
 		resErr = fmt.Errorf("account.Order1 %+v Name:%+v", mStr.ToStr(err), opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 
@@ -114,7 +121,8 @@ func Order(opt OrderParam) (resErr error) {
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf("account.Order2 Data:%+v ; %+v Name:%+v", mStr.ToStr(Data), mStr.ToStr(res), opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 

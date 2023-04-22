@@ -22,18 +22,21 @@ func ClosePosition(opt ClosePositionParam) (resErr error) {
 
 	if len(opt.TradeInst.InstID) < 3 {
 		resErr = fmt.Errorf("account.Order opt.InstID 不能为空 %+v Name:%+v", opt.TradeInst.InstID, opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 	if mCount.Le(opt.TradeInst.MinSz, "0") < 1 {
 		resErr = fmt.Errorf("account.Order opt.TradeInst.MinSz 不能为空 %+v Name:%+v", opt.TradeInst.MinSz, opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 
 	if len(opt.OKXKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("account.Order opt.OKXKey.ApiKey 不能为空 %+v Name:%+v", opt.OKXKey.ApiKey, opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 
@@ -53,7 +56,8 @@ func ClosePosition(opt ClosePositionParam) (resErr error) {
 	})
 	if err != nil {
 		resErr = fmt.Errorf("account.ClosePosition1 %+v Name:%+v", mStr.ToStr(err), opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 
@@ -61,7 +65,8 @@ func ClosePosition(opt ClosePositionParam) (resErr error) {
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf("account.ClosePosition2 %+v Name:%+v", mStr.ToStr(res), opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 

@@ -32,7 +32,8 @@ func GetOKXBalance(OKXKey dbType.OkxKeyType) (resData []dbType.AccountBalance, r
 
 	if len(OKXKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("account.GetOKXBalance OKXKey.ApiKey 不能为空 %+v Name:%+v", OKXKey.ApiKey, OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(OKXKey, resErr)
 		return
 	}
 
@@ -54,7 +55,8 @@ func GetOKXBalance(OKXKey dbType.OkxKeyType) (resData []dbType.AccountBalance, r
 
 	if err != nil {
 		resErr = fmt.Errorf("account.GetOKXBalance1 %s Name:%+v", mStr.ToStr(err), OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(OKXKey, resErr)
 		return
 	}
 
@@ -63,7 +65,8 @@ func GetOKXBalance(OKXKey dbType.OkxKeyType) (resData []dbType.AccountBalance, r
 
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf("account.GetOKXBalance2 %s Name:%+v", mStr.ToStr(res), OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(OKXKey, resErr)
 		return
 	}
 	var Data BalanceReq

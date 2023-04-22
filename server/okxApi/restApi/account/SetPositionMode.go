@@ -37,7 +37,8 @@ func SetPositionMode(OKXKey dbType.OkxKeyType) (resErr error) {
 
 	if err != nil {
 		resErr = fmt.Errorf("account.SetPositionMode1 %+v Name:%+v", mStr.ToStr(err), OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(OKXKey, resErr)
 		return
 	}
 
@@ -45,8 +46,8 @@ func SetPositionMode(OKXKey dbType.OkxKeyType) (resErr error) {
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf("account.SetPositionMode2 %s Name:%+v", mStr.ToStr(res), OKXKey.Name)
-		global.LogErr(resErr)
-
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(OKXKey, resErr)
 		return
 	}
 

@@ -20,7 +20,8 @@ func GetOKXPositions(OKXKey dbType.OkxKeyType) (resData []dbType.PositionsData, 
 
 	if len(OKXKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("account.GetOKXPositions OKXKey.ApiKey 不能为空 Name:%+v", OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(OKXKey, resErr)
 		return
 	}
 
@@ -42,14 +43,16 @@ func GetOKXPositions(OKXKey dbType.OkxKeyType) (resData []dbType.PositionsData, 
 
 	if err != nil {
 		resErr = fmt.Errorf("account.GetOKXPositions1 %+v Name:%+v", mStr.ToStr(err), OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(OKXKey, resErr)
 		return
 	}
 	var resObj mOKX.TypeReq
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf("account.GetOKXPositions2 Name:%+v", OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(OKXKey, resErr)
 		return
 	}
 

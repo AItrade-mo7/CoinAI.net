@@ -63,7 +63,8 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resData []PendingOrderType, re
 
 	if len(opt.OKXKey.ApiKey) < 10 {
 		resErr = fmt.Errorf("account.GetOrdersPending opt.OKXKey.ApiKey 不能为空 Name:%+v", opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 
@@ -86,7 +87,8 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resData []PendingOrderType, re
 	mFile.Write(config.Dir.JsonData+"/OrdersPending.json", string(res))
 	if err != nil {
 		resErr = fmt.Errorf("account.GetOrdersPending1 %+v Name:%+v", mStr.ToStr(err), opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 
@@ -94,7 +96,8 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resData []PendingOrderType, re
 	jsoniter.Unmarshal(res, &resObj)
 	if resObj.Code != "0" {
 		resErr = fmt.Errorf("account.GetOrdersPending2 %s Name:%+v", mStr.ToStr(res), opt.OKXKey.Name)
-		global.LogErr(resErr)
+		global.LogErr("该错误已同步至用户邮箱", resErr)
+		LogErr(opt.OKXKey, resErr)
 		return
 	}
 
