@@ -244,9 +244,10 @@ func (_this *AccountObj) Close() (resErr error) {
 		TradeInst := okxInfo.Inst[Position.InstID]
 		Side := ""
 		Sz := "0"
+
+		err = _this.GetMaxSize()
 		if err != nil {
-			err = fmt.Errorf("平仓 获取最大数量 失败")
-			global.LogErr(err)
+			err = fmt.Errorf("平仓 获取最大数量 失败:%+v", err)
 			errArr = append(errArr, err)
 		}
 
@@ -271,7 +272,7 @@ func (_this *AccountObj) Close() (resErr error) {
 		}
 
 		if err != nil {
-			err = fmt.Errorf("平仓 下单 失败")
+			err = fmt.Errorf("平仓失败: %+v", err)
 			errArr = append(errArr, err)
 		}
 	}
