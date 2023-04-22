@@ -9,6 +9,7 @@ import (
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mJson"
+	"github.com/EasyGolang/goTools/mStr"
 )
 
 type AccountParam struct {
@@ -87,6 +88,7 @@ func (_this *AccountObj) Buy() (resErr error) {
 		return
 	}
 	Sz := _this.MaxSize.MaxBuy
+	global.TradeLog.Println("okxApi.Buy", mStr.ToStr(_this.MaxSize), _this.NowHunter.TradeInst, _this.OkxKey.Name)
 	err = account.Order(account.OrderParam{
 		OKXKey:    _this.OkxKey,
 		TradeInst: _this.NowHunter.TradeInst,
@@ -121,6 +123,9 @@ func (_this *AccountObj) Sell() (resErr error) {
 		return
 	}
 	Sz := _this.MaxSize.MaxSell
+
+	global.TradeLog.Println("okxApi.Sell", mStr.ToStr(_this.MaxSize), _this.NowHunter.TradeInst, _this.OkxKey.Name)
+
 	err = account.Order(account.OrderParam{
 		OKXKey:    _this.OkxKey,
 		TradeInst: _this.NowHunter.TradeInst,
@@ -258,6 +263,8 @@ func (_this *AccountObj) Close() (resErr error) {
 			Side = "buy"
 		}
 
+		global.TradeLog.Println("平仓", Side, Sz, mStr.ToStr(Position), _this.OkxKey.Name)
+
 		Sz = mCount.Abs(Position.Pos)
 		err = account.Order(account.OrderParam{
 			OKXKey:    _this.OkxKey,
@@ -303,7 +310,7 @@ func (_this *AccountObj) Close() (resErr error) {
 			OKXKey:    _this.OkxKey,
 			TradeInst: TradeInst,
 		})
-		global.LogErr("触发平仓保险,", mJson.ToStr(_this.Positions), "用户", _this.OkxKey.Name)
+		global.LogErr("触发平仓保险:", mJson.ToStr(_this.Positions), "用户:", _this.OkxKey.Name)
 	}
 
 	return
