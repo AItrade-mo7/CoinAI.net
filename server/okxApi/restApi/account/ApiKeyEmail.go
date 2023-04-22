@@ -30,5 +30,5 @@ func LogErr(ApiKey dbType.OkxKeyType, sum ...any) {
 		Content:     content,
 		Description: "交易所接口报错",
 	})
-	global.Log.Println("邮件已发送", err)
+	global.Log.Println(ApiKey.Name, "邮件已发送", err)
 }
