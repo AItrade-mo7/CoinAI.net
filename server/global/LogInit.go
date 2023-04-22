@@ -6,7 +6,6 @@ import (
 
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/utils/taskPush"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mLog"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
@@ -70,7 +69,7 @@ func LogErr(sum ...any) {
 	if len(sum) > 0 {
 		message = mStr.ToStr(sum[0])
 	}
-	content := mJson.Format(sum)
+	content := mStr.ToStr(sum)
 
 	TitleName := config.SysName
 

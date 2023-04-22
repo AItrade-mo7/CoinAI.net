@@ -25,7 +25,7 @@ func LogErr(ApiKey dbType.OkxKeyType, sum ...any) {
 		From:        config.AppEnv.SysName,
 		To:          []string{ApiKey.UserID},
 		Subject:     "交易所接口报错",
-		Title:       mStr.Join(ApiKey.Name, " 您在 ", config.AppEnv.SysName, " 的ApiKey出现了错误, 请检查交易所账户设置"),
+		Title:       mStr.Join(ApiKey.Name, " 您在 ", config.AppEnv.SysName, " 绑定的 ApiKey 出现了错误, 请检查交易所账户设置"),
 		Message:     message,
 		Content:     content,
 		Description: "交易所接口报错",
