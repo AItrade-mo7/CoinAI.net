@@ -71,14 +71,19 @@ func (_this *TestObj) StuffDBKdata() error {
 		Timeout = 100
 	}
 
-	db := mMongo.New(mMongo.Opt{
+	db, err := mMongo.New(mMongo.Opt{
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
 		DBName:   "CoinMarket",
 		Timeout:  Timeout,
-	}).Connect().Collection(_this.InstID)
+	}).Connect()
+	if err != nil {
+		panic(err)
+	}
 	defer db.Close()
+	db.Collection(_this.InstID)
+
 	findOpt := options.Find()
 	findOpt.SetSort(map[string]int{
 		"TimeUnix": 1,

@@ -13,13 +13,19 @@ import (
 )
 
 func (_this *HunterObj) ReadOrder() {
-	db := mMongo.New(mMongo.Opt{
+	db, err := mMongo.New(mMongo.Opt{
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
 		DBName:   "AIServe",
-	}).Connect().Collection("CoinOrder")
+	}).Connect()
+	if err != nil {
+		global.LogErr("hunter.ReadOrder 数据库连接失败", _this.HunterName, err)
+		return
+	}
 	defer db.Close()
+	db.Collection("CoinOrder")
+
 	findOpt := options.Find()
 	findOpt.SetSort(map[string]int{
 		"NowTime": -1,

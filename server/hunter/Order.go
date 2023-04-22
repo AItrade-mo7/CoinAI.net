@@ -100,14 +100,20 @@ func (_this *HunterObj) SetOrderDB(Type string) {
 	orderData.TimeID = mOKX.GetTimeID(orderData.NowTime)
 	orderData.OrderID = mEncrypt.GetUUID()
 
-	db := mMongo.New(mMongo.Opt{
+	db, err := mMongo.New(mMongo.Opt{
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
 		DBName:   "AIServe",
-	}).Connect().Collection("CoinOrder")
+	}).Connect()
+	if err != nil {
+		global.LogErr("hunter.SetOrderDB 数据库连接失败", _this.HunterName, err)
+		return
+	}
 	defer db.Close()
-	_, err := db.Table.InsertOne(db.Ctx, orderData)
+	db.Collection("CoinOrder")
+
+	_, err = db.Table.InsertOne(db.Ctx, orderData)
 	if err != nil {
 		global.LogErr("hunter.SetOrderDB 数据存储失败", _this.HunterName, err)
 	}
@@ -321,14 +327,19 @@ func (_this *HunterObj) CloseOrderSettlement(Settlement []SettlementType) {
 		})
 	}
 
-	db := mMongo.New(mMongo.Opt{
+	db, err := mMongo.New(mMongo.Opt{
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
 		DBName:   "Account",
 		Timeout:  len(UserOrderArr) * 20,
-	}).Connect().Collection("OkxOrder")
+	}).Connect()
+	if err != nil {
+		global.LogErr("hunter.CloseOrderSettlement 数据库连接失败", err)
+		return
+	}
 	defer db.Close()
+	db.Collection("OkxOrder")
 
 	for _, Kd := range UserOrderArr {
 		FK := bson.D{{

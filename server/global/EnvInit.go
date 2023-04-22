@@ -69,13 +69,18 @@ func AppEnvInit() {
 }
 
 func ReadeDBAppEnv() {
-	db := mMongo.New(mMongo.Opt{
+	db, err := mMongo.New(mMongo.Opt{
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
 		DBName:   "AIServe",
-	}).Connect().Collection("CoinAI")
+	}).Connect()
+	if err != nil {
+		LogErr("global.ReadeDBAppEnv 数据库连接失败", err)
+		return
+	}
 	defer db.Close()
+	db.Collection("CoinAI")
 
 	findOpt := options.FindOne()
 	findOpt.SetSort(map[string]int{
@@ -106,15 +111,19 @@ func WriteAppEnv() {
 		"UserID": config.AppEnv.UserID,
 		"Port":   config.AppEnv.Port,
 	})))
-	// mFile.Write(config.File.AppEnv, mJson.JsonFormat(mJson.ToJson(config.AppEnv)))
 
-	db := mMongo.New(mMongo.Opt{
+	db, err := mMongo.New(mMongo.Opt{
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
 		DBName:   "AIServe",
-	}).Connect().Collection("CoinAI")
+	}).Connect()
+	if err != nil {
+		LogErr("global.WriteAppEnv 数据库连接失败", err)
+		return
+	}
 	defer db.Close()
+	db.Collection("CoinAI")
 
 	findOpt := options.FindOne()
 	findOpt.SetSort(map[string]int{
@@ -142,12 +151,12 @@ func WriteAppEnv() {
 
 	upOpt := options.Update()
 	upOpt.SetUpsert(true)
-	_, err := db.Table.UpdateOne(db.Ctx, FK, UK, upOpt)
+	_, err = db.Table.UpdateOne(db.Ctx, FK, UK, upOpt)
 	if err != nil {
-		LogErr("config.AppEnv 数据更插失败", err)
+		LogErr("global.WriteAppEnv 数据更插失败", err)
 	}
 
-	Log.Println("config.AppEnv 已更新至数据库")
+	Log.Println("global.WriteAppEnv 已更新至数据库")
 }
 
 func GetLocalAPI() (ip string) {

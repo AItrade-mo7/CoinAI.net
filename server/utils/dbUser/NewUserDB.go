@@ -21,12 +21,18 @@ type AccountType struct {
 func NewUserDB(opt NewUserOpt) (resData *AccountType, resErr error) {
 	resData = &AccountType{}
 	resErr = nil
-	db := mMongo.New(mMongo.Opt{
+	db, err := mMongo.New(mMongo.Opt{
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
 		DBName:   "Account",
-	}).Connect().Collection("User")
+	}).Connect()
+	if err != nil {
+		resErr = err
+		return
+	}
+	defer db.Close()
+	db.Collection("User")
 
 	resData.DB = db
 

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
 	"github.com/EasyGolang/goTools/mEncrypt"
@@ -34,7 +33,7 @@ func TokenAuth(c *fiber.Ctx) (UserID string, err error) {
 
 	Message = Claims.Message
 	UserID = Message
-	if len(UserID) < 16 {
+	if len(UserID) != 32 {
 		err = errors.New("Token解析失败")
 		return
 	}
@@ -48,22 +47,19 @@ func TokenAuth(c *fiber.Ctx) (UserID string, err error) {
 	}
 
 	// 数据库验证
-	db := mMongo.New(mMongo.Opt{
+	db, err := mMongo.New(mMongo.Opt{
 		UserName: config.SysEnv.MongoUserName,
 		Password: config.SysEnv.MongoPassword,
 		Address:  config.SysEnv.MongoAddress,
 		DBName:   "Message",
-		Event: func(s1, s2 string) {
-			global.Run.Println("middle.TokenAuth", s1, s2)
-		},
-	}).Connect().Collection("VerifyToken")
-	defer db.Close()
-	err = db.Ping()
+	}).Connect()
 	if err != nil {
-		db.Close()
-		err = fmt.Errorf("Token验证失败")
+		err = fmt.Errorf("数据库连接错误")
 		return
 	}
+	defer db.Close()
+	db.Collection("VerifyToken")
+
 	var dbRes dbType.TokenTable
 	FK := bson.D{{
 		Key:   "UserID",

@@ -46,6 +46,7 @@ func (_this *HunterObj) Running() {
 	// 在这里填充基础数据 走 mongodb
 	err := _this.FileBaseKdata()
 	if err != nil { // 在这里切换了币种，重新执行
+		global.LogErr(err)
 		_this.Running() // 立即重新执行一次 Running
 		return          // 阻断后面的执行
 	}
@@ -82,14 +83,19 @@ func (_this *HunterObj) Running() {
 func (_this *HunterObj) FileBaseKdata() error {
 	if len(_this.NowKdataList) < 100 {
 		// 回填历史数据 1 组
-		db := mMongo.New(mMongo.Opt{
+		db, err := mMongo.New(mMongo.Opt{
 			UserName: config.SysEnv.MongoUserName,
 			Password: config.SysEnv.MongoPassword,
 			Address:  config.SysEnv.MongoAddress,
 			DBName:   "CoinMarket",
 			Timeout:  _this.MaxLen,
-		}).Connect().Collection(_this.KdataInst.InstID)
+		}).Connect()
+		if err != nil {
+			return err
+		}
 		defer db.Close()
+		db.Collection(_this.KdataInst.InstID)
+
 		findOpt := options.Find()
 		findOpt.SetSort(map[string]int{
 			"TimeUnix": -1,
