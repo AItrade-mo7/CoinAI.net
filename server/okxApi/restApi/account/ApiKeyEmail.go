@@ -7,7 +7,6 @@ import (
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/utils/taskPush"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
 )
 
@@ -19,7 +18,7 @@ func LogErr(ApiKey dbType.OkxKeyType, sum ...any) {
 	if len(sum) > 0 {
 		message = mStr.ToStr(sum[0])
 	}
-	content := mJson.Format(sum)
+	content := mStr.ToStr(sum)
 
 	err := taskPush.SysEmail(taskPush.SysEmailOpt{
 		From:        config.AppEnv.SysName,
