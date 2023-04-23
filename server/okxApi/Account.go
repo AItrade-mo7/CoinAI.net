@@ -8,7 +8,6 @@ import (
 	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
 )
 
@@ -262,10 +261,9 @@ func (_this *AccountObj) Close() (resErr error) {
 		if mCount.Le(Position.Pos, "0") < 0 {
 			Side = "buy"
 		}
+		Sz = mCount.Abs(Position.Pos)
 
 		global.TradeLog.Println("平仓", Side, Sz, mStr.ToStr(Position), _this.OkxKey.Name)
-
-		Sz = mCount.Abs(Position.Pos)
 		err = account.Order(account.OrderParam{
 			OKXKey:    _this.OkxKey,
 			TradeInst: TradeInst,
@@ -310,7 +308,7 @@ func (_this *AccountObj) Close() (resErr error) {
 			OKXKey:    _this.OkxKey,
 			TradeInst: TradeInst,
 		})
-		global.LogErr("触发平仓保险:", mJson.ToStr(_this.Positions), "用户:", _this.OkxKey.Name)
+		global.TradeLog.Println("触发平仓保险", Position.Pos, _this.OkxKey.Name)
 	}
 
 	return
