@@ -288,12 +288,7 @@ func (_this *AccountObj) Close() (resErr error) {
 
 	// isAgin 为真，则再来一次
 	if isAgin {
-		err = _this.Close()
-	}
-
-	if err != nil {
-		resErr = err
-		return
+		_this.Close()
 	}
 
 	// 再次检查持仓  平仓保险机制
@@ -309,6 +304,11 @@ func (_this *AccountObj) Close() (resErr error) {
 			TradeInst: TradeInst,
 		})
 		global.TradeLog.Println("触发平仓保险", Position.Pos, _this.OkxKey.Name)
+	}
+
+	if err != nil {
+		resErr = err
+		return
 	}
 
 	return
