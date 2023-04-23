@@ -227,21 +227,21 @@ func (_this *AccountObj) Close() (resErr error) {
 	err := _this.GetOrdersPending() // 获取未成交订单
 	if err != nil {
 		resErr = err
-		_this.Close()
+		go _this.Close()
 		return
 	}
 
 	err = _this.CancelOrder() // 取消所有未成交订单
 	if err != nil {
 		resErr = err
-		_this.Close()
+		go _this.Close()
 		return
 	}
 
 	err = _this.GetPositions() // 获取所有持仓
 	if err != nil {
 		resErr = err
-		_this.Close()
+		go _this.Close()
 		return
 	}
 
@@ -293,21 +293,26 @@ func (_this *AccountObj) Close() (resErr error) {
 	err = _this.GetPositions() // 获取所有持仓
 	if err != nil {
 		resErr = err
-		_this.Close()
+		go _this.Close()
 		return
 	}
 	for _, Position := range _this.Positions {
 		TradeInst := okxInfo.Inst[Position.InstID]
-		account.ClosePosition(account.ClosePositionParam{
+		resErr := account.ClosePosition(account.ClosePositionParam{
 			OKXKey:    _this.OkxKey,
 			TradeInst: TradeInst,
 		})
-		global.TradeLog.Println("触发平仓保险", Position.Pos, _this.OkxKey.Name)
+		global.TradeLog.Println("触发平仓保险", resErr, Position.Pos, _this.OkxKey.Name)
+
+		if resErr != nil {
+			isAgin = true
+		}
 	}
 
 	// isAgin 为真，则再来一次
 	if isAgin {
 		_this.Close()
+		return
 	}
 
 	return
