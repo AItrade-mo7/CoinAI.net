@@ -266,6 +266,7 @@ func (_this *AccountObj) Close() (resErr error) {
 			Side = "buy"
 		}
 		Sz = mCount.Abs(Position.Pos)
+		Sz = mCount.Add(Sz, TradeInst.MinSz)
 
 		global.TradeLog.Println("平仓", Side, Sz, mStr.ToStr(Position), _this.OkxKey.Name)
 		err = account.Order(account.OrderParam{
