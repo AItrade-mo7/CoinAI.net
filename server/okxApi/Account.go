@@ -224,6 +224,8 @@ func (_this *AccountObj) CancelOrder() (resErr error) {
 
 // 下单 平仓,平掉当前所有仓位
 func (_this *AccountObj) Close() (resErr error) {
+	resErr = nil
+
 	err := _this.GetOrdersPending() // 获取未成交订单
 	if err != nil {
 		resErr = err
@@ -246,7 +248,6 @@ func (_this *AccountObj) Close() (resErr error) {
 	}
 
 	errArr := []error{}
-	isAgin := false
 	for _, Position := range _this.Positions {
 		TradeInst := okxInfo.Inst[Position.InstID]
 		Side := ""
@@ -273,20 +274,18 @@ func (_this *AccountObj) Close() (resErr error) {
 			Side:      Side,
 			Sz:        Sz,
 		})
-		// 如果 Sz 大于了最大数量 , 则再来一次
-		if mCount.Le(Sz, TradeInst.MaxMktSz) > 0 {
-			isAgin = true
-			break
-		}
-
 		if err != nil {
 			err = fmt.Errorf("平仓失败: %+v", err)
+			errArr = append(errArr, err)
+		}
+		// 如果 Sz 大于了最大数量 , 则再来一次
+		if mCount.Le(Sz, TradeInst.MaxMktSz) > 0 {
+			err = fmt.Errorf("数量超过上限了: %+v", err)
 			errArr = append(errArr, err)
 		}
 	}
 
 	if len(errArr) > 0 {
-		resErr = fmt.Errorf("err:%+v", errArr)
 		go _this.Close()
 	}
 
@@ -297,6 +296,9 @@ func (_this *AccountObj) Close() (resErr error) {
 		go _this.Close()
 		return
 	}
+
+	resErr = nil
+	errArr = []error{}
 	for _, Position := range _this.Positions {
 		TradeInst := okxInfo.Inst[Position.InstID]
 		resErr := account.ClosePosition(account.ClosePositionParam{
@@ -306,14 +308,13 @@ func (_this *AccountObj) Close() (resErr error) {
 		global.TradeLog.Println("触发平仓保险", resErr, Position.Pos, _this.OkxKey.Name)
 
 		if resErr != nil {
-			isAgin = true
+			err = fmt.Errorf("平仓保险失败: %+v", err)
+			errArr = append(errArr, err)
 		}
 	}
 
-	// isAgin 为真，则再来一次
-	if isAgin {
-		_this.Close()
-		resErr = nil
+	if len(errArr) > 0 {
+		resErr = fmt.Errorf("平仓失败: %+v", errArr)
 		return
 	}
 
