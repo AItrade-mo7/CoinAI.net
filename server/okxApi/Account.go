@@ -287,6 +287,7 @@ func (_this *AccountObj) Close() (resErr error) {
 
 	if len(errArr) > 0 {
 		resErr = fmt.Errorf("err:%+v", errArr)
+		go _this.Close()
 	}
 
 	// 再次检查持仓  平仓保险机制
@@ -312,6 +313,7 @@ func (_this *AccountObj) Close() (resErr error) {
 	// isAgin 为真，则再来一次
 	if isAgin {
 		_this.Close()
+		resErr = nil
 		return
 	}
 
