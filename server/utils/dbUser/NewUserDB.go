@@ -31,7 +31,6 @@ func NewUserDB(opt NewUserOpt) (resData *AccountType, resErr error) {
 		resErr = err
 		return
 	}
-	defer db.Close()
 	db.Collection("User")
 
 	resData.DB = db
