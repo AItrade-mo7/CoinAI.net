@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "embed"
+	"fmt"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbType"
@@ -11,7 +12,7 @@ import (
 	"github.com/EasyGolang/goTools/mTime"
 )
 
-var ResultBasePath = "/root/AItrade/CoinAI.net/task/analyConfig/一整年"
+var ResultBasePath = "/root/AItrade/CoinAI.net/task/2021_2022"
 
 func main() {
 	// 初始化系统参数
@@ -31,10 +32,11 @@ func main() {
 func Step1(InstID string) {
 	// 第一步： 暴力求值 （海量参数结果罗列） 需要几个小时甚至好几天
 	EmaPArr := []int{}
-	StarNum := 60
-	for i := 0; i < 520; i += 2 {
-		StarNum = 60 + i
+	StarNum := 30
+	for i := 0; i < 400; i += 2 {
+		StarNum = 30 + i
 		EmaPArr = append(EmaPArr, StarNum)
+		fmt.Println(StarNum)
 	}
 
 	// LevelArr := []int{2, 3, 4, 5}
@@ -49,8 +51,8 @@ func Step1(InstID string) {
 	// 	ConfArr = append(ConfArr, conf)
 	// }
 
-	StartTime := mTime.TimeParse(mTime.Lay_DD, "2022-01-01")
-	EndTime := mTime.TimeParse(mTime.Lay_DD, "2023-01-01")
+	StartTime := mTime.TimeParse(mTime.Lay_DD, "2021-01-01")
+	EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-01-01")
 	taskHunter.BackTest(taskHunter.BackOpt{
 		StartTime: StartTime,
 		EndTime:   EndTime,
@@ -58,10 +60,10 @@ func Step1(InstID string) {
 		OutPutDir: mStr.Join(ResultBasePath),
 		GetConfigOpt: testHunter.GetConfigOpt{
 			EmaPArr:  EmaPArr,
-			CAPArr:   []int{2, 3, 4, 5, 6, 7},
+			CAPArr:   []int{3},
 			LevelArr: []int{1},
-			CAPMax:   []string{"0.5", "1", "1.5", "2", "2.5", "3"},
-			CAPMin:   []string{"-0.5", "-1", "-1.5", "-2", "-2.5", "-3"},
+			CAPMax:   []string{"0.5"},
+			CAPMin:   []string{"-0.5"},
 			// ConfArr: ConfArr,
 		},
 	})
