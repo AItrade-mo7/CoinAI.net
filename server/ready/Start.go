@@ -5,6 +5,7 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/hunter"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mClock"
@@ -13,9 +14,57 @@ import (
 	"github.com/EasyGolang/goTools/mJson"
 )
 
+var HunterOptArr = []hunter.HunterOpt{
+	{
+		HunterName: "BTC-CoinAI",
+		InstID:     "BTC-USDT",
+		Describe:   "以 BTC-USDT 交易对为主执行自动交易,支持的资金量更大,更加稳定",
+		TradeKdataOpt: dbType.TradeKdataOpt{
+			EMA_Period:    342, // 参数已确定  2023-04-11 18:14
+			CAP_Period:    7,
+			CAP_Max:       "2.5",
+			CAP_Min:       "-2.5",
+			MaxTradeLever: 5,
+		},
+	},
+	{
+		HunterName: "ETH-CoinAI",
+		InstID:     "ETH-USDT",
+		Describe:   "以 ETH-USDT 交易对为主执行自动交易,交易次数更加频发,可以收获更高收益",
+		TradeKdataOpt: dbType.TradeKdataOpt{
+			EMA_Period:    266, // 参数确定时间 2023-4-11 20:28:37
+			CAP_Period:    5,
+			CAP_Max:       "3",
+			CAP_Min:       "-3",
+			MaxTradeLever: 5,
+		},
+	},
+}
+
 func Start() {
 	// 初始化 Hunter 全局 初始值
 	okxInfo.OkxInfoInit()
+
+	/*
+
+		// 设置最优参数
+		CoinTradeConfig = map[string]dbType.TradeKdataOpt{
+			"BTC-USDT": {
+				EMA_Period:    342, // 参数已确定  2023-04-11 18:14
+				CAP_Period:    7,
+				CAP_Max:       "2.5",
+				CAP_Min:       "-2.5",
+				MaxTradeLever: 5,
+			},
+			"ETH-USDT": {
+				EMA_Period:    266, // 参数确定时间 2023-4-11 20:28:37
+				CAP_Period:    5,
+				CAP_Max:       "3",
+				CAP_Min:       "-3",
+				MaxTradeLever: 5,
+			},
+		}
+	*/
 
 	// 发送启动邮件
 	StartEmail()
@@ -31,18 +80,10 @@ func Start() {
 		Spec: "10 1,6,11,16,21,26,31,36,41,46,51,56 * * * ? ", // 每隔5分钟比标准时间晚一分钟 过 10 秒执行查询
 	})
 
-	// 启动策略 1
 	hunter.New(hunter.HunterOpt{
 		HunterName: "BTC-CoinAI",
 		InstID:     "BTC-USDT",
 		Describe:   "以 BTC-USDT 交易对为主执行自动交易,支持的资金量更大,更加稳定",
-	}).Start()
-
-	// 启动策略 2
-	hunter.New(hunter.HunterOpt{
-		HunterName: "ETH-CoinAI",
-		InstID:     "ETH-USDT",
-		Describe:   "以 ETH-USDT 交易对为主执行自动交易,交易次数更加频发,可以收获更高收益",
 	}).Start()
 }
 

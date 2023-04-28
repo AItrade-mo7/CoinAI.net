@@ -13,6 +13,7 @@ import (
 
 type HunterOpt struct {
 	HunterName      string // 默认:MyHunter
+	TradeKdataOpt   dbType.TradeKdataOpt
 	InstID          string // 当前策略交易对 默认:BTC-USDT
 	Describe        string // Hunter描述  默认:空
 	OutPutDirectory string // 数据读写的目录 默认 jsonData
@@ -52,7 +53,11 @@ func New(opt HunterOpt) *HunterObj {
 	obj.NowKdataList = []mOKX.TypeKd{}
 	obj.TradeKdataList = []okxInfo.TradeKdType{}
 
-	obj.TradeKdataOpt = dbType.TradeKdataOpt{}
+	obj.TradeKdataOpt = opt.TradeKdataOpt
+	if obj.TradeKdataOpt.EMA_Period < 1 {
+		panic("hunter.New obj.TradeKdataOpt.EMA_Period 不能为空")
+	}
+
 	obj.NowVirtualPosition = dbType.VirtualPositionType{}
 
 	obj.OutPutDirectory = opt.OutPutDirectory

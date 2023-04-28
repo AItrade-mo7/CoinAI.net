@@ -58,13 +58,6 @@ func (_this *HunterObj) Running() {
 		return
 	}
 
-	err = _this.SetTradeConfig()
-	if err != nil { // 在这里检查数据出了问题
-		global.LogErr(err)
-		_this.Running() // 立即重新执行一次 Running
-		return
-	}
-
 	_this.SyncInfoToGlobal() // 同步一次数据
 
 	// 策略执行的核心
