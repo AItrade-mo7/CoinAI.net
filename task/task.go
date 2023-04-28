@@ -6,8 +6,7 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/hunter/testHunter"
-	"CoinAI.net/task/analyConfig"
-	"CoinAI.net/task/taskStart"
+	"CoinAI.net/task/taskHunter"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
 )
@@ -52,7 +51,7 @@ func Step1(InstID string) {
 
 	StartTime := mTime.TimeParse(mTime.Lay_DD, "2022-01-01")
 	EndTime := mTime.TimeParse(mTime.Lay_DD, "2023-01-01")
-	taskStart.BackTest(taskStart.BackOpt{
+	taskHunter.BackTest(taskHunter.BackOpt{
 		StartTime: StartTime,
 		EndTime:   EndTime,
 		InstID:    InstID,
@@ -70,7 +69,7 @@ func Step1(InstID string) {
 
 func Step2(InstID string) {
 	// 第二步骤：根据胜率和最终营收 筛选
-	analyConfig.GetWinArr(analyConfig.GetWinArrOpt{
+	taskHunter.GetWinArr(taskHunter.GetWinArrOpt{
 		InstID:     InstID,
 		OutPutDir:  ResultBasePath,
 		MoneyRight: "1300",
@@ -102,7 +101,7 @@ func Step3(InstID string) {
 	// EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-10-01")
 	EndTime := mTime.TimeParse(mTime.Lay_DD, "2023-05-01")
 	StartTime := EndTime - (mTime.UnixTimeInt64.Day * 260)
-	taskStart.BackTest(taskStart.BackOpt{
+	taskHunter.BackTest(taskHunter.BackOpt{
 		StartTime: StartTime,
 		EndTime:   EndTime,
 		InstID:    InstID,
@@ -128,7 +127,7 @@ func Step3(InstID string) {
 
 func Step4(InstID string) {
 	// 第四步： 根据第三步的结果进行筛选 (胜率和最终营收) 得出参数结果
-	analyConfig.GetWinArr(analyConfig.GetWinArrOpt{
+	taskHunter.GetWinArr(taskHunter.GetWinArrOpt{
 		InstID: InstID,
 		// OutPutDir:  mStr.Join(ResultBasePath),
 		OutPutDir: mStr.Join(ResultBasePath, "/Step3"),

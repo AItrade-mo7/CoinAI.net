@@ -1,4 +1,4 @@
-package analyConfig
+package taskHunter
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package taskStart
+package taskHunter
 
 import (
 	"fmt"
