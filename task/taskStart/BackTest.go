@@ -5,8 +5,8 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
+	"CoinAI.net/server/hunter/testHunter"
 	"CoinAI.net/server/utils/taskPush"
-	"CoinAI.net/task/testHunter"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"

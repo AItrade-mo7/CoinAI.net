@@ -5,9 +5,9 @@ import (
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbType"
+	"CoinAI.net/server/hunter/testHunter"
 	"CoinAI.net/task/analyConfig"
 	"CoinAI.net/task/taskStart"
-	"CoinAI.net/task/testHunter"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
 )

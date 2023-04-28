@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"CoinAI.net/server/global/dbType"
-	"CoinAI.net/task/testHunter"
+	"CoinAI.net/server/hunter/testHunter"
 	"github.com/EasyGolang/goTools/mPath"
 	"github.com/EasyGolang/goTools/mStr"
 	jsoniter "github.com/json-iterator/go"

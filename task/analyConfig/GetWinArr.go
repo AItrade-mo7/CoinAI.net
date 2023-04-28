@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"CoinAI.net/server/global"
-	"CoinAI.net/task/testHunter"
+	"CoinAI.net/server/hunter/testHunter"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
