@@ -80,11 +80,9 @@ func Start() {
 		Spec: "10 1,6,11,16,21,26,31,36,41,46,51,56 * * * ? ", // 每隔5分钟比标准时间晚一分钟 过 10 秒执行查询
 	})
 
-	hunter.New(hunter.HunterOpt{
-		HunterName: "BTC-CoinAI",
-		InstID:     "BTC-USDT",
-		Describe:   "以 BTC-USDT 交易对为主执行自动交易,支持的资金量更大,更加稳定",
-	}).Start()
+	for _, conf := range HunterOptArr {
+		hunter.New(conf).Start()
+	}
 }
 
 func GetAnalyData() {
