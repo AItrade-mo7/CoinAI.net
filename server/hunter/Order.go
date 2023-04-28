@@ -132,12 +132,44 @@ type SettlementType struct {
 }
 
 func (_this *HunterObj) SyncAllApiKey() {
+	DirText := "保持空仓"
+	if _this.NowVirtualPosition.NowDir > 0 {
+		DirText = "买多看涨"
+	}
+	if _this.NowVirtualPosition.NowDir < 0 {
+		DirText = "买空看跌"
+	}
+
 	global.TradeLog.Println(_this.HunterName, "开始执行所有的ApiKey")
 	ApiKeyList := []dbType.OkxKeyType{}
 
 	for _, item := range config.AppEnv.ApiKeyList {
 		if item.Hunter == _this.HunterName {
 			ApiKeyList = append(ApiKeyList, item)
+
+			// 发送邮件通知
+			tmplStr := `
+		<br />
+		策略名称： ${HunterName}  <br />
+		当前持仓建议： ${NowDir}  <br />
+		ApiKey Name: ${Name} <br />
+		`
+			lMap := map[string]string{
+				"HunterName": _this.HunterName,
+				"NowDir":     DirText,
+				"Name":       item.Name,
+			}
+
+			Content := mStr.Temp(tmplStr, lMap)
+			taskPush.SysEmail(taskPush.SysEmailOpt{
+				From:        config.SysName,
+				To:          config.NoticeEmail,
+				Subject:     "市场方向已改变",
+				Title:       "市场方向已改变,系统将在30秒内同步您的持仓",
+				Content:     Content,
+				Description: "单个用户同步持仓邮件",
+			})
+
 		}
 	}
 
@@ -151,6 +183,7 @@ func (_this *HunterObj) SyncAllApiKey() {
 
 	var ErrList []ErrObj
 	for _, OkxKey := range ApiKeyList {
+
 		// 新建账户对象
 		OKXAccount, err := okxApi.NewAccount(okxApi.AccountParam{
 			OkxKey: OkxKey,
@@ -249,14 +282,6 @@ func (_this *HunterObj) SyncAllApiKey() {
 		}
 		// 记录走完流程的账户
 		RightAccount = append(RightAccount, OkxKey)
-	}
-
-	DirText := "保持空仓"
-	if _this.NowVirtualPosition.NowDir > 0 {
-		DirText = "买多看涨"
-	}
-	if _this.NowVirtualPosition.NowDir < 0 {
-		DirText = "买空看跌"
 	}
 
 	tmplStr := `
