@@ -12,19 +12,19 @@ import (
 	"github.com/EasyGolang/goTools/mTime"
 )
 
-var ResultBasePath = "/root/AItrade/CoinAI.net/task/2021_2022"
+var ResultBasePath = "/root/AItrade/CoinAI.net/task/2022_2023"
 
 func main() {
 	// 初始化系统参数
 	global.Start()
 
-	Step1("BTC-USDT")
+	// Step1("BTC-USDT")
 	// Step2("BTC-USDT")
 	// Step3("BTC-USDT")
 	// Step4("BTC-USDT")
 
-	Step1("ETH-USDT")
-	// Step2("ETH-USDT")
+	// Step1("ETH-USDT")
+	Step2("ETH-USDT")
 	// Step3("ETH-USDT")
 	// Step4("ETH-USDT")
 }
@@ -74,9 +74,9 @@ func Step2(InstID string) {
 	taskHunter.GetWinArr(taskHunter.GetWinArrOpt{
 		InstID:     InstID,
 		OutPutDir:  ResultBasePath,
-		MoneyRight: "1300",
-		WinRight:   "0.35",
-		Sort:       "Win",
+		MoneyRight: "1700",
+		// WinRight:   "0.35",
+		Sort: "Win",
 	})
 }
 
