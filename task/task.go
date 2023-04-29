@@ -12,7 +12,7 @@ import (
 	"github.com/EasyGolang/goTools/mTime"
 )
 
-var ResultBasePath = "/root/AItrade/CoinAI.net/task/2022_2023"
+var ResultBasePath = "/root/AItrade/CoinAI.net/task/2021_2022"
 
 func main() {
 	// 初始化系统参数
@@ -74,9 +74,9 @@ func Step2(InstID string) {
 	taskHunter.GetWinArr(taskHunter.GetWinArrOpt{
 		InstID:     InstID,
 		OutPutDir:  ResultBasePath,
-		MoneyRight: "1700",
+		MoneyRight: "3000",
 		// WinRight:   "0.35",
-		Sort: "Win",
+		// Sort: "Win",
 	})
 }
 
