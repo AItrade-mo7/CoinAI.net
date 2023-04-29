@@ -26,7 +26,7 @@ func main() {
 
 	// Step1("ETH-USDT")
 	// Step2("ETH-USDT")
-	// Step3("ETH-USDT")
+	Step3("ETH-USDT")
 	// Step4("ETH-USDT")
 }
 
@@ -114,7 +114,7 @@ func Step3(InstID string) {
 		StartTime: StartTime,
 		EndTime:   EndTime,
 		InstID:    InstID,
-		OutPutDir: mStr.Join(ResultBasePath, "/Step3"),
+		OutPutDir: mStr.Join(ResultBasePath),
 		GetConfigOpt: testHunter.GetConfigOpt{
 			EmaPArr:  EmaArr,                                       // Ema 步长
 			CAPArr:   []int{2, 3, 4, 5, 6, 7},                      // CAP 步长
