@@ -7,8 +7,6 @@ import (
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/hunter/testHunter"
 	"CoinAI.net/task/taskHunter"
-	"github.com/EasyGolang/goTools/mFile"
-	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
 )
@@ -83,24 +81,19 @@ func Step2(InstID string) {
 
 func Step3(InstID string) {
 	// 第三步：提取第二步的配置，加上杠杆得出新的参数组合 大概 几百个 然后 换个新的时间段进行新一轮测试
-	confArr := taskHunter.GetWinConfig(taskHunter.GetWinConfigOpt{
-		OutPutDir: ResultBasePath,
-		InstID:    InstID,
-	})
+	// EmaFilePath := mStr.Join(ResultBasePath, "/", InstID, "-EmaArr.json")
 
-	// 提取 EMA 的值
+	// confArr := taskHunter.GetWinConfig(taskHunter.GetWinConfigOpt{
+	// 	OutPutDir: ResultBasePath,
+	// 	InstID:    InstID,
+	// })
 
-	EmaArr := []int{}
-
-	// ConfArr := []dbType.TradeKdataOpt{}
-	// LevelArr := []int{2, 3, 4, 5}
-
-	for _, conf := range confArr {
-		EmaArr = append(EmaArr, conf.EMA_Period)
-	}
-	mFile.Write(mStr.Join(
-		ResultBasePath, "/", InstID, "-EmaArr.json",
-	), mJson.ToStr(EmaArr))
+	// // 提取 EMA 的值
+	// EmaArr := []int{}
+	// for _, conf := range confArr {
+	// 	EmaArr = append(EmaArr, conf.EMA_Period)
+	// }
+	// mFile.Write(EmaFilePath, mJson.ToStr(EmaArr))
 
 	// 新一轮求解，计算最优杠杆倍率 用  2022 年 8 月 的 260 天前进行回测 （此步骤会更换时间段反复进行）
 	// EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-10-01")
