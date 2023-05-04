@@ -163,7 +163,7 @@ func (_this *HunterObj) SyncAllApiKey() {
 			Content := mStr.Temp(tmplStr, lMap)
 			taskPush.SysEmail(taskPush.SysEmailOpt{
 				From:        config.SysName,
-				To:          config.NoticeEmail,
+				To:          []string{item.UserID},
 				Subject:     "市场方向已改变",
 				Title:       "市场方向已改变,系统将在30秒内同步您的持仓",
 				Content:     Content,
@@ -344,7 +344,7 @@ func (_this *HunterObj) CloseOrderSettlement(Settlement []SettlementType) {
 	if len(resErr) > 0 {
 		taskPush.SysEmail(taskPush.SysEmailOpt{
 			From:        config.SysName,
-			To:          []string{"meichangliang@outlook.com"},
+			To:          config.NoticeEmail,
 			Subject:     "存储用户订单出错",
 			Title:       "存储用户订单出错,错误信息如下",
 			Content:     mJson.ToStr(resErr),
