@@ -70,7 +70,8 @@ func (_this *HunterObj) Running() {
 	}
 
 	// 1, 16, 31, 46 每15分钟执行一次分析和换仓
-	if IsAnalyTimeScale(mTime.GetUnixInt64()) {
+	if IsAnalyTimeScale(mTime.GetUnixInt64()) || len(_this.NowVirtualPosition.NowC) < 1 {
+		global.Run.Println("执行一次分析", _this.InstID)
 		_this.Analy()
 	}
 
