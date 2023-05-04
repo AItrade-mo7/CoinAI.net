@@ -174,7 +174,6 @@ func GetCursor(opt CurOpt) (resCur *CurOpt, resErr error) {
 	// 查询总条目
 	total, err := db.Table.CountDocuments(db.Ctx, FK)
 	if err != nil {
-		db.Close()
 		resErr = fmt.Errorf("读取总条目失败 %+v", err)
 		return
 	}
@@ -184,7 +183,6 @@ func GetCursor(opt CurOpt) (resCur *CurOpt, resErr error) {
 
 	cur, err := db.Table.Find(db.Ctx, FK, findOpt)
 	if err != nil {
-		db.Close()
 		resErr = fmt.Errorf("数据读取失败 %+v", err)
 		return
 	}

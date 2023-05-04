@@ -34,7 +34,6 @@ func DelEmailCode(email string) error {
 		Value: email,
 	}}
 	_, err = db.Table.DeleteOne(db.Ctx, FK)
-	db.Close()
 	if err != nil {
 		return err
 	}

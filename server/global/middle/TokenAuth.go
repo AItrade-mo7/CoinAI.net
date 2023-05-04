@@ -67,11 +67,9 @@ func TokenAuth(c *fiber.Ctx) (UserID string, err error) {
 	}}
 	db.Table.FindOne(db.Ctx, FK).Decode(&dbRes)
 	if dbRes.Token != Token {
-		db.Close()
 		err = fmt.Errorf("Token验证失败")
 		return
 	}
-	db.Close()
 
 	nowUnix := mTime.GetUnixInt64()
 	if nowUnix-dbRes.CreateTime > mTime.UnixTimeInt64.Day {

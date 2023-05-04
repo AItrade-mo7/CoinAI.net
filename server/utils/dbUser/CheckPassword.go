@@ -13,7 +13,6 @@ func (dbObj *AccountType) CheckPassword(Password string) (resErr error) {
 	AccountData := dbObj.Data
 
 	if AccountData.Password != mEncrypt.AseDecrypt(Password, config.SecretKey) {
-		dbObj.DB.Close()
 		return fmt.Errorf("密码错误")
 	}
 

@@ -41,7 +41,6 @@ func TheOpen(c *fiber.Ctx) error {
 		UserID: UserID,
 	})
 	if err != nil {
-		UserDB.DB.Close()
 		return c.JSON(result.ErrDB.WithData(mStr.ToStr(err)))
 	}
 	defer UserDB.DB.Close()
@@ -58,8 +57,6 @@ func TheOpen(c *fiber.Ctx) error {
 	if err != nil {
 		return c.JSON(result.Fail.WithMsg(err))
 	}
-
-	UserDB.DB.Close()
 
 	config.AppEnv.IsPublic = !config.AppEnv.IsPublic
 	global.WriteAppEnv()

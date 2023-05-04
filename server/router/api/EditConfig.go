@@ -66,16 +66,11 @@ func EditConfig(c *fiber.Ctx) error {
 	if err != nil {
 		return c.JSON(result.ErrToken.WithData(mStr.ToStr(err)))
 	}
-	if err != nil {
-		UserDB.DB.Close()
-		return c.JSON(result.ErrDB.WithData(mStr.ToStr(err)))
-	}
 	defer UserDB.DB.Close()
 	err = UserDB.CheckPassword(json.Password)
 	if err != nil {
 		return c.JSON(result.ErrDB.WithMsg(mStr.ToStr(err)))
 	}
-	UserDB.DB.Close()
 
 	// 验证邮箱验证码
 	err = taskPush.CheckEmailCode(taskPush.CheckEmailCodeParam{

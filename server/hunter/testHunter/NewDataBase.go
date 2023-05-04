@@ -104,7 +104,6 @@ func (_this *TestObj) StuffDBKdata() error {
 	})
 	cur, err := db.Table.Find(db.Ctx, FK, findOpt)
 	if err != nil {
-		db.Close()
 		return err
 	}
 
@@ -117,8 +116,6 @@ func (_this *TestObj) StuffDBKdata() error {
 
 	_this.KdataList = []mOKX.TypeKd{}
 	_this.KdataList = AllList
-
-	db.Close()
 
 	global.Run.Println("数据填充完毕", len(_this.KdataList))
 

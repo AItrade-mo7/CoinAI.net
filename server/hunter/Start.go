@@ -97,7 +97,6 @@ func (_this *HunterObj) FileBaseKdata() error {
 		findOpt.SetLimit(int64(_this.MaxLen))
 		cur, err := db.Table.Find(db.Ctx, bson.D{}, findOpt)
 		if err != nil {
-			db.Close()
 			return err
 		}
 		AllList := []mOKX.TypeKd{}
@@ -106,7 +105,6 @@ func (_this *HunterObj) FileBaseKdata() error {
 			cur.Decode(&result)
 			AllList = append(AllList, result)
 		}
-		db.Close()
 
 		KdataList := []mOKX.TypeKd{}
 		for i := len(AllList) - 1; i >= 0; i-- {
