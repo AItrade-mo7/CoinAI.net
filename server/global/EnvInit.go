@@ -200,9 +200,8 @@ func GetMainUser() {
 		UserID: config.AppEnv.UserID,
 	})
 	if err != nil {
-		err := fmt.Errorf("启动错误，数据库链接失败: %v", err)
+		err := fmt.Errorf("global.GetMainUser 错误，数据库链接失败: %v", err)
 		LogErr(err)
-		panic(err)
 	}
 	defer UserDB.DB.Close()
 
