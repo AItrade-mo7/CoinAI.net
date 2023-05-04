@@ -23,8 +23,8 @@ func LogErr(ApiKey dbType.OkxKeyType, sum ...any) {
 	err := taskPush.SysEmail(taskPush.SysEmailOpt{
 		From:        config.AppEnv.SysName,
 		To:          []string{ApiKey.UserID},
-		Subject:     "交易所接口报错",
-		Title:       mStr.Join(ApiKey.Name, " 您在 ", config.AppEnv.SysName, " 绑定的 ApiKey 出现了错误, 请检查交易所账户设置"),
+		Subject:     "交易所接口报错,请及时检查账户以及持仓！",
+		Title:       mStr.Join(ApiKey.Name, ", 您在卫星服务: ", config.AppEnv.SysName, " 绑定的 ApiKey 出现了错误, 请及时检查持仓以及设置！"),
 		Message:     message,
 		Content:     content,
 		Description: "交易所接口报错",
