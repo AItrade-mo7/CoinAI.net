@@ -32,7 +32,10 @@ func (_this *HunterObj) Analy() {
 
 	// 当前持仓方向不符合计算结果时，执行一次下单操作
 	if _this.NowVirtualPosition.NowDir != AnalyDir {
-		_this.OnOrder(AnalyDir)
+		//  1, 16, 31, 46 每15分钟执行一次分析和换仓
+		if IsAnalyTimeScale(mTime.GetUnixInt64()) {
+			_this.OnOrder(AnalyDir)
+		}
 	}
 }
 

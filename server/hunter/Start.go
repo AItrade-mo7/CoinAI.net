@@ -13,7 +13,6 @@ import (
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
-	"github.com/EasyGolang/goTools/mTime"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -69,11 +68,7 @@ func (_this *HunterObj) Running() {
 		return
 	}
 
-	// 1, 16, 31, 46 每15分钟执行一次分析和换仓
-	if IsAnalyTimeScale(mTime.GetUnixInt64()) || len(_this.NowVirtualPosition.NowC) < 1 {
-		global.Run.Println("执行一次分析", _this.InstID)
-		_this.Analy()
-	}
+	_this.Analy()
 
 	// 策略执行的核心模块
 
