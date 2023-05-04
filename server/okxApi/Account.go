@@ -8,6 +8,7 @@ import (
 	"CoinAI.net/server/okxApi/restApi/account"
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
 )
 
@@ -231,31 +232,24 @@ func (_this *AccountObj) CancelOrder() (resErr error) {
 }
 
 // 下单 平仓,平掉当前所有仓位
-func (_this *AccountObj) Close() (resErr error) {
-	resErr = nil
+func (_this *AccountObj) Close() error {
+	resErr := []error{}
 
 	err := _this.GetOrdersPending() // 获取未成交订单
 	if err != nil {
-		resErr = err
-		go _this.Close()
-		return
+		resErr = append(resErr, err)
 	}
 
 	err = _this.CancelOrder() // 取消所有未成交订单
 	if err != nil {
-		resErr = err
-		go _this.Close()
-		return
+		resErr = append(resErr, err)
 	}
 
 	err = _this.GetPositions() // 获取所有持仓
 	if err != nil {
-		resErr = err
-		go _this.Close()
-		return
+		resErr = append(resErr, err)
 	}
 
-	errArr := []error{}
 	for _, Position := range _this.Positions {
 		TradeInst := okxInfo.Inst[Position.InstID]
 		Side := ""
@@ -264,7 +258,7 @@ func (_this *AccountObj) Close() (resErr error) {
 		err = _this.GetMaxSize()
 		if err != nil {
 			err = fmt.Errorf("平仓 获取最大数量 失败:%+v", err)
-			errArr = append(errArr, err)
+			resErr = append(resErr, err)
 		}
 
 		if mCount.Le(Position.Pos, "0") > 0 {
@@ -285,47 +279,43 @@ func (_this *AccountObj) Close() (resErr error) {
 		})
 		if err != nil {
 			err = fmt.Errorf("平仓失败: %+v", err)
-			errArr = append(errArr, err)
+			resErr = append(resErr, err)
 		}
 		// 如果 Sz 大于了最大数量 , 则再来一次
 		if mCount.Le(Sz, TradeInst.MaxMktSz) > 0 {
 			err = fmt.Errorf("数量超过上限了: %+v", err)
-			errArr = append(errArr, err)
+			resErr = append(resErr, err)
 		}
-	}
-
-	if len(errArr) > 0 {
-		go _this.Close()
 	}
 
 	// 再次检查持仓  平仓保险机制
 	err = _this.GetPositions() // 获取所有持仓
 	if err != nil {
-		resErr = err
-		go _this.Close()
-		return
+		resErr = append(resErr, err)
 	}
-
-	resErr = nil
-	errArr = []error{}
 	for _, Position := range _this.Positions {
 		TradeInst := okxInfo.Inst[Position.InstID]
-		resErr := account.ClosePosition(account.ClosePositionParam{
+		err := account.ClosePosition(account.ClosePositionParam{
 			OKXKey:    _this.OkxKey,
 			TradeInst: TradeInst,
 		})
 		global.TradeLog.Println("触发平仓保险", resErr, Position.Pos, _this.OkxKey.Name)
 
-		if resErr != nil {
+		if err != nil {
 			err = fmt.Errorf("平仓保险失败: %+v", err)
-			errArr = append(errArr, err)
+			resErr = append(resErr, err)
 		}
 	}
 
-	if len(errArr) > 0 {
-		resErr = fmt.Errorf("平仓失败: %+v", errArr)
-		return
+	// 最后再检查一次持仓
+	err = _this.GetPositions()
+	if err != nil {
+		resErr = append(resErr, err)
 	}
 
-	return
+	if len(_this.Positions) > 0 {
+		return fmt.Errorf("平仓出现问题，请及时检查账户持仓情况与设置！%+v", mJson.ToStr(resErr))
+	}
+
+	return nil
 }
