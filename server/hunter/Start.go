@@ -13,6 +13,7 @@ import (
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mStr"
+	"github.com/EasyGolang/goTools/mTime"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -21,11 +22,11 @@ func (_this *HunterObj) Start() {
 	go _this.Running()
 	go mClock.New(mClock.OptType{
 		Func: func() {
-			RoundNum := mCount.GetRound(0, 60) // 构建请求延迟
+			RoundNum := mCount.GetRound(0, 40) // 构建请求延迟 顶多40秒延迟
 			time.Sleep(time.Second * time.Duration(RoundNum))
 			_this.Running()
 		},
-		Spec: "10 1,6,11,16,21,26,31,36,41,46,51,56 * * * ? ", // 每隔5分钟比标准时间晚一分钟 过 10 秒执行查询
+		Spec: "1 1,6,11,16,21,26,31,36,41,46,51,56 * * * ? ", // 每隔5分钟比标准时间晚一分钟 过 1 秒执行查询
 	})
 }
 
@@ -67,7 +68,12 @@ func (_this *HunterObj) Running() {
 		_this.Running() // 立即重新执行一次 Running
 		return
 	}
-	_this.Analy()
+
+	// 1, 16, 31, 46 每15分钟执行一次分析和换仓
+	if IsAnalyTimeScale(mTime.GetUnixInt64()) {
+		_this.Analy()
+	}
+
 	// 策略执行的核心模块
 
 	_this.SyncInfoToGlobal() // 同步一次数据

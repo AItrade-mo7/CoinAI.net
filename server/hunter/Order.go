@@ -57,7 +57,7 @@ func (_this *HunterObj) OnOrder(dir int) {
 	_this.OrderArr = append(_this.OrderArr, _this.NowVirtualPosition)
 	mFile.Write(_this.OutPutDirectory+"/OrderArr.json", mJson.ToStr(_this.OrderArr))
 
-	_this.SyncAllApiKey()
+	go _this.SyncAllApiKey()
 }
 
 func (_this *HunterObj) BillingFun() {
