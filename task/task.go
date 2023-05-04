@@ -21,13 +21,13 @@ func main() {
 
 	// Step1("BTC-USDT")
 	// Step2("BTC-USDT")
-	Step3("BTC-USDT")
+	// Step3("BTC-USDT")
 	// Step4("BTC-USDT")
 
 	// Step1("ETH-USDT")
 	// Step2("ETH-USDT")
-	Step3("ETH-USDT")
-	// Step4("ETH-USDT")
+	// Step3("ETH-USDT")
+	Step4("ETH-USDT")
 }
 
 func Step1(InstID string) {
@@ -137,11 +137,10 @@ func Step3(InstID string) {
 func Step4(InstID string) {
 	// 第四步： 根据第三步的结果进行筛选 (胜率和最终营收) 得出参数结果
 	taskHunter.GetWinArr(taskHunter.GetWinArrOpt{
-		InstID: InstID,
-		// OutPutDir:  mStr.Join(ResultBasePath),
-		OutPutDir: mStr.Join(ResultBasePath, "/Step3"),
-		// MoneyRight: "1000",
+		InstID:     InstID,
+		OutPutDir:  mStr.Join(ResultBasePath),
+		MoneyRight: "1000",
 		// WinRight:   "0.35",
-		// Sort: "Win", //  Win
+		Sort: "Win", //  Win
 	})
 }

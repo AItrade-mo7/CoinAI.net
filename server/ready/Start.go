@@ -20,11 +20,11 @@ var HunterOptArr = []hunter.HunterOpt{
 		InstID:     "BTC-USDT",
 		Describe:   "以 BTC-USDT 交易对为主执行自动交易,支持的资金量更大,更加稳定",
 		TradeKdataOpt: dbType.TradeKdataOpt{
-			EMA_Period:    342, // 参数已确定  2023-04-11 18:14
-			CAP_Period:    7,
-			CAP_Max:       "2.5",
-			CAP_Min:       "-2.5",
-			MaxTradeLever: 5,
+			EMA_Period:    294, // 参数已确定  2023-04-11 18:14
+			CAP_Period:    6,
+			CAP_Max:       "3",
+			CAP_Min:       "-0.5",
+			MaxTradeLever: 4,
 		},
 	},
 	{
@@ -32,11 +32,11 @@ var HunterOptArr = []hunter.HunterOpt{
 		InstID:     "ETH-USDT",
 		Describe:   "以 ETH-USDT 交易对为主执行自动交易,交易次数更加频发,可以收获更高收益",
 		TradeKdataOpt: dbType.TradeKdataOpt{
-			EMA_Period:    266, // 参数确定时间 2023-4-11 20:28:37
-			CAP_Period:    5,
-			CAP_Max:       "3",
-			CAP_Min:       "-3",
-			MaxTradeLever: 5,
+			EMA_Period:    80, // 参数确定时间 2023-4-11 20:28:37
+			CAP_Period:    2,
+			CAP_Max:       "0.5",
+			CAP_Min:       "-0.5",
+			MaxTradeLever: 3,
 		},
 	},
 }
