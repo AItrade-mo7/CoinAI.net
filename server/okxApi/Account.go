@@ -63,6 +63,14 @@ func (_this *AccountObj) GetHunter() (resErr error) {
 
 	_this.NowHunter = NowHunter
 
+	if _this.OkxKey.TradeLever > _this.NowHunter.TradeKdataOpt.MaxTradeLever {
+		_this.OkxKey.TradeLever = _this.NowHunter.TradeKdataOpt.MaxTradeLever
+	}
+
+	if _this.OkxKey.TradeLever < 0 {
+		_this.OkxKey.TradeLever = 1
+	}
+
 	return
 }
 
