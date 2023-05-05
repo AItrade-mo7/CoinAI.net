@@ -16,7 +16,7 @@ import (
 
 var HunterOptArr = []hunter.HunterOpt{
 	{
-		HunterName: "BTC-CoinAI",
+		HunterName: "BTC-CAP",
 		InstID:     "BTC-USDT",
 		Describe:   "以 BTC-USDT 交易对为主执行自动交易,支持的资金量更大,更加稳定",
 		TradeKdataOpt: dbType.TradeKdataOpt{
@@ -28,7 +28,7 @@ var HunterOptArr = []hunter.HunterOpt{
 		},
 	},
 	{
-		HunterName: "ETH-CoinAI",
+		HunterName: "ETH-CAP",
 		InstID:     "ETH-USDT",
 		Describe:   "以 ETH-USDT 交易对为主执行自动交易,交易次数更加频发,可以收获更高收益",
 		TradeKdataOpt: dbType.TradeKdataOpt{
@@ -97,16 +97,13 @@ func CheckOKXAccount() {
 
 		for key, ApiKey := range config.AppEnv.ApiKeyList {
 			if ApiKey.Hunter == HunterName {
-				// 检查杠杆倍率
+				// 检查杠杆倍率 并重制
 				if ApiKey.TradeLever < 1 {
 					config.AppEnv.ApiKeyList[key].TradeLever = 1
 				}
 				if ApiKey.TradeLever > MaxTradeLever {
 					config.AppEnv.ApiKeyList[key].TradeLever = MaxTradeLever
 				}
-			} else {
-				// 没有在 Hunter 列表中的策略直接置空
-				config.AppEnv.ApiKeyList[key].Hunter = ""
 			}
 		}
 	}
