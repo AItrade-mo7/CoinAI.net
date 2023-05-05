@@ -11,7 +11,7 @@ func IsAnalyTimeScale(KTime int64) bool {
 
 	isIn := false
 	// timeScale := []int{1, 16, 31, 46}
-	timeScale := []int{1}
+	timeScale := []int{1, 31}
 	for _, val := range timeScale {
 		if Minute-val == 0 {
 			isIn = true
