@@ -10,7 +10,8 @@ func IsAnalyTimeScale(KTime int64) bool {
 	Minute := nowTimeObj.Minute()
 
 	isIn := false
-	timeScale := []int{1, 16, 31, 46}
+	// timeScale := []int{1, 16, 31, 46}
+	timeScale := []int{1}
 	for _, val := range timeScale {
 		if Minute-val == 0 {
 			isIn = true
