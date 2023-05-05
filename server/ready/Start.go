@@ -62,6 +62,8 @@ func Start() {
 	for _, conf := range HunterOptArr {
 		hunter.New(conf).Start()
 	}
+
+	CheckOKXAccount()
 }
 
 func GetAnalyData() {
@@ -86,4 +88,28 @@ func GetAnalyData() {
 		global.LogErr("ready.GetAnalyData okxInfo.NowTicker.TickerVol 长度不足", len(okxInfo.NowTicker.TickerVol))
 		return
 	}
+}
+
+func CheckOKXAccount() {
+	for _, conf := range HunterOptArr {
+		HunterName := conf.HunterName
+		MaxTradeLever := conf.TradeKdataOpt.MaxTradeLever
+
+		for key, ApiKey := range config.AppEnv.ApiKeyList {
+			if ApiKey.Hunter == HunterName {
+				// 检查杠杆倍率
+				if ApiKey.TradeLever < 1 {
+					config.AppEnv.ApiKeyList[key].TradeLever = 1
+				}
+				if ApiKey.TradeLever > MaxTradeLever {
+					config.AppEnv.ApiKeyList[key].TradeLever = MaxTradeLever
+				}
+			} else {
+				// 没有在 Hunter 列表中的策略直接置空
+				config.AppEnv.ApiKeyList[key].Hunter = ""
+			}
+		}
+	}
+
+	global.WriteAppEnv()
 }
