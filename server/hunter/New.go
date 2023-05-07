@@ -3,6 +3,7 @@ package hunter
 import (
 	"os"
 
+	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/global/dbType"
 	"CoinAI.net/server/okxInfo"
@@ -55,7 +56,7 @@ func New(opt HunterOpt) *HunterObj {
 
 	obj.TradeKdataOpt = opt.TradeKdataOpt
 	if obj.TradeKdataOpt.EMA_Period < 1 {
-		panic("hunter.New obj.TradeKdataOpt.EMA_Period 不能为空")
+		global.LogErr("hunter.New obj.TradeKdataOpt.EMA_Period 不能为空")
 	}
 
 	obj.NowVirtualPosition = dbType.VirtualPositionType{}
