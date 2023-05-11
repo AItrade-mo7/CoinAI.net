@@ -208,6 +208,7 @@ func GetMainUser() {
 	if len(UserDB.UserID) < 1 {
 		err := fmt.Errorf("启动错误，用户未找到: %v", UserDB.UserID)
 		LogErr(err)
+		return
 	}
 	// 清空通知邮箱
 	config.NoticeEmail = []string{}
