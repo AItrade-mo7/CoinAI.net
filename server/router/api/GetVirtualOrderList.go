@@ -7,6 +7,7 @@ import (
 	"CoinAI.net/server/router/result"
 	"CoinAI.net/server/utils/dbSearch"
 	"github.com/EasyGolang/goTools/mFiber"
+	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mMongo"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/gofiber/fiber/v2"
@@ -15,6 +16,8 @@ import (
 func GetVirtualOrderList(c *fiber.Ctx) error {
 	var json dbSearch.FindParam
 	mFiber.Parser(c, &json)
+
+	mJson.Println(json)
 
 	HunterName := mStr.ToStr(json.Query["HunterName"])
 
