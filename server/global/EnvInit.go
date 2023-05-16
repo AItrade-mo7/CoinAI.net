@@ -221,7 +221,9 @@ func GetMainUser() {
 	config.NoticeEmail = NoticeEmail
 
 	// 回填用户信息
-	config.MainUser = UserDB.Data
+	if len(UserDB.Data.Email) > 0 {
+		config.MainUser = UserDB.Data
+	}
 }
 
 func GetFuzzyApiKey() []dbType.OkxKeyType {

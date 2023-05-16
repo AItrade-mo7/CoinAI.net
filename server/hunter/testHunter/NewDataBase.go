@@ -79,7 +79,7 @@ func (_this *TestObj) StuffDBKdata() error {
 		Timeout:  Timeout,
 	}).Connect()
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer db.Close()
 	db.Collection(_this.InstID)
