@@ -14,6 +14,10 @@ function GitSet {
 # 项目根目录
 NowPath=$(pwd)
 
+# 项目的名字和编译时的名字
+StartName=${NowPath##*/}
+BuildName=${StartName}
+
 # 最终的输出目录
 OutPutPath="${NowPath}/dist"
 
