@@ -30,7 +30,7 @@ func SetKey(c *fiber.Ctx) error {
 	var json SetKeyParam
 	mFiber.Parser(c, &json)
 
-	if len(config.AppEnv.ApiKeyList) > config.AppEnv.MaxApiKeyNum {
+	if len(config.AppEnv.ApiKeyList) >= config.AppEnv.MaxApiKeyNum {
 		return c.JSON(result.Fail.WithMsg("当前服务承载的 ApiKey 已达到上限!"))
 	}
 
