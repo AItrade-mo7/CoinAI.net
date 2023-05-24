@@ -55,6 +55,7 @@ func Start() {
 			RoundNum := mCount.GetRound(0, 60) // 构建请求延迟
 			time.Sleep(time.Second * time.Duration(RoundNum))
 			GetAnalyData()
+			global.GetMainUser()
 		},
 		Spec: "10 1,6,11,16,21,26,31,36,41,46,51,56 * * * ? ", // 每隔5分钟比标准时间晚一分钟 过 10 秒执行查询
 	})
@@ -67,8 +68,6 @@ func Start() {
 }
 
 func GetAnalyData() {
-	go global.GetMainUser()
-
 	okxInfo.Inst = GetInstAll()
 
 	mFile.Write(config.Dir.JsonData+"/InstAll.json", mJson.ToStr(okxInfo.Inst))
