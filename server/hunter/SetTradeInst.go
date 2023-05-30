@@ -2,6 +2,7 @@ package hunter
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/okxInfo"
@@ -57,7 +58,7 @@ func (_this *HunterObj) SetTradeInst(InstID string) (resErr error) {
 	_this.KdataInst = KdataInst
 	_this.TradeInst = TradeInst
 
-	global.TradeLog.Println(_this.HunterName, "hunter.SetTradeInst", CoinId)
+	global.TradeLog.Info(_this.HunterName, zap.String("hunter.SetTradeInst", CoinId))
 
 	return
 }

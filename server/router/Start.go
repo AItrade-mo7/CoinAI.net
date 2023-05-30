@@ -69,6 +69,6 @@ func Start() {
 	app.Use(api.Ping)
 
 	listenHost := mStr.Join(":", config.AppEnv.Port)
-	global.Log.Println(mStr.Join(`启动服务: http://127.0.0.1`, listenHost))
+	global.Log.Info(mStr.Join(`启动服务: http://127.0.0.1`, listenHost))
 	app.Listen(listenHost)
 }

@@ -53,7 +53,7 @@ func (_this *HunterObj) OnOrder(dir int) {
 
 	// 在这里执行下单
 	_this.OrderOpen() // 这里的结果 要么是 1 要么是 0  要么 是 -1 没有第三种了
-	global.TradeLog.Println(_this.HunterName, "下单一次", mJson.ToStr(_this.NowVirtualPosition))
+	global.TradeLog.Info(_this.HunterName + " 下单一次 " + mJson.ToStr(_this.NowVirtualPosition))
 	_this.OrderArr = append(_this.OrderArr, _this.NowVirtualPosition)
 	mFile.Write(_this.OutPutDirectory+"/OrderArr.json", mJson.ToStr(_this.OrderArr))
 
@@ -73,12 +73,12 @@ func (_this *HunterObj) BillingFun() {
 	Money = mCount.Sub(Money, nowCharge)      // 减去手续费
 	Money = mCount.CentRound(Money, 3)        // 四舍五入保留三位小数
 	_this.NowVirtualPosition.Money = Money    // 保存结果到当前持仓
-	global.Run.Println("结算一次", mJson.ToStr(_this.NowVirtualPosition))
+	global.Run.Info("结算一次 " + mJson.ToStr(_this.NowVirtualPosition))
 }
 
 func (_this *HunterObj) OrderOpen() {
 	// 在这里进行 下单存储。
-	global.Run.Println("下单", mJson.ToStr(_this.NowVirtualPosition))
+	global.Run.Info("下单 " + mJson.ToStr(_this.NowVirtualPosition))
 	if _this.NowVirtualPosition.NowDir > 0 {
 		_this.SetOrderDB("Buy")
 	}
@@ -140,7 +140,7 @@ func (_this *HunterObj) SyncAllApiKey() {
 		DirText = "买空看跌"
 	}
 
-	global.TradeLog.Println(_this.HunterName, "开始执行所有的ApiKey")
+	global.TradeLog.Info(_this.HunterName + "开始执行所有的ApiKey")
 	ApiKeyList := []dbType.OkxKeyType{}
 
 	for _, item := range config.AppEnv.ApiKeyList {
@@ -311,7 +311,7 @@ func (_this *HunterObj) SyncAllApiKey() {
 		Description: "同步持仓邮件",
 	})
 
-	global.TradeLog.Println(_this.HunterName, "交易失败列表", ErrList)
+	global.TradeLog.Info(_this.HunterName + " 交易失败列表 " + mJson.ToStr(ErrList))
 
 	_this.CloseOrderSettlement(AccountSettlement)
 }

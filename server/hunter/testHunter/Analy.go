@@ -1,7 +1,6 @@
 package testHunter
 
 import (
-	"CoinAI.net/server/global"
 	"CoinAI.net/server/hunter"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mStr"
@@ -26,7 +25,7 @@ func (_this *MockObj) Analy() {
 	}
 
 	// 记录日志
-	global.Run.Println(_this.NowVirtualPosition.NowTimeStr, _this.NowVirtualPosition.NowDir, AnalyDir)
+	//global.Run.Info(_this.NowVirtualPosition.NowTimeStr, _this.NowVirtualPosition.NowDir, AnalyDir)
 
 	// 当前持仓与 判断方向不符合时，执行一次下单操作
 	if _this.NowVirtualPosition.NowDir != AnalyDir {

@@ -2,6 +2,7 @@ package account
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
@@ -12,7 +13,7 @@ import (
 
 func LogErr(ApiKey dbType.OkxKeyType, sum ...any) {
 	str := fmt.Sprintf("okxApi.LogErr: %+v", sum)
-	global.Log.Println(str)
+	global.Log.Info(str)
 
 	message := ""
 	if len(sum) > 0 {
@@ -29,5 +30,5 @@ func LogErr(ApiKey dbType.OkxKeyType, sum ...any) {
 		Content:     content,
 		Description: "交易所接口报错",
 	})
-	global.Log.Println(ApiKey.Name, "邮件已发送", err)
+	global.Log.Info(ApiKey.Name+"邮件已发送", zap.Error(err))
 }

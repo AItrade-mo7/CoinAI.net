@@ -6,6 +6,7 @@ import (
 	"CoinAI.net/server/okxInfo"
 	"github.com/EasyGolang/goTools/mCount"
 	"github.com/EasyGolang/goTools/mOKX"
+	"go.uber.org/zap"
 )
 
 // 模拟数据流动并执行分析交易
@@ -20,6 +21,9 @@ func (_this *MockObj) MockRun() BillingType {
 	MaxLen := 900
 	FormatEnd := []mOKX.TypeKd{}
 	for _, Kdata := range _this.RunKdataList {
+		//if i%500 == 0 {
+		//	fmt.Printf("MockRun %d from %d\n", i, len(_this.RunKdataList))
+		//}
 		FormatEnd = append(FormatEnd, Kdata)
 
 		// 小于步长则不执行
@@ -43,13 +47,13 @@ func (_this *MockObj) MockRun() BillingType {
 		}
 
 		if mCount.Le(_this.NowVirtualPosition.NowUplRatio, "-45") < 0 {
-			global.Log.Println("爆仓！", _this.Billing.MockName, Kdata.TimeStr)
-			break
+			global.Log.Info("爆仓！", zap.String(_this.Billing.MockName, Kdata.TimeStr))
+			//break
 		}
 
 		if mCount.Le(_this.NowVirtualPosition.Money, MinMoney) < 0 {
-			global.Log.Println("亏完", _this.Billing.MockName, Kdata.TimeStr)
-			break
+			global.Log.Info("亏完", zap.String(_this.Billing.MockName, Kdata.TimeStr))
+			//break
 		}
 
 	}
@@ -59,7 +63,7 @@ func (_this *MockObj) MockRun() BillingType {
 	}
 
 	// 搜集和整理结果
-	global.TradeLog.Println(" ===== 分析交易结束 ===== ", _this.Billing.MockName)
+	global.TradeLog.Info(" ===== 分析交易结束 ===== " + _this.Billing.MockName)
 	_this.ResultCollect()
 
 	// 在这里抛出结果

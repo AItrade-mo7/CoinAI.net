@@ -2,6 +2,7 @@ package account
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 	"strings"
 
 	"CoinAI.net/server/global"
@@ -64,11 +65,10 @@ func GetMaxSize(opt GetMaxSizeParam) (resData MaxSizeType, resErr error) {
 		Data: Data,
 	})
 	// 打印接口日志
-	global.OKXLogo.Println("account.GetMaxSize",
-		err,
-		mStr.ToStr(res),
-		opt.OKXKey.Name,
-		mJson.ToStr(Data),
+	global.OKXLogo.Info("account.GetMaxSize",
+		zap.Error(err),
+		zap.String("res", mStr.ToStr(res)),
+		zap.String(opt.OKXKey.Name, mJson.ToStr(Data)),
 	)
 
 	if err != nil {

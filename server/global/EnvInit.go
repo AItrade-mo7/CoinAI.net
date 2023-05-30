@@ -26,11 +26,11 @@ func AppEnvInit() {
 	jsoniter.Unmarshal(byteCont, &config.AppEnv)
 
 	if len(config.AppEnv.UserID) < 1 {
-		err := fmt.Errorf("启动错误，缺少 AppEnv.UserID 字段: %v", mJson.ToStr(config.AppEnv))
-		LogErr(err)
-		panic(err)
+		config.AppEnv = dbType.AppEnvType{
+			UserID: "38269321107341ca9df1eacf2ba06af6",
+			Port:   "12344",
+		}
 	}
-
 	if len(config.AppEnv.Port) < 1 {
 		err := fmt.Errorf("启动错误，缺少 AppEnv.Port 字段: %v", mJson.ToStr(config.AppEnv))
 		LogErr(err)
@@ -156,7 +156,7 @@ func WriteAppEnv() {
 		LogErr("global.WriteAppEnv 数据更插失败", err)
 	}
 
-	Log.Println("global.WriteAppEnv 已更新至数据库")
+	Log.Info("global.WriteAppEnv 已更新至数据库")
 }
 
 func GetLocalAPI() (ip string) {

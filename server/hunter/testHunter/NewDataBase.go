@@ -2,6 +2,7 @@ package testHunter
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
@@ -51,7 +52,7 @@ func NewDataBase(opt TestOpt) *TestObj {
 		obj.StartTime = earliest
 	}
 
-	global.Run.Println("新建数据", mJson.Format(map[string]any{
+	global.Run.Info("新建数据 " + mJson.Format(map[string]any{
 		"InstID":    obj.InstID,
 		"StartTime": mTime.UnixFormat(obj.StartTime),
 		"EndTime":   mTime.UnixFormat(obj.EndTime),
@@ -117,7 +118,7 @@ func (_this *TestObj) StuffDBKdata() error {
 	_this.KdataList = []mOKX.TypeKd{}
 	_this.KdataList = AllList
 
-	global.Run.Println("数据填充完毕", len(_this.KdataList))
+	global.Run.Info("数据填充完毕", zap.Int("len", len(_this.KdataList)))
 
 	return nil
 }
@@ -146,7 +147,7 @@ func (_this *TestObj) CheckKdataList() (resErr error) {
 		}
 	}
 
-	global.Run.Println("数据检查完毕", resErr)
+	global.Run.Info("数据检查完毕", zap.Error(resErr))
 
 	return
 }

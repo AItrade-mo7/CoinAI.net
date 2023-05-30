@@ -13,13 +13,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-var ResultBasePath = "/root/AItrade/CoinAI.net/task/2021_2023"
+var ResultBasePath = "/Users/zhangxiaofei.sf/GolandProjects/CoinAI.net/task/2021_2023"
 
 func main() {
 	// 初始化系统参数
 	global.Start()
 
-	// Step1("BTC-USDT")
+	Step1("BTC-USDT")
 	// Step2("BTC-USDT")
 	// Step3("BTC-USDT")
 	// Step4("BTC-USDT")
@@ -27,7 +27,7 @@ func main() {
 	// Step1("ETH-USDT")
 	// Step2("ETH-USDT")
 	// Step3("ETH-USDT")
-	Step4("ETH-USDT")
+	// Step4("ETH-USDT")
 }
 
 func Step1(InstID string) {
@@ -37,7 +37,7 @@ func Step1(InstID string) {
 	for i := 0; i < 400; i += 2 {
 		StarNum = 30 + i
 		EmaPArr = append(EmaPArr, StarNum)
-		fmt.Println(StarNum)
+		//fmt.Println(StarNum)
 	}
 
 	// LevelArr := []int{2, 3, 4, 5}
@@ -52,22 +52,10 @@ func Step1(InstID string) {
 	// 	ConfArr = append(ConfArr, conf)
 	// }
 
-	StartTime := mTime.TimeParse(mTime.Lay_DD, "2021-01-01")
+	StartTime := mTime.TimeParse(mTime.Lay_DD, "2021-09-01")
 	EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-01-01")
-	taskHunter.BackTest(taskHunter.BackOpt{
-		StartTime: StartTime,
-		EndTime:   EndTime,
-		InstID:    InstID,
-		OutPutDir: mStr.Join(ResultBasePath),
-		GetConfigOpt: testHunter.GetConfigOpt{
-			EmaPArr:  EmaPArr,
-			CAPArr:   []int{3},
-			LevelArr: []int{1},
-			CAPMax:   []string{"0.5"},
-			CAPMin:   []string{"-0.5"},
-			// ConfArr: ConfArr,
-		},
-	})
+	taskHunter.BackTestWithGeneticAlgo(
+		StartTime, EndTime, InstID, mStr.Join(ResultBasePath))
 }
 
 func Step2(InstID string) {

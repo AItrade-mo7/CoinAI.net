@@ -212,9 +212,9 @@ func GetConfig(opt GetConfigOpt) GetConfigReturn {
 		}
 	}
 
-	global.Run.Println("新建参数集合:",
-		"\n 任务视图: \n", mJson.Format(GorMapView),
-		"\n 线程数量: \n", mJson.Format(GorMapNameArr),
+	global.Run.Info("新建参数集合:" +
+		"\n 任务视图: \n" + mJson.Format(GorMapView) +
+		"\n 线程数量: \n" + mJson.Format(GorMapNameArr),
 	)
 
 	return GetConfigReturn{

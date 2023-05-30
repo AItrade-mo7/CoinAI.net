@@ -8,6 +8,7 @@ import (
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
+	"go.uber.org/zap"
 )
 
 func (_this *HunterObj) Analy() {
@@ -27,7 +28,7 @@ func (_this *HunterObj) Analy() {
 	AnalyDir := GetAnalyDir(_this.NowVirtualPosition)
 
 	// 打印日志和文件写入
-	global.TradeLog.Println(_this.HunterName, "更新持仓状态", AnalyDir, mJson.ToStr(_this.NowVirtualPosition))
+	global.TradeLog.Info(_this.HunterName, zap.String("更新持仓状态", mJson.ToStr(_this.NowVirtualPosition)), zap.Int("dir cnt", AnalyDir))
 	mFile.Write(_this.OutPutDirectory+"/PositionArr.json", mJson.ToStr(_this.PositionArr))
 
 	// 当前持仓方向不符合计算结果时，执行一次下单操作

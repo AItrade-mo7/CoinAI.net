@@ -5,6 +5,7 @@ import (
 	"CoinAI.net/server/global/config"
 	"CoinAI.net/server/utils/taskPush"
 	"github.com/EasyGolang/goTools/mStr"
+	"go.uber.org/zap"
 )
 
 func StartEmail() {
@@ -52,5 +53,5 @@ func StartEmail() {
 		Content:     Content,
 		Description: "系统启动邮件",
 	})
-	global.Run.Println("系统启动邮件已发送", err)
+	global.Run.Info("系统启动邮件已发送", zap.Error(err))
 }

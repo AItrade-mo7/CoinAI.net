@@ -10,6 +10,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 )
 
 func (_this *HunterObj) ReadOrder() {
@@ -83,5 +84,5 @@ func (_this *HunterObj) ReadOrder() {
 
 	mFile.Write(_this.OutPutDirectory+"/OrderArr.json", mJson.ToStr(OrderArr))
 
-	global.TradeLog.Println(_this.HunterName, "加载初始持仓", mJson.ToStr(_this.NowVirtualPosition))
+	global.TradeLog.Info(_this.HunterName, zap.String("加载初始持仓", mJson.ToStr(_this.NowVirtualPosition)))
 }

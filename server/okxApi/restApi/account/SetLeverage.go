@@ -2,6 +2,7 @@ package account
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 	"strings"
 
 	"CoinAI.net/server/global"
@@ -63,11 +64,10 @@ func SetLeverage(opt SetLeverageParam) (resErr error) {
 		Data: Data,
 	})
 	// 打印接口日志
-	global.OKXLogo.Println("account.SetLeverage",
-		err,
-		mStr.ToStr(res),
-		opt.OKXKey.Name,
-		mJson.ToStr(Data),
+	global.OKXLogo.Info("account.SetLeverage",
+		zap.Error(err),
+		zap.String("res", mStr.ToStr(res)),
+		zap.String(opt.OKXKey.Name, mJson.ToStr(Data)),
 	)
 
 	if err != nil {

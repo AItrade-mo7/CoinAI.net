@@ -2,6 +2,7 @@ package hunter
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
@@ -11,7 +12,6 @@ import (
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mOKX"
 	"github.com/EasyGolang/goTools/mTalib"
-	jsoniter "github.com/json-iterator/go"
 )
 
 func (_this *HunterObj) FormatTradeKdata() error {
@@ -40,7 +40,8 @@ func (_this *HunterObj) FormatTradeKdata() error {
 
 	WriteFilePath := config.Dir.JsonData + "/" + _this.HunterName + "_TradeKdataList.json"
 	mFile.Write(WriteFilePath, string(mJson.ToJson(_this.TradeKdataList)))
-	global.TradeLog.Println("数据整理完毕,已写入", len(_this.TradeKdataList), WriteFilePath)
+
+	global.TradeLog.Info("数据整理完毕,已写入", zap.Int("len", len(_this.TradeKdataList)), zap.String("path", WriteFilePath))
 	return nil
 }
 
@@ -71,8 +72,9 @@ func NewTradeKdataObj(opt dbType.TradeKdataOpt) *TradeKdataObj {
 
 func (_this *TradeKdataObj) NewTradeKdata(KdataList []mOKX.TypeKd) (TradeKdata okxInfo.TradeKdType) {
 	TradeKdata = okxInfo.TradeKdType{}
-	jsonByte := mJson.ToJson(KdataList[len(KdataList)-1])
-	jsoniter.Unmarshal(jsonByte, &TradeKdata)
+	TradeKdata.TypeKd = KdataList[len(KdataList)-1]
+	//jsonByte := mJson.ToJson(KdataList[len(KdataList)-1])
+	//jsoniter.Unmarshal(jsonByte, &TradeKdata)
 
 	TradeKdata.Opt = _this.Opt // 在这里把设置打印出来
 

@@ -2,6 +2,7 @@ package hunter
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 
 	"CoinAI.net/server/global"
 	"github.com/EasyGolang/goTools/mOKX"
@@ -62,7 +63,8 @@ func (_this *HunterObj) SetNowKdata() error {
 	}
 
 	Last := _this.NowKdataList[len(_this.NowKdataList)-1]
-	global.TradeLog.Println(_this.HunterName, "更新一次最新数据: ", Last.InstID, Last.TimeStr, len(_this.NowKdataList), Last.C)
+	global.TradeLog.Info(_this.HunterName, zap.String("更新一次最新数据: ", Last.InstID),
+		zap.String("time", Last.TimeStr), zap.Int("len", len(_this.NowKdataList)), zap.String("close", Last.C))
 
 	return err
 }

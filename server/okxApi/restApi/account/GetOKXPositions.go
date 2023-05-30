@@ -2,6 +2,7 @@ package account
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
@@ -35,10 +36,10 @@ func GetOKXPositions(OKXKey dbType.OkxKeyType) (resData []dbType.PositionsData, 
 		},
 	})
 	// 打印接口日志
-	global.OKXLogo.Println("account.GetOKXPositions",
-		err,
-		mStr.ToStr(res),
-		OKXKey.Name,
+	global.OKXLogo.Info("account.GetOKXPositions",
+		zap.Error(err),
+		zap.String("res", mStr.ToStr(res)),
+		zap.String("name", OKXKey.Name),
 	)
 
 	if err != nil {

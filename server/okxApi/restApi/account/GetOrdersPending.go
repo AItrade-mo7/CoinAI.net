@@ -2,6 +2,7 @@ package account
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/config"
@@ -78,10 +79,10 @@ func GetOrdersPending(opt GetOrdersPendingParam) (resData []PendingOrderType, re
 		},
 	})
 	// 打印接口日志
-	global.OKXLogo.Println("account.GetOrdersPending",
-		err,
-		mStr.ToStr(res),
-		opt.OKXKey.Name,
+	global.OKXLogo.Info("account.GetOrdersPending",
+		zap.Error(err),
+		zap.String("res", mStr.ToStr(res)),
+		zap.String("name", opt.OKXKey.Name),
 	)
 
 	mFile.Write(config.Dir.JsonData+"/OrdersPending.json", string(res))

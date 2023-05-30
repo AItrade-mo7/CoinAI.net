@@ -6,17 +6,18 @@ import (
 	"github.com/EasyGolang/goTools/mFile"
 	"github.com/EasyGolang/goTools/mJson"
 	"github.com/EasyGolang/goTools/mStr"
+	"go.uber.org/zap"
 )
 
 // // 根据下单结果进行模拟持仓
 func (_this *MockObj) BillingFun() {
 	NowKTradeData := _this.TradeKdataList[len(_this.TradeKdataList)-1]
 
-	global.KdataLog.Println(_this.Billing.MockName, "下单总结一次",
-		NowKTradeData.TimeStr,
-		"平仓方向", _this.NowVirtualPosition.NowDir,
-		"收益率", _this.NowVirtualPosition.NowUplRatio,
-		"结算", _this.NowVirtualPosition.Money,
+	global.KdataLog.Info(_this.Billing.MockName, zap.String("下单总结一次",
+		NowKTradeData.TimeStr),
+		zap.Int("平仓方向", _this.NowVirtualPosition.NowDir),
+		zap.String("收益率", _this.NowVirtualPosition.NowUplRatio),
+		zap.String("结算", _this.NowVirtualPosition.Money),
 	)
 
 	// 记录平仓时最大亏损和单次最大盈利
@@ -87,22 +88,22 @@ func (_this *MockObj) ResultCollect() {
 	// 记录 整理好的数组
 	TradeKdataList_Path := mStr.Join(_this.OutPutDirectory, "/", _this.Billing.InstID, "-TradeKdataList.json")
 	mFile.Write(TradeKdataList_Path, string(mJson.ToJson(_this.TradeKdataList)))
-	global.Run.Println("TradeKdataList: ", TradeKdataList_Path)
+	global.Run.Info("TradeKdataList: " + TradeKdataList_Path)
 
 	// 记录 持仓数组
 	PositionArr_Path := mStr.Join(_this.OutPutDirectory, "/", _this.Billing.InstID, "-PositionArr.json")
 	mFile.Write(PositionArr_Path, string(mJson.ToJson(_this.PositionArr)))
-	global.Run.Println("PositionArr: ", PositionArr_Path)
+	global.Run.Info("PositionArr: " + PositionArr_Path)
 
 	// 记录 下单数组
 	OrderArr_Path := mStr.Join(_this.OutPutDirectory, "/", _this.Billing.InstID, "-OrderArr.json")
 	mFile.Write(OrderArr_Path, string(mJson.ToJson(_this.OrderArr)))
-	global.Run.Println("OrderArr: ", OrderArr_Path)
+	global.Run.Info("OrderArr: " + OrderArr_Path)
 
 	// 记录 交易结果
 	Billing_Path := mStr.Join(_this.OutPutDirectory, "/", _this.Billing.InstID, "-Billing.json")
 	mFile.Write(Billing_Path, string(mJson.ToJson(_this.Billing)))
-	global.Run.Println("Billing: ", Billing_Path)
+	global.Run.Info("Billing: " + Billing_Path)
 
 	Tmp := `交易结果:
 参数名称: ${MockName}
@@ -179,5 +180,5 @@ InstID: ${InstID}
 		"Level":            _this.Billing.Level,                         // 杠杆倍率
 	}
 
-	global.TradeLog.Println(mStr.Temp(Tmp, Data))
+	global.TradeLog.Info(mStr.Temp(Tmp, Data))
 }

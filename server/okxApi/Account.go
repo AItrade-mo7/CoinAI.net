@@ -2,6 +2,7 @@ package okxApi
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 
 	"CoinAI.net/server/global"
 	"CoinAI.net/server/global/dbType"
@@ -96,7 +97,7 @@ func (_this *AccountObj) Buy() (resErr error) {
 		return
 	}
 	Sz := _this.MaxSize.MaxBuy
-	global.TradeLog.Println("okxApi.Buy", mStr.ToStr(_this.MaxSize), _this.NowHunter.TradeInst, _this.OkxKey.Name)
+	global.TradeLog.Info("okxApi.Buy", zap.String("max_size", mStr.ToStr(_this.MaxSize)), zap.String(_this.OkxKey.Name, mJson.ToStr(_this.NowHunter.TradeInst)))
 	err = account.Order(account.OrderParam{
 		OKXKey:    _this.OkxKey,
 		TradeInst: _this.NowHunter.TradeInst,
@@ -132,7 +133,7 @@ func (_this *AccountObj) Sell() (resErr error) {
 	}
 	Sz := _this.MaxSize.MaxSell
 
-	global.TradeLog.Println("okxApi.Sell", mStr.ToStr(_this.MaxSize), _this.NowHunter.TradeInst, _this.OkxKey.Name)
+	global.TradeLog.Info("okxApi.Sell", zap.String("max_size", mStr.ToStr(_this.MaxSize)), zap.String(_this.OkxKey.Name, mJson.ToStr(_this.NowHunter.TradeInst)))
 
 	err = account.Order(account.OrderParam{
 		OKXKey:    _this.OkxKey,
@@ -270,7 +271,7 @@ func (_this *AccountObj) Close() error {
 		Sz = mCount.Abs(Position.Pos)
 		Sz = mCount.Add(Sz, TradeInst.MinSz)
 
-		global.TradeLog.Println("平仓", Side, Sz, mStr.ToStr(Position), _this.OkxKey.Name)
+		global.TradeLog.Info("平仓", zap.String(Side, Sz), zap.String(mStr.ToStr(Position), _this.OkxKey.Name))
 		err = account.Order(account.OrderParam{
 			OKXKey:    _this.OkxKey,
 			TradeInst: TradeInst,
@@ -299,7 +300,7 @@ func (_this *AccountObj) Close() error {
 			OKXKey:    _this.OkxKey,
 			TradeInst: TradeInst,
 		})
-		global.TradeLog.Println("触发平仓保险", resErr, Position.Pos, _this.OkxKey.Name)
+		global.TradeLog.Info("触发平仓保险", zap.String(Position.Pos, _this.OkxKey.Name), zap.Errors("errs", resErr))
 
 		if err != nil {
 			err = fmt.Errorf("平仓保险失败: %+v", err)

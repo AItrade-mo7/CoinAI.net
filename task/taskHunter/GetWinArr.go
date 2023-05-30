@@ -2,6 +2,7 @@ package taskHunter
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 	"os"
 
 	"CoinAI.net/server/global"
@@ -82,7 +83,7 @@ InstID: ${InstID}
 				"Level":            item.Level,
 				"ChargeAdd":        item.ChargeAdd,
 			}
-			global.Run.Println(mStr.Temp(Tmp, Data))
+			global.Run.Info(mStr.Temp(Tmp, Data))
 
 			NewMoneyArr = append(NewMoneyArr, item)
 		}
@@ -91,7 +92,7 @@ InstID: ${InstID}
 	resultPath := mStr.Join(opt.OutPutDir, "/", opt.InstID, "-WinArr.json")
 	mFile.Write(resultPath, mJson.ToStr(NewMoneyArr))
 
-	global.Run.Println("GetWinArr 文件已写入", resultPath, len(NewMoneyArr))
+	global.Run.Info("GetWinArr 文件已写入 "+resultPath, zap.Int("len", len(NewMoneyArr)))
 
 	return NewMoneyArr
 }

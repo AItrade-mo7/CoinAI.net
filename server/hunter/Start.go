@@ -2,6 +2,7 @@ package hunter
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 	"time"
 
 	"CoinAI.net/server/global"
@@ -30,7 +31,7 @@ func (_this *HunterObj) Start() {
 }
 
 func (_this *HunterObj) Running() {
-	global.TradeLog.Println(_this.HunterName, " === hunter.Running === ", _this.KdataInst.InstID)
+	global.TradeLog.Info(_this.HunterName + " === hunter.Running === " + _this.KdataInst.InstID)
 
 	// 选取K线和合约信息
 	if len(_this.KdataInst.InstID) < 2 || len(_this.TradeInst.InstID) < 2 {
@@ -116,14 +117,14 @@ func (_this *HunterObj) FileBaseKdata() error {
 		_this.NowKdataList = KdataList
 
 		Last := _this.NowKdataList[len(_this.NowKdataList)-1]
-		global.TradeLog.Println(_this.HunterName, "基础数据回填完毕", len(_this.NowKdataList), Last.TimeStr, Last.InstID)
+		global.TradeLog.Info(_this.HunterName+"基础数据回填完毕", zap.Int("len", len(_this.NowKdataList)), zap.String(Last.TimeStr, Last.InstID))
 		return nil
 	} else { // 如果不为空 则检查当前的数组和持仓币种的关系
 		// 在这里执行重启
 		if _this.KdataInst.InstID != _this.NowKdataList[len(_this.NowKdataList)-1].InstID {
 			_this.NowKdataList = []mOKX.TypeKd{} // 清空历史数据
 			warnStr := _this.HunterName + "即将切换监听币种为: " + _this.KdataInst.InstID
-			global.TradeLog.Println(warnStr)
+			global.TradeLog.Info(warnStr)
 			_this.SendEmail(warnStr)
 			return fmt.Errorf(warnStr)
 		}

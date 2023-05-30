@@ -72,10 +72,10 @@ func DirInit() {
 		os.MkdirAll(Dir.Log, 0o777)
 	}
 
-	if !mPath.Exists(File.AppEnv) {
-		err := fmt.Errorf("缺少文件 %+v", File.AppEnv)
-		panic(err)
-	}
+	//if !mPath.Exists(File.AppEnv) {
+	//	err := fmt.Errorf("缺少文件 %+v", File.AppEnv)
+	//	panic(err)
+	//}
 
 	if !mPath.Exists(File.Shutdown) {
 		err := fmt.Errorf("缺少文件 %+v", File.Shutdown)
