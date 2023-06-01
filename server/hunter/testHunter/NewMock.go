@@ -53,6 +53,7 @@ type BillingType struct {
 	InitMoney        string                 // 初始金钱
 	ResultMoney      string                 // 最终金钱
 	Level            string                 // 杠杆倍率
+	StopReason       string                 // 退出原因
 	Opt              dbType.TradeKdataOpt
 }
 
@@ -89,6 +90,8 @@ func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 	obj.NowVirtualPosition = dbType.VirtualPositionType{}
 	obj.NowVirtualPosition.InitMoney = opt.InitMoney
 	obj.NowVirtualPosition.Money = opt.InitMoney
+	obj.NowVirtualPosition.MaxMoney = opt.InitMoney
+	obj.NowVirtualPosition.FloatMoney = opt.InitMoney
 	obj.NowVirtualPosition.ChargeUpl = opt.ChargeUpl
 
 	obj.PositionArr = []dbType.VirtualPositionType{}

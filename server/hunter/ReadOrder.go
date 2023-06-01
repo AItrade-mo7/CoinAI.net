@@ -81,7 +81,12 @@ func (_this *HunterObj) ReadOrder() {
 	if len(_this.NowVirtualPosition.Money) < 1 {
 		_this.NowVirtualPosition.Money = _this.NowVirtualPosition.InitMoney
 	}
-
+	if len(_this.NowVirtualPosition.MaxMoney) < 1 {
+		_this.NowVirtualPosition.MaxMoney = _this.NowVirtualPosition.InitMoney
+	}
+	if len(_this.NowVirtualPosition.FloatMoney) < 1 {
+		_this.NowVirtualPosition.FloatMoney = _this.NowVirtualPosition.InitMoney
+	}
 	mFile.Write(_this.OutPutDirectory+"/OrderArr.json", mJson.ToStr(OrderArr))
 
 	global.TradeLog.Info(_this.HunterName, zap.String("加载初始持仓", mJson.ToStr(_this.NowVirtualPosition)))

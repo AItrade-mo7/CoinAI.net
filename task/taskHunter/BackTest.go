@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/tomcraven/goga"
 	fo "github.com/tomcraven/goga/function_optimizer"
-	"math/rand"
+	"time"
 
 	//"sync"
 	"sync/atomic"
@@ -49,7 +49,19 @@ func (tc *TaskConf) runTask(params []float64) float64 {
 	Billing := MockObj.MockRun()
 	money, _ := strconv.ParseFloat(Billing.ResultMoney, 64)
 	tc.counter.Add(1)
-	fmt.Printf("run task: %d [%v] done money: %f\n", tc.counter.Load(), params, money)
+	fmt.Printf("run task: %d [%v] done money: %f stop reason: %s start time: %s, end time: %s\n",
+		tc.counter.Load(), params, money, Billing.StopReason, Billing.StartTime, Billing.EndTime)
+	if Billing.StopReason != "norm" {
+		st := mTime.TimeParse(mTime.Lay_ss, Billing.StartTime)
+		if st == 0 {
+			st = tc.backObj.StartTime
+		}
+		et := mTime.TimeParse(mTime.Lay_ss, Billing.EndTime)
+		if et == 0 {
+			et = tc.backObj.EndTime
+		}
+		money = float64(et-st) / float64(tc.backObj.EndTime-tc.backObj.StartTime) * 500
+	}
 	return money
 }
 
@@ -72,6 +84,10 @@ func (tc *TaskConf) RefreshBackTestTimeRange(startTime, endTime int64, instID st
 	if err != nil {
 		panic(fmt.Errorf("出错: %+v", err))
 	}
+	startTm := time.Unix(startTime/1000, 0)
+	endTm := time.Unix(endTime/1000, 0)
+	fmt.Printf("RefreshBackTestTimeRange to start time: %s end time: %s\n", startTm.Format("2006-01-02 03:04:05 PM"), endTm.Format("2006-01-02 03:04:05 PM"))
+
 }
 
 func BackTestWithGeneticAlgo(startTime, endTime int64, instID, outPutDir string) {
@@ -79,7 +95,8 @@ func BackTestWithGeneticAlgo(startTime, endTime int64, instID, outPutDir string)
 		err := fmt.Errorf("目录不存在 %+v", outPutDir)
 		panic(err)
 	}
-	var timeRange int64 = 120 * 24 * 3600 * 1000
+	var timeRange int64 = endTime - startTime
+	var timeMove = timeRange / 3
 
 	tc := &TaskConf{
 		mockConf: testHunter.NewMockOpt{
@@ -91,7 +108,7 @@ func BackTestWithGeneticAlgo(startTime, endTime int64, instID, outPutDir string)
 			InstID:    instID,
 		},
 	}
-	initStartTime := rand.Int63n(endTime-startTime-timeRange) + startTime
+	initStartTime := endTime - timeRange
 	tc.RefreshBackTestTimeRange(initStartTime, initStartTime+timeRange, instID)
 	paramSize := 5
 	requirement := goga.Float64Requirement{
@@ -132,12 +149,33 @@ func BackTestWithGeneticAlgo(startTime, endTime int64, instID, outPutDir string)
 			return 0
 		}
 		return f
-	}), fo.Requirement(&requirement), fo.ParamSize(paramSize), fo.PopulationSize(10),
-		fo.StableMinIter(3),
+	}), fo.Requirement(&requirement), fo.ParamSize(paramSize),
+		fo.StableMinIter(5),
+		fo.PopulationSize(100),
+		fo.MaterExtraRatio(4),
+		fo.LRUSize(100),
 		fo.OnStable(func() {
-			initStartTime = rand.Int63n(endTime-startTime-timeRange) + startTime
+			if initStartTime-timeMove < startTime {
+				timeRange = timeRange + 30*24*3600*1000
+				if timeRange > endTime-startTime {
+					timeRange = endTime - startTime
+				}
+				timeMove = timeRange / 3
+				initStartTime = endTime - timeRange
+			} else {
+				initStartTime -= timeMove
+			}
+			tc.RefreshBackTestTimeRange(initStartTime, initStartTime+timeRange, instID)
+		}),
+		fo.OnEnd(func() {
+			if initStartTime-timeMove < startTime {
+				initStartTime = endTime - timeRange
+			} else {
+				initStartTime -= timeMove
+			}
 			tc.RefreshBackTestTimeRange(initStartTime, initStartTime+timeRange, instID)
 		}))
+
 	algo.Simulate()
 	//wg := sync.WaitGroup{}
 	//cnt := 5

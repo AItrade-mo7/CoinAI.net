@@ -52,7 +52,7 @@ func Step1(InstID string) {
 	// 	ConfArr = append(ConfArr, conf)
 	// }
 
-	StartTime := mTime.TimeParse(mTime.Lay_DD, "2021-09-01")
+	StartTime := mTime.TimeParse(mTime.Lay_DD, "2021-01-01")
 	EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-01-01")
 	taskHunter.BackTestWithGeneticAlgo(
 		StartTime, EndTime, InstID, mStr.Join(ResultBasePath))

@@ -83,6 +83,8 @@ type VirtualPositionType struct {
 	ChargeUpl   string `bson:"ChargeUpl"`   // 当前手续费率 | 固定值初始值设置
 	NowUplRatio string `bson:"NowUplRatio"` // 当前未实现收益率(计算得出) | 运行中设置
 	Money       string `bson:"Money"`       // 账户当前余额 | 如果没有初始值设置一次，下单时计算
+	MaxMoney    string `bson:"MaxMoney"`    // 账户历史最高余额
+	FloatMoney  string `bson:"FloatMoney"`  // 账户浮动余额
 }
 
 type UserOrderTable struct {

@@ -56,6 +56,20 @@ func (_this *MockObj) CountPosition() {
 		// 表示当前正在持仓，持仓状态下收窄 边界值 80%
 		_this.NowVirtualPosition.HunterConfig.CAP_Max = mCount.Mul(_this.NowVirtualPosition.HunterConfig.CAP_Max, "0.8")
 		_this.NowVirtualPosition.HunterConfig.CAP_Min = mCount.Mul(_this.NowVirtualPosition.HunterConfig.CAP_Min, "0.8")
+
+		// 更新账户最大/小收益
+		Money := _this.NowVirtualPosition.Money                            // 提取 Money
+		Upl := mCount.Div(_this.NowVirtualPosition.NowUplRatio, "100")     // 格式化收益率
+		ChargeUpl := mCount.Div(_this.NowVirtualPosition.ChargeUpl, "100") // 格式化手续费率
+		makeMoney := mCount.Mul(Money, Upl)                                // 当前盈利的金钱
+		Money = mCount.Add(Money, makeMoney)                               // 相加得出当账户剩余资金
+		nowCharge := mCount.Mul(Money, ChargeUpl)                          // 当前产生的手续费
+		Money = mCount.Sub(Money, nowCharge)                               // 减去手续费
+		Money = mCount.CentRound(Money, 3)                                 // 四舍五入保留三位小数
+		if mCount.Le(_this.NowVirtualPosition.MaxMoney, Money) < 0 {
+			_this.NowVirtualPosition.MaxMoney = Money
+		}
+		_this.NowVirtualPosition.FloatMoney = Money
 	}
 }
 

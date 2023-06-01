@@ -69,4 +69,4 @@ require (
 	google.golang.org/protobuf v1.30.0 // indirect
 )
 
-replace github.com/tomcraven/goga v0.0.0-20220413070930-f4ca47f4d421 => github.com/shelfee/goga v0.0.7
+replace github.com/tomcraven/goga v0.0.0-20220413070930-f4ca47f4d421 => github.com/shelfee/goga v0.0.10
