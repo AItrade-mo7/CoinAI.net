@@ -7,6 +7,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.44.0
 	github.com/gofiber/websocket/v2 v2.1.6
 	github.com/json-iterator/go v1.1.12
+	github.com/lukechampine/randmap v0.0.0-20161125183226-9e3c222d0413
 	github.com/tomcraven/goga v0.0.0-20220413070930-f4ca47f4d421
 	go.mongodb.org/mongo-driver v1.11.4
 	go.uber.org/zap v1.24.0
@@ -36,6 +37,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.18 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
+	github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
@@ -69,4 +71,4 @@ require (
 	google.golang.org/protobuf v1.30.0 // indirect
 )
 
-replace github.com/tomcraven/goga v0.0.0-20220413070930-f4ca47f4d421 => github.com/shelfee/goga v0.0.10
+replace github.com/tomcraven/goga v0.0.0-20220413070930-f4ca47f4d421 => github.com/shelfee/goga v0.0.11

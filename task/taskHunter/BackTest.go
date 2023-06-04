@@ -22,6 +22,7 @@ import (
 	"github.com/EasyGolang/goTools/mPath"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
+	"github.com/lukechampine/randmap"
 )
 
 type BackOpt struct {
@@ -36,6 +37,15 @@ type TaskConf struct {
 	mockConf testHunter.NewMockOpt
 	opt      BackOpt
 	counter  atomic.Int64
+
+	candidate         map[goga.Genome]map[string]float64
+	removedCandidates map[string]float64
+	ensuredCandidates []goga.Genome
+	beginCount        int
+}
+
+func tmToStr(t int64) string {
+	return time.Unix(t/1000, 0).Format(mTime.Lay_ss)
 }
 
 func (tc *TaskConf) runTask(params []float64) float64 {
@@ -84,10 +94,57 @@ func (tc *TaskConf) RefreshBackTestTimeRange(startTime, endTime int64, instID st
 	if err != nil {
 		panic(fmt.Errorf("出错: %+v", err))
 	}
-	startTm := time.Unix(startTime/1000, 0)
-	endTm := time.Unix(endTime/1000, 0)
-	fmt.Printf("RefreshBackTestTimeRange to start time: %s end time: %s\n", startTm.Format("2006-01-02 03:04:05 PM"), endTm.Format("2006-01-02 03:04:05 PM"))
+	fmt.Printf("RefreshBackTestTimeRange to start time: %s end time: %s\n", tmToStr(startTime), tmToStr(endTime))
+}
 
+func (tc *TaskConf) OnEnd(gs []goga.Genome) {
+	for _, g := range gs {
+		if _, ok := tc.removedCandidates[g.Key()]; ok {
+			continue
+		}
+		if g.GetFitness() > 1100 {
+			if m, ok := tc.candidate[g]; ok {
+				m[tmToStr(tc.opt.StartTime)+" "+tmToStr(tc.opt.EndTime)] = g.GetFitness()
+			} else {
+				tc.candidate[g] = make(map[string]float64)
+				tc.candidate[g][tmToStr(tc.opt.StartTime)+" "+tmToStr(tc.opt.EndTime)] = g.GetFitness()
+			}
+		} else if g.GetFitness() < 1000 {
+			delete(tc.candidate, g)
+			tc.removedCandidates[g.Key()] = g.GetFitness()
+		}
+	}
+}
+
+func (tc *TaskConf) OnBegin() []goga.Genome {
+	l := make([]goga.Genome, len(tc.ensuredCandidates))
+	i := 0
+	for _, e := range tc.ensuredCandidates {
+		l[i] = e
+		i += 1
+	}
+	k := goga.NewGenome(goga.Bitset{})
+	m := make(map[string]float64)
+	it := randmap.FastIter(tc.candidate, &k, &m)
+	for it.Next() {
+		l = append(l, k)
+		if len(l) > tc.beginCount {
+			break
+		}
+	}
+	return l
+}
+
+func getGenome(vs []float64) goga.Genome {
+	b := &goga.Bitset{}
+	b.Create(len(vs) * 8)
+	for i, v := range vs {
+		byteArr := goga.Float64ToByte(v)
+		for idx := 0; idx < 8; idx++ {
+			b.Set(i*8+idx, int(byteArr[idx]))
+		}
+	}
+	return goga.NewGenome(*b)
 }
 
 func BackTestWithGeneticAlgo(startTime, endTime int64, instID, outPutDir string) {
@@ -95,7 +152,7 @@ func BackTestWithGeneticAlgo(startTime, endTime int64, instID, outPutDir string)
 		err := fmt.Errorf("目录不存在 %+v", outPutDir)
 		panic(err)
 	}
-	var timeRange int64 = endTime - startTime
+	var timeRange = (endTime - startTime) / 4
 	var timeMove = timeRange / 3
 
 	tc := &TaskConf{
@@ -107,7 +164,12 @@ func BackTestWithGeneticAlgo(startTime, endTime int64, instID, outPutDir string)
 			OutPutDir: outPutDir,
 			InstID:    instID,
 		},
+		candidate:         make(map[goga.Genome]map[string]float64),
+		removedCandidates: make(map[string]float64),
+		ensuredCandidates: []goga.Genome{getGenome([]float64{294, 6, 3, -0.5, 4})},
+		beginCount:        10,
 	}
+
 	initStartTime := endTime - timeRange
 	tc.RefreshBackTestTimeRange(initStartTime, initStartTime+timeRange, instID)
 	paramSize := 5
@@ -167,13 +229,15 @@ func BackTestWithGeneticAlgo(startTime, endTime int64, instID, outPutDir string)
 			}
 			tc.RefreshBackTestTimeRange(initStartTime, initStartTime+timeRange, instID)
 		}),
-		fo.OnEnd(func() {
+		fo.OnBegin(tc.OnBegin),
+		fo.OnEnd(func(genomes []goga.Genome) {
 			if initStartTime-timeMove < startTime {
 				initStartTime = endTime - timeRange
 			} else {
 				initStartTime -= timeMove
 			}
 			tc.RefreshBackTestTimeRange(initStartTime, initStartTime+timeRange, instID)
+			tc.OnEnd(genomes)
 		}))
 
 	algo.Simulate()
