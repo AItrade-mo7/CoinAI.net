@@ -12,7 +12,7 @@ type RecordNodeType struct {
 }
 
 type TradeKdType struct {
-	mOKX.TypeKd
+	*mOKX.TypeKd
 	EMA string // EMA 值
 	// MA      string // MA 值
 	CAP_EMA string // 基于 EMA 的 平滑点数 0-100 的浮点类型

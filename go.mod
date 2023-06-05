@@ -3,7 +3,7 @@ module CoinAI.net
 go 1.20
 
 require (
-	github.com/EasyGolang/goTools v1.0.31
+	github.com/EasyGolang/goTools v1.0.35
 	github.com/gofiber/fiber/v2 v2.44.0
 	github.com/gofiber/websocket/v2 v2.1.6
 	github.com/json-iterator/go v1.1.12
@@ -21,7 +21,7 @@ require (
 	github.com/antchfx/xmlquery v1.3.15 // indirect
 	github.com/antchfx/xpath v1.2.4 // indirect
 	github.com/bitly/go-simplejson v0.5.0 // indirect
-	github.com/fasthttp/websocket v1.5.2 // indirect
+	github.com/fasthttp/websocket v1.5.3 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gocolly/colly v1.2.0 // indirect
 	github.com/gocolly/colly/v2 v2.1.0 // indirect
@@ -53,7 +53,7 @@ require (
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	github.com/tinylib/msgp v1.1.8 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.46.0 // indirect
+	github.com/valyala/fasthttp v1.47.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/wenlng/go-user-agent v1.0.2 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect

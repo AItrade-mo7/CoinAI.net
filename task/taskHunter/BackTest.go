@@ -1,9 +1,12 @@
 package taskHunter
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/tomcraven/goga"
 	fo "github.com/tomcraven/goga/function_optimizer"
+	"io/ioutil"
+	"math/rand"
 	"time"
 
 	//"sync"
@@ -22,7 +25,6 @@ import (
 	"github.com/EasyGolang/goTools/mPath"
 	"github.com/EasyGolang/goTools/mStr"
 	"github.com/EasyGolang/goTools/mTime"
-	"github.com/lukechampine/randmap"
 )
 
 type BackOpt struct {
@@ -71,6 +73,13 @@ func (tc *TaskConf) runTask(params []float64) float64 {
 			et = tc.backObj.EndTime
 		}
 		money = float64(et-st) / float64(tc.backObj.EndTime-tc.backObj.StartTime) * 500
+	}
+	if tc.mockConf.TradeKdataOpt.FullRun {
+		data, _ := json.MarshalIndent(MockObj, "", "\t") // 第二个表示每行的前缀，这里不用，第三个是缩进符号，这里用tab
+		filename := fmt.Sprintf("%s/%d_%d_%s_%s_%d.json", tc.opt.OutPutDir,
+			tc.mockConf.TradeKdataOpt.EMA_Period, tc.mockConf.TradeKdataOpt.CAP_Period,
+			tc.mockConf.TradeKdataOpt.CAP_Min, tc.mockConf.TradeKdataOpt.CAP_Max, tc.mockConf.TradeKdataOpt.MaxTradeLever)
+		_ = ioutil.WriteFile(filename, data, 0777)
 	}
 	return money
 }
@@ -123,14 +132,18 @@ func (tc *TaskConf) OnBegin() []goga.Genome {
 		l[i] = e
 		i += 1
 	}
-	k := goga.NewGenome(goga.Bitset{})
-	m := make(map[string]float64)
-	it := randmap.FastIter(tc.candidate, &k, &m)
-	for it.Next() {
-		l = append(l, k)
-		if len(l) > tc.beginCount {
-			break
-		}
+	l2 := make([]goga.Genome, len(tc.candidate))
+	j := 0
+	for k := range tc.candidate {
+		l2[j] = k
+		j++
+	}
+	rand.Shuffle(len(l2), func(i, j int) {
+		l2[i], l2[j] = l2[j], l2[i]
+	})
+	i = 0
+	for ; len(l) < tc.beginCount && i < len(l2); i++ {
+		l = append(l, l2[i])
 	}
 	return l
 }
@@ -145,6 +158,23 @@ func getGenome(vs []float64) goga.Genome {
 		}
 	}
 	return goga.NewGenome(*b)
+}
+
+func BackTestParam(startTime, endTime int64, instID, outPutDir string, params []float64) {
+	tc := &TaskConf{
+		mockConf: testHunter.NewMockOpt{
+			InitMoney: "1000", // 初始金钱  1000
+			ChargeUpl: "0.05", // 手续费率  0.05
+		},
+		opt: BackOpt{
+			OutPutDir: outPutDir,
+			InstID:    instID,
+		},
+	}
+	tc.mockConf.TradeKdataOpt.FullRun = true
+	tc.RefreshBackTestTimeRange(startTime, endTime, instID)
+	tc.runTask(params)
+
 }
 
 func BackTestWithGeneticAlgo(startTime, endTime int64, instID, outPutDir string) {
@@ -213,8 +243,8 @@ func BackTestWithGeneticAlgo(startTime, endTime int64, instID, outPutDir string)
 		return f
 	}), fo.Requirement(&requirement), fo.ParamSize(paramSize),
 		fo.StableMinIter(5),
-		fo.PopulationSize(100),
-		fo.MaterExtraRatio(4),
+		fo.PopulationSize(1),
+		fo.MaterExtraRatio(1),
 		fo.LRUSize(100),
 		fo.OnStable(func() {
 			if initStartTime-timeMove < startTime {

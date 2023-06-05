@@ -72,7 +72,7 @@ func NewTradeKdataObj(opt dbType.TradeKdataOpt) *TradeKdataObj {
 
 func (_this *TradeKdataObj) NewTradeKdata(KdataList []mOKX.TypeKd) (TradeKdata okxInfo.TradeKdType) {
 	TradeKdata = okxInfo.TradeKdType{}
-	TradeKdata.TypeKd = KdataList[len(KdataList)-1]
+	TradeKdata.TypeKd = &KdataList[len(KdataList)-1]
 	//jsonByte := mJson.ToJson(KdataList[len(KdataList)-1])
 	//jsoniter.Unmarshal(jsonByte, &TradeKdata)
 

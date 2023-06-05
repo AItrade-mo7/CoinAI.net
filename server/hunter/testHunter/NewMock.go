@@ -66,6 +66,7 @@ type NewMockOpt struct {
 
 type MockObj struct {
 	HunterName         string
+	RunFull            bool
 	NowVirtualPosition dbType.VirtualPositionType   // 当前持仓
 	PositionArr        []dbType.VirtualPositionType // 当前持仓列表
 	OrderArr           []dbType.VirtualPositionType // 平仓列表
@@ -74,6 +75,7 @@ type MockObj struct {
 	TradeKdataList     []okxInfo.TradeKdType        // 计算好各种指标之后的K线
 	TradeKdataOpt      dbType.TradeKdataOpt         // 交易指标
 	OutPutDirectory    string                       // 数据读写的目录
+	CAPRecord          map[int64]string             // cap记录
 }
 
 /*
@@ -119,6 +121,7 @@ func (_this *TestObj) NewMock(opt NewMockOpt) *MockObj {
 	obj.Billing.Opt = opt.TradeKdataOpt // 在结果中显示参数
 	// 设置交易指标
 	obj.TradeKdataOpt = opt.TradeKdataOpt
+	obj.RunFull = opt.TradeKdataOpt.FullRun
 
 	return &obj
 }

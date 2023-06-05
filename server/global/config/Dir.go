@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/EasyGolang/goTools/mPath"
@@ -77,13 +76,13 @@ func DirInit() {
 	//	panic(err)
 	//}
 
-	if !mPath.Exists(File.Shutdown) {
-		err := fmt.Errorf("缺少文件 %+v", File.Shutdown)
-		panic(err)
-	}
-
-	if !mPath.Exists(File.Reboot) {
-		err := fmt.Errorf("缺少文件 %+v", File.Reboot)
-		panic(err)
-	}
+	//if !mPath.Exists(File.Shutdown) {
+	//	err := fmt.Errorf("缺少文件 %+v", File.Shutdown)
+	//	panic(err)
+	//}
+	//
+	//if !mPath.Exists(File.Reboot) {
+	//	err := fmt.Errorf("缺少文件 %+v", File.Reboot)
+	//	panic(err)
+	//}
 }

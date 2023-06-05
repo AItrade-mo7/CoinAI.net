@@ -54,8 +54,9 @@ func Step1(InstID string) {
 
 	StartTime := mTime.TimeParse(mTime.Lay_DD, "2021-01-01")
 	EndTime := mTime.TimeParse(mTime.Lay_DD, "2022-01-01")
-	taskHunter.BackTestWithGeneticAlgo(
-		StartTime, EndTime, InstID, mStr.Join(ResultBasePath))
+	taskHunter.BackTestParam(StartTime, EndTime, InstID, mStr.Join(ResultBasePath), []float64{43, 2, 3, -2, 3})
+	//taskHunter.BackTestWithGeneticAlgo(
+	//	StartTime, EndTime, InstID, mStr.Join(ResultBasePath))
 }
 
 func Step2(InstID string) {

@@ -60,6 +60,7 @@ type TradeKdataOpt struct {
 	CAP_Max       string // CAP 最大边界值
 	CAP_Min       string // CAP 最小边界值
 	MaxTradeLever int    // 最大杠杆数
+	FullRun       bool
 }
 
 // 模拟持仓的数据
