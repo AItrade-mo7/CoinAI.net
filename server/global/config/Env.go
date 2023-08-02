@@ -23,8 +23,8 @@ var SysEnv struct {
 }
 
 func DefaultSysEnv() {
-	SysEnv.MongoAddress = "tcy4.mo7.cc:17017"
-	SysEnv.MongoPassword = "asdasd55555"
-	SysEnv.MongoUserName = "mo7"
-	SysEnv.MessageBaseUrl = "http://msg.mo7.cc"
+	SysEnv.MongoAddress = "xxx.xxx.cc:xxx"
+	SysEnv.MongoPassword = "xxx"
+	SysEnv.MongoUserName = "xxx"
+	SysEnv.MessageBaseUrl = "http://xxx.xxx.xxx"
 }
